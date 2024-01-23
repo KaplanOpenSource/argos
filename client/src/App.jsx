@@ -1,6 +1,13 @@
 import { useState } from 'react'
 import { MapShower } from './MapShower'
 
+import * as React from 'react';
+import Button from '@mui/material/Button';
+
+function ButtonUsage() {
+  return <Button variant="contained">Hello world</Button>;
+}
+
 function App() {
   const [count, setCount] = useState(0)
 
@@ -15,9 +22,10 @@ function App() {
           count is {count}
         </button>
       </div> */}
-      <MapShower>
+      {/* <MapShower>
 
-      </MapShower>
+      </MapShower> */}
+      <ButtonUsage></ButtonUsage>
     </div>
   )
 }
