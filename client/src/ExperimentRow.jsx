@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Collapse, List, ListItemButton, ListItemIcon, ListItemText } from "@mui/material"
+import { Collapse, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, TextField } from "@mui/material"
 // import SendIcon from '@mui/icons-material/Send';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
@@ -11,8 +11,7 @@ export const ExperimentRow = ({ name, data, setData }) => {
 
     return (
         <>
-            <ListItemButton
-                onClick={() => setOpen(!open)}
+            <ListItem
             >
                 {/* <ListItemIcon>
                     <SendIcon />
@@ -20,23 +19,38 @@ export const ExperimentRow = ({ name, data, setData }) => {
                 <ListItemText primary={name} />
                 <DatePicker
                     label="Start Date"
+                    format='DD/MM/YYYY'
                     value={dayjs(data.startDate)}
                     onChange={(val) => setData({ ...data, startDate: val })}
                 />
                 <DatePicker
                     label="End Date"
+                    format='DD/MM/YYYY'
                     value={dayjs(data.endDate)}
                     onChange={(val) => setData({ ...data, endDate: val })}
                 />
-                {open ? <ExpandLess /> : <ExpandMore />}
-            </ListItemButton>
+                <IconButton
+                    onClick={() => setOpen(!open)}
+                >
+                    {open ? <ExpandLess /> : <ExpandMore />}
+                </IconButton>
+            </ListItem>
             <Collapse in={open} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding>
+                    <ListItem>
+                        <TextField
+                            variant="outlined"
+                            label="Description"
+                            InputLabelProps={{ shrink: true }}
+                            value={data.description}
+                            onChange={e => setData({ ...data, description: e.target.value })}
+                        />
+                    </ListItem>
                     <ListItemButton sx={{ pl: 4 }}>
                         {/* <ListItemIcon>
                             <StarBorder />
                         </ListItemIcon> */}
-                        <ListItemText primary="Starred" />
+                        {/* <ListItemText primary="Starred" /> */}
                     </ListItemButton>
                 </List>
             </Collapse>
