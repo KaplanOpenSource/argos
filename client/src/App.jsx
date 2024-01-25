@@ -6,22 +6,38 @@ import { useEffect } from 'react';
 import { ExperimentRow } from './ExperimentRow';
 import { Header } from './Header';
 
-function ButtonUsage() {
-  return <Button variant="contained">Hello world</Button>;
-}
-
 function App() {
-  const [count, setCount] = useState(0)
   const [experiments, setExperiments] = useState([]);
 
+  const getExperimentList = async () => {
+    const resp = await fetch("http://127.0.0.1:8080/experiment_list");
+    const json = await resp.json();
+    setExperiments((json || []).map(x => {
+      return { name: x, data: {} };
+    }))
+  }
+
+  const addExperiment = async () => {
+    const data = { a: 1, b: 'Textual content' };
+    const name = prompt('Experiment name');
+    const resp = await fetch("http://127.0.0.1:8080/experiment_set/" + name, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
+    const json = await resp.json();
+    if ((json || {}).error) {
+      alert(json.error);
+      return;
+    }
+    setExperiments(prev => [...prev, { name, data }]);
+  }
+
   useEffect(() => {
-    (async () => {
-      const resp = await fetch("http://127.0.0.1:8080/experiment_list");
-      const json = await resp.json();
-      setExperiments((json || []).map(x => {
-        return { name: x, data: {} };
-      }))
-    })()
+    getExperimentList();
   }, [])
 
   return (
@@ -30,7 +46,7 @@ function App() {
     // style={{ height: "100%", width: '100%', position: 'absolute', top: 0, bottom: 0, right: 0 }}
     >
       <Header
-        setExperiments={setExperiments}
+        addExperiment={addExperiment}
       />
       <List>
         {
