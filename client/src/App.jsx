@@ -5,6 +5,9 @@ import { Button, List } from '@mui/material';
 import { useEffect } from 'react';
 import { ExperimentRow } from './ExperimentRow';
 import { Header } from './Header';
+import dayjs from 'dayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 
 function App() {
   const [experiments, setExperiments] = useState([]);
@@ -18,8 +21,16 @@ function App() {
   }
 
   const addExperiment = async () => {
-    const data = { a: 1, b: 'Textual content' };
     const name = prompt('Experiment name');
+    const data = {
+      startDate: dayjs().startOf('day'),
+      endDate: dayjs().startOf('day').add(7, 'day'),
+      description: ''
+    };
+    setExperiment(name, data);
+  }
+
+  const setExperiment = async (name, data) => {
     const resp = await fetch("http://127.0.0.1:8080/experiment_set/" + name, {
       method: 'POST',
       headers: {
@@ -33,7 +44,7 @@ function App() {
       alert(json.error);
       return;
     }
-    setExperiments(prev => [...prev, { name, data }]);
+    setExperiments(prev => [...prev.filter(p => p.name !== name), { name, data }]);
   }
 
   useEffect(() => {
@@ -41,28 +52,32 @@ function App() {
   }, [])
 
   return (
-    <div
-    // style={{top:0, bottom:0, position:'100vfh'}}
-    // style={{ height: "100%", width: '100%', position: 'absolute', top: 0, bottom: 0, right: 0 }}
-    >
-      <Header
-        addExperiment={addExperiment}
-      />
-      <List>
-        {
-          experiments.map(e => (
-            <ExperimentRow key={e.name}
-              name={e.name}
-            />
-          ))
-        }
-      </List>
-      {/* <div id='map'>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <div
+      // style={{top:0, bottom:0, position:'100vfh'}}
+      // style={{ height: "100%", width: '100%', position: 'absolute', top: 0, bottom: 0, right: 0 }}
+      >
+        <Header
+          addExperiment={addExperiment}
+        />
+        <List>
+          {
+            experiments.map(e => (
+              <ExperimentRow key={e.name}
+                name={e.name}
+                data={e.data}
+                setData={newData => setExperiment(e.name, newData)}
+              />
+            ))
+          }
+        </List>
+        {/* <div id='map'>
         <MapShower>
 
         </MapShower>
       </div> */}
-    </div>
+      </div>
+    </LocalizationProvider>
   )
 }
 
