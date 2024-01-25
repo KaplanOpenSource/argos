@@ -53,9 +53,10 @@ def experimentGetReq(name):
 def experimentSetReq(name):
     if re.match("^[0-9_a-zA-Z]+$", name):
         os.makedirs(EXPERIMENTS_PATH, exist_ok=True)
-        json_data = json.loads(request.form["json"])
+        json_data = request.json
         with open(os.path.join(EXPERIMENTS_PATH, name + ".json"), "w") as file:
-            file.write(json_data)
+            file.write(json.dumps(json_data, indent=2))
+            return {"ok": True}
     return {"error": "invalid experiment name"}
 
 
