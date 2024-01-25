@@ -32,8 +32,8 @@ def static_file(path):
     return app.send_static_file(path)
 
 
-@app.route("/experiment_names")
-def experimentNamesReq():
+@app.route("/experiment_list")
+def experimentListReq():
     if not os.path.exists(EXPERIMENTS_PATH):
         return []
     names = sorted(os.listdir(EXPERIMENTS_PATH))
@@ -49,7 +49,7 @@ def experimentGetReq(name):
     return {"error": "unknown experiment name"}
 
 
-@app.route("/set_experiment/<name>", methods=["POST"])
+@app.route("/experiment_set/<name>", methods=["POST"])
 def experimentSetReq(name):
     if re.match("^[0-9_a-zA-Z]+$", name):
         os.makedirs(EXPERIMENTS_PATH, exist_ok=True)

@@ -16,7 +16,7 @@ function App() {
 
   useEffect(() => {
     (async () => {
-      const resp = await fetch("http://127.0.0.1:8080/experiment_names");
+      const resp = await fetch("http://127.0.0.1:8080/experiment_list");
       const json = await resp.json();
       setExperiments((json || []).map(x => {
         return { name: x, data: {} };
@@ -30,6 +30,7 @@ function App() {
     // style={{ height: "100%", width: '100%', position: 'absolute', top: 0, bottom: 0, right: 0 }}
     >
       <Header
+        setExperiments={setExperiments}
       />
       <List>
         {

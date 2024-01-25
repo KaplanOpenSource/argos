@@ -4,7 +4,7 @@ import {
     AppBar, IconButton, Toolbar, Typography, Button, List, ListItemButton, ListItemIcon, ListItemText
 } from '@mui/material';
 
-export const Header = ({ }) => {
+export const Header = ({ setExperiments }) => {
     return (
         <AppBar position="static">
             <Toolbar>
@@ -28,7 +28,7 @@ export const Header = ({ }) => {
                         (async () => {
                             const data = { a: 1, b: 'Textual content' };
                             const name = prompt('Experiment name');
-                            const resp = await fetch("http://127.0.0.1:8080/set_experiment/" + name, {
+                            const resp = await fetch("http://127.0.0.1:8080/experiment_set/" + name, {
                                 method: 'POST',
                                 headers: {
                                     'Accept': 'application/json',
