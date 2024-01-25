@@ -3,9 +3,10 @@ import { MapShower } from './MapShower'
 
 import * as React from 'react';
 import {
-  AppBar, IconButton, Toolbar, Typography, Button
+  AppBar, IconButton, Toolbar, Typography, Button, List, ListItemButton, ListItemIcon, ListItemText
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
+import SendIcon from '@mui/icons-material/Send';
 import { useEffect } from 'react';
 
 function ButtonUsage() {
@@ -58,13 +59,21 @@ function App() {
           {/* <Button color="inherit">Login</Button> */}
         </Toolbar>
       </AppBar>
-      {
-        experiments.map(e => (
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            {e.name}
-          </Typography>
-        ))
-      }
+      <List>
+        {
+          experiments.map(e => (
+            <ListItemButton>
+              <ListItemIcon>
+                <SendIcon />
+              </ListItemIcon>
+              <ListItemText primary={e.name} />
+            </ListItemButton>
+            // <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            //   {e.name}
+            // </Typography>
+          ))
+        }
+      </List>
     </div>
   )
 }
