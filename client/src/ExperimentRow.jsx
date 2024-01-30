@@ -19,21 +19,22 @@ export const ExperimentRow = ({ name, data, setData }) => {
         }
     }
 
-    const setTrialSetData = (trialName, trialNewData) => {
-        const trailSet = (data.trailSet || []).slice();
-        let i = trailSet.findIndex(t => t.name === trialName);
-        i = i >= 0 ? i : trailSet.length;
-        trailSet[i] = { name: trialName, data: trialNewData };
-        setData({ ...data, trailSet });
+    const setItemData = (theName, theData, items, setItems) => {
+        const theItems = (items || []).slice();
+        let i = theItems.findIndex(t => t.name === theName);
+        i = i >= 0 ? i : theItems.length;
+        theItems[i] = { name: theName, data: theData };
+        setItems(theItems);
+    }
+
+    const setTrialSetData = (theName, theData) => {
+        setItemData(theName, theData, data.trailSet, trailSet => setData({ ...data, trailSet }));
     }
 
     const setEntityTypeData = (theName, theData) => {
-        const entityTypes = (data.entityTypes || []).slice();
-        let i = entityTypes.findIndex(t => t.name === theName);
-        i = i >= 0 ? i : entityTypes.length;
-        entityTypes[i] = { name: theName, data: theData };
-        setData({ ...data, entityTypes });
+        setItemData(theName, theData, data.entityTypes, entityTypes => setData({ ...data, entityTypes }));
     }
+
 
     return (
         <TreeRow
