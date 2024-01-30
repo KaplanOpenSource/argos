@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Button, List } from '@mui/material';
 import { useEffect } from 'react';
 import { ExperimentRow } from './ExperimentRow';
-import { Header } from './Header';
+import { AppHeader } from './AppHeader';
 import dayjs from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
@@ -38,12 +38,14 @@ function App() {
 
   const addExperiment = async () => {
     const name = prompt('Experiment name');
-    const data = {
-      startDate: dayjs().startOf('day'),
-      endDate: dayjs().startOf('day').add(7, 'day'),
-      description: ''
-    };
-    setExperiment(name, data);
+    if (name && /^[0-9_a-zA-Z]+$/g.test(name)) {
+      const data = {
+        startDate: dayjs().startOf('day'),
+        endDate: dayjs().startOf('day').add(7, 'day'),
+        description: ''
+      };
+      setExperiment(name, data);
+    }
   }
 
   const setExperiment = async (name, data) => {
@@ -73,7 +75,7 @@ function App() {
       // style={{top:0, bottom:0, position:'100vfh'}}
       // style={{ height: "100%", width: '100%', position: 'absolute', top: 0, bottom: 0, right: 0 }}
       >
-        <Header
+        <AppHeader
           addExperiment={addExperiment}
         />
         <List>
@@ -88,10 +90,10 @@ function App() {
           }
         </List>
         {/* <div id='map'>
-        <MapShower>
+<MapShower>
 
-        </MapShower>
-      </div> */}
+</MapShower>
+</div> */}
       </div>
     </LocalizationProvider>
   )

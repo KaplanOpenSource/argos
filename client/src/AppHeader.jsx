@@ -4,7 +4,7 @@ import {
     AppBar, IconButton, Toolbar, Typography, Button, List, ListItemButton, ListItemIcon, ListItemText
 } from '@mui/material';
 
-export const Header = ({ addExperiment }) => {
+export const AppHeader = ({ addExperiment }) => {
     return (
         <AppBar position="static">
             <Toolbar>

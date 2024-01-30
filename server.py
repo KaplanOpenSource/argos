@@ -51,7 +51,7 @@ def experimentGetReq(name):
 
 @app.route("/experiment_set/<name>", methods=["POST"])
 def experimentSetReq(name):
-    if re.match("^[0-9_a-zA-Z]+$", name):
+    if len(name) > 0 and re.match("^[0-9_a-zA-Z]+$", name):
         os.makedirs(EXPERIMENTS_PATH, exist_ok=True)
         json_data = request.json
         with open(os.path.join(EXPERIMENTS_PATH, name + ".json"), "w") as file:
