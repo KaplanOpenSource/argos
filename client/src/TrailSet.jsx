@@ -19,6 +19,13 @@ export const TrailSet = ({ name, data, setData }) => {
                     <Typography variant="body2" sx={{ fontWeight: 'inherit', flexGrow: 1 }}>
                         {name}
                     </Typography>
+                    <TextField
+                        variant="outlined"
+                        label="Description"
+                        InputLabelProps={{ shrink: true }}
+                        value={data.description}
+                        onChange={e => setData({ ...data, description: e.target.value })}
+                    />
                 </Box>
             }
         >
