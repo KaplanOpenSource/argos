@@ -8,34 +8,6 @@ import { TreeRow } from "./TreeRow";
 import { EntityType } from "./EntityType";
 
 export const ExperimentRow = ({ name, data, setData }) => {
-    const newName = (items, nameTemplate) => {
-        if (!(items || []).find(t => t.name === nameTemplate)) {
-            return nameTemplate
-        }
-        for (let i = 1; ; ++i) {
-            if (!(items || []).find(t => t.name === nameTemplate + '_' + i)) {
-                return nameTemplate + '_' + i;
-            }
-        }
-    }
-
-    const setItemData = (theName, theData, items, setItems) => {
-        const theItems = (items || []).slice();
-        let i = theItems.findIndex(t => t.name === theName);
-        i = i >= 0 ? i : theItems.length;
-        theItems[i] = { name: theName, data: theData };
-        setItems(theItems);
-    }
-
-    const setTrialSetData = (theName, theData) => {
-        setItemData(theName, theData, data.trailSet, trailSet => setData({ ...data, trailSet }));
-    }
-
-    const setEntityTypeData = (theName, theData) => {
-        setItemData(theName, theData, data.entityTypes, entityTypes => setData({ ...data, entityTypes }));
-    }
-
-
     return (
         <TreeRow
             key={name}
@@ -59,38 +31,78 @@ export const ExperimentRow = ({ name, data, setData }) => {
                 </>
             }
         >
-            <IconButton
-                color="inherit"
-                onClick={() => setTrialSetData(newName(data.trailSet, 'new_trial_set'), {})}
-            >
-                <AddIcon />
-            </IconButton>
-            {
-                (data.trailSet || []).map(e => (
+
+            <TreeSublist
+                data={data}
+                fieldName='trailSet'
+                nameTemplate='new_trial_set'
+                setData={setData}
+                component={(name, data, setData) => (
                     <TrailSet
-                        key={e.name}
-                        name={e.name}
-                        data={e.data}
-                        setData={newData => setTrialSetData(e.name, newData)}
+                        key={name}
+                        name={name}
+                        data={data}
+                        setData={setData}
                     />
-                ))
+                )}
+            />
+
+            <TreeSublist
+                data={data}
+                fieldName='entityTypes'
+                nameTemplate='new_entity_type'
+                setData={setData}
+                component={(name, data, setData) => (
+                    <EntityType
+                        key={name}
+                        name={name}
+                        data={data}
+                        setData={setData}
+                    />
+                )}
+            />
+        </TreeRow>
+    )
+}
+
+export const TreeSublist = ({ nameTemplate, fieldName, data, setData, component }) => {
+    const items = data[fieldName] || [];
+    const setItems = val => {
+        setData({ ...data, [fieldName]: val });
+    }
+
+    const newName = () => {
+        if (!items.find(t => t.name === nameTemplate)) {
+            return nameTemplate
+        }
+        for (let i = 1; ; ++i) {
+            if (!items.find(t => t.name === nameTemplate + '_' + i)) {
+                return nameTemplate + '_' + i;
             }
+        }
+    }
+
+    const setItemData = (theName, theData) => {
+        const theItems = (items || []).slice();
+        let i = theItems.findIndex(t => t.name === theName);
+        i = i >= 0 ? i : theItems.length;
+        theItems[i] = { name: theName, data: theData };
+        setItems(theItems);
+    }
+
+    return (
+        <>
             <IconButton
                 color="inherit"
-                onClick={() => setEntityTypeData(newName(data.entityTypes, 'new_entity_type'), {})}
+                onClick={() => setItemData(newName(), {})}
             >
                 <AddIcon />
             </IconButton>
             {
-                (data.entityTypes || []).map(e => (
-                    <EntityType
-                        key={e.name}
-                        name={e.name}
-                        data={e.data}
-                        setData={newData => setEntityTypeData(e.name, newData)}
-                    />
+                items.map(e => (
+                    component(e.name, e.data, newData => setItemData(e.name, newData))
                 ))
             }
-        </TreeRow>
+        </>
     )
 }
