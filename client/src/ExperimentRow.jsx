@@ -3,8 +3,8 @@ import AddIcon from '@mui/icons-material/Add';
 
 import dayjs from 'dayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { ListItemCollapsable } from "./ListItemCollapsable";
 import { TreeItem } from "@mui/x-tree-view/TreeItem";
+import { TrailSet } from "./TrailSet";
 
 export const ExperimentRow = ({ name, data, setData }) => {
     return (
@@ -20,7 +20,6 @@ export const ExperimentRow = ({ name, data, setData }) => {
                         pr: 0,
                     }}
                 >
-                    {/* <Box component={LabelIcon} color="inherit" sx={{ mr: 1 }} /> */}
                     <Typography variant="body2" sx={{ fontWeight: 'inherit', flexGrow: 1 }}>
                         {name}
                     </Typography>
@@ -36,10 +35,13 @@ export const ExperimentRow = ({ name, data, setData }) => {
                         value={dayjs(data.endDate)}
                         onChange={(val) => setData({ ...data, endDate: val })}
                     />
-
-                    {/* <Typography variant="caption" color="inherit">
-                                    {labelInfo}
-                                </Typography> */}
+                    <IconButton
+                        edge="start"
+                        color="inherit"
+                        onClick={() => setData({ ...data, trailSet: [...(data.trailSet || []), { name: 'new trialSet', data: {} }] })}
+                    >
+                        <AddIcon />
+                    </IconButton>
                 </Box>
             }
         >
@@ -56,49 +58,16 @@ export const ExperimentRow = ({ name, data, setData }) => {
                     />
                 }
             >
-
             </TreeItem>
+            {
+                (data.trailSet || []).map(e => (
+                    <TrailSet
+                        key={e.name}
+                        name={e.name}
+                        data={e.data}
+                    />
+                ))
+            }
         </TreeItem>
-        // <ListItemCollapsable
-        //     name={name}
-        //     components={
-        //         <>
-        //             <DatePicker
-        //                 label="Start Date"
-        //                 format='DD/MM/YYYY'
-        //                 value={dayjs(data.startDate)}
-        //                 onChange={(val) => setData({ ...data, startDate: val })}
-        //             />
-        //             <DatePicker
-        //                 label="End Date"
-        //                 format='DD/MM/YYYY'
-        //                 value={dayjs(data.endDate)}
-        //                 onChange={(val) => setData({ ...data, endDate: val })}
-        //             />
-        //             <IconButton
-        //                 edge="start"
-        //                 color="inherit"
-        //                 onClick={() => addExperiment()}
-        //             >
-        //                 <AddIcon />
-        //             </IconButton>
-
-        //         </>
-        //     }
-        // >
-        //     <List component="div" disablePadding>
-        //         <ListItem>
-        //         </ListItem>
-        //         {
-        //             (data.trailSet || []).map(e => (
-        //                 <TrailSet
-        //                     key={e.name}
-        //                     name={e.name}
-        //                     data={e.data}
-        //                 />
-        //             ))
-        //         }
-        //     </List>
-        // </ListItemCollapsable>
     )
 }
