@@ -1,10 +1,10 @@
-import { Box, Collapse, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, TextField, Typography } from "@mui/material"
+import { IconButton } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 
 import dayjs from 'dayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { TreeItem } from "@mui/x-tree-view/TreeItem";
 import { TrailSet } from "./TrailSet";
+import { TreeRow } from "./TreeRow";
 
 export const ExperimentRow = ({ name, data, setData }) => {
     const newTrialSetName = () => {
@@ -15,7 +15,7 @@ export const ExperimentRow = ({ name, data, setData }) => {
         for (let i = 1; ; ++i) {
             if (!(data.trailSet || []).find(t => t.name === newName + '_' + i)) {
                 return newName + '_' + i;
-            }    
+            }
         }
     }
 
@@ -28,21 +28,13 @@ export const ExperimentRow = ({ name, data, setData }) => {
     }
 
     return (
-        <TreeItem
+        <TreeRow
             key={name}
-            nodeId={name}
-            label={
-                <Box
-                    sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        // p: 0.5,
-                        // pr: 0,
-                    }}
-                >
-                    <Typography variant="body2" sx={{ fontWeight: 'inherit', flexGrow: 1 }}>
-                        {name}
-                    </Typography>
+            name={name}
+            data={data}
+            setData={setData}
+            components={
+                <>
                     <DatePicker
                         label="Start Date"
                         format='DD/MM/YYYY'
@@ -56,31 +48,17 @@ export const ExperimentRow = ({ name, data, setData }) => {
                         onChange={(val) => setData({ ...data, endDate: val })}
                     />
                     <IconButton
-                        edge="start"
+                        // edge="start"
                         color="inherit"
                         onClick={() => setTrialSetData(newTrialSetName(), {})}
                     >
                         <AddIcon />
                     </IconButton>
-                </Box>
+                </>
             }
         >
-            <TreeItem
-                key={name + '_desc'}
-                nodeId={name + '_desc'}
-                label={
-                    <TextField
-                        variant="outlined"
-                        label="Description"
-                        InputLabelProps={{ shrink: true }}
-                        value={data.description}
-                        onChange={e => setData({ ...data, description: e.target.value })}
-                    />
-                }
-            >
-            </TreeItem>
             {
-                (data.trailSet || []).map((e, i) => (
+                (data.trailSet || []).map(e => (
                     <TrailSet
                         key={e.name}
                         name={e.name}
@@ -89,6 +67,6 @@ export const ExperimentRow = ({ name, data, setData }) => {
                     />
                 ))
             }
-        </TreeItem>
+        </TreeRow>
     )
 }
