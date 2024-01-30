@@ -43,7 +43,19 @@ export const ExperimentRow = ({ name, data, setData }) => {
                 </Box>
             }
         >
+            <TreeItem
+                label={
+                    <TextField
+                        variant="outlined"
+                        label="Description"
+                        InputLabelProps={{ shrink: true }}
+                        value={data.description}
+                        onChange={e => setData({ ...data, description: e.target.value })}
+                    />
+                }
+            >
 
+            </TreeItem>
         </TreeItem>
         // <ListItemCollapsable
         //     name={name}
@@ -74,13 +86,6 @@ export const ExperimentRow = ({ name, data, setData }) => {
         // >
         //     <List component="div" disablePadding>
         //         <ListItem>
-        //             <TextField
-        //                 variant="outlined"
-        //                 label="Description"
-        //                 InputLabelProps={{ shrink: true }}
-        //                 value={data.description}
-        //                 onChange={e => setData({ ...data, description: e.target.value })}
-        //             />
         //         </ListItem>
         //         {
         //             (data.trailSet || []).map(e => (
