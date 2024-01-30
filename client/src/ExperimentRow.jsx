@@ -1,4 +1,4 @@
-import { IconButton } from "@mui/material";
+import { Box, IconButton, Typography } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 
 import dayjs from 'dayjs';
@@ -6,6 +6,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { TrailSet } from "./TrailSet";
 import { TreeRow } from "./TreeRow";
 import { EntityType } from "./EntityType";
+import { TreeSublist } from "./TreeSublist";
 
 export const ExperimentRow = ({ name, data, setData }) => {
     return (
@@ -62,47 +63,5 @@ export const ExperimentRow = ({ name, data, setData }) => {
                 )}
             />
         </TreeRow>
-    )
-}
-
-export const TreeSublist = ({ nameTemplate, fieldName, data, setData, component }) => {
-    const items = data[fieldName] || [];
-    const setItems = val => {
-        setData({ ...data, [fieldName]: val });
-    }
-
-    const newName = () => {
-        if (!items.find(t => t.name === nameTemplate)) {
-            return nameTemplate
-        }
-        for (let i = 1; ; ++i) {
-            if (!items.find(t => t.name === nameTemplate + '_' + i)) {
-                return nameTemplate + '_' + i;
-            }
-        }
-    }
-
-    const setItemData = (theName, theData) => {
-        const theItems = (items || []).slice();
-        let i = theItems.findIndex(t => t.name === theName);
-        i = i >= 0 ? i : theItems.length;
-        theItems[i] = { name: theName, data: theData };
-        setItems(theItems);
-    }
-
-    return (
-        <>
-            <IconButton
-                color="inherit"
-                onClick={() => setItemData(newName(), {})}
-            >
-                <AddIcon />
-            </IconButton>
-            {
-                items.map(e => (
-                    component(e.name, e.data, newData => setItemData(e.name, newData))
-                ))
-            }
-        </>
     )
 }
