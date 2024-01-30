@@ -3,8 +3,11 @@ import AddIcon from '@mui/icons-material/Add';
 import {
     AppBar, IconButton, Toolbar, Typography, Button, List, ListItemButton, ListItemIcon, ListItemText
 } from '@mui/material';
+import { experimentContext } from './ExperimentProvider';
+import { useContext } from 'react';
 
-export const AppHeader = ({ addExperiment }) => {
+export const AppHeader = ({ }) => {
+    const { addExperiment } = useContext(experimentContext);
     return (
         <AppBar position="static">
             <Toolbar>
