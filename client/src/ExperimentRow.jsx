@@ -1,4 +1,5 @@
 import { Collapse, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, TextField } from "@mui/material"
+import AddIcon from '@mui/icons-material/Add';
 
 import dayjs from 'dayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -22,6 +23,14 @@ export const ExperimentRow = ({ name, data, setData }) => {
                         value={dayjs(data.endDate)}
                         onChange={(val) => setData({ ...data, endDate: val })}
                     />
+                    <IconButton
+                        edge="start"
+                        color="inherit"
+                        onClick={() => addExperiment()}
+                    >
+                        <AddIcon />
+                    </IconButton>
+
                 </>
             }
         >
@@ -35,6 +44,15 @@ export const ExperimentRow = ({ name, data, setData }) => {
                         onChange={e => setData({ ...data, description: e.target.value })}
                     />
                 </ListItem>
+                {
+                    (data.trailSet || []).map(e => (
+                        <TrailSet
+                            key={e.name}
+                            name={e.name}
+                            data={e.data}
+                        />
+                    ))
+                }
             </List>
         </ListItemCollapsable>
     )
