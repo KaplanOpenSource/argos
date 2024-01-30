@@ -44,6 +44,8 @@ export const ExperimentRow = ({ name, data, setData }) => {
             }
         >
             <TreeItem
+                key={name + '_desc'}
+                nodeId={name + '_desc'}
                 label={
                     <TextField
                         variant="outlined"

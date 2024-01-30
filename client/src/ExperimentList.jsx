@@ -15,15 +15,20 @@ export const ExperimentList = ({ }) => {
         <TreeView
             defaultCollapseIcon={<ExpandMoreIcon />}
             defaultExpandIcon={<ChevronRightIcon />}
-            sx={{ height: 240, flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
+            sx={{
+                // height: 240,
+                flexGrow: 1,
+                // maxWidth: 400,
+                overflowY: 'auto'
+            }}
         >
             {
                 experiments.map(e => (
                     <ExperimentRow key={e.name}
-                         name={e.name}
-                         data={e.data}
-                         setData={newData => setExperiment(e.name, newData)}
-                     />
+                        name={e.name}
+                        data={e.data}
+                        setData={newData => setExperiment(e.name, newData)}
+                    />
                 ))
             }
             {/* <TreeItem nodeId="1" label="Applications">
