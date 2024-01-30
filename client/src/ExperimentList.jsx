@@ -12,17 +12,6 @@ import dayjs from 'dayjs';
 export const ExperimentList = ({ }) => {
     const { experiments, setExperiment } = useContext(experimentContext);
     return (
-        // <List>
-        //     {
-        //         experiments.map(e => (
-        //             <ExperimentRow key={e.name}
-        //                 name={e.name}
-        //                 data={e.data}
-        //                 setData={newData => setExperiment(e.name, newData)}
-        //             />
-        //         ))
-        //     }
-        // </List>
         <TreeView
             defaultCollapseIcon={<ExpandMoreIcon />}
             defaultExpandIcon={<ChevronRightIcon />}
@@ -30,45 +19,11 @@ export const ExperimentList = ({ }) => {
         >
             {
                 experiments.map(e => (
-                    <TreeItem
-                        key={e.name}
-                        nodeId={e.name}
-                        label={
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    p: 0.5,
-                                    pr: 0,
-                                }}
-                            >
-                                {/* <Box component={LabelIcon} color="inherit" sx={{ mr: 1 }} /> */}
-                                <Typography variant="body2" sx={{ fontWeight: 'inherit', flexGrow: 1 }}>
-                                    {e.name}
-                                </Typography>
-                                <DatePicker
-                                    label="Start Date"
-                                    format='DD/MM/YYYY'
-                                    value={dayjs(e.data.startDate)}
-                                    // onChange={(val) => setData({ ...data, startDate: val })}
-                                />
-                                <DatePicker
-                                    label="End Date"
-                                    format='DD/MM/YYYY'
-                                    value={dayjs(e.data.endDate)}
-                                    // onChange={(val) => setData({ ...data, endDate: val })}
-                                />
-
-                                {/* <Typography variant="caption" color="inherit">
-                                    {labelInfo}
-                                </Typography> */}
-                            </Box>
-                        }
-                    // data={e.data}
-                    // setData={newData => setExperiment(e.name, newData)}
-                    >
-
-                    </TreeItem>
+                    <ExperimentRow key={e.name}
+                         name={e.name}
+                         data={e.data}
+                         setData={newData => setExperiment(e.name, newData)}
+                     />
                 ))
             }
             {/* <TreeItem nodeId="1" label="Applications">
