@@ -3,7 +3,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { TreeItem } from "@mui/x-tree-view/TreeItem";
 import { TreeRow } from "./TreeRow";
 
-export const EntityType = ({ name, data, setData }) => {
+export const DeviceType = ({ name, data, setData }) => {
     return (
         <TreeRow
             key={name}

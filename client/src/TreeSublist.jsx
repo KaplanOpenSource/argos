@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { TrailSet } from "./TrailSet";
 import { TreeRow } from "./TreeRow";
-import { EntityType } from "./EntityType";
+import { DeviceType } from "./DeviceType";
 
 export const TreeSublist = ({ nameTemplate, fieldName, data, setData, component }) => {
     const items = data[fieldName] || [];

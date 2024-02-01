@@ -1,6 +1,6 @@
 import { TrailSet } from "./TrailSet";
 import { TreeRow } from "./TreeRow";
-import { EntityType } from "./EntityType";
+import { DeviceType } from "./DeviceType";
 import { TreeSublist } from "./TreeSublist";
 import { DateProperty } from "./DateProperty";
 
@@ -46,7 +46,7 @@ export const ExperimentRow = ({ name, data, setData }) => {
                 nameTemplate='new_entity_type'
                 setData={setData}
                 component={(name, data, setData) => (
-                    <EntityType
+                    <DeviceType
                         key={name}
                         name={name}
                         data={data}
