@@ -41,7 +41,7 @@ def experimentListReq():
     return names
 
 def validate_name(name: str) -> bool:
-    return name is not None and len(name) > 0 and re.match("^[0-9_a-zA-Z]+$", name) 
+    return name is not None and len(name) > 0 and re.match("^[0-9a-zA-Z_\- ]+$", name) 
 
 @app.route("/experiment/<name>")
 def experimentGetReq(name):
@@ -55,12 +55,12 @@ def experimentGetReq(name):
 def experimentSetReq(name):
     if validate_name(name):
         json_data = request.json
+        str = json.dumps(json_data, indent=2)
         new_name = json_data['name']
         if new_name is None:
             new_name = name
         if validate_name(new_name):
             os.makedirs(EXPERIMENTS_PATH, exist_ok=True)
-            str = json.dumps(json_data['data'], indent=2)
             if new_name != name:
                 oldpath = os.path.join(EXPERIMENTS_PATH, name + ".json")
                 if os.path.exists(oldpath):

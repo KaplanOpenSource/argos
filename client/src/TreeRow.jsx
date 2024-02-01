@@ -2,18 +2,8 @@ import { Box, TextField, Typography } from "@mui/material";
 
 import { TreeItem } from "@mui/x-tree-view/TreeItem";
 
-export const TreeRow = ({ name, data, setData, nameData, setNameData, components, children }) => {
-
-    // Temp until all name/data/setData are replaced by nameData/setNameData
-    if (nameData) {
-        ({ name, data } = nameData);
-    }
-    if (setNameData) {
-        setData = data => {
-            setNameData({ name, data });
-        }
-    }
-
+export const TreeRow = ({ data, setData, components, children }) => {
+    const { name } = data;
     return (
         <TreeItem
             key={name}
@@ -39,7 +29,7 @@ export const TreeRow = ({ name, data, setData, nameData, setNameData, components
                         label="Name"
                         InputLabelProps={{ shrink: true }}
                         value={name}
-                        onChange={e => setNameData({ name: e.target.value, data })}
+                        onChange={e => setData({ ...data, name: e.target.value })}
                     />
                     {components}
                 </Box>
