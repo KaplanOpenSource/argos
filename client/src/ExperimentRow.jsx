@@ -1,4 +1,4 @@
-import { TrailType } from "./TrailType";
+import { TrialType } from "./TrialType";
 import { TreeRow } from "./TreeRow";
 import { DeviceType } from "./DeviceType";
 import { TreeSublist } from "./TreeSublist";
@@ -30,11 +30,11 @@ export const ExperimentRow = ({ info, setInfo }) => {
 
             <TreeSublist
                 data={data}
-                fieldName='trailTypes'
+                fieldName='trialTypes'
                 nameTemplate='new_trial_type'
                 setData={setData}
                 component={(name, data, setData) => (
-                    <TrailType
+                    <TrialType
                         key={name}
                         name={name}
                         data={data}

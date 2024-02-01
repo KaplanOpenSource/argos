@@ -16,8 +16,8 @@ export const DeviceItem = ({ name, data, setData }) => {
             }
         >
             {/* {
-                (data.trailSet || []).map(e => (
-                    <TrailSet
+                (data.trialSet || []).map(e => (
+                    <TrialSet
                         key={e.name}
                         name={e.name}
                         data={e.data}

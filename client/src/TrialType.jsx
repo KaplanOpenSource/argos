@@ -2,12 +2,12 @@ import { Box, Collapse, IconButton, List, ListItem, ListItemButton, ListItemIcon
 import AddIcon from '@mui/icons-material/Add';
 import { TreeItem } from "@mui/x-tree-view/TreeItem";
 import { TreeRow } from "./TreeRow";
-import { Trail } from "./Trail";
+import { Trial } from "./Trial";
 import { TreeSublist } from "./TreeSublist";
 import { AttributeType } from "./AttributeType";
 import dayjs from "dayjs";
 
-export const TrailType = ({ name, data, setData }) => {
+export const TrialType = ({ name, data, setData }) => {
     return (
         <TreeRow
             key={name}
@@ -21,11 +21,11 @@ export const TrailType = ({ name, data, setData }) => {
         >
             <TreeSublist
                 data={data}
-                fieldName='trails'
+                fieldName='trials'
                 nameTemplate='new_trial'
                 setData={setData}
                 component={(name, data, setData) => (
-                    <Trail
+                    <Trial
                         key={name}
                         name={name}
                         data={data}

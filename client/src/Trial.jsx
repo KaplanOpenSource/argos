@@ -1,7 +1,7 @@
 import { DateProperty } from "./DateProperty";
 import { TreeRow } from "./TreeRow";
 
-export const Trail = ({ name, data, setData }) => {
+export const Trial = ({ name, data, setData }) => {
     return (
         <TreeRow
             key={name}
@@ -18,8 +18,8 @@ export const Trail = ({ name, data, setData }) => {
             }
         >
             {/* {
-                (data.trailSet || []).map(e => (
-                    <TrailSet
+                (data.trialSet || []).map(e => (
+                    <TrialSet
                         key={e.name}
                         name={e.name}
                         data={e.data}
