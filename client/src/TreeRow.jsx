@@ -23,21 +23,21 @@ export const TreeRow = ({ name, data, setData, components, children }) => {
                 </Box>
             }
         >
-            <TreeItem
+            {/* <TreeItem
                 key={name + '_desc'}
                 nodeId={name + '_desc'}
-                label={
-                    <TextField
-                        variant="outlined"
-                        size="small"
-                        label="Description"
-                        InputLabelProps={{ shrink: true }}
-                        value={data.description}
-                        onChange={e => setData({ ...data, description: e.target.value })}
-                    />
-                }
+                label={ */}
+            <TextField
+                variant="outlined"
+                size="small"
+                label="Description"
+                InputLabelProps={{ shrink: true }}
+                value={data.description}
+                onChange={e => setData({ ...data, description: e.target.value })}
+            />
+            {/* }
             >
-            </TreeItem>
+            </TreeItem> */}
             {children}
         </TreeItem>
     )

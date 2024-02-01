@@ -1,6 +1,7 @@
 import { FormControlLabel, MenuItem, Select, Switch } from "@mui/material";
 import { DateProperty } from "./DateProperty";
 import { TreeRow } from "./TreeRow";
+import { AttributeValue } from "./AttributeValue";
 
 export const AttributeType = ({ name, data, setData }) => {
     return (
@@ -29,22 +30,15 @@ export const AttributeType = ({ name, data, setData }) => {
                         <MenuItem value={'String'}>String</MenuItem>
                         <MenuItem value={'Number'}>Number</MenuItem>
                     </Select>
-                    {/* <DateProperty data={data} setData={setData}
-                        label="Created Date"
-                        field="createdDate"
-                    /> */}
                 </>
             }
         >
-            {/* {
-                (data.trailSet || []).map(e => (
-                    <TrailSet
-                        key={e.name}
-                        name={e.name}
-                        data={e.data}
-                    />
-                ))
-            } */}
+            <AttributeValue
+                label='Default'
+                type={data.type || 'String'}
+                data={data.defaultValue}
+                setData={val => setData({ ...data, defaultValue: val })}
+            />
         </TreeRow>
     )
 }
