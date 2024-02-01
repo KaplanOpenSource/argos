@@ -1,13 +1,9 @@
 import { useContext } from "react";
 import { experimentContext } from "./ExperimentProvider";
 import { ExperimentRow } from "./ExperimentRow";
-import { Box, List, Typography } from "@mui/material";
-import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import { TreeView } from '@mui/x-tree-view/TreeView';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { DatePicker } from "@mui/x-date-pickers";
-import dayjs from 'dayjs';
 
 export const ExperimentList = ({ }) => {
     const { experiments, setExperiment } = useContext(experimentContext);

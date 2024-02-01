@@ -16,9 +16,20 @@ export const TreeRow = ({ name, data, setData, components, children }) => {
                         // pr: 0,
                     }}
                 >
-                    <Typography variant="body2" sx={{ fontWeight: 'inherit', flexGrow: 1 }}>
+                    {/* <Typography variant="body2"
+                        sx={{ fontWeight: 'inherit', flexGrow: 1 }}
+                    >
                         {name}
-                    </Typography>
+                    </Typography> */}
+                    <TextField
+                        sx={{ padding: '5px' }}
+                        variant="outlined"
+                        size="small"
+                        label="Name"
+                        InputLabelProps={{ shrink: true }}
+                        value={name}
+                        // onChange={e => setName(e.target.value)}
+                    />
                     {components}
                 </Box>
             }
