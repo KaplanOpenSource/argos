@@ -1,4 +1,4 @@
-import { MenuItem, Select } from "@mui/material";
+import { FormControlLabel, MenuItem, Select, Switch } from "@mui/material";
 import { DateProperty } from "./DateProperty";
 import { TreeRow } from "./TreeRow";
 
@@ -11,6 +11,15 @@ export const AttributeType = ({ name, data, setData }) => {
             setData={setData}
             components={
                 <>
+                    <FormControlLabel
+                        label="Required"
+                        control={
+                            <Switch
+                                checked={data.required}
+                                onChange={(e) => setData({ ...data, required: e.target.checked })}
+                            />
+                        }
+                    />
                     <Select
                         value={data.type || 'String'}
                         size="small"
