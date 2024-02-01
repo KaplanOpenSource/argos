@@ -40,10 +40,12 @@ def experimentListReq():
     names = [os.path.splitext(n)[0] for n in names]
     return names
 
+def validate_name(name: str) -> bool:
+    return name is not None and len(name) > 0 and re.match("^[0-9_a-zA-Z]+$", name) 
 
 @app.route("/experiment/<name>")
 def experimentGetReq(name):
-    if re.match("^[0-9_a-zA-Z]+$", name):
+    if validate_name(name):
         if os.path.exists(os.path.join(EXPERIMENTS_PATH, name + ".json")):
             return send_from_directory(EXPERIMENTS_PATH, name + ".json")
     return {"error": "unknown experiment name"}
@@ -51,12 +53,21 @@ def experimentGetReq(name):
 
 @app.route("/experiment_set/<name>", methods=["POST"])
 def experimentSetReq(name):
-    if len(name) > 0 and re.match("^[0-9_a-zA-Z]+$", name):
-        os.makedirs(EXPERIMENTS_PATH, exist_ok=True)
+    if validate_name(name):
         json_data = request.json
-        with open(os.path.join(EXPERIMENTS_PATH, name + ".json"), "w") as file:
-            file.write(json.dumps(json_data, indent=2))
-            return {"ok": True}
+        new_name = json_data['name']
+        if new_name is None:
+            new_name = name
+        if validate_name(new_name):
+            os.makedirs(EXPERIMENTS_PATH, exist_ok=True)
+            str = json.dumps(json_data['data'], indent=2)
+            if new_name != name:
+                oldpath = os.path.join(EXPERIMENTS_PATH, name + ".json")
+                if os.path.exists(oldpath):
+                    os.remove(oldpath)
+            with open(os.path.join(EXPERIMENTS_PATH, new_name + ".json"), "w") as file:
+                file.write(str)
+                return {"ok": True}
     return {"error": "invalid experiment name"}
 
 

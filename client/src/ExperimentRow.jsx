@@ -4,13 +4,16 @@ import { DeviceType } from "./DeviceType";
 import { TreeSublist } from "./TreeSublist";
 import { DateProperty } from "./DateProperty";
 
-export const ExperimentRow = ({ name, data, setData }) => {
+export const ExperimentRow = ({ info, setInfo }) => {
+    const { name, data } = info;
+    const setData = data => {
+        setInfo({ name, data });
+    }
     return (
         <TreeRow
             key={name}
-            name={name}
-            data={data}
-            setData={setData}
+            info={info}
+            setInfo={setInfo}
             components={
                 <>
                     <DateProperty data={data} setData={setData}

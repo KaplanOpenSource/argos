@@ -23,9 +23,8 @@ export const ExperimentList = ({ }) => {
             {
                 experiments.map(e => (
                     <ExperimentRow key={e.name}
-                        name={e.name}
-                        data={e.data}
-                        setData={newData => setExperiment(e.name, newData)}
+                        info={e}
+                        setInfo={val => setExperiment(e.name, val.data, val.name)}
                     />
                 ))
             }

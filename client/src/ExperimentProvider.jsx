@@ -44,14 +44,15 @@ export const ExperimentProvider = ({ children }) => {
         }
     }
 
-    const setExperiment = async (name, data) => {
+    const setExperiment = async (name, data, newName = undefined) => {
+        const info = { name: newName ? newName : name, data };
         const resp = await fetch("http://127.0.0.1:8080/experiment_set/" + name, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(data)
+            body: JSON.stringify(info)
         });
         const json = await resp.json();
         if ((json || {}).error) {
@@ -60,13 +61,12 @@ export const ExperimentProvider = ({ children }) => {
         }
 
         setExperiments(prev => {
-            const exp = { name, data };
             const i = prev.findIndex(t => t.name === name);
             if (i < 0) {
-                return [...prev, exp];
+                return [...prev, info];
             } else {
                 const next = [...prev];
-                next[i] = exp;
+                next[i] = info;
                 return next;
             }
         });
