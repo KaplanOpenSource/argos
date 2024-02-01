@@ -3,7 +3,7 @@ import AddIcon from '@mui/icons-material/Add';
 
 import { camelCaseToWords } from "./utils";
 
-export const TreeSublist = ({ nameTemplate, fieldName, data, setData, component }) => {
+export const TreeSublist = ({ nameTemplate, fieldName, data, setData, component, newDataCreator }) => {
     const items = data[fieldName] || [];
     const setItems = val => {
         setData({ ...data, [fieldName]: val });
@@ -56,7 +56,10 @@ export const TreeSublist = ({ nameTemplate, fieldName, data, setData, component 
                             alignItems: 'flex-start',
                         }}
                         color="inherit"
-                        onClick={() => setItemData(newName(), {})}
+                        onClick={() => {
+                            const data = newDataCreator ? newDataCreator() : {};
+                            setItemData(newName(), data);
+                        }}
                     >
                         <AddIcon />
                     </IconButton>

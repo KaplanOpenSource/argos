@@ -5,6 +5,7 @@ import { TreeRow } from "./TreeRow";
 import { Trail } from "./Trail";
 import { TreeSublist } from "./TreeSublist";
 import { AttributeType } from "./AttributeType";
+import dayjs from "dayjs";
 
 export const TrailType = ({ name, data, setData }) => {
     return (
@@ -31,6 +32,11 @@ export const TrailType = ({ name, data, setData }) => {
                         setData={setData}
                     />
                 )}
+                newDataCreator={() => {
+                    return {
+                        createdDate: dayjs().startOf('day'),
+                    }
+                }}
             />
             <TreeSublist
                 data={data}
