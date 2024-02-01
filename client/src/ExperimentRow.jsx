@@ -1,12 +1,8 @@
-import { Box, IconButton, Typography } from "@mui/material";
-import AddIcon from '@mui/icons-material/Add';
-
-import dayjs from 'dayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { TrailSet } from "./TrailSet";
 import { TreeRow } from "./TreeRow";
 import { EntityType } from "./EntityType";
 import { TreeSublist } from "./TreeSublist";
+import { DateProperty } from "./DateProperty";
 
 export const ExperimentRow = ({ name, data, setData }) => {
     return (
@@ -17,17 +13,13 @@ export const ExperimentRow = ({ name, data, setData }) => {
             setData={setData}
             components={
                 <>
-                    <DatePicker
+                    <DateProperty data={data} setData={setData}
                         label="Start Date"
-                        format='DD/MM/YYYY'
-                        value={dayjs(data.startDate)}
-                        onChange={(val) => setData({ ...data, startDate: val })}
+                        field="startDate"
                     />
-                    <DatePicker
+                    <DateProperty data={data} setData={setData}
                         label="End Date"
-                        format='DD/MM/YYYY'
-                        value={dayjs(data.endDate)}
-                        onChange={(val) => setData({ ...data, endDate: val })}
+                        field="endDate"
                     />
                 </>
             }

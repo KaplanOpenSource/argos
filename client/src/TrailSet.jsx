@@ -2,6 +2,8 @@ import { Box, Collapse, IconButton, List, ListItem, ListItemButton, ListItemIcon
 import AddIcon from '@mui/icons-material/Add';
 import { TreeItem } from "@mui/x-tree-view/TreeItem";
 import { TreeRow } from "./TreeRow";
+import { Trail } from "./Trail";
+import { TreeSublist } from "./TreeSublist";
 
 export const TrailSet = ({ name, data, setData }) => {
     return (
@@ -15,15 +17,20 @@ export const TrailSet = ({ name, data, setData }) => {
                 </>
             }
         >
-            {/* {
-                (data.trailSet || []).map(e => (
-                    <TrailSet
-                        key={e.name}
-                        name={e.name}
-                        data={e.data}
+            <TreeSublist
+                data={data}
+                fieldName='trail'
+                nameTemplate='new_trial'
+                setData={setData}
+                component={(name, data, setData) => (
+                    <Trail
+                        key={name}
+                        name={name}
+                        data={data}
+                        setData={setData}
                     />
-                ))
-            } */}
+                )}
+            />
         </TreeRow>
     )
 }
