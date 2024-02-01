@@ -19,7 +19,7 @@ export const TrialType = ({ name, data, setData }) => {
                 </>
             }
         >
-            <TreeSublist
+            {/* <TreeSublist
                 data={data}
                 fieldName='trials'
                 nameTemplate='new_trial'
@@ -51,7 +51,7 @@ export const TrialType = ({ name, data, setData }) => {
                         setData={setData}
                     />
                 )}
-            />
+            /> */}
         </TreeRow>
     )
 }
