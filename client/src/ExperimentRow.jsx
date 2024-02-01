@@ -42,8 +42,8 @@ export const ExperimentRow = ({ name, data, setData }) => {
 
             <TreeSublist
                 data={data}
-                fieldName='entityTypes'
-                nameTemplate='new_entity_type'
+                fieldName='deviceTypes'
+                nameTemplate='new_device_type'
                 setData={setData}
                 component={(name, data, setData) => (
                     <DeviceType
