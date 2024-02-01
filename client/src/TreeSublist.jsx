@@ -43,7 +43,10 @@ export const TreeSublist = ({ nameTemplate, fieldName, data, setData, component 
                     // pr: 0,
                 }}
             >
-                <Typography variant="body2" sx={{ fontWeight: 'inherit', flexGrow: 1 }}>
+                <Typography variant="body2" sx={{
+                    fontWeight: 'inherit',
+                    //  flexGrow: 1
+                }}>
                     {fieldName}
                 </Typography>
                 <IconButton

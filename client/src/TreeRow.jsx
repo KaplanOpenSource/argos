@@ -22,12 +22,10 @@ export const TreeRow = ({ name, data, setData, components, children }) => {
                     {components}
                 </Box>
             }
+            sx={{ padding: '5px' }}
         >
-            {/* <TreeItem
-                key={name + '_desc'}
-                nodeId={name + '_desc'}
-                label={ */}
             <TextField
+                sx={{ padding: '5px' }}
                 variant="outlined"
                 size="small"
                 label="Description"
@@ -35,9 +33,6 @@ export const TreeRow = ({ name, data, setData, components, children }) => {
                 value={data.description}
                 onChange={e => setData({ ...data, description: e.target.value })}
             />
-            {/* }
-            >
-            </TreeItem> */}
             {children}
         </TreeItem>
     )

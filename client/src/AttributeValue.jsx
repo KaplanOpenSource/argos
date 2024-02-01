@@ -6,6 +6,7 @@ export const AttributeValue = ({ type, label, data, setData }) => {
     if (type === 'Number') {
         return (
             <TextField
+                sx={{ padding: '5px' }}
                 variant='outlined'
                 label={label}
                 type="number"
@@ -19,6 +20,7 @@ export const AttributeValue = ({ type, label, data, setData }) => {
     if (type === 'String') {
         return (
             <TextField
+                sx={{ padding: '5px' }}
                 variant='outlined'
                 label={label}
                 size='small'
