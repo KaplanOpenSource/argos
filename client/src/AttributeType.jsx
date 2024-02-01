@@ -3,11 +3,10 @@ import { DateProperty } from "./DateProperty";
 import { TreeRow } from "./TreeRow";
 import { AttributeValue } from "./AttributeValue";
 
-export const AttributeType = ({ name, data, setData }) => {
+export const AttributeType = ({ data, setData }) => {
     return (
         <TreeRow
-            key={name}
-            name={name}
+            key={data.name}
             data={data}
             setData={setData}
             components={

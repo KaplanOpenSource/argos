@@ -3,11 +3,10 @@ import AddIcon from '@mui/icons-material/Add';
 import { TreeItem } from "@mui/x-tree-view/TreeItem";
 import { TreeRow } from "./TreeRow";
 
-export const DeviceItem = ({ name, data, setData }) => {
+export const DeviceItem = ({ data, setData }) => {
     return (
         <TreeRow
-            key={name}
-            name={name}
+            key={data.name}
             data={data}
             setData={setData}
             components={

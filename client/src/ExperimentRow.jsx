@@ -38,20 +38,19 @@ export const ExperimentRow = ({ data, setData }) => {
                 )}
             />
 
-            {/* <TreeSublist
+            <TreeSublist
                 data={data}
                 fieldName='deviceTypes'
-                nameTemplate='new_device_type'
+                nameTemplate='New Device Type'
                 setData={setData}
-                component={(name, data, setData) => (
+                component={(data, setData) => (
                     <DeviceType
-                        key={name}
-                        name={name}
+                        key={data.name}
                         data={data}
                         setData={setData}
                     />
                 )}
-            /> */}
+            />
         </TreeRow>
     )
 }

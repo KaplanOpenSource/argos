@@ -6,11 +6,10 @@ import { DeviceItem } from "./DeviceItem";
 import { TreeSublist } from "./TreeSublist";
 import { AttributeType } from "./AttributeType";
 
-export const DeviceType = ({ name, data, setData }) => {
+export const DeviceType = ({ data, setData }) => {
     return (
         <TreeRow
-            key={name}
-            name={name}
+            key={data.name}
             data={data}
             setData={setData}
             components={
@@ -21,12 +20,11 @@ export const DeviceType = ({ name, data, setData }) => {
             <TreeSublist
                 data={data}
                 fieldName='devices'
-                nameTemplate='new_device'
+                nameTemplate='New Device'
                 setData={setData}
-                component={(name, data, setData) => (
+                component={(data, setData) => (
                     <DeviceItem
-                        key={name}
-                        name={name}
+                        key={data.name}
                         data={data}
                         setData={setData}
                     />
@@ -36,12 +34,11 @@ export const DeviceType = ({ name, data, setData }) => {
             <TreeSublist
                 data={data}
                 fieldName='attributeTypes'
-                nameTemplate='new_attribute_type'
+                nameTemplate='New Attribute Type'
                 setData={setData}
-                component={(name, data, setData) => (
+                component={(data, setData) => (
                     <AttributeType
-                        key={name}
-                        name={name}
+                        key={data.name}
                         data={data}
                         setData={setData}
                     />
