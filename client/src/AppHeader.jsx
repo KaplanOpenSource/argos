@@ -1,8 +1,7 @@
 import MenuIcon from '@mui/icons-material/Menu';
 import AddIcon from '@mui/icons-material/Add';
 import {
-    AppBar, IconButton, Toolbar, Typography, Button, List, ListItemButton, ListItemIcon, ListItemText
-} from '@mui/material';
+    AppBar, IconButton, Toolbar, Typography} from '@mui/material';
 import { experimentContext } from './ExperimentProvider';
 import { useContext } from 'react';
 

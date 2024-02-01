@@ -1,6 +1,3 @@
-import { Box, Collapse, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, TextField, Typography } from "@mui/material"
-import AddIcon from '@mui/icons-material/Add';
-import { TreeItem } from "@mui/x-tree-view/TreeItem";
 import { TreeRow } from "./TreeRow";
 import { Trial } from "./Trial";
 import { TreeSublist } from "./TreeSublist";
@@ -18,15 +15,14 @@ export const TrialType = ({ data, setData }) => {
                 </>
             }
         >
-            {/* <TreeSublist
+            <TreeSublist
                 data={data}
                 fieldName='trials'
-                nameTemplate='new_trial'
+                nameTemplate='New Trial'
                 setData={setData}
-                component={(name, data, setData) => (
+                component={(data, setData) => (
                     <Trial
-                        key={name}
-                        name={name}
+                        key={data.name}
                         data={data}
                         setData={setData}
                     />
@@ -37,20 +33,21 @@ export const TrialType = ({ data, setData }) => {
                     }
                 }}
             />
+
             <TreeSublist
                 data={data}
                 fieldName='attributeTypes'
-                nameTemplate='new_attribute_type'
+                nameTemplate='New Attribute Type'
                 setData={setData}
-                component={(name, data, setData) => (
+                component={(data, setData) => (
                     <AttributeType
-                        key={name}
-                        name={name}
+                        key={data.name}
                         data={data}
                         setData={setData}
                     />
                 )}
-            /> */}
+            />
+
         </TreeRow>
     )
 }

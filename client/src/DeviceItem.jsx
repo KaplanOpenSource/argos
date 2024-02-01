@@ -1,6 +1,3 @@
-import { Box, Collapse, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, TextField, Typography } from "@mui/material"
-import AddIcon from '@mui/icons-material/Add';
-import { TreeItem } from "@mui/x-tree-view/TreeItem";
 import { TreeRow } from "./TreeRow";
 
 export const DeviceItem = ({ data, setData }) => {

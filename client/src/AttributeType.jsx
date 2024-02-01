@@ -1,5 +1,4 @@
 import { FormControlLabel, MenuItem, Select, Switch } from "@mui/material";
-import { DateProperty } from "./DateProperty";
 import { TreeRow } from "./TreeRow";
 import { AttributeValue } from "./AttributeValue";
 
