@@ -33,14 +33,22 @@ export const ExperimentProvider = ({ children }) => {
     }
 
     const addExperiment = async () => {
-        const name = prompt('Experiment name');
-        if (name && /^[0-9_a-zA-Z]+$/g.test(name)) {
-            const data = {
-                startDate: dayjs().startOf('day'),
-                endDate: dayjs().startOf('day').add(7, 'day'),
-                description: ''
-            };
-            setExperiment(name, data);
+        const data = {
+            startDate: dayjs().startOf('day'),
+            endDate: dayjs().startOf('day').add(7, 'day'),
+            description: ''
+        };
+
+        const nameTemplate = 'New_experiment';
+        if (!experiments.find(t => t.name === nameTemplate)) {
+            setExperiment(nameTemplate, data);
+        } else {
+            for (let i = 1; ; ++i) {
+                if (!experiments.find(t => t.name === nameTemplate + '_' + i)) {
+                    setExperiment(nameTemplate + '_' + i, data);
+                    break;
+                }
+            }
         }
     }
 
