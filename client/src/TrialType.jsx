@@ -7,12 +7,12 @@ import { TreeSublist } from "./TreeSublist";
 import { AttributeType } from "./AttributeType";
 import dayjs from "dayjs";
 
-export const TrialType = ({ nameData, setNameData }) => {
+export const TrialType = ({ data, setData }) => {
     return (
         <TreeRow
-            key={nameData.name}
-            nameData={nameData}
-            setNameData={setNameData}
+            key={data.name}
+            data={data}
+            setData={setData}
             components={
                 <>
                 </>
