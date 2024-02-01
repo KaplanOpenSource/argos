@@ -1,3 +1,4 @@
+import { MenuItem, Select } from "@mui/material";
 import { DateProperty } from "./DateProperty";
 import { TreeRow } from "./TreeRow";
 
@@ -10,6 +11,15 @@ export const AttributeType = ({ name, data, setData }) => {
             setData={setData}
             components={
                 <>
+                    <Select
+                        value={data.type || 'String'}
+                        size="small"
+                        label="Type"
+                        onChange={(e) => setData({ ...data, type: e.target.value })}
+                    >
+                        <MenuItem value={'String'}>String</MenuItem>
+                        <MenuItem value={'Number'}>Number</MenuItem>
+                    </Select>
                     {/* <DateProperty data={data} setData={setData}
                         label="Created Date"
                         field="createdDate"
