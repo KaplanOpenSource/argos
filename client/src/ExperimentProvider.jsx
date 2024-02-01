@@ -58,7 +58,18 @@ export const ExperimentProvider = ({ children }) => {
             alert(json.error);
             return;
         }
-        setExperiments(prev => [...prev.filter(p => p.name !== name), { name, data }]);
+
+        setExperiments(prev => {
+            const exp = { name, data };
+            const i = prev.findIndex(t => t.name === name);
+            if (i < 0) {
+                return [...prev, exp];
+            } else {
+                const next = [...prev];
+                next[i] = exp;
+                return next;
+            }
+        });
     }
 
     useEffect(() => {

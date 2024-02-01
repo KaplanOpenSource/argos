@@ -1,11 +1,6 @@
 import { Box, IconButton, Tooltip, Typography } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 
-import dayjs from 'dayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { TrailType } from "./TrailType";
-import { TreeRow } from "./TreeRow";
-import { DeviceType } from "./DeviceType";
 import { camelCaseToWords } from "./utils";
 
 export const TreeSublist = ({ nameTemplate, fieldName, data, setData, component }) => {
@@ -34,7 +29,7 @@ export const TreeSublist = ({ nameTemplate, fieldName, data, setData, component 
     }
 
     const label = camelCaseToWords(fieldName);
-    
+
     return (
         <>
             <Box
