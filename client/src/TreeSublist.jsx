@@ -3,7 +3,7 @@ import AddIcon from '@mui/icons-material/Add';
 
 import dayjs from 'dayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { TrailSet } from "./TrailSet";
+import { TrailType } from "./TrailType";
 import { TreeRow } from "./TreeRow";
 import { DeviceType } from "./DeviceType";
 

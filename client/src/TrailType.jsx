@@ -6,7 +6,7 @@ import { Trail } from "./Trail";
 import { TreeSublist } from "./TreeSublist";
 import { AttributeType } from "./AttributeType";
 
-export const TrailSet = ({ name, data, setData }) => {
+export const TrailType = ({ name, data, setData }) => {
     return (
         <TreeRow
             key={name}
