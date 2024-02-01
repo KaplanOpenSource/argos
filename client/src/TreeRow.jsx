@@ -29,6 +29,7 @@ export const TreeRow = ({ name, data, setData, components, children }) => {
                 label={
                     <TextField
                         variant="outlined"
+                        size="small"
                         label="Description"
                         InputLabelProps={{ shrink: true }}
                         value={data.description}
