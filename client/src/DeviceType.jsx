@@ -20,7 +20,7 @@ export const DeviceType = ({ name, data, setData }) => {
         >
             <TreeSublist
                 data={data}
-                fieldName='device'
+                fieldName='devices'
                 nameTemplate='new_device'
                 setData={setData}
                 component={(name, data, setData) => (
@@ -35,7 +35,7 @@ export const DeviceType = ({ name, data, setData }) => {
 
             <TreeSublist
                 data={data}
-                fieldName='attributeType'
+                fieldName='attributeTypes'
                 nameTemplate='new_attribute_type'
                 setData={setData}
                 component={(name, data, setData) => (

@@ -21,6 +21,7 @@ export const ExperimentList = ({ }) => {
                 // maxWidth: 400,
                 overflowY: 'auto'
             }}
+            disableSelection
         >
             {
                 experiments.map(e => (

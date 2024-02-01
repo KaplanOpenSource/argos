@@ -20,7 +20,7 @@ export const TrailType = ({ name, data, setData }) => {
         >
             <TreeSublist
                 data={data}
-                fieldName='trail'
+                fieldName='trails'
                 nameTemplate='new_trial'
                 setData={setData}
                 component={(name, data, setData) => (
@@ -34,7 +34,7 @@ export const TrailType = ({ name, data, setData }) => {
             />
             <TreeSublist
                 data={data}
-                fieldName='attributeType'
+                fieldName='attributeTypes'
                 nameTemplate='new_attribute_type'
                 setData={setData}
                 component={(name, data, setData) => (

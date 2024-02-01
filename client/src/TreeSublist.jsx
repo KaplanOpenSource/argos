@@ -1,4 +1,4 @@
-import { Box, IconButton, Typography } from "@mui/material";
+import { Box, IconButton, Tooltip, Typography } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 
 import dayjs from 'dayjs';
@@ -6,6 +6,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { TrailType } from "./TrailType";
 import { TreeRow } from "./TreeRow";
 import { DeviceType } from "./DeviceType";
+import { camelCaseToWords } from "./utils";
 
 export const TreeSublist = ({ nameTemplate, fieldName, data, setData, component }) => {
     const items = data[fieldName] || [];
@@ -32,6 +33,8 @@ export const TreeSublist = ({ nameTemplate, fieldName, data, setData, component 
         setItems(theItems);
     }
 
+    const label = camelCaseToWords(fieldName);
+    
     return (
         <>
             <Box
@@ -47,20 +50,22 @@ export const TreeSublist = ({ nameTemplate, fieldName, data, setData, component 
                     fontWeight: 'inherit',
                     //  flexGrow: 1
                 }}>
-                    {fieldName}
+                    {label}
                 </Typography>
-                <IconButton
-                    sx={{
-                        display: 'flex',
-                        alignSelf: 'flex-start',
-                        alignContent: 'flex-start',
-                        alignItems: 'flex-start',
-                    }}
-                    color="inherit"
-                    onClick={() => setItemData(newName(), {})}
-                >
-                    <AddIcon />
-                </IconButton>
+                <Tooltip title="Add New" placement="right">
+                    <IconButton
+                        sx={{
+                            display: 'flex',
+                            alignSelf: 'flex-start',
+                            alignContent: 'flex-start',
+                            alignItems: 'flex-start',
+                        }}
+                        color="inherit"
+                        onClick={() => setItemData(newName(), {})}
+                    >
+                        <AddIcon />
+                    </IconButton>
+                </Tooltip>
             </Box>
             {
                 items.map(e => (
