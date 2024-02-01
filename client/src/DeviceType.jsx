@@ -4,6 +4,7 @@ import { TreeItem } from "@mui/x-tree-view/TreeItem";
 import { TreeRow } from "./TreeRow";
 import { DeviceItem } from "./DeviceItem";
 import { TreeSublist } from "./TreeSublist";
+import { AttributeType } from "./AttributeType";
 
 export const DeviceType = ({ name, data, setData }) => {
     return (
@@ -31,6 +32,22 @@ export const DeviceType = ({ name, data, setData }) => {
                     />
                 )}
             />
+
+            <TreeSublist
+                data={data}
+                fieldName='attributeType'
+                nameTemplate='new_attribute_type'
+                setData={setData}
+                component={(name, data, setData) => (
+                    <AttributeType
+                        key={name}
+                        name={name}
+                        data={data}
+                        setData={setData}
+                    />
+                )}
+            />
+
         </TreeRow>
     )
 }

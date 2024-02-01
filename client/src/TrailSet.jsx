@@ -4,6 +4,7 @@ import { TreeItem } from "@mui/x-tree-view/TreeItem";
 import { TreeRow } from "./TreeRow";
 import { Trail } from "./Trail";
 import { TreeSublist } from "./TreeSublist";
+import { AttributeType } from "./AttributeType";
 
 export const TrailSet = ({ name, data, setData }) => {
     return (
@@ -24,6 +25,20 @@ export const TrailSet = ({ name, data, setData }) => {
                 setData={setData}
                 component={(name, data, setData) => (
                     <Trail
+                        key={name}
+                        name={name}
+                        data={data}
+                        setData={setData}
+                    />
+                )}
+            />
+            <TreeSublist
+                data={data}
+                fieldName='attributeType'
+                nameTemplate='new_attribute_type'
+                setData={setData}
+                component={(name, data, setData) => (
+                    <AttributeType
                         key={name}
                         name={name}
                         data={data}
