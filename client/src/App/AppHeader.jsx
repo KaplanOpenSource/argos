@@ -4,7 +4,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import {
     AppBar, Button, IconButton, Toolbar, Typography
 } from '@mui/material';
-import { experimentContext } from './ExperimentProvider';
+import { experimentContext } from '../Experiment/ExperimentProvider';
 import { useContext } from 'react';
 
 export const AppHeader = ({ }) => {
@@ -40,7 +40,10 @@ export const AppHeader = ({ }) => {
                             <IconButton
                                 edge="start"
                                 color="inherit"
-                                onClick={() => setCurrTrial()}
+                                onClick={() => {
+                                    setCurrTrial();
+                                    setShowExperiments(true);
+                                }}
                             >
                                 <CloseIcon />
                             </IconButton>

@@ -1,7 +1,7 @@
 import { Button } from "@mui/material";
-import { DateProperty } from "./DateProperty";
-import { TreeRow } from "./TreeRow";
-import { experimentContext } from "./ExperimentProvider";
+import { DateProperty } from "../Utils/DateProperty";
+import { TreeRow } from "../App/TreeRow";
+import { experimentContext } from "../Experiment/ExperimentProvider";
 import { useContext } from "react";
 
 export const Trial = ({ data, setData, experimentName, trialTypeName }) => {

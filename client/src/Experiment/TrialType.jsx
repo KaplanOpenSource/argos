@@ -1,6 +1,6 @@
-import { TreeRow } from "./TreeRow";
+import { TreeRow } from "../App/TreeRow";
 import { Trial } from "./Trial";
-import { TreeSublist } from "./TreeSublist";
+import { TreeSublist } from "../App/TreeSublist";
 import { AttributeType } from "./AttributeType";
 import dayjs from "dayjs";
 

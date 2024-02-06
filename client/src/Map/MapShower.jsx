@@ -14,15 +14,17 @@ export const MapShower = ({ children }) => {
             }}
             crs={CRS.EPSG3857}
             // bounds={posbounds}
-            center={[51.505, -0.09]}
+            center={[32.081128, 34.779729]}
             zoomControl={false}
             minZoom={-6}
             maxZoom={30}
             contextmenu={true}
         >
             <TileLayer
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                attribution='&copy; <a href="https://carto.com">Carto</a> contributors'
+                url='https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}.png'
+                // attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                // url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
             <ZoomControl position='bottomright' />
             {children}

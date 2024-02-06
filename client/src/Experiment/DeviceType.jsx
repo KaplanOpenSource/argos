@@ -1,6 +1,6 @@
-import { TreeRow } from "./TreeRow";
+import { TreeRow } from "../App/TreeRow";
 import { DeviceItem } from "./DeviceItem";
-import { TreeSublist } from "./TreeSublist";
+import { TreeSublist } from "../App/TreeSublist";
 import { AttributeType } from "./AttributeType";
 
 export const DeviceType = ({ data, setData }) => {

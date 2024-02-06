@@ -1,6 +1,6 @@
 import { createContext, useEffect, useState } from "react"
 import dayjs from 'dayjs';
-import { createNewName } from "./utils";
+import { createNewName } from "../Utils/utils";
 
 export const experimentContext = createContext();
 

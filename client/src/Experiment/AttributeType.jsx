@@ -1,5 +1,5 @@
 import { FormControlLabel, MenuItem, Select, Switch } from "@mui/material";
-import { TreeRow } from "./TreeRow";
+import { TreeRow } from "../App/TreeRow";
 import { AttributeValue } from "./AttributeValue";
 
 export const AttributeType = ({ data, setData }) => {

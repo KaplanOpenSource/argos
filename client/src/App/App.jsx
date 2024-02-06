@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { AppHeader } from './AppHeader';
-import { ExperimentProvider } from './ExperimentProvider';
-import { ExperimentList } from './ExperimentList';
-import { MapShower } from './MapShower';
+import { ExperimentProvider } from '../Experiment/ExperimentProvider';
+import { ExperimentList } from '../Experiment/ExperimentList';
+import { MapShower } from '../Map/MapShower';
 import { useState } from 'react';
 
-function App() {
+export function App() {
   return (
     <ExperimentProvider>
 
@@ -28,4 +28,3 @@ function App() {
   )
 }
 
-export default App

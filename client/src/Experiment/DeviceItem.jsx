@@ -1,4 +1,4 @@
-import { TreeRow } from "./TreeRow";
+import { TreeRow } from "../App/TreeRow";
 
 export const DeviceItem = ({ data, setData }) => {
     return (

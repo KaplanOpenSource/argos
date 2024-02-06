@@ -1,7 +1,7 @@
 import { Box, IconButton, Tooltip, Typography } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 
-import { camelCaseToWords, createNewName } from "./utils";
+import { camelCaseToWords, createNewName } from "../Utils/utils";
 import { TreeItem } from "@mui/x-tree-view/TreeItem";
 
 export const TreeSublist = ({ nameTemplate, fieldName, data, setData, component, newDataCreator, parentKey }) => {

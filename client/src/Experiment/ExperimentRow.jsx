@@ -1,8 +1,8 @@
 import { TrialType } from "./TrialType";
-import { TreeRow } from "./TreeRow";
+import { TreeRow } from "../App/TreeRow";
 import { DeviceType } from "./DeviceType";
-import { TreeSublist } from "./TreeSublist";
-import { DateProperty } from "./DateProperty";
+import { TreeSublist } from "../App/TreeSublist";
+import { DateProperty } from "../Utils/DateProperty";
 
 export const ExperimentRow = ({ data, setData }) => {
     return (

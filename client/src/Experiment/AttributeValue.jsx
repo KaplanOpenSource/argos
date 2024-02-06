@@ -1,6 +1,6 @@
 import { FormControlLabel, MenuItem, Select, Switch, TextField } from "@mui/material";
-import { DateProperty } from "./DateProperty";
-import { TreeRow } from "./TreeRow";
+import { DateProperty } from "../Utils/DateProperty";
+import { TreeRow } from "../App/TreeRow";
 
 export const AttributeValue = ({ type, label, data, setData }) => {
     if (type === 'Number') {
