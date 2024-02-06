@@ -3,6 +3,7 @@ import { AppHeader } from './AppHeader';
 import { ExperimentProvider } from './ExperimentProvider';
 import { ExperimentList } from './ExperimentList';
 import { MapShower } from './MapShower';
+import { useState } from 'react';
 
 function App() {
   return (
@@ -17,13 +18,11 @@ function App() {
       />
       <ExperimentList
       />
-      {/* <div id='map'> */}
       <MapShower
       // style={{ height: '100px' }}
       >
 
       </MapShower>
-      {/* </div> */}
       {/* </div> */}
     </ExperimentProvider>
   )

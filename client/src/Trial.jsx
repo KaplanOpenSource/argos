@@ -5,7 +5,7 @@ import { experimentContext } from "./ExperimentProvider";
 import { useContext } from "react";
 
 export const Trial = ({ data, setData, experimentName, trialTypeName }) => {
-    const { setCurrTrial } = useContext(experimentContext);
+    const { setCurrTrial, setShowExperiments } = useContext(experimentContext);
     return (
         <TreeRow
             key={data.name}
@@ -20,6 +20,7 @@ export const Trial = ({ data, setData, experimentName, trialTypeName }) => {
                     <Button
                         onClick={() => {
                             setCurrTrial({ experimentName, trialTypeName, trialName: data.name });
+                            setShowExperiments(false);
                         }}
                     >
                         Edit

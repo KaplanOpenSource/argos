@@ -7,8 +7,11 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { Paper } from "@mui/material";
 
 export const ExperimentList = ({ }) => {
-    const { experiments, setExperiment } = useContext(experimentContext);
+    const { experiments, setExperiment, showExperiments } = useContext(experimentContext);
 
+    if (!showExperiments) {
+        return null;
+    }
     return (
         <Paper
             style={{
