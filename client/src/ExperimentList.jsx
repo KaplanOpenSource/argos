@@ -4,47 +4,64 @@ import { ExperimentRow } from "./ExperimentRow";
 import { TreeView } from '@mui/x-tree-view/TreeView';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { Paper } from "@mui/material";
+import AddIcon from '@mui/icons-material/Add';
+import { Button, IconButton, Paper, Typography } from "@mui/material";
 
 export const ExperimentList = ({ }) => {
-    const { experiments, setExperiment, showExperiments } = useContext(experimentContext);
+    const { experiments, setExperiment, addExperiment, showExperiments, setShowExperiments } = useContext(experimentContext);
 
-    if (!showExperiments) {
-        return null;
-    }
     return (
         <Paper
             style={{
                 zIndex: 1000,
                 position: 'relative',
-                // right: '4px',
-                // left: '4px',
+                maxWidth: showExperiments ? undefined : 'fit-content',
+                right: showExperiments ? '0px' : undefined,
+                left: 0,
                 top: '-5px',
+                margin: '10px',
             }}
         >
-            <TreeView
-                defaultCollapseIcon={<ExpandMoreIcon />}
-                defaultExpandIcon={<ChevronRightIcon />}
-                sx={{
-                    // height: 240,
-                    // flexGrow: 1,
-                    // maxWidth: 400,
-                    // overflowY: 'auto',
-                }}
-                // style={{
-                //     zIndex:1000
-                // }}
-                disableSelection
+            <Button
+                onClick={() => setShowExperiments(!showExperiments)}
             >
-                {
-                    experiments.map(e => (
-                        <ExperimentRow key={e.name}
-                            data={e}
-                            setData={val => setExperiment(e.name, val)}
-                        />
-                    ))
-                }
-            </TreeView>
+                Experiments
+            </Button>
+            <IconButton
+                edge="start"
+                color="inherit"
+                onClick={() => {
+                    addExperiment();
+                    setShowExperiments(true);
+                }}
+            >
+                <AddIcon />
+            </IconButton>
+            {showExperiments &&
+                <TreeView
+                    defaultCollapseIcon={<ExpandMoreIcon />}
+                    defaultExpandIcon={<ChevronRightIcon />}
+                    sx={{
+                        // height: 240,
+                        // flexGrow: 1,
+                        // maxWidth: 400,
+                        // overflowY: 'auto',
+                    }}
+                    // style={{
+                    //     zIndex:1000
+                    // }}
+                    disableSelection
+                >
+                    {
+                        experiments.map(e => (
+                            <ExperimentRow key={e.name}
+                                data={e}
+                                setData={val => setExperiment(e.name, val)}
+                            />
+                        ))
+                    }
+                </TreeView>
+            }
         </Paper>
     )
 }

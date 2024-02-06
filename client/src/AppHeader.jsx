@@ -29,14 +29,14 @@ export const AppHeader = ({ }) => {
                 {
                     currTrial.trialName
                         ? <>
-                            <Button
+                            {/* <Button
                                 color="inherit"
                                 variant='outlined'
                                 style={{ marginRight: 10 }}
                                 onClick={() => setShowExperiments(!showExperiments)}
                             >
                                 {showExperiments ? 'Hide' : 'Show'} Experiments
-                            </Button>
+                            </Button> */}
                             <IconButton
                                 edge="start"
                                 color="inherit"
@@ -55,13 +55,13 @@ export const AppHeader = ({ }) => {
                         : null
                 }
                 {/* <Button color="inherit">Login</Button> */}
-                <IconButton
+                {/* <IconButton
                     edge="start"
                     color="inherit"
                     onClick={() => addExperiment()}
                 >
                     <AddIcon />
-                </IconButton>
+                </IconButton> */}
             </Toolbar>
         </AppBar>
     )
