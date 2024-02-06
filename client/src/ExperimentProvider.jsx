@@ -8,6 +8,7 @@ export const experimentContext = createContext();
 
 export const ExperimentProvider = ({ children }) => {
     const [experiments, setExperiments] = useState([]);
+    const [currTrialInternal, setCurrTrialInternal] = useState();
 
     const getExperimentList = async () => {
         const resp = await fetch("http://127.0.0.1:8080/experiment_list");
@@ -77,12 +78,75 @@ export const ExperimentProvider = ({ children }) => {
         });
     }
 
+    // const replace = (arr, index, data) => {
+    //     const newArr = [...arr];
+    //     newArr[index >= 0 ? index : newArr.length] = data;
+    //     return newArr
+    // }
+
+    // const findTrial = ({ experimentName, trialTypeName, trialName }) => {
+    //     const ie = experiments.findIndex(t => t.name === experimentName);
+    //     if (!experiments) return {}
+    //     if (!)
+    // }
+    const currTrial = currTrialInternal
+        ? {
+            experimentName: currTrialInternal.experimentName,
+            trialTypeName: currTrialInternal.trialTypeName,
+            trialName: currTrialInternal.trialName,
+        }
+        : {};
+
+    const setCurrTrial = ({ experimentName, trialTypeName, trialName }) => {
+        const experimentIndex = experiments.findIndex(t => t.name === experimentName);
+        if (experimentIndex >= 0) {
+            const experiment = experiments[experimentIndex];
+            const trialTypeIndex = experiment.trialTypes.findIndex(t => t.name === trialTypeName);
+            if (trialTypeIndex >= 0) {
+                const trialType = experiment.trialTypes[trialTypeIndex];
+                const trialIndex = trialType.trials.findIndex(t => t.name === trialName);
+                if (trialIndex >= 0) {
+                    const trial = trialType.trials[trialIndex];
+                    setCurrTrialInternal({
+                        experimentName, experimentIndex, experiment,
+                        trialTypeName, trialTypeIndex, trialType,
+                        trialName, trialIndex, trial,
+                    });
+                }
+            }
+        }
+    }
+
+    const trialData = currTrialInternal
+        ? experiments[currTrialInternal.experimentIndex]
+            .trialTypes[currTrialInternal.trialTypeIndex]
+            .trial[currTrialInternal.trialIndex]
+        : undefined;
+
+    const setTrialData = async (data) => {
+        if (!currTrialInternal) {
+            console.log(`trying to set trial data without current trial\n`, data);
+            return;
+        }
+        const e = JSON.parse(JSON.stringify(currTrialInternal.experiment));
+        e.trialTypes[currTrialInternal.trialTypeIndex].trial[currTrialInternal.trialIndex] = data;
+        setExperiment(currTrialInternal.experimentName, e)
+    }
+
     useEffect(() => {
         getExperimentList();
     }, [])
 
     const store = {
-        experiments, setExperiments, setExperiment, addExperiment, getExperimentList
+        experiments,
+        setExperiments,
+        setExperiment,
+        addExperiment,
+        getExperimentList,
+        setCurrTrial,
+        currTrial,
+        trialData,
+        setTrialData
     };
 
     return (
