@@ -97,24 +97,29 @@ export const ExperimentProvider = ({ children }) => {
         }
         : {};
 
-    const setCurrTrial = ({ experimentName, trialTypeName, trialName }) => {
-        const experimentIndex = experiments.findIndex(t => t.name === experimentName);
-        if (experimentIndex >= 0) {
-            const experiment = experiments[experimentIndex];
-            const trialTypeIndex = experiment.trialTypes.findIndex(t => t.name === trialTypeName);
-            if (trialTypeIndex >= 0) {
-                const trialType = experiment.trialTypes[trialTypeIndex];
-                const trialIndex = trialType.trials.findIndex(t => t.name === trialName);
-                if (trialIndex >= 0) {
-                    const trial = trialType.trials[trialIndex];
-                    setCurrTrialInternal({
-                        experimentName, experimentIndex, experiment,
-                        trialTypeName, trialTypeIndex, trialType,
-                        trialName, trialIndex, trial,
-                    });
+    const setCurrTrial = (newCurrTrialStruct) => {
+        if (newCurrTrialStruct) {
+            const { experimentName, trialTypeName, trialName } = newCurrTrialStruct;
+            const experimentIndex = experiments.findIndex(t => t.name === experimentName);
+            if (experimentIndex >= 0) {
+                const experiment = experiments[experimentIndex];
+                const trialTypeIndex = experiment.trialTypes.findIndex(t => t.name === trialTypeName);
+                if (trialTypeIndex >= 0) {
+                    const trialType = experiment.trialTypes[trialTypeIndex];
+                    const trialIndex = trialType.trials.findIndex(t => t.name === trialName);
+                    if (trialIndex >= 0) {
+                        const trial = trialType.trials[trialIndex];
+                        setCurrTrialInternal({
+                            experimentName, experimentIndex, experiment,
+                            trialTypeName, trialTypeIndex, trialType,
+                            trialName, trialIndex, trial,
+                        });
+                        return;
+                    }
                 }
             }
         }
+        setCurrTrialInternal();
     }
 
     const trialData = currTrialInternal

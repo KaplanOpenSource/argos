@@ -1,5 +1,6 @@
 import MenuIcon from '@mui/icons-material/Menu';
 import AddIcon from '@mui/icons-material/Add';
+import CloseIcon from '@mui/icons-material/Close';
 import {
     AppBar, IconButton, Toolbar, Typography
 } from '@mui/material';
@@ -7,7 +8,7 @@ import { experimentContext } from './ExperimentProvider';
 import { useContext } from 'react';
 
 export const AppHeader = ({ }) => {
-    const { addExperiment, currTrial } = useContext(experimentContext);
+    const { addExperiment, currTrial, setCurrTrial } = useContext(experimentContext);
     return (
         <AppBar position="static"
         // style={{ maxHeight: '5em' }}
@@ -28,7 +29,14 @@ export const AppHeader = ({ }) => {
                 {
                     currTrial.trialName
                         ? <>
-                            <Typography variant="body1" padding={2}>
+                            <IconButton
+                                edge="start"
+                                color="inherit"
+                                onClick={() => setCurrTrial()}
+                            >
+                                <CloseIcon />
+                            </IconButton>
+                            <Typography variant="body1" paddingRight={1}>
                                 {currTrial.experimentName}
                                 -
                                 {currTrial.trialTypeName}
