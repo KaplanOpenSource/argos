@@ -7,10 +7,10 @@ import { experimentContext } from './ExperimentProvider';
 import { useContext } from 'react';
 
 export const AppHeader = ({ }) => {
-    const { addExperiment } = useContext(experimentContext);
+    const { addExperiment, currTrial } = useContext(experimentContext);
     return (
         <AppBar position="static"
-            // style={{ maxHeight: '5em' }}
+        // style={{ maxHeight: '5em' }}
         >
             <Toolbar>
                 <IconButton
@@ -25,6 +25,19 @@ export const AppHeader = ({ }) => {
                 <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                     Argos
                 </Typography>
+                {
+                    currTrial.trialName
+                        ? <>
+                            <Typography variant="body1" padding={2}>
+                                {currTrial.experimentName}
+                                -
+                                {currTrial.trialTypeName}
+                                -
+                                {currTrial.trialName}
+                            </Typography>
+                        </>
+                        : null
+                }
                 {/* <Button color="inherit">Login</Button> */}
                 <IconButton
                     edge="start"

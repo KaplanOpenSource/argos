@@ -4,7 +4,7 @@ import { TreeSublist } from "./TreeSublist";
 import { AttributeType } from "./AttributeType";
 import dayjs from "dayjs";
 
-export const TrialType = ({ data, setData }) => {
+export const TrialType = ({ data, setData, experimentName }) => {
     return (
         <TreeRow
             key={data.name}
@@ -21,11 +21,13 @@ export const TrialType = ({ data, setData }) => {
                 fieldName='trials'
                 nameTemplate='New Trial'
                 setData={setData}
-                component={(data, setData) => (
+                component={(data1, setData1) => (
                     <Trial
-                        key={data.name}
-                        data={data}
-                        setData={setData}
+                        key={data1.name}
+                        data={data1}
+                        setData={setData1}
+                        experimentName={experimentName}
+                        trialTypeName={data.name}
                     />
                 )}
                 newDataCreator={() => {

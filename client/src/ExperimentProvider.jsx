@@ -120,7 +120,7 @@ export const ExperimentProvider = ({ children }) => {
     const trialData = currTrialInternal
         ? experiments[currTrialInternal.experimentIndex]
             .trialTypes[currTrialInternal.trialTypeIndex]
-            .trial[currTrialInternal.trialIndex]
+            .trials[currTrialInternal.trialIndex]
         : undefined;
 
     const setTrialData = async (data) => {

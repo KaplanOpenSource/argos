@@ -30,11 +30,12 @@ export const ExperimentRow = ({ data, setData }) => {
                 fieldName='trialTypes'
                 nameTemplate='New Trial Type'
                 setData={setData}
-                component={(data, setData) => (
+                component={(data1, setData1) => (
                     <TrialType
-                        key={data.name}
-                        data={data}
-                        setData={setData}
+                        key={data1.name}
+                        data={data1}
+                        setData={setData1}
+                        experimentName={data.name}
                     />
                 )}
             />
