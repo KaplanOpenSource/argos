@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
     Table,
     TableContainer,
@@ -6,19 +6,19 @@ import {
     Paper,
 } from '@mui/material'
 import { EntityRow } from './EntityRow';
-import { useSelection } from './SelectionContext.jsx';
-import { EntityLocationButton } from './EntityLocationButton.jsx';
+// import { useSelection } from './SelectionContext.jsx';
+// import { EntityLocationButton } from './EntityLocationButton.jsx';
 import { DomEvent } from 'leaflet';
 
 export const EntityList = ({ entityItems, removeEntitiesLocations, layerChosen, showProperties }) => {
-    const [lastIndex, setLastIndex] = React.useState();
+    const [lastIndex, setLastIndex] = useState();
 
-    const {
-        selection,
-        setSelection,
-        toggleIsSelected,
-        setAsSelected
-    } = useSelection();
+    // const {
+    //     selection,
+    //     setSelection,
+    //     toggleIsSelected,
+    //     setAsSelected
+    // } = useSelection();
 
     const getRangeKeys = (lowInclusive, highInclusive) => {
         return entityItems.slice(lowInclusive, highInclusive + 1).map(e => e.entityItem.key);
@@ -114,7 +114,7 @@ export const EntityList = ({ entityItems, removeEntitiesLocations, layerChosen, 
                                                     },
                                                 ]}
                                             >
-                                                {!location ? null :
+                                                {/* {!location ? null :
                                                     <EntityLocationButton
                                                         entityLocation={location}
                                                         isEntityOnLayer={isOnLayer}
@@ -137,7 +137,7 @@ export const EntityList = ({ entityItems, removeEntitiesLocations, layerChosen, 
                                                             },
                                                         ]}
                                                     />
-                                                }
+                                                } */}
                                             </EntityRow>
                                         )
                                     })
