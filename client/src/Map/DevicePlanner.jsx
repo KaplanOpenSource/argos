@@ -1,6 +1,15 @@
+import { useContext } from "react";
 import { TypesInfoBox } from "./TypesInfoBox"
+import { experimentContext } from "../Experiment/ExperimentProvider";
 
-export const DevicePlanner = ({ }) => {
+export const DevicePlanner = () => {
+    const { currTrial } = useContext(experimentContext);
+    const { experiment, trialType, trial } = currTrial;
+    if (!trial) {
+        return null;
+    }
+    console.log('experiment', experiment, '\ntrialType', trialType, '\ntrial', trial)
+    const deviceTypes = experiment.deviceTypes;
     return (
         <div
             style={{
@@ -10,7 +19,7 @@ export const DevicePlanner = ({ }) => {
             }}
         >
             <TypesInfoBox
-                entities={[]}
+                entities={deviceTypes}
                 shownEntityItems={[]}
                 shownEntityTypes={[]}
                 showTableOfType={true}

@@ -92,8 +92,11 @@ export const ExperimentProvider = ({ children }) => {
     // }
     const currTrial = currTrialInternal
         ? {
+            experiment: currTrialInternal.experiment,
             experimentName: currTrialInternal.experimentName,
+            trialType: currTrialInternal.trialType,
             trialTypeName: currTrialInternal.trialTypeName,
+            trial: currTrialInternal.trial,
             trialName: currTrialInternal.trialName,
         }
         : {};

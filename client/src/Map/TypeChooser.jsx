@@ -6,7 +6,7 @@ export const TypeChooser = ({ shownEntityTypes, setShownEntityTypes, entities, e
 
     useEffect(() => {
         if (shownEntityTypes.length === 0 && entities.length > 0) {
-            setShownEntityTypes(entities.map(e => e.name));
+            // setShownEntityTypes(entities.map(e => e.name));
         }
     }, [shownEntityTypes, entities])
 
