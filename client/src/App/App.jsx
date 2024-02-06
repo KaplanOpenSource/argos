@@ -4,6 +4,7 @@ import { ExperimentProvider } from '../Experiment/ExperimentProvider';
 import { ExperimentList } from '../Experiment/ExperimentList';
 import { MapShower } from '../Map/MapShower';
 import { useState } from 'react';
+import { DevicePlanner } from '../Map/DevicePlanner';
 
 export function App() {
   return (
@@ -17,6 +18,8 @@ export function App() {
       // style={{ height: 100 }}
       />
       <ExperimentList
+      />
+      <DevicePlanner
       />
       <MapShower
       // style={{ height: '100px' }}
