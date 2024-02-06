@@ -25,6 +25,7 @@ export const ExperimentRow = ({ data, setData }) => {
         >
 
             <TreeSublist
+                parentKey={data.name}
                 data={data}
                 fieldName='trialTypes'
                 nameTemplate='New Trial Type'
@@ -39,6 +40,7 @@ export const ExperimentRow = ({ data, setData }) => {
             />
 
             <TreeSublist
+                parentKey={data.name}
                 data={data}
                 fieldName='deviceTypes'
                 nameTemplate='New Device Type'

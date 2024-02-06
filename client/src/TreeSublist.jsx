@@ -4,12 +4,14 @@ import AddIcon from '@mui/icons-material/Add';
 import { camelCaseToWords, createNewName } from "./utils";
 import { TreeItem } from "@mui/x-tree-view/TreeItem";
 
-export const TreeSublist = ({ nameTemplate, fieldName, data, setData, component, newDataCreator }) => {
+export const TreeSublist = ({ nameTemplate, fieldName, data, setData, component, newDataCreator, parentKey }) => {
     const items = data[fieldName] || [];
+    const key = parentKey + '_' + fieldName;
 
     return (
         <TreeItem
-            nodeId={fieldName}
+            key={key}
+            nodeId={key}
             label={
                 <Box
                     sx={{

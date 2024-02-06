@@ -15,6 +15,7 @@ export const DeviceType = ({ data, setData }) => {
             }
         >
             <TreeSublist
+                parentKey={data.name}
                 data={data}
                 fieldName='devices'
                 nameTemplate='New Device'
@@ -29,6 +30,7 @@ export const DeviceType = ({ data, setData }) => {
             />
 
             <TreeSublist
+                parentKey={data.name}
                 data={data}
                 fieldName='attributeTypes'
                 nameTemplate='New Attribute Type'
