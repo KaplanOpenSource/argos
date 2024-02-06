@@ -1,14 +1,17 @@
 import MenuIcon from '@mui/icons-material/Menu';
 import AddIcon from '@mui/icons-material/Add';
 import {
-    AppBar, IconButton, Toolbar, Typography} from '@mui/material';
+    AppBar, IconButton, Toolbar, Typography
+} from '@mui/material';
 import { experimentContext } from './ExperimentProvider';
 import { useContext } from 'react';
 
 export const AppHeader = ({ }) => {
     const { addExperiment } = useContext(experimentContext);
     return (
-        <AppBar position="static">
+        <AppBar position="static"
+            // style={{ maxHeight: '5em' }}
+        >
             <Toolbar>
                 <IconButton
                     // size="large"

@@ -8,7 +8,10 @@ export const MapShower = ({ children }) => {
         <MapContainer
             zoom={15}
             // style={{ height: "1000%" }}
-            style={{ height: "100%", width: '100%', position: 'absolute', top: 0, bottom: 0, right: 0 }}
+            style={{
+                // height: "100%", width: '100%',
+                position: 'absolute', top: '5em', bottom: 0, right: 0, left: 0
+            }}
             crs={CRS.EPSG3857}
             // bounds={posbounds}
             center={[51.505, -0.09]}
