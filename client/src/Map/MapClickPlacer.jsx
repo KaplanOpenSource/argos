@@ -13,8 +13,11 @@ export const MapClickPlacer = ({ }) => {
                     const { experiment, trialType, trial } = currTrial;
                     console.log(coordinates, experiment, trial);
                     if (experiment && trial && selection.length > 0) {
-                        const newDevice = { ...(selection[0]), location: { name: 'OSMMap', coordinates } };
-                        const devicesOnTrial = [...(trial.devicesOnTrial || []), newDevice];
+                        const { deviceTypeName, deviceItemName } = selection[0];
+                        const newDevice = { deviceTypeName, deviceItemName, location: { name: 'OSMMap', coordinates } };
+                        const devicesOnTrial = [...(trial.devicesOnTrial || [])];
+                        const i = devicesOnTrial.findIndex(t => t.deviceItemName === deviceItemName && t.deviceTypeName === deviceTypeName);
+                        devicesOnTrial[i >= 0 ? i : devicesOnTrial.length] = newDevice;
                         const data = { ...trial, devicesOnTrial };
                         setSelection(selection.slice(1));
                         await setTrialData(data);
