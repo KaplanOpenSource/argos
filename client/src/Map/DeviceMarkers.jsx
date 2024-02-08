@@ -3,8 +3,8 @@ import { Marker } from "react-leaflet";
 import { experimentContext } from "../Experiment/ExperimentProvider";
 
 export const DeviceMarkers = ({ }) => {
-    const { selection, setSelection, currTrial, setTrialData } = useContext(experimentContext);
-    const devicesOnTrial = (currTrial.trial || {}).devicesOnTrial || [];
+    const { selection, setSelection, trialData, setTrialData } = useContext(experimentContext);
+    const devicesOnTrial = (trialData || {}).devicesOnTrial || [];
     return (
         <>
             {devicesOnTrial.map(d => {
