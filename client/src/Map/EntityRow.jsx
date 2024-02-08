@@ -7,12 +7,12 @@ import {
     Check,
     Close,
 } from "@mui/icons-material";
-import { useEntities } from './EntitiesContext';
-import { TextFieldEntityProperty, entitySaveForTextFields } from './TextFieldEntityProperty';
-import { ContextMenu } from './ContextMenu';
+// import { useEntities } from './EntitiesContext';
+// import { TextFieldEntityProperty, entitySaveForTextFields } from './TextFieldEntityProperty';
+// import { ContextMenu } from './ContextMenu';
 
 export const EntityRow = ({ entityItem, entityType, onClick, showProperties, nameMenuItems, children }) => {
-    const { setEntityProperties, setEntityLocations } = useEntities();
+    // const { setEntityProperties, setEntityLocations } = useEntities();
 
     const [changedValues, setChangedValues] = useState({});
     const propertyKeys = entityType.properties.flatMap(({ key, type }) => type === 'location' ? [key + '_lat', key + '_lng'] : [key]);
