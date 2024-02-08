@@ -5,6 +5,8 @@ import { ExperimentList } from '../Experiment/ExperimentList';
 import { MapShower } from '../Map/MapShower';
 import { useState } from 'react';
 import { DevicePlanner } from '../Map/DevicePlanner';
+import { DeviceTable } from '../DeviceTable/DeviceTable';
+import { Grid } from '@mui/material';
 
 export function App() {
   return (
@@ -17,10 +19,19 @@ export function App() {
       <AppHeader
       // style={{ height: 100 }}
       />
-      <ExperimentList
-      />
-      {/* <DevicePlanner
+      <Grid container direction={'row'} justifyContent="space-between">
+        <Grid item>
+          <ExperimentList
+          />
+        </Grid>
+        {/* <DevicePlanner
       /> */}
+        <Grid item>
+          <DeviceTable
+          />
+        </Grid>
+      </Grid>
+
       <MapShower
       // style={{ height: '100px' }}
       >

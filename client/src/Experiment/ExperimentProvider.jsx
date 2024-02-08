@@ -10,6 +10,7 @@ export const ExperimentProvider = ({ children }) => {
     const [experiments, setExperiments] = useState([]);
     const [currTrialInternal, setCurrTrialInternal] = useState();
     const [showExperiments, setShowExperiments] = useState(true);
+    const [selection, setSelection] = useState([]);
 
     const getExperimentList = async () => {
         const resp = await fetch("http://127.0.0.1:8080/experiment_list");
@@ -157,7 +158,9 @@ export const ExperimentProvider = ({ children }) => {
         trialData,
         setTrialData,
         showExperiments,
-        setShowExperiments
+        setShowExperiments,
+        selection,
+        setSelection
     };
 
     return (

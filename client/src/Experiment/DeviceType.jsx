@@ -20,11 +20,12 @@ export const DeviceType = ({ data, setData }) => {
                 fieldName='devices'
                 nameTemplate='New Device'
                 setData={setData}
-                component={(data, setData) => (
+                component={(data1, setData1) => (
                     <DeviceItem
-                        key={data.name}
-                        data={data}
-                        setData={setData}
+                        key={data1.name}
+                        data={data1}
+                        setData={setData1}
+                        deviceType={data}
                     />
                 )}
             />
