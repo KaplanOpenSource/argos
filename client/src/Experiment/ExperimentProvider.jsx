@@ -139,7 +139,7 @@ export const ExperimentProvider = ({ children }) => {
             return;
         }
         const e = JSON.parse(JSON.stringify(currTrialInternal.experiment));
-        e.trialTypes[currTrialInternal.trialTypeIndex].trial[currTrialInternal.trialIndex] = data;
+        e.trialTypes[currTrialInternal.trialTypeIndex].trials[currTrialInternal.trialIndex] = data;
         setExperiment(currTrialInternal.experimentName, e)
     }
 

@@ -1,31 +1,23 @@
 import * as React from 'react';
 import { AppHeader } from './AppHeader';
-import { ExperimentProvider } from '../Experiment/ExperimentProvider';
 import { ExperimentList } from '../Experiment/ExperimentList';
 import { MapShower } from '../Map/MapShower';
 import { useState } from 'react';
 import { DevicePlanner } from '../Map/DevicePlanner';
 import { DeviceTable } from '../DeviceTable/DeviceTable';
 import { Grid } from '@mui/material';
+import { MapClickPlacer } from '../Map/MapClickPlacer';
 
 export function App() {
   return (
-    <ExperimentProvider>
-
-      {/* <div
-      // style={{top:0, bottom:0, position:'100vfh'}}
-      // style={{ height: "100%", width: '100%', position: 'absolute', top: 0, bottom: 0, right: 0 }}
-      > */}
+    <>
       <AppHeader
-      // style={{ height: 100 }}
       />
-      <Grid container direction={'row'} justifyContent="space-between">
+      <Grid container direction={'row'} justifyContent="space-between" alignItems="flex-start">
         <Grid item>
           <ExperimentList
           />
         </Grid>
-        {/* <DevicePlanner
-      /> */}
         <Grid item>
           <DeviceTable
           />
@@ -33,12 +25,11 @@ export function App() {
       </Grid>
 
       <MapShower
-      // style={{ height: '100px' }}
       >
-
+        <MapClickPlacer
+        />
       </MapShower>
-      {/* </div> */}
-    </ExperimentProvider>
+    </>
   )
 }
 
