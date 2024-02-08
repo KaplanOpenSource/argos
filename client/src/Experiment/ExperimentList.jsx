@@ -15,11 +15,14 @@ export const ExperimentList = ({ }) => {
             style={{
                 zIndex: 1000,
                 position: 'relative',
-                maxWidth: showExperiments ? undefined : 'fit-content',
-                right: showExperiments ? '0px' : undefined,
+                maxWidth: 'fit-content',
+                // maxHeight: '500px',
+                // maxWidth: showExperiments ? undefined : 'fit-content',
+                // right: showExperiments ? '0px' : undefined,
                 left: 0,
                 top: '-5px',
                 margin: '10px',
+                overflowY: 'visible'
             }}
         >
             <Button
@@ -42,10 +45,10 @@ export const ExperimentList = ({ }) => {
                     defaultCollapseIcon={<ExpandMoreIcon />}
                     defaultExpandIcon={<ChevronRightIcon />}
                     sx={{
-                        // height: 240,
+                        height: '80vh',
                         // flexGrow: 1,
                         // maxWidth: 400,
-                        // overflowY: 'auto',
+                        overflowY: 'auto',
                     }}
                     // style={{
                     //     zIndex:1000

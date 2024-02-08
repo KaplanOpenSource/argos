@@ -19,8 +19,8 @@ export function App() {
       />
       <ExperimentList
       />
-      <DevicePlanner
-      />
+      {/* <DevicePlanner
+      /> */}
       <MapShower
       // style={{ height: '100px' }}
       >
