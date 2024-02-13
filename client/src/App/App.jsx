@@ -8,6 +8,7 @@ import { DeviceTable } from '../DeviceTable/DeviceTable';
 import { Grid } from '@mui/material';
 import { MapClickPlacer } from '../Map/MapClickPlacer';
 import { DeviceMarkers } from '../Map/DeviceMarkers';
+import { MapPositionOnUrl } from '../Map/MapPositionOnUrl';
 
 export function App() {
   return (
@@ -27,6 +28,8 @@ export function App() {
 
       <MapShower
       >
+        <MapPositionOnUrl
+        />
         <MapClickPlacer
         />
         <DeviceMarkers
