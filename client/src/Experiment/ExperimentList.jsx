@@ -15,7 +15,7 @@ export const ExperimentList = ({ }) => {
     useEffect(() => {
         const { experimentName, trialTypeName, trialName } = currTrial;
         if (trialName) {
-            setExpanded([experimentName, experimentName + "_trialTypes", trialTypeName, trialTypeName + "_trials", trialName]);
+            setExpanded([experimentName, experimentName + "_trialTypes", trialTypeName, trialTypeName + "_trials", experimentName + "_deviceTypes", trialName]);
         }
     }, [currTrial]);
 

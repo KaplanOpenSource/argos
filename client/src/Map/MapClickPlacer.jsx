@@ -11,15 +11,15 @@ export const MapClickPlacer = ({ }) => {
                 if (e.originalEvent.srcElement === mapObj._container) {
                     const coordinates = [e.latlng.lat, e.latlng.lng];
                     const { experiment, trialType, trial } = currTrial;
-                    console.log(coordinates, experiment, trial);
                     if (experiment && trial && selection.length > 0) {
                         const { deviceTypeName, deviceItemName } = selection[0];
-                        const newDevice = { deviceTypeName, deviceItemName, location: { name: 'OSMMap', coordinates } };
-                        const devicesOnTrial = [...(trial.devicesOnTrial || [])];
-                        const i = devicesOnTrial.findIndex(t => t.deviceItemName === deviceItemName && t.deviceTypeName === deviceTypeName);
-                        devicesOnTrial[i >= 0 ? i : devicesOnTrial.length] = newDevice;
-                        const data = { ...trial, devicesOnTrial };
                         setSelection(selection.slice(1));
+
+                        const devicesOnTrial = [...(trial.devicesOnTrial || [])].filter(t => {
+                            return t.deviceItemName !== deviceItemName || t.deviceTypeName !== deviceTypeName;
+                        });
+                        devicesOnTrial.push({ deviceTypeName, deviceItemName, location: { name: 'OSMMap', coordinates } });
+                        const data = { ...trial, devicesOnTrial };
                         await setTrialData(data);
                     }
                 }
