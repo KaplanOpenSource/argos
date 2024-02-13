@@ -18,7 +18,11 @@ export function createNewName(currentNamedItems, nameTemplate, separator = ' ') 
 export function replaceUrlParams(params) {
     const u = new URL(window.location);
     for (const [k, v] of Object.entries(params)) {
-        u.searchParams.set(k, v);
+        if (v !== undefined) {
+            u.searchParams.set(k, v);
+        } else {
+            u.searchParams.delete(k);
+        }
     }
     window.history.replaceState(null, null, u.href);
 }

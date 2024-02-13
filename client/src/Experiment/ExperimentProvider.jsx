@@ -133,6 +133,11 @@ export const ExperimentProvider = ({ children }) => {
             }
         }
         setCurrTrialInternal();
+        replaceUrlParams({
+            experimentName: undefined,
+            trialTypeName: undefined,
+            trialName: undefined,
+        });
     }
 
     const trialData = currTrialInternal
