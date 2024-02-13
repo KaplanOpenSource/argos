@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { experimentContext } from "./ExperimentProvider";
 import { ExperimentRow } from "./ExperimentRow";
 import { TreeView } from '@mui/x-tree-view/TreeView';
@@ -8,7 +8,16 @@ import AddIcon from '@mui/icons-material/Add';
 import { Button, IconButton, Paper, Typography } from "@mui/material";
 
 export const ExperimentList = ({ }) => {
-    const { experiments, setExperiment, addExperiment, showExperiments, setShowExperiments } = useContext(experimentContext);
+    const { experiments, setExperiment, addExperiment, showExperiments, setShowExperiments, currTrial } = useContext(experimentContext);
+
+    const [expanded, setExpanded] = useState([]);
+
+    useEffect(() => {
+        const { experimentName, trialTypeName, trialName } = currTrial;
+        if (trialName) {
+            setExpanded([experimentName, experimentName + "_trialTypes", trialTypeName, trialTypeName + "_trials", trialName]);
+        }
+    }, [currTrial]);
 
     return (
         <Paper
@@ -50,6 +59,8 @@ export const ExperimentList = ({ }) => {
                         // maxWidth: 400,
                         overflowY: 'auto',
                     }}
+                    expanded={expanded}
+                    onNodeToggle={(event, nodeIds) => setExpanded(nodeIds)}
                     // style={{
                     //     zIndex:1000
                     // }}
