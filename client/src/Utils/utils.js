@@ -35,3 +35,13 @@ export function parseUrlParams() {
     }
     return ret;
 }
+
+export function downloadJsonFile(filename, jsonData) {
+    const element = document.createElement("a");
+    const textFile = new Blob([JSON.stringify(jsonData)], { type: 'text/plain' });
+    element.href = URL.createObjectURL(textFile);
+    element.download = filename;
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+}

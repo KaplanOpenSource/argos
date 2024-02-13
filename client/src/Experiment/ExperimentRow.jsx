@@ -3,6 +3,9 @@ import { TreeRow } from "../App/TreeRow";
 import { DeviceType } from "./DeviceType";
 import { TreeSublist } from "../App/TreeSublist";
 import { DateProperty } from "../Utils/DateProperty";
+import { IconButton } from "@mui/material";
+import DownloadIcon from '@mui/icons-material/Download';
+import { downloadJsonFile } from "../Utils/utils";
 
 export const ExperimentRow = ({ data, setData }) => {
     return (
@@ -20,6 +23,13 @@ export const ExperimentRow = ({ data, setData }) => {
                         label="End Date"
                         field="endDate"
                     />
+                    <IconButton
+                        onClick={() => {
+                            downloadJsonFile(`experiment_${data.name}.json`, data);
+                        }}
+                    >
+                        <DownloadIcon />
+                    </IconButton>
                 </>
             }
         >
