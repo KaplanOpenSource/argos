@@ -14,3 +14,20 @@ export function createNewName(currentNamedItems, nameTemplate, separator = ' ') 
         }
     }
 }
+
+export function replaceUrlParams(params) {
+    const u = new URL(window.location);
+    for (const [k, v] of Object.entries(params)) {
+        u.searchParams.set(k, v);
+    }
+    window.history.replaceState(null, null, u.href);
+}
+
+export function parseUrlParams() {
+    const u = new URL(window.location);
+    const ret = {};
+    for (const k of u.searchParams.keys()) {
+        ret[k] = u.searchParams.get(k);
+    }
+    return ret;
+}
