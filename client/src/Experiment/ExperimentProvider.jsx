@@ -1,6 +1,6 @@
 import { createContext, useEffect, useState } from "react"
 import dayjs from 'dayjs';
-import { createNewName } from "../Utils/utils";
+import { createNewName, parseUrlParams, replaceUrlParams } from "../Utils/utils";
 
 export const experimentContext = createContext();
 
@@ -43,6 +43,8 @@ export const ExperimentProvider = ({ children }) => {
         }
 
         setExperiments(exp);
+        const { experimentName, trialTypeName, trialName } = parseUrlParams();
+        setCurrTrial({ experimentName, trialTypeName, trialName }, exp);
     }
 
     const addExperiment = async () => {
@@ -102,12 +104,13 @@ export const ExperimentProvider = ({ children }) => {
         }
         : {};
 
-    const setCurrTrial = (newCurrTrialStruct) => {
+    const setCurrTrial = (newCurrTrialStruct, theExperiments = undefined) => {
+        theExperiments = theExperiments || experiments;
         if (newCurrTrialStruct) {
             const { experimentName, trialTypeName, trialName } = newCurrTrialStruct;
-            const experimentIndex = experiments.findIndex(t => t.name === experimentName);
+            const experimentIndex = theExperiments.findIndex(t => t.name === experimentName);
             if (experimentIndex >= 0) {
-                const experiment = experiments[experimentIndex];
+                const experiment = theExperiments[experimentIndex];
                 const trialTypeIndex = experiment.trialTypes.findIndex(t => t.name === trialTypeName);
                 if (trialTypeIndex >= 0) {
                     const trialType = experiment.trialTypes[trialTypeIndex];
@@ -118,6 +121,11 @@ export const ExperimentProvider = ({ children }) => {
                             experimentName, experimentIndex, experiment,
                             trialTypeName, trialTypeIndex, trialType,
                             trialName, trialIndex, trial,
+                        });
+                        replaceUrlParams({
+                            experimentName,
+                            trialTypeName,
+                            trialName,
                         });
                         return;
                     }
