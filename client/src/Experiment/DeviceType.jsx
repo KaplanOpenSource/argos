@@ -2,6 +2,9 @@ import { TreeRow } from "../App/TreeRow";
 import { DeviceItem } from "./DeviceItem";
 import { TreeSublist } from "../App/TreeSublist";
 import { AttributeType } from "./AttributeType";
+import { IconButton } from "@mui/material";
+import DeleteIcon from '@mui/icons-material/Delete';
+import { changeByName } from "../Utils/utils";
 
 export const DeviceType = ({ data, setData }) => {
     return (
@@ -11,6 +14,11 @@ export const DeviceType = ({ data, setData }) => {
             setData={setData}
             components={
                 <>
+                    <IconButton
+                        onClick={() => setData(undefined)}
+                    >
+                        <DeleteIcon />
+                    </IconButton>
                 </>
             }
         >

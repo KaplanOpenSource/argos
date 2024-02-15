@@ -6,6 +6,8 @@ import { AttributeType } from "./AttributeType";
 import dayjs from "dayjs";
 import { experimentContext } from "./ExperimentProvider";
 import { changeByName } from "../Utils/utils";
+import { IconButton } from "@mui/material";
+import DeleteIcon from '@mui/icons-material/Delete';
 
 export const TrialType = ({ data, setData, experimentName }) => {
     const { showExperiments, currTrial } = useContext(experimentContext);
@@ -16,6 +18,11 @@ export const TrialType = ({ data, setData, experimentName }) => {
             setData={setData}
             components={
                 <>
+                    <IconButton
+                        onClick={() => setData(undefined)}
+                    >
+                        <DeleteIcon />
+                    </IconButton>
                 </>
             }
         >

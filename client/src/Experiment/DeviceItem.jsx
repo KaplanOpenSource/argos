@@ -1,7 +1,8 @@
-import { Button } from "@mui/material";
+import { Button, IconButton } from "@mui/material";
 import { TreeRow } from "../App/TreeRow";
 import { useContext } from "react";
 import { experimentContext } from "./ExperimentProvider";
+import DeleteIcon from '@mui/icons-material/Delete';
 
 export const DeviceItem = ({ data, setData, deviceType }) => {
     const { selection, setSelection } = useContext(experimentContext);
@@ -26,7 +27,11 @@ export const DeviceItem = ({ data, setData, deviceType }) => {
                     >
                         Select
                     </Button>
-
+                    <IconButton
+                        onClick={() => setData(undefined)}
+                    >
+                        <DeleteIcon />
+                    </IconButton>
                 </>
             }
         >

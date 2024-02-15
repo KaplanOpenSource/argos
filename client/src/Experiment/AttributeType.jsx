@@ -1,6 +1,7 @@
-import { FormControlLabel, MenuItem, Select, Switch } from "@mui/material";
+import { FormControlLabel, IconButton, MenuItem, Select, Switch } from "@mui/material";
 import { TreeRow } from "../App/TreeRow";
 import { AttributeValue } from "./AttributeValue";
+import DeleteIcon from '@mui/icons-material/Delete';
 
 export const AttributeType = ({ data, setData }) => {
     return (
@@ -28,6 +29,11 @@ export const AttributeType = ({ data, setData }) => {
                         <MenuItem value={'String'}>String</MenuItem>
                         <MenuItem value={'Number'}>Number</MenuItem>
                     </Select>
+                    <IconButton
+                        onClick={() => setData(undefined)}
+                    >
+                        <DeleteIcon />
+                    </IconButton>
                 </>
             }
         >
