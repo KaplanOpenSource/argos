@@ -59,37 +59,34 @@ export const ExperimentProvider = ({ children }) => {
     }
 
     const setExperiment = async (name, data) => {
-        // const nameData = { name: newName ? newName : name, data };
-        const resp = await fetch("http://127.0.0.1:8080/experiment_set/" + name, {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        });
-        const json = await resp.json();
-        if ((json || {}).error) {
-            alert(json.error);
-            return;
-        }
-
         setExperiments(prev => {
             return changeByName(prev, name, data);
         });
     }
 
-    // const replace = (arr, index, data) => {
-    //     const newArr = [...arr];
-    //     newArr[index >= 0 ? index : newArr.length] = data;
-    //     return newArr
-    // }
+    const saveExperiment = async (name) => {
+        const data = experiments.find(t => t.name === name);
+        try {
+            const resp = await fetch("http://127.0.0.1:8080/experiment_set/" + name, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+            const json = await resp.json();
+            if ((json || {}).error) {
+                alert(json.error);
+                return false;
+            }
+        } catch (e) {
+            alert(e);
+            return false;
+        }
+        return true;
+    }
 
-    // const findTrial = ({ experimentName, trialTypeName, trialName }) => {
-    //     const ie = experiments.findIndex(t => t.name === experimentName);
-    //     if (!experiments) return {}
-    //     if (!)
-    // }
     const currTrial = currTrialInternal
         ? {
             experiment: currTrialInternal.experiment,
@@ -161,6 +158,7 @@ export const ExperimentProvider = ({ children }) => {
         experiments,
         setExperiments,
         setExperiment,
+        saveExperiment,
         addExperiment,
         getExperimentList,
         setCurrTrial,

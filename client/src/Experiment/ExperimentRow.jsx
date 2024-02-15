@@ -9,9 +9,10 @@ import DownloadIcon from '@mui/icons-material/Download';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { changeByName, downloadJsonFile } from "../Utils/utils";
 import { experimentContext } from "./ExperimentProvider";
+import { Save } from "@mui/icons-material";
 
 export const ExperimentRow = ({ data, setData }) => {
-    const { showExperiments, currTrial } = useContext(experimentContext);
+    const { showExperiments, currTrial, saveExperiment } = useContext(experimentContext);
     return (
         <TreeRow
             key={data.name}
@@ -28,13 +29,15 @@ export const ExperimentRow = ({ data, setData }) => {
                         field="endDate"
                     />
                     <IconButton
-                        onClick={() => {
-                            downloadJsonFile(`experiment_${data.name}.json`, data);
-                        }}
+                        onClick={() => downloadJsonFile(`experiment_${data.name}.json`, data)}
                     >
                         <DownloadIcon />
                     </IconButton>
-
+                    <IconButton
+                        onClick={() => saveExperiment(data.name)}
+                    >
+                        <Save />
+                    </IconButton>
                     <IconButton
                         onClick={() => setData(undefined)}
                     >
