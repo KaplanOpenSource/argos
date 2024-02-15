@@ -2,8 +2,6 @@ import * as React from 'react';
 import { AppHeader } from './AppHeader';
 import { ExperimentList } from '../Experiment/ExperimentList';
 import { MapShower } from '../Map/MapShower';
-import { useState } from 'react';
-import { DevicePlanner } from '../Map/DevicePlanner';
 import { DeviceTable } from '../DeviceTable/DeviceTable';
 import { Grid } from '@mui/material';
 import { MapClickPlacer } from '../Map/MapClickPlacer';

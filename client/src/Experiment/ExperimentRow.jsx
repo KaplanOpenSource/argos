@@ -6,6 +6,7 @@ import { TreeSublist } from "../App/TreeSublist";
 import { DateProperty } from "../Utils/DateProperty";
 import { IconButton } from "@mui/material";
 import DownloadIcon from '@mui/icons-material/Download';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { changeByName, downloadJsonFile } from "../Utils/utils";
 import { experimentContext } from "./ExperimentProvider";
 
@@ -32,6 +33,12 @@ export const ExperimentRow = ({ data, setData }) => {
                         }}
                     >
                         <DownloadIcon />
+                    </IconButton>
+
+                    <IconButton
+                        onClick={() => setData(undefined)}
+                    >
+                        <DeleteIcon />
                     </IconButton>
                 </>
             }

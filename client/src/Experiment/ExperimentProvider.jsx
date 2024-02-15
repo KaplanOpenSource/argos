@@ -1,6 +1,6 @@
 import { createContext, useEffect, useState } from "react"
 import dayjs from 'dayjs';
-import { createNewName, parseUrlParams, replaceUrlParams } from "../Utils/utils";
+import { changeByName, createNewName, parseUrlParams, replaceUrlParams } from "../Utils/utils";
 
 export const experimentContext = createContext();
 
@@ -75,10 +75,7 @@ export const ExperimentProvider = ({ children }) => {
         }
 
         setExperiments(prev => {
-            const i = prev.findIndex(t => t.name === name);
-            const newArr = [...prev];
-            newArr[i >= 0 ? i : newArr.length] = data;
-            return newArr;
+            return changeByName(prev, name, data);
         });
     }
 
