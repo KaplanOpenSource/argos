@@ -54,20 +54,28 @@ def experimentGetReq(name):
 @app.route("/experiment_set/<name>", methods=["POST"])
 def experimentSetReq(name):
     if validate_name(name):
-        json_data = request.json
-        str = json.dumps(json_data, indent=2)
-        new_name = json_data['name']
-        if new_name is None:
-            new_name = name
-        if validate_name(new_name):
-            os.makedirs(EXPERIMENTS_PATH, exist_ok=True)
-            if new_name != name:
-                oldpath = os.path.join(EXPERIMENTS_PATH, name + ".json")
-                if os.path.exists(oldpath):
-                    os.remove(oldpath)
-            with open(os.path.join(EXPERIMENTS_PATH, new_name + ".json"), "w") as file:
-                file.write(str)
-                return {"ok": True}
+        json_str = request.get_data()
+
+        oldpath = os.path.join(EXPERIMENTS_PATH, name + ".json")
+
+        if json_str == b'': # undefined was received
+            if os.path.exists(oldpath):
+                os.remove(oldpath)
+            return {"ok": True}
+        else:
+            json_data = json.loads(json_str)
+            str = json.dumps(json_data, indent=2)
+            new_name = json_data['name']
+            if new_name is None:
+                new_name = name
+            if validate_name(new_name):
+                os.makedirs(EXPERIMENTS_PATH, exist_ok=True)
+                if new_name != name:
+                    if os.path.exists(oldpath):
+                        os.remove(oldpath)
+                with open(os.path.join(EXPERIMENTS_PATH, new_name + ".json"), "w") as file:
+                    file.write(str)
+                    return {"ok": True}
     return {"error": "invalid experiment name"}
 
 
