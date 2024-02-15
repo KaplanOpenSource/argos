@@ -5,7 +5,7 @@ import { TreeSublist } from "../App/TreeSublist";
 import { DateProperty } from "../Utils/DateProperty";
 import { IconButton } from "@mui/material";
 import DownloadIcon from '@mui/icons-material/Download';
-import { downloadJsonFile } from "../Utils/utils";
+import { changeByName, downloadJsonFile } from "../Utils/utils";
 
 export const ExperimentRow = ({ data, setData }) => {
     return (
@@ -40,15 +40,20 @@ export const ExperimentRow = ({ data, setData }) => {
                 fieldName='trialTypes'
                 nameTemplate='New Trial Type'
                 setData={setData}
-                component={(data1, setData1) => (
-                    <TrialType
-                        key={data1.name}
-                        data={data1}
-                        setData={setData1}
-                        experimentName={data.name}
-                    />
-                )}
-            />
+            >
+                {
+                    (data.trialTypes || []).map(itemData => (
+                        <TrialType
+                            key={itemData.name}
+                            data={itemData}
+                            setData={newData => {
+                                setData({ ...data, trialTypes: changeByName(data.trialTypes, itemData.name, newData) });
+                            }}
+                            experimentName={data.name}
+                        />
+                    ))
+                }
+            </TreeSublist>
 
             <TreeSublist
                 parentKey={data.name}
@@ -56,14 +61,20 @@ export const ExperimentRow = ({ data, setData }) => {
                 fieldName='deviceTypes'
                 nameTemplate='New Device Type'
                 setData={setData}
-                component={(data, setData) => (
-                    <DeviceType
-                        key={data.name}
-                        data={data}
-                        setData={setData}
-                    />
-                )}
-            />
+            >
+                {
+                    (data.deviceTypes || []).map(itemData => (
+                        <DeviceType
+                            key={itemData.name}
+                            data={itemData}
+                            setData={newData => {
+                                setData({ ...data, deviceTypes: changeByName(data.deviceTypes, itemData.name, newData) });
+                            }}
+                            experimentName={data.name}
+                        />
+                    ))
+                }
+            </TreeSublist>
         </TreeRow>
     )
 }

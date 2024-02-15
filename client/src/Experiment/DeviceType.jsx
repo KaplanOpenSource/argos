@@ -20,15 +20,20 @@ export const DeviceType = ({ data, setData }) => {
                 fieldName='devices'
                 nameTemplate='New Device'
                 setData={setData}
-                component={(data1, setData1) => (
-                    <DeviceItem
-                        key={data1.name}
-                        data={data1}
-                        setData={setData1}
-                        deviceType={data}
-                    />
-                )}
-            />
+            >
+                {
+                    (data.devices || []).map(itemData => (
+                        <DeviceItem
+                            key={itemData.name}
+                            data={itemData}
+                            setData={newData => {
+                                setData({ ...data, devices: changeByName(data.devices, itemData.name, newData) });
+                            }}
+                            deviceType={data}
+                        />
+                    ))
+                }
+            </TreeSublist>
 
             <TreeSublist
                 parentKey={data.name}
@@ -36,14 +41,19 @@ export const DeviceType = ({ data, setData }) => {
                 fieldName='attributeTypes'
                 nameTemplate='New Attribute Type'
                 setData={setData}
-                component={(data, setData) => (
-                    <AttributeType
-                        key={data.name}
-                        data={data}
-                        setData={setData}
-                    />
-                )}
-            />
+            >
+                {
+                    (data.attributeTypes || []).map(itemData => (
+                        <AttributeType
+                            key={itemData.name}
+                            data={itemData}
+                            setData={newData => {
+                                setData({ ...data, attributeTypes: changeByName(data.attributeTypes, itemData.name, newData) });
+                            }}
+                        />
+                    ))
+                }
+            </TreeSublist>
 
         </TreeRow>
     )

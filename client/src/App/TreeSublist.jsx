@@ -4,7 +4,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { camelCaseToWords, createNewName } from "../Utils/utils";
 import { TreeItem } from "@mui/x-tree-view/TreeItem";
 
-export const TreeSublist = ({ nameTemplate, fieldName, data, setData, component, newDataCreator, parentKey }) => {
+export const TreeSublist = ({ nameTemplate, fieldName, data, setData, newDataCreator, parentKey, children }) => {
     const items = data[fieldName] || [];
     const key = parentKey + '_' + fieldName;
 
@@ -49,19 +49,7 @@ export const TreeSublist = ({ nameTemplate, fieldName, data, setData, component,
                 </Box>
             }
         >
-            {
-                items.map(itemData => (
-                    component(
-                        itemData,
-                        newData => {
-                            const i = items.findIndex(t => t.name === itemData.name);
-                            const theItems = [...items];
-                            theItems[i] = newData;
-                            setData({ ...data, [fieldName]: theItems });
-                        }
-                    )
-                ))
-            }
+            {children}
         </TreeItem>
     )
 }

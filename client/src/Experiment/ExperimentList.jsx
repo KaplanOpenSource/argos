@@ -49,33 +49,29 @@ export const ExperimentList = ({ }) => {
             >
                 <AddIcon />
             </IconButton>
-            {showExperiments &&
-                <TreeView
-                    defaultCollapseIcon={<ExpandMoreIcon />}
-                    defaultExpandIcon={<ChevronRightIcon />}
-                    sx={{
-                        height: '80vh',
-                        // flexGrow: 1,
-                        // maxWidth: 400,
-                        overflowY: 'auto',
-                    }}
-                    expanded={expanded}
-                    onNodeToggle={(event, nodeIds) => setExpanded(nodeIds)}
-                    // style={{
-                    //     zIndex:1000
-                    // }}
-                    disableSelection
-                >
-                    {
-                        experiments.map(e => (
-                            <ExperimentRow key={e.name}
-                                data={e}
-                                setData={val => setExperiment(e.name, val)}
-                            />
-                        ))
-                    }
-                </TreeView>
-            }
+            <TreeView
+                defaultCollapseIcon={<ExpandMoreIcon />}
+                defaultExpandIcon={<ChevronRightIcon />}
+                sx={{
+                    height: '80vh',
+                    // flexGrow: 1,
+                    // maxWidth: 400,
+                    overflowY: 'auto',
+                }}
+                expanded={expanded}
+                onNodeToggle={(event, nodeIds) => setExpanded(nodeIds)}
+                // style={{
+                //     zIndex:1000
+                // }}
+                disableSelection
+            >
+                {((showExperiments || !currTrial.experiment) ? experiments : [currTrial.experiment]).map(e => (
+                    <ExperimentRow key={e.name}
+                        data={e}
+                        setData={val => setExperiment(e.name, val)}
+                    />
+                ))}
+            </TreeView>
         </Paper>
     )
 }

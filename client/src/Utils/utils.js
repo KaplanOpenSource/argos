@@ -45,3 +45,14 @@ export function downloadJsonFile(filename, jsonData) {
     element.click();
     document.body.removeChild(element);
 }
+
+export function changeByName(arr, name, newData) {
+    const theItems = [...(arr || [])];
+    const i = theItems.findIndex(t => t.name === name);
+    if (i === -1) {
+        theItems.push(newData);
+    } else {
+        theItems[i] = newData;
+    }
+    return theItems;
+}

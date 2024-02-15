@@ -21,21 +21,26 @@ export const TrialType = ({ data, setData, experimentName }) => {
                 fieldName='trials'
                 nameTemplate='New Trial'
                 setData={setData}
-                component={(data1, setData1) => (
-                    <Trial
-                        key={data1.name}
-                        data={data1}
-                        setData={setData1}
-                        experimentName={experimentName}
-                        trialTypeName={data.name}
-                    />
-                )}
                 newDataCreator={() => {
                     return {
                         createdDate: dayjs().startOf('day'),
                     }
                 }}
-            />
+            >
+                {
+                    (data.trials || []).map(itemData => (
+                        <Trial
+                            key={itemData.name}
+                            data={itemData}
+                            setData={newData => {
+                                setData({ ...data, trials: changeByName(data.trials, itemData.name, newData) });
+                            }}
+                            experimentName={experimentName}
+                            trialTypeName={data.name}
+                        />
+                    ))
+                }
+            </TreeSublist>
 
             <TreeSublist
                 parentKey={data.name}
@@ -43,14 +48,19 @@ export const TrialType = ({ data, setData, experimentName }) => {
                 fieldName='attributeTypes'
                 nameTemplate='New Attribute Type'
                 setData={setData}
-                component={(data, setData) => (
-                    <AttributeType
-                        key={data.name}
-                        data={data}
-                        setData={setData}
-                    />
-                )}
-            />
+            >
+                {
+                    (data.attributeTypes || []).map(itemData => (
+                        <AttributeType
+                            key={itemData.name}
+                            data={itemData}
+                            setData={newData => {
+                                setData({ ...data, attributeTypes: changeByName(data.attributeTypes, itemData.name, newData) });
+                            }}
+                        />
+                    ))
+                }
+            </TreeSublist>
 
         </TreeRow>
     )
