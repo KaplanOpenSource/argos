@@ -1,3 +1,4 @@
+import { useContext } from "react";
 import { TrialType } from "./TrialType";
 import { TreeRow } from "../App/TreeRow";
 import { DeviceType } from "./DeviceType";
@@ -6,8 +7,10 @@ import { DateProperty } from "../Utils/DateProperty";
 import { IconButton } from "@mui/material";
 import DownloadIcon from '@mui/icons-material/Download';
 import { changeByName, downloadJsonFile } from "../Utils/utils";
+import { experimentContext } from "./ExperimentProvider";
 
 export const ExperimentRow = ({ data, setData }) => {
+    const { showExperiments, currTrial } = useContext(experimentContext);
     return (
         <TreeRow
             key={data.name}
@@ -42,7 +45,7 @@ export const ExperimentRow = ({ data, setData }) => {
                 setData={setData}
             >
                 {
-                    (data.trialTypes || []).map(itemData => (
+                    ((showExperiments || !currTrial.trialType) ? (data.trialTypes || []) : [currTrial.trialType]).map(itemData => (
                         <TrialType
                             key={itemData.name}
                             data={itemData}

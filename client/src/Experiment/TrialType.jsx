@@ -1,10 +1,13 @@
+import { useContext } from "react";
 import { TreeRow } from "../App/TreeRow";
 import { Trial } from "./Trial";
 import { TreeSublist } from "../App/TreeSublist";
 import { AttributeType } from "./AttributeType";
 import dayjs from "dayjs";
+import { experimentContext } from "./ExperimentProvider";
 
 export const TrialType = ({ data, setData, experimentName }) => {
+    const { showExperiments, currTrial } = useContext(experimentContext);
     return (
         <TreeRow
             key={data.name}
@@ -28,7 +31,7 @@ export const TrialType = ({ data, setData, experimentName }) => {
                 }}
             >
                 {
-                    (data.trials || []).map(itemData => (
+                    ((showExperiments || !currTrial.trial) ? (data.trials || []) : [currTrial.trial]).map(itemData => (
                         <Trial
                             key={itemData.name}
                             data={itemData}
