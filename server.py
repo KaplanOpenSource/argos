@@ -36,7 +36,17 @@ def static_file(path):
 def experimentListReq():
     if not os.path.exists(EXPERIMENTS_PATH):
         return []
-    names = sorted(os.listdir(EXPERIMENTS_PATH))
+    def namekey(n):
+        sn = os.path.splitext(n)[0]
+        pos = re.search(r'[ 0-9]+$', sn)
+        num = 0
+        if pos is not None:
+            num = int(pos.group())
+            sn = sn[0:pos.start()]
+        return (sn, num)
+    names = sorted(os.listdir(EXPERIMENTS_PATH), key=namekey)
+    for n in names:
+        print(n)
     names = [os.path.splitext(n)[0] for n in names]
     return names
 
@@ -80,4 +90,5 @@ def experimentSetReq(name):
 
 
 if __name__ == "__main__":  # pragma: no cover
+    print(experimentListReq())
     app.run(host="0.0.0.0", port=int(args.port))
