@@ -12,12 +12,12 @@ export const ExperimentList = ({ }) => {
 
     const [expanded, setExpanded] = useState([]);
 
+    const { experimentName, trialTypeName, trialName } = currTrial;
     useEffect(() => {
-        const { experimentName, trialTypeName, trialName } = currTrial;
         if (trialName) {
             setExpanded([experimentName, experimentName + "_trialTypes", trialTypeName, trialTypeName + "_trials", experimentName + "_deviceTypes", trialName]);
         }
-    }, [currTrial]);
+    }, [`${experimentName}:${trialTypeName}:${trialName}`]);
 
     return (
         <Paper

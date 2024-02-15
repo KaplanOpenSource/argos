@@ -9,6 +9,7 @@ import { useContext } from 'react';
 
 export const AppHeader = ({ }) => {
     const { addExperiment, currTrial, setCurrTrial, showExperiments, setShowExperiments } = useContext(experimentContext);
+    const { experimentName, trialTypeName, trialName } = currTrial;
     return (
         <AppBar position="static"
         // style={{ maxHeight: '5em' }}
@@ -27,7 +28,7 @@ export const AppHeader = ({ }) => {
                     Argos
                 </Typography>
                 {
-                    currTrial.trialName
+                    trialName
                         ? <>
                             {/* <Button
                                 color="inherit"
@@ -48,11 +49,11 @@ export const AppHeader = ({ }) => {
                                 <CloseIcon />
                             </IconButton>
                             <Typography variant="body1" paddingRight={1}>
-                                {currTrial.experimentName}
-                                -
-                                {currTrial.trialTypeName}
-                                -
-                                {currTrial.trialName}
+                                {experimentName}
+                                &nbsp;:&nbsp;
+                                {trialTypeName}
+                                &nbsp;:&nbsp;
+                                {trialName}
                             </Typography>
                         </>
                         : null

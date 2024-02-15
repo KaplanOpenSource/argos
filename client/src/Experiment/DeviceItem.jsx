@@ -3,12 +3,14 @@ import { TreeRow } from "../App/TreeRow";
 import { useContext } from "react";
 import { experimentContext } from "./ExperimentProvider";
 import DeleteIcon from '@mui/icons-material/Delete';
+import { PlaylistAdd } from "@mui/icons-material";
 
 export const DeviceItem = ({ data, setData, deviceType }) => {
     const { selection, setSelection } = useContext(experimentContext);
     const selectedIndex = selection.findIndex(({ deviceTypeName, deviceItemName }) => {
         return deviceTypeName === deviceType.name && deviceItemName === data.name;
     });
+    const isSelected = selectedIndex !== -1;
     return (
         <TreeRow
             key={data.name}
@@ -16,17 +18,18 @@ export const DeviceItem = ({ data, setData, deviceType }) => {
             setData={setData}
             components={
                 <>
-                    <Button
-                        onClick={() => {
-                            if (selectedIndex === -1) {
-                                setSelection([...selection, { deviceTypeName: deviceType.name, deviceItemName: data.name }]);
-                            } else {
+                    <IconButton
+                        onClick={(e) => {
+                            if (isSelected) {
                                 setSelection(selection.filter((_, i) => i !== selectedIndex));
+                            } else {
+                                setSelection([...selection, { deviceTypeName: deviceType.name, deviceItemName: data.name }]);
                             }
+                            e.stopPropagation();
                         }}
                     >
-                        Select
-                    </Button>
+                        <PlaylistAdd color={isSelected ? "primary" : ""} />
+                    </IconButton>
                     <IconButton
                         onClick={() => setData(undefined)}
                     >
@@ -35,15 +38,6 @@ export const DeviceItem = ({ data, setData, deviceType }) => {
                 </>
             }
         >
-            {/* {
-                (data.trialSet || []).map(e => (
-                    <TrialSet
-                        key={e.name}
-                        name={e.name}
-                        data={e.data}
-                    />
-                ))
-            } */}
         </TreeRow>
     )
 }
