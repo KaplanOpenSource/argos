@@ -47,12 +47,17 @@ export function downloadJsonFile(filename, jsonData) {
 }
 
 export function changeByName(arr, name, newData) {
-    const theItems = [...(arr || [])];
-    const i = theItems.findIndex(t => t.name === name);
-    if (i === -1) {
-        theItems.push(newData);
-    } else {
-        theItems[i] = newData;
+    if (arr === undefined) {
+        return [newData];
     }
+    if (newData === undefined) {
+        return arr.filter(t => t.name !== name);
+    }
+    const i = arr.findIndex(t => t.name === name);
+    if (i === -1) {
+        return [...arr, newData];
+    }
+    const theItems = [...arr];
+    theItems[i] = newData;
     return theItems;
 }

@@ -1,8 +1,9 @@
-import { Button } from "@mui/material";
+import { Button, IconButton } from "@mui/material";
 import { DateProperty } from "../Utils/DateProperty";
 import { TreeRow } from "../App/TreeRow";
 import { experimentContext } from "../Experiment/ExperimentProvider";
 import { useContext } from "react";
+import DeleteIcon from '@mui/icons-material/Delete';
 
 export const Trial = ({ data, setData, experimentName, trialTypeName }) => {
     const { setCurrTrial, setShowExperiments } = useContext(experimentContext);
@@ -25,6 +26,11 @@ export const Trial = ({ data, setData, experimentName, trialTypeName }) => {
                     >
                         Edit
                     </Button>
+                    <IconButton
+                        onClick={() => setData(undefined)}
+                    >
+                        <DeleteIcon />
+                    </IconButton>
                 </>
             }
         >
