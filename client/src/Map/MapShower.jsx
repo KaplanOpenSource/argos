@@ -3,6 +3,8 @@ import 'leaflet/dist/leaflet.css';
 
 import { MapContainer, TileLayer, ZoomControl } from 'react-leaflet';
 
+L.Icon.Default.imagePath = 'leaflet-images/';
+
 export const MapShower = ({ children }) => {
     return (
         <MapContainer
