@@ -5,7 +5,16 @@ export const DateProperty = ({ label, field, data, setData }) => {
     return (
         <DatePicker
             label={label}
-            slotProps={{ textField: { fullWidth: false, size: 'small' } }}
+            slotProps={{
+                textField: {
+                    fullWidth: false, size: 'small',
+                    inputProps: {
+                        style: {
+                            width: '100px'
+                        }
+                    }
+                }
+            }}
             format='DD/MM/YYYY'
             value={dayjs(data[field])}
             onChange={(val) => setData({ ...data, [field]: val })}
