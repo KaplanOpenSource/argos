@@ -5,6 +5,7 @@ import { experimentContext } from "../Experiment/ExperimentProvider";
 import { useContext } from "react";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { GridOn } from "@mui/icons-material";
+import { AttributeItemList } from "./AttributeItemList";
 
 export const Trial = ({ data, setData, experimentName, trialTypeName }) => {
     const { currTrial, setCurrTrial, setShowExperiments } = useContext(experimentContext);
@@ -35,6 +36,11 @@ export const Trial = ({ data, setData, experimentName, trialTypeName }) => {
                 </>
             }
         >
+            <AttributeItemList
+                attributeTypes={currTrial.trialType.attributeTypes}
+                data={data}
+                setData={setData}
+            />
         </TreeRow>
     )
 }
