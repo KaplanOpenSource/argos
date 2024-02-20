@@ -49,6 +49,11 @@ export const DeviceType = ({ data, setData }) => {
                 fieldName='attributeTypes'
                 nameTemplate='New Attribute Type'
                 setData={setData}
+                newDataCreator={() => {
+                    return {
+                        type: 'String',
+                    }
+                }}
             >
                 {
                     (data.attributeTypes || []).map(itemData => (

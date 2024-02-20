@@ -59,6 +59,11 @@ export const TrialType = ({ data, setData, experimentName }) => {
                 fieldName='attributeTypes'
                 nameTemplate='New Attribute Type'
                 setData={setData}
+                newDataCreator={() => {
+                    return {
+                        type: 'String',
+                    }
+                }}
             >
                 {
                     (data.attributeTypes || []).map(itemData => (
