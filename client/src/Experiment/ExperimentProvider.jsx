@@ -12,8 +12,10 @@ export const ExperimentProvider = ({ children }) => {
     const [showExperiments, setShowExperiments] = useState(true);
     const [selection, setSelection] = useState([]);
 
+    const baseUrl = window.location.port === '8080' ? '' : 'http://127.0.0.1:8080';
+
     const getExperimentList = async () => {
-        const resp = await fetch("http://127.0.0.1:8080/experiment_list");
+        const resp = await fetch(baseUrl + "/experiment_list");
         const json = await resp.json();
         if ((json || {}).error) {
             alert(json.error);
@@ -25,7 +27,7 @@ export const ExperimentProvider = ({ children }) => {
         const exp = [];
         const errors = [];
         for (const name of (json || [])) {
-            const resp = await fetch("http://127.0.0.1:8080/experiment/" + name);
+            const resp = await fetch(baseUrl + "/experiment/" + name);
             const json = await resp.json();
             if ((json || {}).error) {
                 errors.push(json.error);
@@ -67,7 +69,7 @@ export const ExperimentProvider = ({ children }) => {
     const saveExperiment = async (name) => {
         const data = experiments.find(t => t.name === name);
         try {
-            const resp = await fetch("http://127.0.0.1:8080/experiment_set/" + name, {
+            const resp = await fetch(baseUrl + "/experiment_set/" + name, {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
