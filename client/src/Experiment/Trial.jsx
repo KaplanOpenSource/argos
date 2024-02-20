@@ -7,8 +7,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { GridOn } from "@mui/icons-material";
 import { AttributeItemList } from "./AttributeItemList";
 
-export const Trial = ({ data, setData, experimentName, trialTypeName }) => {
-    const { currTrial, setCurrTrial, setShowExperiments } = useContext(experimentContext);
+export const Trial = ({ data, setData, experiment, trialType }) => {
+    const { currTrial, setCurrTrial, setShowExperiments, experiments } = useContext(experimentContext);
     return (
         <TreeRow
             key={data.name}
@@ -22,7 +22,7 @@ export const Trial = ({ data, setData, experimentName, trialTypeName }) => {
                     />
                     <IconButton
                         onClick={() => {
-                            setCurrTrial({ experimentName, trialTypeName, trialName: data.name });
+                            setCurrTrial({ experimentName: experiment.name, trialTypeName: trialType.name, trialName: data.name });
                             setShowExperiments(false);
                         }}
                     >
@@ -37,7 +37,7 @@ export const Trial = ({ data, setData, experimentName, trialTypeName }) => {
             }
         >
             <AttributeItemList
-                attributeTypes={currTrial.trialType.attributeTypes}
+                attributeTypes={trialType.attributeTypes}
                 data={data}
                 setData={setData}
             />

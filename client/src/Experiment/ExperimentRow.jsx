@@ -62,7 +62,7 @@ export const ExperimentRow = ({ data, setData }) => {
                             setData={newData => {
                                 setData({ ...data, trialTypes: changeByName(data.trialTypes, itemData.name, newData) });
                             }}
-                            experimentName={data.name}
+                            experiment={data}
                         />
                     ))
                 }
@@ -83,7 +83,6 @@ export const ExperimentRow = ({ data, setData }) => {
                             setData={newData => {
                                 setData({ ...data, deviceTypes: changeByName(data.deviceTypes, itemData.name, newData) });
                             }}
-                            experimentName={data.name}
                         />
                     ))
                 }

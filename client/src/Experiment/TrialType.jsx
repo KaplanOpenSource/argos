@@ -9,7 +9,7 @@ import { changeByName } from "../Utils/utils";
 import { IconButton } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 
-export const TrialType = ({ data, setData, experimentName }) => {
+export const TrialType = ({ data, setData, experiment }) => {
     const { showExperiments, currTrial } = useContext(experimentContext);
     return (
         <TreeRow
@@ -46,8 +46,8 @@ export const TrialType = ({ data, setData, experimentName }) => {
                             setData={newData => {
                                 setData({ ...data, trials: changeByName(data.trials, itemData.name, newData) });
                             }}
-                            experimentName={experimentName}
-                            trialTypeName={data.name}
+                            experiment={experiment}
+                            trialType={data}
                         />
                     ))
                 }
