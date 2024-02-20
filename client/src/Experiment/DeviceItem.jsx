@@ -4,6 +4,8 @@ import { useContext } from "react";
 import { experimentContext } from "./ExperimentProvider";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { PlaylistAdd } from "@mui/icons-material";
+import { AttributeValue } from "./AttributeValue";
+import { changeByName } from "../Utils/utils";
 
 export const DeviceItem = ({ data, setData, deviceType }) => {
     const { selection, setSelection } = useContext(experimentContext);
@@ -11,6 +13,7 @@ export const DeviceItem = ({ data, setData, deviceType }) => {
         return deviceTypeName === deviceType.name && deviceItemName === data.name;
     });
     const isSelected = selectedIndex !== -1;
+    const attributes = data.attributes || [];
     return (
         <TreeRow
             key={data.name}
@@ -38,6 +41,20 @@ export const DeviceItem = ({ data, setData, deviceType }) => {
                 </>
             }
         >
+            {
+                (deviceType.attributeTypes || []).map(attrType => (
+                    <AttributeValue
+                        key={attrType.name}
+                        label={attrType.name}
+                        type={attrType.type || 'String'}
+                        data={(attributes.find(t => t.name === attrType.name) || { value: '' }).value}
+                        setData={newData => {
+                            const attrValue = { name: attrType.name, value: newData };
+                            setData({ ...data, attributes: changeByName(attributes, attrType.name, attrValue) });
+                        }}
+                    />
+                ))
+            }
         </TreeRow>
     )
 }

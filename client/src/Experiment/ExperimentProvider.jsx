@@ -91,11 +91,11 @@ export const ExperimentProvider = ({ children }) => {
 
     const currTrial = currTrialInternal
         ? {
-            experiment: currTrialInternal.experiment,
+            experiment: experiments[currTrialInternal.experimentIndex],
             experimentName: currTrialInternal.experimentName,
-            trialType: currTrialInternal.trialType,
+            trialType: experiments[currTrialInternal.experimentIndex].trialTypes[currTrialInternal.trialTypeIndex],
             trialTypeName: currTrialInternal.trialTypeName,
-            trial: currTrialInternal.trial,
+            trial: experiments[currTrialInternal.experimentIndex].trialTypes[currTrialInternal.trialTypeIndex].trials[currTrialInternal.trialIndex],
             trialName: currTrialInternal.trialName,
         }
         : {};
@@ -114,9 +114,9 @@ export const ExperimentProvider = ({ children }) => {
                     if (trialIndex >= 0) {
                         const trial = trialType.trials[trialIndex];
                         setCurrTrialInternal({
-                            experimentName, experimentIndex, experiment,
-                            trialTypeName, trialTypeIndex, trialType,
-                            trialName, trialIndex, trial,
+                            experimentName, experimentIndex,
+                            trialTypeName, trialTypeIndex,
+                            trialName, trialIndex,
                         });
                         replaceUrlParams({
                             experimentName,
@@ -147,7 +147,7 @@ export const ExperimentProvider = ({ children }) => {
             console.log(`trying to set trial data without current trial\n`, data);
             return;
         }
-        const e = JSON.parse(JSON.stringify(currTrialInternal.experiment));
+        const e = JSON.parse(JSON.stringify(experiments[currTrialInternal.experimentIndex]));
         e.trialTypes[currTrialInternal.trialTypeIndex].trials[currTrialInternal.trialIndex] = data;
         setExperiment(currTrialInternal.experimentName, e)
     }
