@@ -9,7 +9,8 @@ export const experimentContext = createContext();
 export const ExperimentProvider = ({ children }) => {
     const actions = {
         SET_ALL_EXPS: 1,
-        // SET_ONE_EXP: 2,
+        ADD_EXP: 2,
+        DEL_EXP: 3,
     };
     const initialState = {
         experiments: [],
@@ -18,8 +19,17 @@ export const ExperimentProvider = ({ children }) => {
         switch (action.type) {
             case actions.SET_ALL_EXPS:
                 return { ...state, experiments: action.payload };
-            // case actions.SET_ONE_EXP:
-            //     return { ...state, experiments: changeByName(state.experiments, action.name, action.payload) };
+            case actions.ADD_EXP:
+                const name = createNewName(state.experiments, 'New Experiment');
+                const newExp = {
+                    name,
+                    startDate: dayjs().startOf('day'),
+                    endDate: dayjs().startOf('day').add(7, 'day'),
+                    description: '',
+                };
+                return { ...state, experiments: [...state.experiments, newExp] };
+            case actions.DEL_EXP:
+                return { ...state, experiments: state.experiments.filter(t => t.name !== action.name) };
             default:
                 return state;
         }
@@ -66,6 +76,10 @@ export const ExperimentProvider = ({ children }) => {
         dispatch({ type: actions.SET_ALL_EXPS, payload: exp });
         const { experimentName, trialTypeName, trialName } = parseUrlParams();
         setCurrTrial({ experimentName, trialTypeName, trialName }, exp);
+    }
+
+    const deleteExperiment = (name) => {
+        dispatch({ type: actions.DEL_EXP, name: name });
     }
 
     const addExperiment = async () => {
@@ -176,6 +190,7 @@ export const ExperimentProvider = ({ children }) => {
 
     const store = {
         experiments,
+        deleteExperiment,
         setExperiment,
         saveExperiment,
         addExperiment,
