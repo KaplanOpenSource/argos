@@ -39,7 +39,6 @@ export const ExperimentProvider = ({ children }) => {
                 }
                 const experiments = state.experiments.slice();
                 const newDoc = applyOperation(state.experiments[i], action.operation).newDocument;
-                console.log(newDoc);
                 experiments[i] = newDoc;
                 return { ...state, experiments };
             default:

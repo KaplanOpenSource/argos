@@ -12,7 +12,7 @@ import { experimentContext } from "./ExperimentProvider";
 import { Save } from "@mui/icons-material";
 
 export const ExperimentRow = ({ data, setData }) => {
-    const { showExperiments, currTrial, saveExperiment, deleteExperiment } = useContext(experimentContext);
+    const { showExperiments, currTrial, saveExperiment, deleteExperiment, changeExperiment } = useContext(experimentContext);
     return (
         <TreeRow
             key={data.name}
@@ -20,15 +20,15 @@ export const ExperimentRow = ({ data, setData }) => {
             setData={setData}
             components={
                 <>
-                    <DateProperty data={data} path={"/startDate"}
+                    <DateProperty
                         label="Start Date"
-                        field="startDate"
-                        experimentName={data.name}
+                        data={data["startDate"]}
+                        setData={(val) => changeExperiment(data.name, { op: "replace", path: "/startDate", value: val })}
                     />
-                    <DateProperty data={data} path={"/endDate"}
+                    <DateProperty
                         label="End Date"
-                        field="endDate"
-                        experimentName={data.name}
+                        data={data["endDate"]}
+                        setData={(val) => changeExperiment(data.name, { op: "replace", path: "/endDate", value: val })}
                     />
                     <IconButton
                         onClick={() => downloadJsonFile(`experiment_${data.name}.json`, data)}
