@@ -83,14 +83,7 @@ export const ExperimentProvider = ({ children }) => {
     }
 
     const addExperiment = async () => {
-        const name = createNewName(experiments, 'New Experiment');
-        const data = {
-            name,
-            startDate: dayjs().startOf('day'),
-            endDate: dayjs().startOf('day').add(7, 'day'),
-            description: '',
-        };
-        setExperiment(name, data);
+        dispatch({ type: actions.ADD_EXP });
     }
 
     const setExperiment = (name, data) => {
