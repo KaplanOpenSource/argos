@@ -1,7 +1,10 @@
 import { DatePicker } from "@mui/x-date-pickers"
 import dayjs from 'dayjs';
+import { useContext } from "react";
+import { experimentContext } from "../Experiment/ExperimentProvider";
 
-export const DateProperty = ({ label, field, data, setData }) => {
+export const DateProperty = ({ label, field, data, path, experimentName }) => {
+    const { changeExperiment } = useContext(experimentContext);
     return (
         <DatePicker
             label={label}
@@ -17,7 +20,7 @@ export const DateProperty = ({ label, field, data, setData }) => {
             }}
             format='DD/MM/YYYY'
             value={dayjs(data[field])}
-            onChange={(val) => setData({ ...data, [field]: val })}
+            onChange={(val) => changeExperiment(experimentName, { op: "replace", path, value: val.toISOString() })}
         />
     )
 }

@@ -16,10 +16,10 @@ export const Trial = ({ data, setData, experiment, trialType }) => {
             setData={setData}
             components={
                 <>
-                    <DateProperty data={data} setData={setData}
+                    {/* <DateProperty data={data} setData={setData}
                         label="Created Date"
                         field="createdDate"
-                    />
+                    /> */}
                     <IconButton
                         onClick={() => {
                             setCurrTrial({ experimentName: experiment.name, trialTypeName: trialType.name, trialName: data.name });
