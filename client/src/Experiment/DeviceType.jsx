@@ -6,7 +6,7 @@ import { IconButton } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { changeByName } from "../Utils/utils";
 
-export const DeviceType = ({ data, setData }) => {
+export const DeviceType = ({ data, setData, path }) => {
     return (
         <TreeRow
             key={data.name}

@@ -78,10 +78,11 @@ export const ExperimentRow = ({ data, setData, path }) => {
                 setData={setData}
             >
                 {
-                    (data.deviceTypes || []).map(itemData => (
+                    (data.deviceTypes || []).map((itemData, index) => (
                         <DeviceType
                             key={itemData.name}
                             data={itemData}
+                            path={`${path}/deviceTypes/${index}`}
                             setData={newData => {
                                 setData({ ...data, deviceTypes: changeByName(data.deviceTypes, itemData.name, newData) });
                             }}
