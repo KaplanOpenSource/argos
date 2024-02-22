@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react"
+import { createContext, useEffect, useReducer, useState } from "react"
 import dayjs from 'dayjs';
 import { changeByName, createNewName, parseUrlParams, replaceUrlParams } from "../Utils/utils";
 
@@ -7,7 +7,26 @@ export const experimentContext = createContext();
 // export const useExperiment = useContext(experimentContext);
 
 export const ExperimentProvider = ({ children }) => {
-    const [experiments, setExperiments] = useState([]);
+    const actions = {
+        SET_ALL_EXPS: 1,
+        // SET_ONE_EXP: 2,
+    };
+    const initialState = {
+        experiments: [],
+    }
+    const reducer = (state, action) => {
+        switch (action.type) {
+            case actions.SET_ALL_EXPS:
+                return { ...state, experiments: action.payload };
+            // case actions.SET_ONE_EXP:
+            //     return { ...state, experiments: changeByName(state.experiments, action.name, action.payload) };
+            default:
+                return state;
+        }
+    };
+    const [state, dispatch] = useReducer(reducer, initialState);
+    const experiments = state.experiments;
+
     const [currTrialInternal, setCurrTrialInternal] = useState();
     const [showExperiments, setShowExperiments] = useState(true);
     const [selection, setSelection] = useState([]);
@@ -44,7 +63,7 @@ export const ExperimentProvider = ({ children }) => {
             return;
         }
 
-        setExperiments(exp);
+        dispatch({ type: actions.SET_ALL_EXPS, payload: exp });
         const { experimentName, trialTypeName, trialName } = parseUrlParams();
         setCurrTrial({ experimentName, trialTypeName, trialName }, exp);
     }
@@ -60,10 +79,9 @@ export const ExperimentProvider = ({ children }) => {
         setExperiment(name, data);
     }
 
-    const setExperiment = async (name, data) => {
-        setExperiments(prev => {
-            return changeByName(prev, name, data);
-        });
+    const setExperiment = (name, data) => {
+        const exp = changeByName(state.experiments, name, data);
+        dispatch({ type: actions.SET_ALL_EXPS, payload: exp });
     }
 
     const saveExperiment = async (name) => {
@@ -158,11 +176,9 @@ export const ExperimentProvider = ({ children }) => {
 
     const store = {
         experiments,
-        setExperiments,
         setExperiment,
         saveExperiment,
         addExperiment,
-        getExperimentList,
         setCurrTrial,
         currTrial,
         trialData,
