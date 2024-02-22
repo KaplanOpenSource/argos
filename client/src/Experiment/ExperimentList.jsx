@@ -65,10 +65,11 @@ export const ExperimentList = ({ }) => {
                 // }}
                 disableSelection
             >
-                {((showExperiments || !currTrial.experiment) ? experiments : [currTrial.experiment]).map(e => (
+                {((showExperiments || !currTrial.experiment) ? experiments : [currTrial.experiment]).map((e, i) => (
                     <ExperimentRow key={e.name}
                         data={e}
-                        setData={val => setExperiment(e.name, val)}
+                        path={`/${i}`}
+                        setData={val => setExperiment(e.name, val)} // Obsolete
                     />
                 ))}
             </TreeView>

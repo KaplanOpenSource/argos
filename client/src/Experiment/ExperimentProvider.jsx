@@ -33,13 +33,7 @@ export const ExperimentProvider = ({ children }) => {
             case actions.DEL_EXP:
                 return { ...state, experiments: state.experiments.filter(t => t.name !== action.name) };
             case actions.CHANGE_EXP:
-                const i = state.experiments.findIndex(t => t.name === action.name)
-                if (i === -1) {
-                    return state;
-                }
-                const experiments = state.experiments.slice();
-                const newDoc = applyOperation(state.experiments[i], action.operation).newDocument;
-                experiments[i] = newDoc;
+                const experiments = applyOperation(state.experiments, action.operation).newDocument;
                 return { ...state, experiments };
             default:
                 return state;
@@ -96,11 +90,12 @@ export const ExperimentProvider = ({ children }) => {
     const addExperiment = async () => {
         dispatch({ type: actions.ADD_EXP });
     }
-    
-    const changeExperiment = (name, operation) => {
-        dispatch({ type: actions.CHANGE_EXP, name, operation });
+
+    const changeExperiment = (operation) => {
+        dispatch({ type: actions.CHANGE_EXP, operation });
     }
 
+    // Obsolete
     const setExperiment = (name, data) => {
         const exp = changeByName(state.experiments, name, data);
         dispatch({ type: actions.SET_ALL_EXPS, payload: exp });

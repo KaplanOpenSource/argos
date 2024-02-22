@@ -11,7 +11,7 @@ import { changeByName, downloadJsonFile } from "../Utils/utils";
 import { experimentContext } from "./ExperimentProvider";
 import { Save } from "@mui/icons-material";
 
-export const ExperimentRow = ({ data, setData }) => {
+export const ExperimentRow = ({ data, setData, path }) => {
     const { showExperiments, currTrial, saveExperiment, deleteExperiment, changeExperiment } = useContext(experimentContext);
     return (
         <TreeRow
@@ -23,12 +23,12 @@ export const ExperimentRow = ({ data, setData }) => {
                     <DateProperty
                         label="Start Date"
                         data={data["startDate"]}
-                        setData={(val) => changeExperiment(data.name, { op: "replace", path: "/startDate", value: val })}
+                        setData={(val) => changeExperiment({ op: "replace", path: path + "/startDate", value: val })}
                     />
                     <DateProperty
                         label="End Date"
                         data={data["endDate"]}
-                        setData={(val) => changeExperiment(data.name, { op: "replace", path: "/endDate", value: val })}
+                        setData={(val) => changeExperiment({ op: "replace", path: path + "/endDate", value: val })}
                     />
                     <IconButton
                         onClick={() => downloadJsonFile(`experiment_${data.name}.json`, data)}
