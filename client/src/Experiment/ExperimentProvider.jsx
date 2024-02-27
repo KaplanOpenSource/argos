@@ -1,7 +1,6 @@
 import { createContext, useEffect, useReducer, useState } from "react"
 import dayjs from 'dayjs';
-import { changeByName, createNewName, parseUrlParams, replaceUrlParams, splitLast } from "../Utils/utils";
-import { applyOperation } from 'fast-json-patch';
+import { createNewName, parseUrlParams, replaceUrlParams, splitLast } from "../Utils/utils";
 import * as jsondiffpatch from 'jsondiffpatch';
 
 export const experimentContext = createContext();
