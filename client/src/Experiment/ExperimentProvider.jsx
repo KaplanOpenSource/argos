@@ -12,7 +12,8 @@ export const ExperimentProvider = ({ children }) => {
         SET_ALL_EXPS: 1,
         ADD_EXP: 2,
         DEL_EXP: 3,
-        CHANGE_EXP: 4,
+        SET_EXP: 4,
+        CHANGE_EXP: 5,
     };
     const initialState = {
         experiments: [],
@@ -32,16 +33,16 @@ export const ExperimentProvider = ({ children }) => {
                 return { ...state, experiments: [...state.experiments, newExp] };
             case actions.DEL_EXP:
                 return { ...state, experiments: state.experiments.filter(t => t.name !== action.name) };
-            case actions.CHANGE_EXP:
-                const i = state.experiments.findIndex(t => t.name === action.name)
-                if (i === -1) {
-                    return state;
+            case actions.SET_EXP:
+                {
+                    const i = state.experiments.findIndex(t => t.name === action.name)
+                    if (i === -1) {
+                        return state;
+                    }
+                    const experiments = state.experiments.slice();
+                    experiments[i] = action.data;
+                    return { ...state, experiments };
                 }
-                const experiments = state.experiments.slice();
-                const newDoc = applyOperation(state.experiments[i], action.operation).newDocument;
-                console.log(newDoc);
-                experiments[i] = newDoc;
-                return { ...state, experiments };
             default:
                 return state;
         }
@@ -97,16 +98,10 @@ export const ExperimentProvider = ({ children }) => {
     const addExperiment = async () => {
         dispatch({ type: actions.ADD_EXP });
     }
-    
-    const changeExperiment = (name, operation) => {
-        dispatch({ type: actions.CHANGE_EXP, name, operation });
-    }
 
     const setExperiment = (name, data) => {
-        const exp = changeByName(state.experiments, name, data);
-        dispatch({ type: actions.SET_ALL_EXPS, payload: exp });
+        dispatch({ type: actions.SET_EXP, name, data });
     }
-
 
     const saveExperiment = async (name) => {
         const data = experiments.find(t => t.name === name);
@@ -202,7 +197,6 @@ export const ExperimentProvider = ({ children }) => {
         experiments,
         deleteExperiment,
         addExperiment,
-        changeExperiment,
         setExperiment,
         saveExperiment,
         setCurrTrial,
