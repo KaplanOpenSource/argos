@@ -6,9 +6,10 @@ import {
 } from '@mui/material';
 import { experimentContext } from '../Experiment/ExperimentProvider';
 import { useContext } from 'react';
+import { Undo } from '@mui/icons-material';
 
 export const AppHeader = ({ }) => {
-    const { addExperiment, currTrial, setCurrTrial, showExperiments, setShowExperiments } = useContext(experimentContext);
+    const { undoOperation, currTrial, setCurrTrial, setShowExperiments } = useContext(experimentContext);
     const { experimentName, trialTypeName, trialName } = currTrial;
     return (
         <AppBar position="static"
@@ -27,6 +28,16 @@ export const AppHeader = ({ }) => {
                 <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                     Argos
                 </Typography>
+                <IconButton
+                    // size="large"
+                    edge="start"
+                    color="inherit"
+                    aria-label="menu"
+                    sx={{ mr: 2 }}
+                    onClick={() => undoOperation()}
+                >
+                    <Undo />
+                </IconButton>
                 {
                     trialName
                         ? <>
