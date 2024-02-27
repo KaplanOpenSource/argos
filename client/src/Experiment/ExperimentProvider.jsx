@@ -1,6 +1,6 @@
 import { createContext, useEffect, useReducer, useState } from "react"
 import dayjs from 'dayjs';
-import { changeByName, createNewName, parseUrlParams, replaceUrlParams } from "../Utils/utils";
+import { changeByName, createNewName, parseUrlParams, replaceUrlParams, splitLast } from "../Utils/utils";
 import { applyOperation } from 'fast-json-patch';
 import * as jsondiffpatch from 'jsondiffpatch';
 
@@ -49,19 +49,35 @@ export const ExperimentProvider = ({ children }) => {
                     const delta = jsondiffpatch.diff(experiments[i], action.data);
                     const undoStack = [...state.undoStack, { name, delta }]
                     experiments[i] = action.data;
-                    return { ...state, experiments, undoStack };
+                    return { ...state, experiments, undoStack, redoStack: [] };
                 }
             case actions.UNDO: {
-                if (state.undoStack.length === 0) {
-                    return state;
+                const [undoStack, item] = splitLast(state.undoStack);
+                if (item) {
+                    const { name, delta } = item;
+                    const i = state.experiments.findIndex(t => t.name === name)
+                    if (i !== -1) {
+                        const experiments = state.experiments.slice();
+                        experiments[i] = jsondiffpatch.unpatch(experiments[i], delta);
+                        const redoStack = [...state.redoStack, item];
+                        return { ...state, experiments, undoStack, redoStack };
+                    }
                 }
-                const { name, delta } = state.undoStack.at(-1);
-                const experiments = state.experiments.slice();
-                const i = experiments.findIndex(t => t.name === name)
-                if (i !== -1) {
-                    experiments[i] = jsondiffpatch.unpatch(experiments[i], delta);
+                return state;
+            }
+            case actions.REDO: {
+                const [redoStack, item] = splitLast(state.redoStack);
+                if (item) {
+                    const { name, delta } = item;
+                    const i = state.experiments.findIndex(t => t.name === name)
+                    if (i !== -1) {
+                        const experiments = state.experiments.slice();
+                        experiments[i] = jsondiffpatch.patch(experiments[i], delta);
+                        const undoStack = [...state.undoStack, item];
+                        return { ...state, experiments, undoStack, redoStack };
+                    }
                 }
-                return { ...state, experiments, undoStack: state.undoStack.slice(0, -1) };
+                return state;
             }
             default:
                 return state;

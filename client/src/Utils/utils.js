@@ -61,3 +61,10 @@ export function changeByName(arr, name, newData) {
     theItems[i] = newData;
     return theItems;
 }
+
+export function splitLast(arr) {
+    if (!arr || !arr.length) {
+        return [arr, undefined];
+    }
+    return [arr.slice(0, -1), arr.at(-1)];
+}
