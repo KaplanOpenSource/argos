@@ -127,6 +127,7 @@ export const ExperimentProvider = ({ children }) => {
     }
 
     const deleteExperiment = (name) => {
+        saveExperimentWithData(name, undefined);
         dispatch({ type: actions.DEL_EXP, name: name });
     }
 
@@ -138,8 +139,7 @@ export const ExperimentProvider = ({ children }) => {
         dispatch({ type: actions.SET_EXP, name, data });
     }
 
-    const saveExperiment = async (name) => {
-        const data = experiments.find(t => t.name === name);
+    const saveExperimentWithData = async (name, data) => {
         try {
             const resp = await fetch(baseUrl + "/experiment_set/" + name, {
                 method: 'POST',
@@ -159,6 +159,11 @@ export const ExperimentProvider = ({ children }) => {
             return false;
         }
         return true;
+    }
+
+    const saveExperiment = async (name) => {
+        const data = experiments.find(t => t.name === name);
+        return saveExperimentWithData(name, data);
     }
 
     const currTrial = currTrialInternal
