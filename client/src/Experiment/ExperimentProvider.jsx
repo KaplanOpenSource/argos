@@ -218,11 +218,11 @@ export const ExperimentProvider = ({ children }) => {
     }
 
     const setTrialData = (data) => {
-        if (!currTrialInternal) {
+        if (!currTrialInternal || currTrialInternal.trialIndex === undefined) {
             console.log(`trying to set trial data without current trial\n`, data);
             return;
         }
-        const e = JSON.parse(JSON.stringify(experiments[currTrialInternal.experimentIndex]));
+        const e = jsonpatch.deepClone(experiments[currTrialInternal.experimentIndex]);
         e.trialTypes[currTrialInternal.trialTypeIndex].trials[currTrialInternal.trialIndex] = data;
         setExperiment(currTrialInternal.experimentName, e)
     }
