@@ -4,8 +4,6 @@ import { experimentContext } from "../Experiment/ExperimentProvider";
 import { parseUrlParams, replaceUrlParams } from "../Utils/utils";
 
 export const MapPositionOnUrl = ({ }) => {
-    // const { selection, setSelection, currTrial, setTrialData } = useContext(experimentContext);
-
     const mapObj = useMapEvents({
         move: () => {
             replaceUrlParams({

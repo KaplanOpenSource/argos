@@ -17,7 +17,7 @@
     "@mui/x-date-pickers": "^6.19.2",
     "@mui/x-tree-view": "^6.17.0",
     "dayjs": "^1.11.10",
-    "jsondiffpatch": "^0.6.0",
+    "fast-json-patch": "^3.1.1",
     "leaflet": "^1.9.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

@@ -1,7 +1,7 @@
 import { createContext, useEffect, useReducer, useState } from "react"
 import dayjs from 'dayjs';
 import { createNewName, parseUrlParams, replaceUrlParams, splitLast } from "../Utils/utils";
-import * as jsondiffpatch from 'jsondiffpatch';
+import * as jsonpatch from 'fast-json-patch';
 
 export const experimentContext = createContext();
 
@@ -45,20 +45,22 @@ export const ExperimentProvider = ({ children }) => {
                         return state;
                     }
                     const experiments = state.experiments.slice();
-                    const delta = jsondiffpatch.diff(experiments[i], action.data);
-                    const undoStack = [...state.undoStack, { name, delta }]
+                    const undoPatch = jsonpatch.compare(action.data, experiments[i]);
+                    const undoStack = [...state.undoStack, { name, undoPatch }]
                     experiments[i] = action.data;
                     return { ...state, experiments, undoStack, redoStack: [] };
                 }
             case actions.UNDO: {
                 const [undoStack, item] = splitLast(state.undoStack);
                 if (item) {
-                    const { name, delta } = item;
+                    const { name, undoPatch } = item;
                     const i = state.experiments.findIndex(t => t.name === name)
                     if (i !== -1) {
                         const experiments = state.experiments.slice();
-                        experiments[i] = jsondiffpatch.unpatch(experiments[i], delta);
-                        const redoStack = [...state.redoStack, item];
+                        const newExp = jsonpatch.applyPatch(experiments[i], undoPatch, false, false).newDocument;
+                        const redoPatch = jsonpatch.compare(newExp, experiments[i]);
+                        experiments[i] = newExp;
+                        const redoStack = [...state.redoStack, { name, redoPatch }];
                         return { ...state, experiments, undoStack, redoStack };
                     }
                 }
@@ -67,12 +69,14 @@ export const ExperimentProvider = ({ children }) => {
             case actions.REDO: {
                 const [redoStack, item] = splitLast(state.redoStack);
                 if (item) {
-                    const { name, delta } = item;
+                    const { name, redoPatch } = item;
                     const i = state.experiments.findIndex(t => t.name === name)
                     if (i !== -1) {
                         const experiments = state.experiments.slice();
-                        experiments[i] = jsondiffpatch.patch(experiments[i], delta);
-                        const undoStack = [...state.undoStack, item];
+                        const newExp = jsonpatch.applyPatch(experiments[i], redoPatch, false, false).newDocument;
+                        const undoPatch = jsonpatch.compare(newExp, experiments[i]);
+                        experiments[i] = newExp;
+                        const undoStack = [...state.undoStack, { name, undoPatch }];
                         return { ...state, experiments, undoStack, redoStack };
                     }
                 }
@@ -213,13 +217,7 @@ export const ExperimentProvider = ({ children }) => {
         });
     }
 
-    const trialData = currTrialInternal
-        ? experiments[currTrialInternal.experimentIndex]
-            .trialTypes[currTrialInternal.trialTypeIndex]
-            .trials[currTrialInternal.trialIndex]
-        : undefined;
-
-    const setTrialData = async (data) => {
+    const setTrialData = (data) => {
         if (!currTrialInternal) {
             console.log(`trying to set trial data without current trial\n`, data);
             return;
@@ -241,7 +239,6 @@ export const ExperimentProvider = ({ children }) => {
         saveExperiment,
         setCurrTrial,
         currTrial,
-        trialData,
         setTrialData,
         showExperiments,
         setShowExperiments,

@@ -3,8 +3,8 @@ import { Marker } from "react-leaflet";
 import { experimentContext } from "../Experiment/ExperimentProvider";
 
 export const DeviceMarkers = ({ }) => {
-    const { selection, setSelection, trialData, setTrialData } = useContext(experimentContext);
-    const devicesOnTrial = (trialData || {}).devicesOnTrial || [];
+    const { currTrial } = useContext(experimentContext);
+    const devicesOnTrial = (currTrial.trial || {}).devicesOnTrial || [];
     // console.log('devices:\n' + devicesOnTrial.map(d => `${d.deviceItemName}: ${d.location.coordinates.map(x => Math.round(x * 1e7) / 1e7)}`).join('\n'));
     return (
         <>
