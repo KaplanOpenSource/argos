@@ -1,31 +1,32 @@
 import { FormControlLabel, MenuItem, Select, Switch, TextField } from "@mui/material";
 import { DateProperty } from "../Utils/DateProperty";
 import { TreeRow } from "../App/TreeRow";
+import { TextFieldDebounce } from "../Utils/TextFieldDebounce";
 
 export const AttributeValue = ({ type, label, data, setData }) => {
     if (type === 'Number') {
         return (
-            <TextField
+            <TextFieldDebounce
                 sx={{ padding: '5px' }}
                 variant='outlined'
                 label={label}
                 type="number"
                 size='small'
                 InputLabelProps={{ shrink: true }}
-                onChange={(e) => setData(e.target.value)}
+                onChange={val => setData(val)}
                 value={data}
             />
         )
     }
     if (type === 'String') {
         return (
-            <TextField
+            <TextFieldDebounce
                 sx={{ padding: '5px' }}
                 variant='outlined'
                 label={label}
                 size='small'
                 InputLabelProps={{ shrink: true }}
-                onChange={(e) => setData(e.target.value)}
+                onChange={val => setData(val)}
                 value={data}
             />
         )

@@ -1,6 +1,7 @@
 import { Box, TextField } from "@mui/material";
 
 import { TreeItem } from "@mui/x-tree-view/TreeItem";
+import { TextFieldDebounce } from "../Utils/TextFieldDebounce";
 
 export const TreeRow = ({ data, setData, components, children }) => {
     const { name } = data;
@@ -22,28 +23,28 @@ export const TreeRow = ({ data, setData, components, children }) => {
                     >
                         {name}
                     </Typography> */}
-                    <TextField
+                    <TextFieldDebounce
                         sx={{ padding: '5px' }}
                         variant="outlined"
                         size="small"
                         label="Name"
                         InputLabelProps={{ shrink: true }}
                         value={name}
-                        onChange={e => setData({ ...data, name: e.target.value })}
+                        onChange={val => setData({ ...data, name: val })}
                     />
                     {components}
                 </Box>
             }
             sx={{ padding: '5px' }}
         >
-            <TextField
+            <TextFieldDebounce
                 sx={{ padding: '5px' }}
                 variant="outlined"
                 size="small"
                 label="Description"
                 InputLabelProps={{ shrink: true }}
                 value={data.description}
-                onChange={e => setData({ ...data, description: e.target.value })}
+                onChange={val => setData({ ...data, description: val })}
             />
             {children}
         </TreeItem>
