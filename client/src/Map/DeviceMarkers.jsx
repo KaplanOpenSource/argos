@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { Marker } from "react-leaflet";
-import { experimentContext } from "../Experiment/ExperimentProvider";
+import { experimentContext } from "../Context/ExperimentProvider";
 
 export const DeviceMarkers = ({ }) => {
     const { currTrial } = useContext(experimentContext);

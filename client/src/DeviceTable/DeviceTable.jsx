@@ -3,7 +3,7 @@ import { TreeView } from "@mui/x-tree-view/TreeView"
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { useContext } from "react";
-import { experimentContext } from "../Experiment/ExperimentProvider";
+import { experimentContext } from "../Context/ExperimentProvider";
 import { DeviceItem } from "../Experiment/DeviceItem";
 
 export const DeviceTable = ({ }) => {

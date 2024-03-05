@@ -1,7 +1,7 @@
 import { Button, IconButton } from "@mui/material";
 import { TreeRow } from "../App/TreeRow";
 import { useContext } from "react";
-import { experimentContext } from "./ExperimentProvider";
+import { experimentContext } from "../Context/ExperimentProvider";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { PlaylistAdd } from "@mui/icons-material";
 import { AttributeValue } from "./AttributeValue";

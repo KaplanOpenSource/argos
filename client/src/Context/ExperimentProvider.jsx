@@ -3,129 +3,137 @@ import dayjs from 'dayjs';
 import { createNewName, parseUrlParams, replaceUrlParams, splitLast } from "../Utils/utils";
 import * as jsonpatch from 'fast-json-patch';
 
+const baseUrl = window.location.port === '8080' ? '' : 'http://127.0.0.1:8080';
+
 export const experimentContext = createContext();
 
 // export const useExperiment = useContext(experimentContext);
 
-export const ExperimentProvider = ({ children }) => {
-    const actions = {
-        SET_ALL_EXPS: "SET_ALL_EXPS",
-        ADD_EXP: "ADD_EXP",
-        DEL_EXP: "DEL_EXP",
-        SET_EXP: "SET_EXP",
-        CHANGE_EXP: "CHANGE_EXP",
-        UNDO: "UNDO",
-        REDO: "REDO",
-        CLEAR_SERVER: "CLEAR_SERVER",
-    };
-    const initialState = {
-        experiments: [],
-        undoStack: [],
-        redoStack: [],
-        serverUpdates: [],
-    }
-    const reducer = (state, action) => {
-        switch (action.type) {
-            case actions.SET_ALL_EXPS:
-                return { ...state, experiments: action.payload };
-            case actions.ADD_EXP:
-                const name = createNewName(state.experiments, 'New Experiment');
-                const newExp = {
-                    name,
-                    startDate: dayjs().startOf('day'),
-                    endDate: dayjs().startOf('day').add(7, 'day'),
-                    description: '',
-                };
-                return {
-                    ...state,
-                    experiments: [...state.experiments, newExp],
-                    serverUpdates: [...state.serverUpdates, { name, exp: newExp }],
-                };
-            case actions.DEL_EXP:
-                return {
-                    ...state,
-                    experiments: state.experiments.filter(t => t.name !== action.name),
-                    serverUpdates: [...state.serverUpdates, { name: action.name, exp: undefined }],
-                };
-            case actions.SET_EXP:
-                {
-                    const name = action.name;
-                    const i = state.experiments.findIndex(t => t.name === name)
-                    if (i === -1) {
-                        return state;
-                    }
-                    const redoPatch = jsonpatch.compare(state.experiments[i], action.data);
-                    if (redoPatch.length === 0) {
-                        return state;
-                    }
+const actions = {
+    SET_ALL_EXPS: "SET_ALL_EXPS",
+    ADD_EXP: "ADD_EXP",
+    DEL_EXP: "DEL_EXP",
+    SET_EXP: "SET_EXP",
+    CHANGE_EXP: "CHANGE_EXP",
+    UNDO: "UNDO",
+    REDO: "REDO",
+    CLEAR_SERVER_UPDATES: "CLEAR_SERVER_UPDATES",
+};
+
+const initialState = {
+    experiments: [],
+    undoStack: [],
+    redoStack: [],
+    serverUpdates: [],
+}
+
+const reducer = (state, action) => {
+    switch (action.type) {
+        case actions.SET_ALL_EXPS: {
+            return { ...state, experiments: action.payload };
+        }
+        case actions.ADD_EXP: {
+            const name = createNewName(state.experiments, 'New Experiment');
+            const newExp = {
+                name,
+                startDate: dayjs().startOf('day'),
+                endDate: dayjs().startOf('day').add(7, 'day'),
+                description: '',
+            };
+            return {
+                ...state,
+                experiments: [...state.experiments, newExp],
+                serverUpdates: [...state.serverUpdates, { name, exp: newExp }],
+            };
+        }
+        case actions.DEL_EXP: {
+            const { name } = action;
+            return {
+                ...state,
+                experiments: state.experiments.filter(t => t.name !== name),
+                serverUpdates: [...state.serverUpdates, { name, exp: undefined }],
+            };
+        }
+        case actions.SET_EXP: {
+            const { name, data } = action;
+            const i = state.experiments.findIndex(t => t.name === name)
+            if (i === -1) {
+                return state;
+            }
+            const redoPatch = jsonpatch.compare(state.experiments[i], data);
+            if (redoPatch.length === 0) {
+                return state;
+            }
+            const experiments = state.experiments.slice();
+            const undoPatch = jsonpatch.compare(data, experiments[i]);
+            const undoStack = [...state.undoStack, { name, undoPatch, redoPatch }]
+            experiments[i] = data;
+            return {
+                ...state,
+                experiments,
+                undoStack,
+                redoStack: [],
+                serverUpdates: [...state.serverUpdates, { name, exp: data }],
+            };
+        }
+        case actions.UNDO: {
+            const [undoStack, item] = splitLast(state.undoStack);
+            if (item) {
+                const { name, undoPatch } = item;
+                const i = state.experiments.findIndex(t => t.name === name)
+                if (i !== -1) {
                     const experiments = state.experiments.slice();
-                    const undoPatch = jsonpatch.compare(action.data, experiments[i]);
-                    const undoStack = [...state.undoStack, { name, undoPatch, redoPatch }]
-                    experiments[i] = action.data;
+                    const newExp = jsonpatch.applyPatch(experiments[i], undoPatch, false, false).newDocument;
+                    experiments[i] = newExp;
+                    const redoStack = [...state.redoStack, item];
                     return {
                         ...state,
                         experiments,
                         undoStack,
-                        redoStack: [],
-                        serverUpdates: [...state.serverUpdates, { name, exp: action.data }],
+                        redoStack,
+                        serverUpdates: [...state.serverUpdates, { name, exp: newExp }],
                     };
                 }
-            case actions.UNDO: {
-                const [undoStack, item] = splitLast(state.undoStack);
-                if (item) {
-                    const { name, undoPatch } = item;
-                    const i = state.experiments.findIndex(t => t.name === name)
-                    if (i !== -1) {
-                        const experiments = state.experiments.slice();
-                        const newExp = jsonpatch.applyPatch(experiments[i], undoPatch, false, false).newDocument;
-                        experiments[i] = newExp;
-                        const redoStack = [...state.redoStack, item];
-                        return {
-                            ...state,
-                            experiments,
-                            undoStack,
-                            redoStack,
-                            serverUpdates: [...state.serverUpdates, { name, exp: newExp }],
-                        };
-                    }
-                }
-                return state;
             }
-            case actions.REDO: {
-                const [redoStack, item] = splitLast(state.redoStack);
-                if (item) {
-                    const { name, redoPatch } = item;
-                    const i = state.experiments.findIndex(t => t.name === name)
-                    if (i !== -1) {
-                        const experiments = state.experiments.slice();
-                        const newExp = jsonpatch.applyPatch(experiments[i], redoPatch, false, false).newDocument;
-                        experiments[i] = newExp;
-                        const undoStack = [...state.undoStack, item];
-                        return {
-                            ...state,
-                            experiments,
-                            undoStack,
-                            redoStack,
-                            serverUpdates: [...state.serverUpdates, { name, exp: newExp }],
-                        };
-                    }
-                }
-                return state;
-            }
-            case actions.CLEAR_SERVER:
-                return { ...state, serverUpdates: [] };
-            default:
-                return state;
+            return state;
         }
-    };
+        case actions.REDO: {
+            const [redoStack, item] = splitLast(state.redoStack);
+            if (item) {
+                const { name, redoPatch } = item;
+                const i = state.experiments.findIndex(t => t.name === name)
+                if (i !== -1) {
+                    const experiments = state.experiments.slice();
+                    const newExp = jsonpatch.applyPatch(experiments[i], redoPatch, false, false).newDocument;
+                    experiments[i] = newExp;
+                    const undoStack = [...state.undoStack, item];
+                    return {
+                        ...state,
+                        experiments,
+                        undoStack,
+                        redoStack,
+                        serverUpdates: [...state.serverUpdates, { name, exp: newExp }],
+                    };
+                }
+            }
+            return state;
+        }
+        case actions.CLEAR_SERVER_UPDATES: {
+            return { ...state, serverUpdates: [] };
+        }
+        default: {
+            return state;
+        }
+    }
+};
+
+export const ExperimentProvider = ({ children }) => {
     const [state, dispatch] = useReducer(reducer, initialState);
     const experiments = state.experiments;
 
     const [currTrialInternal, setCurrTrialInternal] = useState();
     const [showExperiments, setShowExperiments] = useState(true);
     const [selection, setSelection] = useState([]);
-
-    const baseUrl = window.location.port === '8080' ? '' : 'http://127.0.0.1:8080';
 
     const getExperimentList = async () => {
         const resp = await fetch(baseUrl + "/experiment_list");
@@ -261,7 +269,7 @@ export const ExperimentProvider = ({ children }) => {
         if (state.serverUpdates.length > 0) {
             (async () => {
                 const updates = state.serverUpdates;
-                dispatch({ type: actions.CLEAR_SERVER });
+                dispatch({ type: actions.CLEAR_SERVER_UPDATES });
                 for (const { name, exp } of updates) {
                     await saveExperimentWithData(name, exp);
                 }

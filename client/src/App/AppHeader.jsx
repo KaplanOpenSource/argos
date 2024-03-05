@@ -4,7 +4,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import {
     AppBar, Button, IconButton, Toolbar, Typography
 } from '@mui/material';
-import { experimentContext } from '../Experiment/ExperimentProvider';
+import { experimentContext } from '../Context/ExperimentProvider';
 import { useContext } from 'react';
 import { Redo, Undo } from '@mui/icons-material';
 

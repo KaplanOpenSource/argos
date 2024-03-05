@@ -8,7 +8,7 @@ import { IconButton } from "@mui/material";
 import DownloadIcon from '@mui/icons-material/Download';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { changeByName, downloadJsonFile } from "../Utils/utils";
-import { experimentContext } from "./ExperimentProvider";
+import { experimentContext } from "../Context/ExperimentProvider";
 import { Save } from "@mui/icons-material";
 
 export const ExperimentRow = ({ data, setData }) => {

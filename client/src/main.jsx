@@ -7,7 +7,7 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
-import { ExperimentProvider } from './Experiment/ExperimentProvider';
+import { ExperimentProvider } from './Context/ExperimentProvider';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <LocalizationProvider dateAdapter={AdapterDayjs}>

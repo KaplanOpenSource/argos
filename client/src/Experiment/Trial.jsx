@@ -1,7 +1,7 @@
 import { Button, IconButton } from "@mui/material";
 import { DateProperty } from "../Utils/DateProperty";
 import { TreeRow } from "../App/TreeRow";
-import { experimentContext } from "../Experiment/ExperimentProvider";
+import { experimentContext } from "../Context/ExperimentProvider";
 import { useContext } from "react";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { GridOn } from "@mui/icons-material";

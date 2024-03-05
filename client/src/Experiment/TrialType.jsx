@@ -4,7 +4,7 @@ import { Trial } from "./Trial";
 import { TreeSublist } from "../App/TreeSublist";
 import { AttributeType } from "./AttributeType";
 import dayjs from "dayjs";
-import { experimentContext } from "./ExperimentProvider";
+import { experimentContext } from "../Context/ExperimentProvider";
 import { changeByName } from "../Utils/utils";
 import { IconButton } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';

@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { useMapEvents } from "react-leaflet";
-import { experimentContext } from "../Experiment/ExperimentProvider";
+import { experimentContext } from "../Context/ExperimentProvider";
 
 export const MapClickPlacer = ({ }) => {
     const { selection, setSelection, currTrial, setTrialData } = useContext(experimentContext);

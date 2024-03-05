@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { experimentContext } from "./ExperimentProvider";
+import { experimentContext } from "../Context/ExperimentProvider";
 import { ExperimentRow } from "./ExperimentRow";
 import { TreeView } from '@mui/x-tree-view/TreeView';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
