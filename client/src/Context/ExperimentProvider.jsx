@@ -2,8 +2,7 @@ import { createContext, useEffect, useReducer, useState } from "react"
 import dayjs from 'dayjs';
 import { createNewName, parseUrlParams, replaceUrlParams, splitLast } from "../Utils/utils";
 import * as jsonpatch from 'fast-json-patch';
-
-const baseUrl = window.location.port === '8080' ? '' : 'http://127.0.0.1:8080';
+import { fetchAllExperiments, saveExperimentWithData } from "./FetchExperiment";
 
 export const experimentContext = createContext();
 
@@ -135,41 +134,6 @@ export const ExperimentProvider = ({ children }) => {
     const [showExperiments, setShowExperiments] = useState(true);
     const [selection, setSelection] = useState([]);
 
-    const getExperimentList = async () => {
-        const resp = await fetch(baseUrl + "/experiment_list");
-        const json = await resp.json();
-        if ((json || {}).error) {
-            alert(json.error);
-            return;
-        }
-
-        // TODO: reading all the experiments data just to get the dates and so
-        // this can be optimized by fetching limited data from the server
-        const exp = [];
-        const errors = [];
-        for (const name of (json || [])) {
-            const resp = await fetch(baseUrl + "/experiment/" + name);
-            const json = await resp.json();
-            if ((json || {}).error) {
-                errors.push(json.error);
-                continue;
-            }
-            if ((json || {}).name !== name) {
-                errors.push(`corrupted experiment ${name}`);
-                continue;
-            }
-            exp.push(json);
-        }
-        if (errors.length) {
-            alert(errors.join('\n'));
-            return;
-        }
-
-        dispatch({ type: actions.SET_ALL_EXPS, payload: exp });
-        const { experimentName, trialTypeName, trialName } = parseUrlParams();
-        setCurrTrial({ experimentName, trialTypeName, trialName }, exp);
-    }
-
     const deleteExperiment = (name) => {
         dispatch({ type: actions.DEL_EXP, name: name });
     }
@@ -180,28 +144,6 @@ export const ExperimentProvider = ({ children }) => {
 
     const setExperiment = (name, data) => {
         dispatch({ type: actions.SET_EXP, name, data });
-    }
-
-    const saveExperimentWithData = async (name, data) => {
-        try {
-            const resp = await fetch(baseUrl + "/experiment_set/" + name, {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            });
-            const json = await resp.json();
-            if ((json || {}).error) {
-                alert(json.error);
-                return false;
-            }
-        } catch (e) {
-            alert(e);
-            return false;
-        }
-        return true;
     }
 
     const currTrial = currTrialInternal
@@ -262,7 +204,12 @@ export const ExperimentProvider = ({ children }) => {
     }
 
     useEffect(() => {
-        getExperimentList();
+        (async () => {
+            const exp = await fetchAllExperiments();
+            dispatch({ type: actions.SET_ALL_EXPS, payload: exp });
+            const { experimentName, trialTypeName, trialName } = parseUrlParams();
+            setCurrTrial({ experimentName, trialTypeName, trialName }, exp);
+        })()
     }, [])
 
     useEffect(() => {
