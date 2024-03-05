@@ -16,11 +16,13 @@ export const ExperimentProvider = ({ children }) => {
         CHANGE_EXP: "CHANGE_EXP",
         UNDO: "UNDO",
         REDO: "REDO",
+        CLEAR_SERVER: "CLEAR_SERVER",
     };
     const initialState = {
         experiments: [],
         undoStack: [],
         redoStack: [],
+        serverUpdates: [],
     }
     const reducer = (state, action) => {
         switch (action.type) {
@@ -34,9 +36,17 @@ export const ExperimentProvider = ({ children }) => {
                     endDate: dayjs().startOf('day').add(7, 'day'),
                     description: '',
                 };
-                return { ...state, experiments: [...state.experiments, newExp] };
+                return {
+                    ...state,
+                    experiments: [...state.experiments, newExp],
+                    serverUpdates: [...state.serverUpdates, { name, exp: newExp }],
+                };
             case actions.DEL_EXP:
-                return { ...state, experiments: state.experiments.filter(t => t.name !== action.name) };
+                return {
+                    ...state,
+                    experiments: state.experiments.filter(t => t.name !== action.name),
+                    serverUpdates: [...state.serverUpdates, { name: action.name, exp: undefined }],
+                };
             case actions.SET_EXP:
                 {
                     const name = action.name;
@@ -52,7 +62,13 @@ export const ExperimentProvider = ({ children }) => {
                     const undoPatch = jsonpatch.compare(action.data, experiments[i]);
                     const undoStack = [...state.undoStack, { name, undoPatch, redoPatch }]
                     experiments[i] = action.data;
-                    return { ...state, experiments, undoStack, redoStack: [] };
+                    return {
+                        ...state,
+                        experiments,
+                        undoStack,
+                        redoStack: [],
+                        serverUpdates: [...state.serverUpdates, { name, exp: action.data }],
+                    };
                 }
             case actions.UNDO: {
                 const [undoStack, item] = splitLast(state.undoStack);
@@ -64,7 +80,13 @@ export const ExperimentProvider = ({ children }) => {
                         const newExp = jsonpatch.applyPatch(experiments[i], undoPatch, false, false).newDocument;
                         experiments[i] = newExp;
                         const redoStack = [...state.redoStack, item];
-                        return { ...state, experiments, undoStack, redoStack };
+                        return {
+                            ...state,
+                            experiments,
+                            undoStack,
+                            redoStack,
+                            serverUpdates: [...state.serverUpdates, { name, exp: newExp }],
+                        };
                     }
                 }
                 return state;
@@ -79,11 +101,19 @@ export const ExperimentProvider = ({ children }) => {
                         const newExp = jsonpatch.applyPatch(experiments[i], redoPatch, false, false).newDocument;
                         experiments[i] = newExp;
                         const undoStack = [...state.undoStack, item];
-                        return { ...state, experiments, undoStack, redoStack };
+                        return {
+                            ...state,
+                            experiments,
+                            undoStack,
+                            redoStack,
+                            serverUpdates: [...state.serverUpdates, { name, exp: newExp }],
+                        };
                     }
                 }
                 return state;
             }
+            case actions.CLEAR_SERVER:
+                return { ...state, serverUpdates: [] };
             default:
                 return state;
         }
@@ -232,6 +262,18 @@ export const ExperimentProvider = ({ children }) => {
     useEffect(() => {
         getExperimentList();
     }, [])
+
+    useEffect(() => {
+        if (state.serverUpdates.length > 0) {
+            (async () => {
+                const updates = state.serverUpdates;
+                dispatch({ type: actions.CLEAR_SERVER });
+                for (const { name, exp } of updates) {
+                    await saveExperimentWithData(name, exp);
+                }
+            })();
+        }
+    }, [state]);
 
     const store = {
         experiments,
