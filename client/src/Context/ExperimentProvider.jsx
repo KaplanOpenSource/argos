@@ -163,7 +163,7 @@ export const ExperimentProvider = ({ children }) => {
             const trialType = experiment.trialTypes[state.currTrial.trialTypeIndex];
             const trial = trialType.trials[state.currTrial.trialIndex];
             return {
-                ...currTrial,
+                ...state.currTrial,
                 experiment,
                 trialType,
                 trial,
