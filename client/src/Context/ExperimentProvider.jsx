@@ -24,6 +24,7 @@ const initialState = {
     undoStack: [],
     redoStack: [],
     serverUpdates: [],
+    currTrial: {},
 }
 
 const reducer = (state, action) => {
@@ -120,6 +121,29 @@ const reducer = (state, action) => {
         case actions.CLEAR_SERVER_UPDATES: {
             return { ...state, serverUpdates: [] };
         }
+        case actions.SET_CURR_TRIAL: {
+            const { experimentName, trialTypeName, trialName } = action;
+            const experimentIndex = state.experiments.findIndex(t => t.name === experimentName);
+            if (experimentIndex >= 0) {
+                const experiment = state.experiments[experimentIndex];
+                const trialTypeIndex = experiment.trialTypes.findIndex(t => t.name === trialTypeName);
+                if (trialTypeIndex >= 0) {
+                    const trialType = experiment.trialTypes[trialTypeIndex];
+                    const trialIndex = trialType.trials.findIndex(t => t.name === trialName);
+                    if (trialIndex >= 0) {
+                        return {
+                            ...state,
+                            currTrial: {
+                                experimentName, experimentIndex,
+                                trialTypeName, trialTypeIndex,
+                                trialName, trialIndex,
+                            }
+                        }
+                    }
+                }
+            }
+            return { ...state, currTrial: {} };
+        }
         default: {
             return state;
         }
@@ -130,9 +154,30 @@ export const ExperimentProvider = ({ children }) => {
     const [state, dispatch] = useReducer(reducer, initialState);
     const experiments = state.experiments;
 
-    const [currTrialInternal, setCurrTrialInternal] = useState();
     const [showExperiments, setShowExperiments] = useState(true);
     const [selection, setSelection] = useState([]);
+
+    const currTrialByIndices = () => {
+        if (state.currTrial.trialName) {
+            const experiment = state.experiments[state.currTrial.experimentIndex];
+            const trialType = experiment.trialTypes[state.currTrial.trialTypeIndex];
+            const trial = trialType.trials[state.currTrial.trialIndex];
+            return {
+                ...currTrial,
+                experiment,
+                trialType,
+                trial,
+            }
+        }
+        return {};
+    }
+
+    const currTrial = currTrialByIndices();
+
+    const setCurrTrial = (newCurrTrialStruct) => {
+        const { experimentName, trialTypeName, trialName } = newCurrTrialStruct || {};
+        dispatch({ type: actions.SET_CURR_TRIAL, experimentName, trialTypeName, trialName })
+    }
 
     const deleteExperiment = (name) => {
         dispatch({ type: actions.DEL_EXP, name: name });
@@ -146,61 +191,14 @@ export const ExperimentProvider = ({ children }) => {
         dispatch({ type: actions.SET_EXP, name, data });
     }
 
-    const currTrial = currTrialInternal
-        ? {
-            experiment: experiments[currTrialInternal.experimentIndex],
-            experimentName: currTrialInternal.experimentName,
-            trialType: experiments[currTrialInternal.experimentIndex].trialTypes[currTrialInternal.trialTypeIndex],
-            trialTypeName: currTrialInternal.trialTypeName,
-            trial: experiments[currTrialInternal.experimentIndex].trialTypes[currTrialInternal.trialTypeIndex].trials[currTrialInternal.trialIndex],
-            trialName: currTrialInternal.trialName,
-        }
-        : {};
-
-    const setCurrTrial = (newCurrTrialStruct, theExperiments = undefined) => {
-        theExperiments = theExperiments || experiments;
-        if (newCurrTrialStruct) {
-            const { experimentName, trialTypeName, trialName } = newCurrTrialStruct;
-            const experimentIndex = theExperiments.findIndex(t => t.name === experimentName);
-            if (experimentIndex >= 0) {
-                const experiment = theExperiments[experimentIndex];
-                const trialTypeIndex = experiment.trialTypes.findIndex(t => t.name === trialTypeName);
-                if (trialTypeIndex >= 0) {
-                    const trialType = experiment.trialTypes[trialTypeIndex];
-                    const trialIndex = trialType.trials.findIndex(t => t.name === trialName);
-                    if (trialIndex >= 0) {
-                        const trial = trialType.trials[trialIndex];
-                        setCurrTrialInternal({
-                            experimentName, experimentIndex,
-                            trialTypeName, trialTypeIndex,
-                            trialName, trialIndex,
-                        });
-                        replaceUrlParams({
-                            experimentName,
-                            trialTypeName,
-                            trialName,
-                        });
-                        return;
-                    }
-                }
-            }
-        }
-        setCurrTrialInternal();
-        replaceUrlParams({
-            experimentName: undefined,
-            trialTypeName: undefined,
-            trialName: undefined,
-        });
-    }
-
     const setTrialData = (data) => {
-        if (!currTrialInternal || currTrialInternal.trialIndex === undefined) {
+        if (state.currTrial.trialName === undefined) {
             console.log(`trying to set trial data without current trial\n`, data);
             return;
         }
-        const e = jsonpatch.deepClone(experiments[currTrialInternal.experimentIndex]);
-        e.trialTypes[currTrialInternal.trialTypeIndex].trials[currTrialInternal.trialIndex] = data;
-        setExperiment(currTrialInternal.experimentName, e)
+        const e = jsonpatch.deepClone(currTrial.experiment);
+        e.trialTypes[currTrial.trialTypeIndex].trials[currTrial.trialIndex] = data;
+        setExperiment(currTrial.experimentName, e)
     }
 
     useEffect(() => {
@@ -208,9 +206,21 @@ export const ExperimentProvider = ({ children }) => {
             const exp = await fetchAllExperiments();
             dispatch({ type: actions.SET_ALL_EXPS, payload: exp });
             const { experimentName, trialTypeName, trialName } = parseUrlParams();
-            setCurrTrial({ experimentName, trialTypeName, trialName }, exp);
+            dispatch({ type: actions.SET_CURR_TRIAL, experimentName, trialTypeName, trialName });
         })()
     }, [])
+
+    useEffect(() => {
+        const { experimentName, trialTypeName, trialName } = state.currTrial;
+        const u = parseUrlParams();
+        if (experimentName !== u.experimentName || trialTypeName !== u.trialTypeName || trialName !== u.trialName) {
+            replaceUrlParams({
+                experimentName,
+                trialTypeName,
+                trialName,
+            });
+        }
+    }, [state.currTrial])
 
     useEffect(() => {
         if (state.serverUpdates.length > 0) {
@@ -222,7 +232,7 @@ export const ExperimentProvider = ({ children }) => {
                 }
             })();
         }
-    }, [state]);
+    }, [state.serverUpdates]);
 
     const store = {
         experiments,
