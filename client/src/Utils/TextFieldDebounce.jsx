@@ -1,46 +1,35 @@
-import React, { useState, useEffect } from 'react';
-import { TextField } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import TextField from '@mui/material/TextField';
+import debounce from 'lodash.debounce';
 
-// Custom debounce hook
-const useDebounce = (value, delay) => {
-    // State and setters for debounced value
-    const [debouncedValue, setDebouncedValue] = useState(value);
+export const TextFieldDebounce = ({ value, onChange, debounceMs = 500, ...props }) => {
+    const [innerValue, setInnerValue] = useState(value);
 
+    // Update inner value when external value changes
+    // This ensures the component stays controlled but still debounceable
     useEffect(() => {
-        // Set debouncedValue to value after the specified delay
-        const handler = setTimeout(() => {
-            setDebouncedValue(value);
-        }, delay);
+        setInnerValue(value);
+    }, [value]);
 
-        // Cancel the timeout if value changes (also on component unmount)
-        return () => {
-            clearTimeout(handler);
-        };
-    }, [value, delay]); // Only re-call effect if value or delay changes
+    // Create a debounced onChange function
+    const debouncedOnChange = React.useMemo(() => debounce(onChange, debounceMs), [onChange, debounceMs]);
 
-    return debouncedValue;
-};
-
-export const TextFieldDebounce = ({ value, onChange, delay = 500, ...props }) => {
-    const [inputValue, setInputValue] = useState(value);
-    const debouncedValue = useDebounce(inputValue, delay);
-
-    useEffect(() => {
-        // If the debounced value changes and it's different from the prop value, call onChange
-        if (debouncedValue !== value) {
-            onChange(debouncedValue);
-        }
-    }, [debouncedValue, value, onChange]);
-
-    // Handle input change
     const handleChange = (event) => {
-        setInputValue(event.target.value);
+        setInnerValue(event.target.value); // Update local state for immediate feedback
+        debouncedOnChange(event.target.value); // Pass the value to the debounced onChange
     };
+
+    // Cleanup the debounced function on component unmount
+    useEffect(() => {
+        return () => {
+            debouncedOnChange.cancel();
+        };
+    }, [debouncedOnChange]);
 
     return (
         <TextField
-            {...props}
-            value={inputValue}
+            {...props} // Pass any additional props to the TextField
+            value={innerValue}
             onChange={handleChange}
         />
     );

@@ -9,13 +9,13 @@ export const experimentContext = createContext();
 
 export const ExperimentProvider = ({ children }) => {
     const actions = {
-        SET_ALL_EXPS: 1,
-        ADD_EXP: 2,
-        DEL_EXP: 3,
-        SET_EXP: 4,
-        CHANGE_EXP: 5,
-        UNDO: 6,
-        REDO: 7,
+        SET_ALL_EXPS: "SET_ALL_EXPS",
+        ADD_EXP: "ADD_EXP",
+        DEL_EXP: "DEL_EXP",
+        SET_EXP: "SET_EXP",
+        CHANGE_EXP: "CHANGE_EXP",
+        UNDO: "UNDO",
+        REDO: "REDO",
     };
     const initialState = {
         experiments: [],
@@ -44,9 +44,13 @@ export const ExperimentProvider = ({ children }) => {
                     if (i === -1) {
                         return state;
                     }
+                    const redoPatch = jsonpatch.compare(state.experiments[i], action.data);
+                    if (redoPatch.length === 0) {
+                        return state;
+                    }
                     const experiments = state.experiments.slice();
                     const undoPatch = jsonpatch.compare(action.data, experiments[i]);
-                    const undoStack = [...state.undoStack, { name, undoPatch }]
+                    const undoStack = [...state.undoStack, { name, undoPatch, redoPatch }]
                     experiments[i] = action.data;
                     return { ...state, experiments, undoStack, redoStack: [] };
                 }
@@ -58,9 +62,8 @@ export const ExperimentProvider = ({ children }) => {
                     if (i !== -1) {
                         const experiments = state.experiments.slice();
                         const newExp = jsonpatch.applyPatch(experiments[i], undoPatch, false, false).newDocument;
-                        const redoPatch = jsonpatch.compare(newExp, experiments[i]);
                         experiments[i] = newExp;
-                        const redoStack = [...state.redoStack, { name, redoPatch }];
+                        const redoStack = [...state.redoStack, item];
                         return { ...state, experiments, undoStack, redoStack };
                     }
                 }
@@ -74,9 +77,8 @@ export const ExperimentProvider = ({ children }) => {
                     if (i !== -1) {
                         const experiments = state.experiments.slice();
                         const newExp = jsonpatch.applyPatch(experiments[i], redoPatch, false, false).newDocument;
-                        const undoPatch = jsonpatch.compare(newExp, experiments[i]);
                         experiments[i] = newExp;
-                        const undoStack = [...state.undoStack, { name, undoPatch }];
+                        const undoStack = [...state.undoStack, item];
                         return { ...state, experiments, undoStack, redoStack };
                     }
                 }
