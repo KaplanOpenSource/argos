@@ -12,7 +12,7 @@ import { experimentContext } from "./ExperimentProvider";
 import { Save } from "@mui/icons-material";
 
 export const ExperimentRow = ({ data, setData }) => {
-    const { showExperiments, currTrial, saveExperiment, deleteExperiment } = useContext(experimentContext);
+    const { showExperiments, currTrial, deleteExperiment } = useContext(experimentContext);
     return (
         <TreeRow
             key={data.name}
@@ -32,11 +32,6 @@ export const ExperimentRow = ({ data, setData }) => {
                         onClick={() => downloadJsonFile(`experiment_${data.name}.json`, data)}
                     >
                         <DownloadIcon />
-                    </IconButton>
-                    <IconButton
-                        onClick={() => saveExperiment(data.name)}
-                    >
-                        <Save />
                     </IconButton>
                     <IconButton
                         onClick={() => deleteExperiment(data.name)}

@@ -163,7 +163,6 @@ export const ExperimentProvider = ({ children }) => {
     }
 
     const deleteExperiment = (name) => {
-        saveExperimentWithData(name, undefined);
         dispatch({ type: actions.DEL_EXP, name: name });
     }
 
@@ -195,11 +194,6 @@ export const ExperimentProvider = ({ children }) => {
             return false;
         }
         return true;
-    }
-
-    const saveExperiment = async (name) => {
-        const data = experiments.find(t => t.name === name);
-        return saveExperimentWithData(name, data);
     }
 
     const currTrial = currTrialInternal
@@ -280,7 +274,6 @@ export const ExperimentProvider = ({ children }) => {
         deleteExperiment,
         addExperiment,
         setExperiment,
-        saveExperiment,
         setCurrTrial,
         currTrial,
         setTrialData,
