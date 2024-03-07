@@ -30,6 +30,7 @@ export const EditTool = ({ icon, id, component, title, shape, markedPoints, onCl
                 >
                     <Button key={id}
                         onClick={() => onClickIcon(id)}
+                        color='inherit'
                     >
                         {icon}
                     </Button>
