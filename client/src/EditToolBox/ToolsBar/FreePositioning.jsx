@@ -1,0 +1,36 @@
+import React from 'react';
+import { Grid, TextField } from '@mui/material';
+
+const FreePositioning = ({ classes, onSubmit, buttonText }) => {
+  const [pos, setPos] = React.useState({ x: 0, y: 0 });
+  const onChange = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+    setPos((p) => ({ ...p, [name]: parseFloat(value) }));
+  };
+  return (
+    <Grid container className={classes.tool}>
+      <Grid item className="toolItem">
+        <TextField
+          id="x-input"
+          label="x"
+          onChange={onChange}
+          name="x"
+          defaultValue={pos.x}
+          InputLabelProps={{ shrink: true }}
+        />
+        <TextField
+          id="y-input"
+          label="y"
+          onChange={onChange}
+          name="y"
+          defaultValue={pos.y}
+          InputLabelProps={{ shrink: true }}
+        />
+      </Grid>
+      {/* <Button text={buttonText} onClick={() => onSubmit(pos)} /> */}
+    </Grid>
+  );
+};
+
+export default FreePositioning;

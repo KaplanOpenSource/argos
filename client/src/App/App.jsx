@@ -7,6 +7,8 @@ import { Grid } from '@mui/material';
 import { MapClickPlacer } from '../Map/MapClickPlacer';
 import { DeviceMarkers } from '../Map/DeviceMarkers';
 import { MapPositionOnUrl } from '../Map/MapPositionOnUrl';
+import { EditToolBox } from '../EditToolBox/EditToolBox';
+import { ShapeProvider } from '../EditToolBox/ShapeContext';
 
 export function App() {
   return (
@@ -33,6 +35,17 @@ export function App() {
         <DeviceMarkers
         />
       </MapShower>
+
+      <ShapeProvider>
+        <EditToolBox
+        // handleSetOne={handleMapClick}
+        // handleSetMany={handlePutEntities}
+        // markedPoints={markedPoints}
+        // setMarkedPoints={setMarkedPoints}
+        // showEditBox={showEditBox}
+        // setShowEditBox={setShowEditBox}
+        ></EditToolBox>
+      </ShapeProvider>
     </>
   )
 }
