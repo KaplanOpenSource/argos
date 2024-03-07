@@ -1,7 +1,7 @@
 import React from 'react';
 import { Grid, TextField } from '@mui/material';
 
-const FreePositioning = ({ classes, onSubmit, buttonText }) => {
+const FreePositioning = ({ onSubmit, buttonText }) => {
   const [pos, setPos] = React.useState({ x: 0, y: 0 });
   const onChange = (e) => {
     const name = e.target.name;
@@ -9,7 +9,7 @@ const FreePositioning = ({ classes, onSubmit, buttonText }) => {
     setPos((p) => ({ ...p, [name]: parseFloat(value) }));
   };
   return (
-    <Grid container className={classes.tool}>
+    <Grid container>
       <Grid item className="toolItem">
         <TextField
           id="x-input"

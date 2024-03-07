@@ -37,7 +37,7 @@ export const EditTool = ({ icon, id, component, title, shape, markedPoints, onCl
                         zIndex: 1000
                     }}
                 >
-                    <Grid container className={classes.toolBoxContainer}
+                    <Grid container 
                         style={{
                             minWidth: 300,
                             minHeight: `100%`
@@ -45,7 +45,6 @@ export const EditTool = ({ icon, id, component, title, shape, markedPoints, onCl
                     >
                         <Grid item>
                             {React.cloneElement(component, {
-                                classes,
                                 markedPoints,
                                 title
                             })}

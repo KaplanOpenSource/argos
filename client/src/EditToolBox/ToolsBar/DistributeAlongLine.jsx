@@ -2,7 +2,7 @@ import React from 'react';
 import { Grid, TextField, Typography } from '@mui/material';
 import processingDecimalDigits from '../../Utils/processingDecimalDigits';
 
-const DistributeAlongLine = ({ classes, onSubmit, markedPoints, title }) => {
+const DistributeAlongLine = ({ onSubmit, markedPoints, title }) => {
   const points = Array.from({ ...markedPoints, length: Math.max(2, markedPoints.length) });
   const positions = points.map((p, i) => {
     const x = p ? processingDecimalDigits(p[0]) : '';
@@ -12,7 +12,7 @@ const DistributeAlongLine = ({ classes, onSubmit, markedPoints, title }) => {
   })
 
   return (
-    <Grid container className={classes.tool}>
+    <Grid container>
       {positions.map((point, index) => (
         <Grid item className="toolItem" key={index}>
           <Grid item md={1}>

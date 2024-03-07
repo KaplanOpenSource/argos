@@ -2,7 +2,7 @@ import React from 'react';
 import { Grid, TextField, Typography } from '@mui/material';
 import processingDecimalDigits from '../../Utils/processingDecimalDigits';
 
-const DistributeAlongArc = ({ classes, onSubmit, markedPoints }) => {
+const DistributeAlongArc = ({ onSubmit, markedPoints }) => {
   const labels = [
     'center',
     'radius',
@@ -17,7 +17,7 @@ const DistributeAlongArc = ({ classes, onSubmit, markedPoints }) => {
   })
 
   return (
-    <Grid container className={classes.tool}>
+    <Grid container>
       {positions.map((point, index) => (
         <Grid item className="toolItem" key={index}>
           <Grid item md={1}>

@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { AppHeader } from './AppHeader';
 import { ExperimentList } from '../Experiment/ExperimentList';
 import { MapShower } from '../Map/MapShower';
@@ -9,8 +8,12 @@ import { DeviceMarkers } from '../Map/DeviceMarkers';
 import { MapPositionOnUrl } from '../Map/MapPositionOnUrl';
 import { EditToolBox } from '../EditToolBox/EditToolBox';
 import { ShapeProvider } from '../EditToolBox/ShapeContext';
+import { useState } from 'react';
 
 export function App() {
+  const [showEditBox, setShowEditBox] = useState(false);
+  const [markedPoints, setMarkedPoints] = useState([]);
+
   return (
     <>
       <AppHeader
@@ -38,12 +41,12 @@ export function App() {
 
       <ShapeProvider>
         <EditToolBox
-        // handleSetOne={handleMapClick}
-        // handleSetMany={handlePutEntities}
-        // markedPoints={markedPoints}
-        // setMarkedPoints={setMarkedPoints}
-        // showEditBox={showEditBox}
-        // setShowEditBox={setShowEditBox}
+          // handleSetOne={handleMapClick}
+          // handleSetMany={handlePutEntities}
+          markedPoints={markedPoints}
+          setMarkedPoints={setMarkedPoints}
+          showEditBox={showEditBox}
+          setShowEditBox={setShowEditBox}
         ></EditToolBox>
       </ShapeProvider>
     </>

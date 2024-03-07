@@ -9,7 +9,7 @@ import {
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import processingDecimalDigits from '../../Utils/processingDecimalDigits';
 
-const Rectangle = ({ classes, markedPoints }) => {
+const Rectangle = ({ markedPoints }) => {
   const positions = [{ x: '', y: '' }];
   if (markedPoints.length > 0) {
     markedPoints.forEach((markedPoint, index) => {
@@ -21,7 +21,7 @@ const Rectangle = ({ classes, markedPoints }) => {
     });
   }
   return (
-    <Grid container className={classes.tool}>
+    <Grid container>
       {positions.slice(0, 4).map((point, index) => (
         <Grid item className="toolItem" key={index}>
           <Grid item md={1}>
