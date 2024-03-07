@@ -39,16 +39,18 @@ export const MarkedPoint = (props) => {
                     dragStartLoc = e.target.getLatLng();
                 }
             }}
-            // icon={divIcon({
-            //     className: 'argos-leaflet-div-icon',
-            //     iconSize: [20, 20],
-            //     html: renderToStaticMarkup(
-            //         <div>
-            //             <i className="fas fa-crosshairs"></i>
-            //         </div>
-            //     ),
-            //     iconAnchor: [6, 9]
-            // })}
+            icon={divIcon({
+                className: 'argos-leaflet-div-icon',
+                iconSize: [20, 20],
+                html: renderToStaticMarkup(
+                    <div>
+                        X
+                        {/* <FontAwesomeIcon icon={"fa-crosshairs"} /> */}
+                        {/* <i className="fas fa-crosshairs"></i> */}
+                    </div>
+                ),
+                iconAnchor: [6, 9]
+            })}
             {...props}
         >
             <Popup permanent>
