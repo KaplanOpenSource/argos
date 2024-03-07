@@ -17,6 +17,7 @@ const actions = {
     UNDO: "UNDO",
     REDO: "REDO",
     CLEAR_SERVER_UPDATES: "CLEAR_SERVER_UPDATES",
+    SET_CURR_TRIAL: "SET_CURR_TRIAL",
 };
 
 const initialState = {
@@ -131,6 +132,11 @@ const reducer = (state, action) => {
                     const trialType = experiment.trialTypes[trialTypeIndex];
                     const trialIndex = trialType.trials.findIndex(t => t.name === trialName);
                     if (trialIndex >= 0) {
+                        replaceUrlParams({
+                            experimentName,
+                            trialTypeName,
+                            trialName,
+                        });
                         return {
                             ...state,
                             currTrial: {
@@ -142,6 +148,11 @@ const reducer = (state, action) => {
                     }
                 }
             }
+            replaceUrlParams({
+                experimentName: undefined,
+                trialTypeName: undefined,
+                trialName: undefined,
+            });
             return { ...state, currTrial: {} };
         }
         default: {
@@ -176,7 +187,7 @@ export const ExperimentProvider = ({ children }) => {
 
     const setCurrTrial = (newCurrTrialStruct) => {
         const { experimentName, trialTypeName, trialName } = newCurrTrialStruct || {};
-        dispatch({ type: actions.SET_CURR_TRIAL, experimentName, trialTypeName, trialName })
+        dispatch({ type: actions.SET_CURR_TRIAL, experimentName, trialTypeName, trialName });
     }
 
     const deleteExperiment = (name) => {
@@ -206,21 +217,9 @@ export const ExperimentProvider = ({ children }) => {
             const exp = await fetchAllExperiments();
             dispatch({ type: actions.SET_ALL_EXPS, payload: exp });
             const { experimentName, trialTypeName, trialName } = parseUrlParams();
-            dispatch({ type: actions.SET_CURR_TRIAL, experimentName, trialTypeName, trialName });
+            setCurrTrial({ experimentName, trialTypeName, trialName });
         })()
     }, [])
-
-    useEffect(() => {
-        const { experimentName, trialTypeName, trialName } = state.currTrial;
-        const u = parseUrlParams();
-        if (experimentName !== u.experimentName || trialTypeName !== u.trialTypeName || trialName !== u.trialName) {
-            replaceUrlParams({
-                experimentName,
-                trialTypeName,
-                trialName,
-            });
-        }
-    }, [state.currTrial])
 
     useEffect(() => {
         if (state.serverUpdates.length > 0) {
