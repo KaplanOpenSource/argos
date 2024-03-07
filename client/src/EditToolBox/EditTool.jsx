@@ -15,14 +15,7 @@ import {
 import { ButtonWithShadow } from './ToolsBar/ButtonWithShadow';
 
 export const EditTool = ({ icon, id, component, title, shape, markedPoints, onClickIcon, showEditBox, onSubmit, submitText }) => {
-    // const iconStyle = shape === id ? classes.activeButton : null;
-    // const iconButtonStyle = shape === id ? classes.notActiveButton : null;
     return (
-        // <div
-        //     style={{ position: 'relative', textAlign: 'center' }}
-        //     key={title}
-        // // className={iconStyle}
-        // >
         <>
             <Tooltip
                 title={title}
@@ -31,7 +24,6 @@ export const EditTool = ({ icon, id, component, title, shape, markedPoints, onCl
                 <IconButton key={id}
                     color={shape === id ? "primary" : ""}
                     onClick={() => onClickIcon(id)}
-                // className={iconButtonStyle}
                 >
                     {icon}
                 </IconButton>
@@ -87,7 +79,6 @@ export const EditTool = ({ icon, id, component, title, shape, markedPoints, onCl
                     </Grid>
                 </Box>
             )}
-            {/* {id === POINT_SHAPE && <Divider variant="middle" light />} */}
         </>
     );
 }

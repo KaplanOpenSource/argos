@@ -1,5 +1,4 @@
 import React from 'react';
-// import { makeStyles } from '@mui/system';
 import {
     Divider,
     Box,
@@ -10,8 +9,6 @@ import {
 import RotateLeftIcon from '@mui/icons-material/RotateLeft';
 import PlaceIcon from '@mui/icons-material/Place';
 
-// import classnames from 'classnames';
-// import { styles } from './styles';
 import { useShape } from './ShapeContext.jsx';
 import CurveIcon from './utils/icons/CurveIcon.svg?react';
 import DotIcon from './utils/icons/DotIcon.svg?react';
@@ -35,17 +32,11 @@ import {
     ARC_SHAPE
 } from './utils/constants.js';
 
-import {
-    FreePositioning,
-    Dot,
-    DistributeAlongLine,
-    Rectangle,
-    DistributeAlongArc
-} from './ToolsBar';
 import { EditTool } from './EditTool.jsx';
-import { Place } from '@mui/icons-material';
-
-// const useStyles = makeStyles(styles);
+import FreePositioning from './ToolsBar/FreePositioning.jsx';
+import DistributeAlongLine from './ToolsBar/DistributeAlongLine.jsx';
+import DistributeAlongArc from './ToolsBar/DistributeAlongArc.jsx';
+import Rectangle from './ToolsBar/Rectangle.jsx';
 
 export const EditToolBox = ({
     handleSetOne,
@@ -56,7 +47,6 @@ export const EditToolBox = ({
     setShowEditBox,
     children,
 }) => {
-    // const classes = useStyles();
     const {
         shape,
         setShape,
@@ -87,10 +77,6 @@ export const EditToolBox = ({
             <Stack
                 direction="row"
             >
-                {/* <Typography variant="overline" align="center">
-                tools
-            </Typography> */}
-
                 <EditTool shape={shape} onClickIcon={onClickIcon} markedPoints={markedPoints} showEditBox={false}
                     id={CHOOSE_SHAPE}
                     icon={<PlaceIcon />}
@@ -141,10 +127,6 @@ export const EditToolBox = ({
                     title={RECTANGLE_TITLE}
                     onSubmit={handleSetMany}
                 />
-                {/* {(!children || children.length === 0) ? null :
-                <Divider orientation="vertical" />
-            } */}
-                {/* <Divider orientation="vertical" /> */}
                 {children}
             </Stack>
         </Paper>
