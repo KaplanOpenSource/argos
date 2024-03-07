@@ -19,7 +19,7 @@ const DistributeAlongArc = ({ onSubmit, markedPoints }) => {
   return (
     <Stack direction="column">
       {positions.map((point, index) => (
-        <Stack direction="row">
+        <Stack direction="row" key={index}>
           <Typography component="span" minWidth={50}>{positions[index].label}</Typography>
           <TextField
             InputProps={{ style: { fontSize: 14 } }}

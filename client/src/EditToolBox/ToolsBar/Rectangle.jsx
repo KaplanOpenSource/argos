@@ -23,7 +23,7 @@ const Rectangle = ({ markedPoints }) => {
   return (
     <Stack direction="column">
       {positions.slice(0, 4).map((point, index) => (
-        <Stack direction="row">
+        <Stack direction="row" key={index}>
           <Typography component="span" minWidth={45}>{index + 1}</Typography>
           <TextField
             InputProps={{ style: { fontSize: 14 } }}

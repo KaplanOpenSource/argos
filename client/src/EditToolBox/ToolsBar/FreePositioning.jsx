@@ -11,6 +11,7 @@ const FreePositioning = ({ onSubmit, buttonText }) => {
   return (
     <Stack direction="column">
       <TextField
+        key="x-input"
         id="x-input"
         label="x"
         onChange={onChange}
@@ -19,6 +20,7 @@ const FreePositioning = ({ onSubmit, buttonText }) => {
         InputLabelProps={{ shrink: true }}
       />
       <TextField
+        key="y-input"
         id="y-input"
         label="y"
         onChange={onChange}
