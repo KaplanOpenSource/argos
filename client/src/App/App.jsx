@@ -3,7 +3,7 @@ import { ExperimentList } from '../Experiment/ExperimentList';
 import { MapShower } from '../Map/MapShower';
 import { DeviceTable } from '../DeviceTable/DeviceTable';
 import { Grid } from '@mui/material';
-import { MapClickPlacer } from '../Map/MapClickPlacer';
+import { MapPlacer } from '../Map/MapPlacer';
 import { DeviceMarkers } from '../Map/DeviceMarkers';
 import { MapPositionOnUrl } from '../Map/MapPositionOnUrl';
 import { EditToolBox } from '../EditToolBox/EditToolBox';
@@ -29,17 +29,19 @@ export function App() {
         </Grid>
       </Grid>
 
-      <MapShower
-      >
-        <MapPositionOnUrl
-        />
-        <MapClickPlacer
-        />
-        <DeviceMarkers
-        />
-      </MapShower>
-
       <ShapeProvider>
+        <MapShower
+        >
+          <MapPositionOnUrl
+          />
+          <MapPlacer
+            markedPoints={markedPoints}
+            setMarkedPoints={setMarkedPoints}
+          />
+          <DeviceMarkers
+          />
+        </MapShower>
+
         <EditToolBox
           // handleSetOne={handleMapClick}
           // handleSetMany={handlePutEntities}

@@ -1,6 +1,6 @@
 import React, { createContext, useContext } from 'react'
 import { FREEPOSITIONING_SHAPE, CHOOSE_SHAPE, POINT_SHAPE } from './utils/constants.js';
-import { arcCurveFromPoints, lerpPoint, rectByAngle, resamplePolyline, splineCurve } from './GeometryUtils';
+import { arcCurveFromPoints, lerpPoint, rectByAngle, resamplePolyline, splineCurve } from '../Utils/GeometryUtils';
 
 export const ShapeContext = createContext(null)
 

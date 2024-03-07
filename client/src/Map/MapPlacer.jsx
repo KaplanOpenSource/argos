@@ -1,8 +1,12 @@
 import { useContext } from "react";
 import { experimentContext } from "../Context/ExperimentProvider";
 import { MapClickEventer } from "./MapClickEventer";
+import { MarkedShape } from "./MarkedShape";
 
-export const MapClickPlacer = ({ }) => {
+export const MapPlacer = ({
+    markedPoints,
+    setMarkedPoints,
+}) => {
     const { selection, setSelection, currTrial, setTrialData } = useContext(experimentContext);
 
     const onMapClick = (latlng) => {
@@ -21,8 +25,16 @@ export const MapClickPlacer = ({ }) => {
     }
 
     return (
-        <MapClickEventer
-            onMapClick={onMapClick}
-        />
+        <>
+            <MapClickEventer
+                onMapClick={onMapClick}
+            />
+            <MarkedShape
+                markedPoints={markedPoints}
+                setMarkedPoints={setMarkedPoints}
+                entityNum={selection.length}
+                // distanceInMeters={showDistanceInMeters}
+            />
+        </>
     )
 }
