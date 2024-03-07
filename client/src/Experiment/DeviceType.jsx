@@ -5,6 +5,7 @@ import { AttributeType } from "./AttributeType";
 import { IconButton } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { changeByName } from "../Utils/utils";
+import { AddMultipleDevices } from "./AddMultipleDevices";
 
 export const DeviceType = ({ data, setData }) => {
     return (
@@ -28,6 +29,12 @@ export const DeviceType = ({ data, setData }) => {
                 fieldName='devices'
                 nameTemplate='New Device'
                 setData={setData}
+                components={
+                    <AddMultipleDevices
+                        deviceType={data}
+                        addDevices={newDevices => setData({ ...data, devices: [...(data.devices || []), ...newDevices] })}
+                    />
+                }
             >
                 {
                     (data.devices || []).map(itemData => (
