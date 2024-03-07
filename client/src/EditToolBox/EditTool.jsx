@@ -7,6 +7,7 @@ import {
     Box,
     Tooltip,
     Paper,
+    Button,
 } from '@mui/material';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import CloseIcon from "@mui/icons-material/Close";
@@ -22,12 +23,17 @@ export const EditTool = ({ icon, id, component, title, shape, markedPoints, onCl
                 title={title}
                 placement="top"
             >
-                <IconButton key={id}
-                    color={shape === id ? "primary" : ""}
-                    onClick={() => onClickIcon(id)}
+                <div
+                    style={{
+                        borderBottom: shape === id ? '2px solid #27AE60' : '',
+                    }}
                 >
-                    {icon}
-                </IconButton>
+                    <Button key={id}
+                        onClick={() => onClickIcon(id)}
+                    >
+                        {icon}
+                    </Button>
+                </div>
             </Tooltip>
             {showEditBox && shape === id && (
                 <Paper
@@ -41,7 +47,7 @@ export const EditTool = ({ icon, id, component, title, shape, markedPoints, onCl
                         borderColor: 'black',
                     }}
                 >
-                    <Grid container 
+                    <Grid container
                         style={{
                             minWidth: 300,
                             minHeight: `100%`
