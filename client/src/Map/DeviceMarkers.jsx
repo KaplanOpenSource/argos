@@ -9,6 +9,10 @@ export const DeviceMarkers = ({ }) => {
     return (
         <>
             {devicesOnTrial.map(d => {
+                if (!d.location.coordinates) {
+                    console.log('no coordinates on device:', JSON.stringify(d));
+                    return null;
+                }
                 return (
                     <Marker
                         key={d.deviceTypeName + '_' + d.deviceItemName}
