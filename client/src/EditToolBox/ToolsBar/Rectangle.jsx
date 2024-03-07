@@ -1,4 +1,4 @@
-import { Grid, TextField, Typography } from '@mui/material';
+import { Grid, Stack, TextField, Typography } from '@mui/material';
 import React from 'react';
 import {
   Divider,
@@ -21,35 +21,29 @@ const Rectangle = ({ markedPoints }) => {
     });
   }
   return (
-    <Grid container>
+    <Stack direction="column">
       {positions.slice(0, 4).map((point, index) => (
-        <Grid item className="toolItem" key={index}>
-          <Grid item md={1}>
-            <Typography component="span">{index + 1}</Typography>
-          </Grid>
-          <Grid item md={4}>
-            <TextField
-              InputProps={{ style: { fontSize: 14 } }}
-              id="x-input"
-              label="x"
-              value={point.x}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Grid>
-          <Grid item md={4}>
-            <TextField
-              InputProps={{ style: { fontSize: 14 } }}
-              id="y-input"
-              label="y"
-              value={point.y}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Grid>
-        </Grid>
+        <Stack direction="row">
+          <Typography component="span" minWidth={45}>{index + 1}</Typography>
+          <TextField
+            InputProps={{ style: { fontSize: 14 } }}
+            id="x-input"
+            label="x"
+            value={point.x}
+            InputLabelProps={{ shrink: true }}
+          />
+          <TextField
+            InputProps={{ style: { fontSize: 14 } }}
+            id="y-input"
+            label="y"
+            value={point.y}
+            InputLabelProps={{ shrink: true }}
+          />
+        </Stack>
       ))}
 
       {/* <Button className="button" text="distribute" onClick={onSubmit} /> */}
-    </Grid>
+    </Stack>
   );
 };
 

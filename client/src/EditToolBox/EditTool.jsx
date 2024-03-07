@@ -6,6 +6,7 @@ import {
     Grid,
     Box,
     Tooltip,
+    Paper,
 } from '@mui/material';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import CloseIcon from "@mui/icons-material/Close";
@@ -29,12 +30,15 @@ export const EditTool = ({ icon, id, component, title, shape, markedPoints, onCl
                 </IconButton>
             </Tooltip>
             {showEditBox && shape === id && (
-                <Box
+                <Paper
                     sx={{
                         position: 'absolute',
                         bottom: 'calc(100% + 10px)',
                         left: 0,
-                        zIndex: 1000
+                        zIndex: 1000,
+                        padding: '5px',
+                        border: 2,
+                        borderColor: 'black',
                     }}
                 >
                     <Grid container 
@@ -76,7 +80,7 @@ export const EditTool = ({ icon, id, component, title, shape, markedPoints, onCl
                         </Grid>
 
                     </Grid>
-                </Box>
+                </Paper>
             )}
         </>
     );

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, TextField, Typography } from '@mui/material';
+import { Stack, TextField, Typography } from '@mui/material';
 import processingDecimalDigits from '../../Utils/processingDecimalDigits';
 
 const DistributeAlongLine = ({ onSubmit, markedPoints, title }) => {
@@ -12,34 +12,30 @@ const DistributeAlongLine = ({ onSubmit, markedPoints, title }) => {
   })
 
   return (
-    <Grid container>
+    <Stack direction="column">
       {positions.map((point, index) => (
-        <Grid item className="toolItem" key={index}>
-          <Grid item md={1}>
-            <Typography component="span">{point.label}</Typography>
-          </Grid>
-          <Grid item md={4}>
-            <TextField
-              InputProps={{ style: { fontSize: 14 } }}
-              id="x-input"
-              label="x"
-              value={point.x}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Grid>
-          <Grid item md={4}>
-            <TextField
-              InputProps={{ style: { fontSize: 14 } }}
-              id="y-input"
-              label="y"
-              value={point.y}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Grid>
-        </Grid>
+        <Stack direction="row">
+          <Typography component="span" minWidth={40}>{point.label}</Typography>
+          <TextField
+            InputProps={{ style: { fontSize: 14 } }}
+            id="x-input"
+            label="x"
+            value={point.x}
+            InputLabelProps={{ shrink: true }}
+            fullWidth={true}
+          />
+          <TextField
+            InputProps={{ style: { fontSize: 14 } }}
+            id="y-input"
+            label="y"
+            value={point.y}
+            InputLabelProps={{ shrink: true }}
+            fullWidth={true}
+          />
+        </Stack>
       ))}
       {/* <Button className="button" text="distribute" onClick={onSubmit} /> */}
-    </Grid>
+    </Stack>
   );
 };
 
