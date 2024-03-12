@@ -3,7 +3,7 @@ import { experimentContext } from "../Context/ExperimentProvider";
 import { MapClickEventer } from "./MapClickEventer";
 import { MarkedShape } from "./MarkedShape";
 import { useShape } from "../EditToolBox/ShapeContext";
-import { FREEPOSITIONING_SHAPE } from "../EditToolBox/utils/constants";
+import { FREEPOSITIONING_SHAPE, POINT_SHAPE } from "../EditToolBox/utils/constants";
 
 export const MapPlacer = ({
     markedPoints,
@@ -27,6 +27,8 @@ export const MapPlacer = ({
                 if (selection.length > 0) {
                     setLocationsToStackDevices([latlng]);
                 }
+            } else if (shape === POINT_SHAPE) {
+                setLocationsToStackDevices(selection.map(_ => latlng));
             }
         }
     }
