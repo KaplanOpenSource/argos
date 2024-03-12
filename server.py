@@ -108,13 +108,14 @@ def upload():
     file = request.files["file"]
     if file.filename == "":  # If the user does not select a file, the browser submits an empty file without a filename.
         return {"error": "No selected file"}
-    if file and allowed_file(file.filename):
-        ts = datetime.now().isoformat().replace("-", "").replace(".", "_")
-        filename = secure_filename(ts + "_" + file.filename)
-        os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-        file.save(os.path.join(UPLOAD_FOLDER, filename))
-        return url_for("download_file", name=filename)
-    return {"error": "File not allowed"}
+    if not file or not allowed_file(file.filename):
+        return {"error": "File not allowed"}
+    ts = datetime.now().isoformat().replace("-", "").replace(".", "_")
+    filename = secure_filename(ts + "_" + file.filename)
+    os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+    file.save(os.path.join(UPLOAD_FOLDER, filename))
+    path = url_for("download_file", name=filename)
+    return {"path": path}
 
 
 @app.route("/uploads/<name>")

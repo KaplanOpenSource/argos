@@ -18,6 +18,7 @@ export const ImageStandalone = ({ data, setData }) => {
                         <DeleteIcon />
                     </IconButton>
                     <UploadImageIcon
+                        onChangeFile={(path, height, width) => setData({ ...data, path, height, width })}
                     />
                 </>
             }

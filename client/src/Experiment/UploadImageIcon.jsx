@@ -51,34 +51,21 @@ export const UploadImageIcon = ({ onChangeFile }) => {
         if (height && width) {
             const formData = new FormData();
             formData.append('file', file);
-            // formData.append('filename', '1.png');
             const resp = await fetch(baseUrl + "/upload", {
                 method: 'POST',
-                // headers: {
-                //     // 'Accept': 'application/json',
-                //     "Content-Type": "multipart/form-data",
-                //     // "type": "formData",
-                // },
                 body: formData,
             });
-            const ret = await resp.text();
-            console.log(ret);
-            // const imageServerFilename = await uploadFileToServer(file);
-            // if (imageServerFilename) {
-            //     onChangeFile(imageServerFilename.path, height, width)
-            // }
+            const ret = await resp.json();
+            const error = (ret || { error: 'invalid server reply' }).error;
+            if (error) {
+                alert(error);
+            } else {
+                onChangeFile(ret.path, height, width)
+            }
         }
 
         // setWorking(false);
     };
-
-    // const uploadFileToServer = async (file) => {
-    //     // const data = await client.mutate({ mutation: UPLOAD_FILE, variables: { file } });
-    //     // if (!data || !data.data || !data.data.uploadFile || data.data.uploadFile === "err") {
-    //     //     return undefined;
-    //     // }
-    //     // return data.data.uploadFile
-    // };
 
     return (
         <>
@@ -90,7 +77,7 @@ export const UploadImageIcon = ({ onChangeFile }) => {
                 onChange={handleChangeFile}
                 accept="image/*"
             />
-            <IconButton aria-label="expand row"
+            <IconButton
                 onClick={onButtonClick}
             // disabled={working}
             >
