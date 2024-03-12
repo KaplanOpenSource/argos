@@ -2,6 +2,7 @@ import { IconButton, Stack } from "@mui/material"
 import { TreeRow } from "../App/TreeRow"
 import DeleteIcon from '@mui/icons-material/Delete';
 import { TextFieldDebounce, TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
+import { UploadImageIcon } from "./UploadImageIcon";
 
 export const ImageStandalone = ({ data, setData }) => {
     return (
@@ -16,6 +17,8 @@ export const ImageStandalone = ({ data, setData }) => {
                     >
                         <DeleteIcon />
                     </IconButton>
+                    <UploadImageIcon
+                    />
                 </>
             }
         >
