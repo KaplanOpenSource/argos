@@ -10,6 +10,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { changeByName, downloadJsonFile } from "../Utils/utils";
 import { experimentContext } from "../Context/ExperimentProvider";
 import { Save } from "@mui/icons-material";
+import { ImageStandalone } from "./ImageStandalone";
+import { ImageEmbedded } from "./ImageEmbedded";
 
 export const ExperimentRow = ({ data, setData }) => {
     const { showExperiments, currTrial, deleteExperiment } = useContext(experimentContext);
@@ -77,6 +79,46 @@ export const ExperimentRow = ({ data, setData }) => {
                             data={itemData}
                             setData={newData => {
                                 setData({ ...data, deviceTypes: changeByName(data.deviceTypes, itemData.name, newData) });
+                            }}
+                        />
+                    ))
+                }
+            </TreeSublist>
+
+            <TreeSublist
+                parentKey={data.name}
+                data={data}
+                fieldName='imageEmbedded'
+                nameTemplate='New Embedded Image'
+                setData={setData}
+            >
+                {
+                    (data.imageEmbedded || []).map(itemData => (
+                        <ImageEmbedded
+                            key={itemData.name}
+                            data={itemData}
+                            setData={newData => {
+                                setData({ ...data, imageEmbedded: changeByName(data.imageEmbedded, itemData.name, newData) });
+                            }}
+                        />
+                    ))
+                }
+            </TreeSublist>
+
+            <TreeSublist
+                parentKey={data.name}
+                data={data}
+                fieldName='imageStandalone'
+                nameTemplate='New Standalone Image'
+                setData={setData}
+            >
+                {
+                    (data.imageStandalone || []).map(itemData => (
+                        <ImageStandalone
+                            key={itemData.name}
+                            data={itemData}
+                            setData={newData => {
+                                setData({ ...data, imageStandalone: changeByName(data.imageStandalone, itemData.name, newData) });
                             }}
                         />
                     ))

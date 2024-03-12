@@ -34,3 +34,15 @@ export const TextFieldDebounce = ({ value, onChange, debounceMs = 500, ...props 
         />
     );
 };
+
+export const TextFieldDebounceOutlined = ({ ...props }) => {
+    return (
+        <TextFieldDebounce
+            {...props}
+            sx={{ padding: '5px' }}
+            variant="outlined"
+            size="small"
+            InputLabelProps={{ shrink: true }}
+        />
+    )
+}
