@@ -12,6 +12,7 @@ export const MapPlacer = ({
     const { selection, setSelection, currTrial, setTrialData } = useContext(experimentContext);
     const {
         shape,
+        shapeData,
     } = useShape();
 
     const onMapClick = (latlng) => {
@@ -29,7 +30,13 @@ export const MapPlacer = ({
                 setTrialData(data);
             }
         } else {
-            setMarkedPoints([...markedPoints, latlng]);
+            if (!shapeData.noControlPoints) {
+                if (!shapeData.maxPoints) {
+                    setMarkedPoints([...markedPoints, latlng]);
+                } else {
+                    setMarkedPoints([...markedPoints.slice(0, shapeData.maxPoints - 1), latlng]);
+                }
+            }
         }
     }
 
