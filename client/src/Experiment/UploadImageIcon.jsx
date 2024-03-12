@@ -1,25 +1,14 @@
-import React, { useRef, useContext } from "react";
-// import gql from 'graphql-tag';
-// import { WorkingContext } from "../../AppLayout/AppLayout.jsx";
+import React, { useRef, useState } from "react";
 import {
     IconButton,
-    Icon,
 } from "@mui/material";
-
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
+import HourglassBottomIcon from '@mui/icons-material/HourglassBottom';
 import { baseUrl } from "../Context/FetchExperiment";
-
-// const UPLOAD_FILE = gql`
-//   mutation($file: Upload!) {
-//     uploadFile(file: $file){
-//       filename
-//       path
-//     }
-//   }`;
 
 export const UploadImageIcon = ({ onChangeFile }) => {
     const inputFile = useRef(null);
-    // const { working, setWorking } = useContext(WorkingContext);
+    const [working, setWorking] = useState(false);
 
     const onButtonClick = () => {
         // `current` points to the mounted file input element
@@ -45,7 +34,7 @@ export const UploadImageIcon = ({ onChangeFile }) => {
             return;
         }
 
-        // setWorking(true);
+        setWorking(true);
 
         const [height, width] = await getImageSize(file);
         if (height && width) {
@@ -64,7 +53,7 @@ export const UploadImageIcon = ({ onChangeFile }) => {
             }
         }
 
-        // setWorking(false);
+        setWorking(false);
     };
 
     return (
@@ -79,9 +68,12 @@ export const UploadImageIcon = ({ onChangeFile }) => {
             />
             <IconButton
                 onClick={onButtonClick}
-            // disabled={working}
+                disabled={working}
             >
-                <FolderOpenIcon />
+                {working
+                    ? <HourglassBottomIcon />
+                    : <FolderOpenIcon />
+                }
             </IconButton>
         </>
     );
