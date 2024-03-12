@@ -3,6 +3,7 @@ import { Marker, Popup } from "react-leaflet";
 import { divIcon } from 'leaflet';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCrosshairs } from '@fortawesome/free-solid-svg-icons'
 
 let dragStartLoc;
 
@@ -43,10 +44,8 @@ export const MarkedPoint = (props) => {
                 className: 'argos-leaflet-div-icon',
                 iconSize: [20, 20],
                 html: renderToStaticMarkup(
-                    <div>
-                        X
-                        {/* <FontAwesomeIcon icon={"fa-crosshairs"} /> */}
-                        {/* <i className="fas fa-crosshairs"></i> */}
+                    <div >
+                        <FontAwesomeIcon icon={faCrosshairs} />
                     </div>
                 ),
                 iconAnchor: [6, 9]
