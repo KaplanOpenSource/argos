@@ -7,6 +7,7 @@ import {
 } from "@mui/material";
 
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
+import { baseUrl } from "../Context/FetchExperiment";
 
 // const UPLOAD_FILE = gql`
 //   mutation($file: Upload!) {
@@ -48,22 +49,36 @@ export const UploadImageIcon = ({ onChangeFile }) => {
 
         const [height, width] = await getImageSize(file);
         if (height && width) {
-            const imageServerFilename = await uploadFileToServer(file);
-            if (imageServerFilename) {
-                onChangeFile(imageServerFilename.path, height, width)
-            }
+            const formData = new FormData();
+            formData.append('file', file);
+            // formData.append('filename', '1.png');
+            const resp = await fetch(baseUrl + "/upload", {
+                method: 'POST',
+                // headers: {
+                //     // 'Accept': 'application/json',
+                //     "Content-Type": "multipart/form-data",
+                //     // "type": "formData",
+                // },
+                body: formData,
+            });
+            const ret = await resp.text();
+            console.log(ret);
+            // const imageServerFilename = await uploadFileToServer(file);
+            // if (imageServerFilename) {
+            //     onChangeFile(imageServerFilename.path, height, width)
+            // }
         }
 
         // setWorking(false);
     };
 
-    const uploadFileToServer = async (file) => {
-        // const data = await client.mutate({ mutation: UPLOAD_FILE, variables: { file } });
-        // if (!data || !data.data || !data.data.uploadFile || data.data.uploadFile === "err") {
-        //     return undefined;
-        // }
-        // return data.data.uploadFile
-    };
+    // const uploadFileToServer = async (file) => {
+    //     // const data = await client.mutate({ mutation: UPLOAD_FILE, variables: { file } });
+    //     // if (!data || !data.data || !data.data.uploadFile || data.data.uploadFile === "err") {
+    //     //     return undefined;
+    //     // }
+    //     // return data.data.uploadFile
+    // };
 
     return (
         <>
