@@ -9,7 +9,7 @@ export const MapPlacer = ({
     markedPoints,
     setMarkedPoints,
 }) => {
-    const { selection, setSelection, currTrial, setDeviceLocation, setLocationsToStackDevices } = useContext(experimentContext);
+    const { selection, setLocationsToStackDevices } = useContext(experimentContext);
     const {
         shape,
         shapeData,

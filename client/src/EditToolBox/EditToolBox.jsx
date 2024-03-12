@@ -1,4 +1,5 @@
 import React from 'react';
+import { useContext } from 'react';
 import {
     Divider,
     Box,
@@ -37,6 +38,7 @@ import FreePositioning from './ToolsBar/FreePositioning.jsx';
 import DistributeAlongLine from './ToolsBar/DistributeAlongLine.jsx';
 import DistributeAlongArc from './ToolsBar/DistributeAlongArc.jsx';
 import Rectangle from './ToolsBar/Rectangle.jsx';
+import { experimentContext } from '../Context/ExperimentProvider.jsx';
 
 export const EditToolBox = ({
     handleSetOne,
@@ -47,13 +49,9 @@ export const EditToolBox = ({
     setShowEditBox,
     children,
 }) => {
-    const {
-        shape,
-        setShape,
-        // rectRows,
-        // setRectRows,
-        // shapeOptions
-    } = useShape();
+    const { shape, setShape, shapeData, } = useShape();
+
+    const { selection, setLocationsToStackDevices } = useContext(experimentContext);
 
     const onClickIcon = (id) => {
         if (id === shape) {
@@ -64,6 +62,13 @@ export const EditToolBox = ({
             setShape(id);
         }
     };
+
+    const setMultipleDeviceLocations = () => {
+        const positions = shapeData.toPositions(markedPoints, selection.length);
+        setLocationsToStackDevices(positions);
+        setMarkedPoints([]);
+        setShowEditBox(false);
+    }
 
     return (
         <Paper
@@ -121,7 +126,7 @@ export const EditToolBox = ({
                     id={CURVE_SHAPE}
                     icon={<CurveIcon />}
                     title={CURVE_TITLE}
-                    onSubmit={handleSetMany}
+                    onSubmit={setMultipleDeviceLocations}
                 >
                     <DistributeAlongLine
                         markedPoints={markedPoints}
@@ -134,7 +139,7 @@ export const EditToolBox = ({
                     id={DISTRIBUTE_ALONG_LINE_SHAPE}
                     icon={<DistrubteAlongLineIcon />}
                     title={DISTRIBUTE_ALONG_LINE_TITLE}
-                    onSubmit={handleSetMany}
+                    onSubmit={setMultipleDeviceLocations}
                 >
                     <DistributeAlongLine
                         markedPoints={markedPoints}
@@ -146,7 +151,7 @@ export const EditToolBox = ({
                     showEditBox={showEditBox}
                     id={ARC_SHAPE}
                     icon={<RotateLeftIcon fontSize="large" />}
-                    onSubmit={handleSetMany}
+                    onSubmit={setMultipleDeviceLocations}
                     title={ARC_TITLE}
                 >
                     <DistributeAlongArc
@@ -160,7 +165,7 @@ export const EditToolBox = ({
                     id={RECTANGLE_SHAPE}
                     icon={<RectangleIcon />}
                     title={RECTANGLE_TITLE}
-                    onSubmit={handleSetMany}
+                    onSubmit={setMultipleDeviceLocations}
                 >
                     <Rectangle
                         markedPoints={markedPoints}
