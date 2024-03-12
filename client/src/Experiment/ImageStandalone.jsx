@@ -1,8 +1,9 @@
-import { IconButton, Stack } from "@mui/material"
+import { IconButton, Stack, Typography } from "@mui/material"
 import { TreeRow } from "../App/TreeRow"
 import DeleteIcon from '@mui/icons-material/Delete';
-import { TextFieldDebounce, TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
+import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
 import { UploadImageIcon } from "./UploadImageIcon";
+import { baseUrl } from "../Context/FetchExperiment";
 
 export const ImageStandalone = ({ data, setData }) => {
     return (
@@ -48,6 +49,22 @@ export const ImageStandalone = ({ data, setData }) => {
                         onChange={val => setData({ ...data, ybottom: val })}
                     />
                 </Stack>
+                {
+                    !data.path ? null :
+                        <>
+                            <Typography variant="body2">Size: {data.width} x {data.height}</Typography>
+                            {data.height > data.width
+                                ? <img
+                                    src={baseUrl + data.path}
+                                    height={Math.min(data.height, 500)}
+                                />
+                                : <img
+                                    src={baseUrl + data.path}
+                                    width={Math.min(data.width, 500)}
+                                />
+                            }
+                        </>
+                }
             </Stack>
         </TreeRow>
     )
