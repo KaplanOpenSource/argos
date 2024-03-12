@@ -212,6 +212,37 @@ export const ExperimentProvider = ({ children }) => {
         setExperiment(currTrial.experimentName, e)
     }
 
+    const setDeviceLocation = (trial, deviceTypeName, deviceItemName, latlng) => {
+        const devicesOnTrial = [...(trial.devicesOnTrial || [])].filter(t => {
+            return t.deviceItemName !== deviceItemName || t.deviceTypeName !== deviceTypeName;
+        });
+        devicesOnTrial.push({ deviceTypeName, deviceItemName, location: { name: 'OSMMap', coordinates: latlng } });
+        const data = { ...trial, devicesOnTrial };
+        setTrialData(data);
+    }
+
+    const setLocationsToStackDevices = (latlngs) => {
+        const { experiment, trialType, trial } = currTrial;
+        if (experiment && trial && selection.length > 0 && latlngs.length > 0) {
+            const newSelection = [];
+            let devicesOnTrial = [...(trial.devicesOnTrial || [])];
+            for (let i = 0; i < selection.length; ++i) {
+                if (i >= latlngs.length) {
+                    newSelection.push(selection[i]);
+                } else {
+                    const { deviceTypeName, deviceItemName } = selection[i];
+                    devicesOnTrial = devicesOnTrial.filter(t => {
+                        return t.deviceItemName !== deviceItemName || t.deviceTypeName !== deviceTypeName;
+                    });
+                    devicesOnTrial.push({ deviceTypeName, deviceItemName, location: { name: 'OSMMap', coordinates: latlngs[i] } });
+                }
+            }
+            const data = { ...trial, devicesOnTrial };
+            setTrialData(data);
+            setSelection(newSelection);
+        }
+    }
+
     useEffect(() => {
         (async () => {
             const exp = await fetchAllExperiments();
@@ -247,6 +278,8 @@ export const ExperimentProvider = ({ children }) => {
         setSelection,
         undoOperation: () => dispatch({ type: actions.UNDO }),
         redoOperation: () => dispatch({ type: actions.REDO }),
+        setDeviceLocation,
+        setLocationsToStackDevices,
     };
 
     return (
