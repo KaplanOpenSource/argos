@@ -15,19 +15,22 @@ export const MapPlacer = ({
         shapeData,
     } = useShape();
 
+    const setDeviceLocation = (trial, deviceTypeName, deviceItemName, latlng) => {
+        const devicesOnTrial = [...(trial.devicesOnTrial || [])].filter(t => {
+            return t.deviceItemName !== deviceItemName || t.deviceTypeName !== deviceTypeName;
+        });
+        devicesOnTrial.push({ deviceTypeName, deviceItemName, location: { name: 'OSMMap', coordinates: latlng } });
+        const data = { ...trial, devicesOnTrial };
+        setTrialData(data);
+    }
+
     const onMapClick = (latlng) => {
         if (shape === FREEPOSITIONING_SHAPE) {
             const { experiment, trialType, trial } = currTrial;
             if (experiment && trial && selection.length > 0) {
                 const { deviceTypeName, deviceItemName } = selection[0];
                 setSelection(selection.slice(1));
-
-                const devicesOnTrial = [...(trial.devicesOnTrial || [])].filter(t => {
-                    return t.deviceItemName !== deviceItemName || t.deviceTypeName !== deviceTypeName;
-                });
-                devicesOnTrial.push({ deviceTypeName, deviceItemName, location: { name: 'OSMMap', coordinates: latlng } });
-                const data = { ...trial, devicesOnTrial };
-                setTrialData(data);
+                setDeviceLocation(trial, deviceTypeName, deviceItemName, latlng);
             }
         } else {
             if (!shapeData.noControlPoints) {
