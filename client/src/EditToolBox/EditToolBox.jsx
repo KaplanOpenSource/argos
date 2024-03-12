@@ -77,56 +77,95 @@ export const EditToolBox = ({
             <Stack
                 direction="row"
             >
-                <EditTool shape={shape} onClickIcon={onClickIcon} markedPoints={markedPoints} showEditBox={false}
+                <EditTool
+                    shape={shape}
+                    onClickIcon={onClickIcon}
+                    showEditBox={false}
                     id={CHOOSE_SHAPE}
                     icon={<PlaceIcon />}
-                    component={<PlaceIcon />}
                     title={CHOOSE_TITLE}
-                />
-                <EditTool shape={shape} onClickIcon={onClickIcon} markedPoints={markedPoints} showEditBox={showEditBox}
+                >
+                </EditTool>
+                <EditTool
+                    shape={shape}
+                    onClickIcon={onClickIcon}
+                    showEditBox={showEditBox}
                     id={FREEPOSITIONING_SHAPE}
                     icon={<FreePositioningIcon />}
-                    component={<FreePositioning />}
                     title={FREEPOSITIONING_TITLE}
                     onSubmit={pos => handleSetOne({ latlng: { lat: pos.x, lng: pos.y } })}
                     submitText={"free position"}
-                />
-                <EditTool shape={shape} onClickIcon={onClickIcon} markedPoints={markedPoints} showEditBox={showEditBox}
+                >
+                    <FreePositioning
+                        markedPoints={markedPoints}
+                    />
+                </EditTool>
+                <EditTool
+                    shape={shape}
+                    onClickIcon={onClickIcon}
+                    showEditBox={showEditBox}
                     id={POINT_SHAPE}
                     icon={<DotIcon />}
-                    component={<FreePositioning />}
                     title={POINT_TITLE}
                     onSubmit={pos => handleSetOne({ latlng: { lat: pos.x, lng: pos.y } })}
                     submitText={"position all"}
-                />
-                <EditTool shape={shape} onClickIcon={onClickIcon} markedPoints={markedPoints} showEditBox={showEditBox}
+                >
+                    <FreePositioning
+                        markedPoints={markedPoints}
+                    />
+                </EditTool>
+                <EditTool
+                    shape={shape}
+                    onClickIcon={onClickIcon}
+                    showEditBox={showEditBox}
                     id={CURVE_SHAPE}
                     icon={<CurveIcon />}
-                    component={<DistributeAlongLine />}
                     title={CURVE_TITLE}
                     onSubmit={handleSetMany}
-                />
-                <EditTool shape={shape} onClickIcon={onClickIcon} markedPoints={markedPoints} showEditBox={showEditBox}
+                >
+                    <DistributeAlongLine
+                        markedPoints={markedPoints}
+                    />
+                </EditTool>
+                <EditTool
+                    shape={shape}
+                    onClickIcon={onClickIcon}
+                    showEditBox={showEditBox}
                     id={DISTRIBUTE_ALONG_LINE_SHAPE}
                     icon={<DistrubteAlongLineIcon />}
-                    component={<DistributeAlongLine />}
                     title={DISTRIBUTE_ALONG_LINE_TITLE}
                     onSubmit={handleSetMany}
-                />
-                <EditTool shape={shape} onClickIcon={onClickIcon} markedPoints={markedPoints} showEditBox={showEditBox}
+                >
+                    <DistributeAlongLine
+                        markedPoints={markedPoints}
+                    />
+                </EditTool>
+                <EditTool
+                    shape={shape}
+                    onClickIcon={onClickIcon}
+                    showEditBox={showEditBox}
                     id={ARC_SHAPE}
                     icon={<RotateLeftIcon fontSize="large" />}
-                    component={<DistributeAlongArc />}
                     onSubmit={handleSetMany}
                     title={ARC_TITLE}
-                />
-                <EditTool shape={shape} onClickIcon={onClickIcon} markedPoints={markedPoints} showEditBox={showEditBox}
+                >
+                    <DistributeAlongArc
+                        markedPoints={markedPoints}
+                    />
+                </EditTool>
+                <EditTool
+                    shape={shape}
+                    onClickIcon={onClickIcon}
+                    showEditBox={showEditBox}
                     id={RECTANGLE_SHAPE}
                     icon={<RectangleIcon />}
-                    component={<Rectangle />}
                     title={RECTANGLE_TITLE}
                     onSubmit={handleSetMany}
-                />
+                >
+                    <Rectangle
+                        markedPoints={markedPoints}
+                    />
+                </EditTool>
                 {children}
             </Stack>
         </Paper>

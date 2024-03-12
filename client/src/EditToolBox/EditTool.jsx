@@ -16,7 +16,7 @@ import {
 } from './utils/constants';
 import { ButtonWithShadow } from './ToolsBar/ButtonWithShadow';
 
-export const EditTool = ({ icon, id, component, title, shape, markedPoints, onClickIcon, showEditBox, onSubmit, submitText }) => {
+export const EditTool = ({ icon, id, title, shape, onClickIcon, showEditBox, onSubmit, submitText, children }) => {
     return (
         <>
             <Tooltip
@@ -55,10 +55,7 @@ export const EditTool = ({ icon, id, component, title, shape, markedPoints, onCl
                         }}
                     >
                         <Grid item>
-                            {React.cloneElement(component, {
-                                markedPoints,
-                                title
-                            })}
+                            {children}
                         </Grid>
                         <Grid item style={{
                             display: 'flex',
