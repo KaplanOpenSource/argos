@@ -12,11 +12,11 @@ export const saveExperimentWithData = async (name, data) => {
         });
         const json = await resp.json();
         if ((json || {}).error) {
-            alert(json.error);
+            alert('save error: ' + json.error);
             return false;
         }
     } catch (e) {
-        alert(e);
+        alert('save crush: ' + e);
         return false;
     }
     return true;
@@ -26,7 +26,7 @@ export const fetchAllExperiments = async () => {
     const resp = await fetch(baseUrl + "/experiment_list");
     const json = await resp.json();
     if ((json || {}).error) {
-        alert(json.error);
+        alert('fetch list: ' + json.error);
         return;
     }
 
@@ -35,10 +35,11 @@ export const fetchAllExperiments = async () => {
     const exp = [];
     const errors = [];
     for (const name of (json || [])) {
-        const resp = await fetch(baseUrl + "/experiment/" + name);
+        const url = baseUrl + "/experiment/" + name.replaceAll(' ', '%20');
+        const resp = await fetch(url);
         const json = await resp.json();
         if ((json || {}).error) {
-            errors.push(json.error);
+            errors.push('fetch ' + name + ': ' + json.error);
             continue;
         }
         if ((json || {}).name !== name) {
