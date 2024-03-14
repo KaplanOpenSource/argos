@@ -46,8 +46,10 @@ def experimentListReq():
         pos = re.search(r"[ 0-9]+$", sn)
         num = 0
         if pos is not None:
-            num = int(pos.group())
-            sn = sn[0 : pos.start()]
+            spos = pos.group().strip()
+            if len(spos) > 0:
+                num = int(pos.group())
+                sn = sn[0 : pos.start()]
         return (sn, num)
 
     names = sorted(os.listdir(EXPERIMENTS_PATH), key=namekey)
@@ -71,30 +73,33 @@ def experimentGetReq(name):
 
 @app.route("/experiment_set/<name>", methods=["POST"])
 def experimentSetReq(name):
-    if validate_name(name):
-        json_str = request.get_data()
+    if not validate_name(name):
+        return {"error": "invalid experiment name"}
 
-        oldpath = os.path.join(EXPERIMENTS_PATH, name + ".json")
+    json_str = request.get_data()
+    oldpath = os.path.join(EXPERIMENTS_PATH, name + ".json")
+    if json_str == b"":  # undefined was received
+        if os.path.exists(oldpath):
+            os.remove(oldpath)
+        return {"ok": True}
 
-        if json_str == b"":  # undefined was received
-            if os.path.exists(oldpath):
-                os.remove(oldpath)
-            return {"ok": True}
-        else:
-            json_data = json.loads(json_str)
-            str = json.dumps(json_data, indent=2)
-            new_name = json_data["name"]
-            if new_name is None:
-                new_name = name
-            if validate_name(new_name):
-                os.makedirs(EXPERIMENTS_PATH, exist_ok=True)
-                if new_name != name:
-                    if os.path.exists(oldpath):
-                        os.remove(oldpath)
-                with open(os.path.join(EXPERIMENTS_PATH, new_name + ".json"), "w") as file:
-                    file.write(str)
-                    return {"ok": True}
-    return {"error": "invalid experiment name"}
+    json_data = json.loads(json_str)
+    str = json.dumps(json_data, indent=2)
+    new_name = json_data["name"]
+    if new_name is None:
+        new_name = name
+
+    if not validate_name(new_name):
+        return {"error": "invalid new experiment name"}
+
+    os.makedirs(EXPERIMENTS_PATH, exist_ok=True)
+    if new_name != name:
+        if os.path.exists(oldpath):
+            os.remove(oldpath)
+    with open(os.path.join(EXPERIMENTS_PATH, new_name + ".json"), "w") as file:
+        file.write(str)
+
+    return {"ok": True}
 
 
 def filenames_for_image(experimentName, imageName):
@@ -126,7 +131,7 @@ def upload():
     for f in filenames:
         os.remove(f)
 
-    filename = filenames[0]
+    filename = os.path.join(UPLOAD_FOLDER, experimentName, imageName + ext)
     print("saving: " + filename)
     os.makedirs(os.path.dirname(filename), exist_ok=True)
     file.save(filename)
