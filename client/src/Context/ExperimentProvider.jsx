@@ -18,6 +18,7 @@ const actions = {
     REDO: "REDO",
     CLEAR_SERVER_UPDATES: "CLEAR_SERVER_UPDATES",
     SET_CURR_TRIAL: "SET_CURR_TRIAL",
+    SET_SHOWN_MAP: "SET_SHOWN_MAP",
 };
 
 const initialState = {
@@ -155,6 +156,19 @@ const reducer = (state, action) => {
             });
             return { ...state, currTrial: {} };
         }
+        case actions.SET_SHOWN_MAP: {
+            if (state.currTrial.experimentName) {
+                const experiment = state.experiments[state.currTrial.experimentIndex];
+                const { shownMapName } = action;
+                const shownMapIndex = experiment.imageStandalone.findIndex(t => t.name === shownMapName);
+                if (shownMapIndex >= 0) {
+                    replaceUrlParams({ shownMapName });
+                    return { ...state, currTrial: { ...state.currTrial, shownMapName, shownMapIndex } };
+                }
+            }
+            replaceUrlParams({ shownMapName: undefined });
+            return { ...state, currTrial: { ...state.currTrial, shownMapName: undefined, shownMapIndex: undefined } };
+        }
         default: {
             return state;
         }
@@ -280,6 +294,7 @@ export const ExperimentProvider = ({ children }) => {
         redoOperation: () => dispatch({ type: actions.REDO }),
         setDeviceLocation,
         setLocationsToStackDevices,
+        setShownMap: (shownMapName) => dispatch({ type: actions.SET_SHOWN_MAP, shownMapName }),
     };
 
     return (

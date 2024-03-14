@@ -5,8 +5,12 @@ import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
 import { UploadImageIcon } from "./UploadImageIcon";
 import { baseUrl } from "../Context/FetchExperiment";
 import { ImageOnServer } from "./ImageOnServer";
+import MapIcon from '@mui/icons-material/Map';
+import { useContext } from "react";
+import { experimentContext } from "../Context/ExperimentProvider";
 
 export const ImageStandalone = ({ data, setData }) => {
+    const { setShownMap } = useContext(experimentContext);
     return (
         <TreeRow
             key={data.name}
@@ -26,6 +30,11 @@ export const ImageStandalone = ({ data, setData }) => {
                             xright: width, ytop: height,
                         })}
                     />
+                    <IconButton
+                        onClick={() => setShownMap(data.name)}
+                    >
+                        <MapIcon />
+                    </IconButton>
                 </>
             }
         >

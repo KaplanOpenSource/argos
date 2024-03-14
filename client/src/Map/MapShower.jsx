@@ -1,11 +1,16 @@
 import { CRS } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { useContext } from 'react';
 
-import { MapContainer, TileLayer, ZoomControl } from 'react-leaflet';
+import { ImageOverlay, MapContainer, TileLayer, ZoomControl } from 'react-leaflet';
+import { experimentContext } from '../Context/ExperimentProvider';
+import { baseUrl } from '../Context/FetchExperiment';
 
 L.Icon.Default.imagePath = 'leaflet-images/';
 
 export const MapShower = ({ children }) => {
+    const { currTrial } = useContext(experimentContext);
+    const shownMap = ((currTrial.experiment || {}).imageStandalone || [])[currTrial.shownMapIndex];
     return (
         <MapContainer
             zoom={15}
@@ -22,12 +27,17 @@ export const MapShower = ({ children }) => {
             maxZoom={30}
             contextmenu={true}
         >
-            <TileLayer
-                attribution='&copy; <a href="https://carto.com">Carto</a> contributors'
-                url='https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}.png'
-            // attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            // url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
+            {shownMap
+                ? <ImageOverlay
+                    url={baseUrl + shownMap.path}
+                    bounds={[[shownMap.ytop, shownMap.xleft], [shownMap.ybottom, shownMap.xright]]}
+                />
+                : <TileLayer
+                    attribution='&copy; <a href="https://carto.com">Carto</a> contributors'
+                    url='https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}.png'
+                // attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                // url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />}
             <ZoomControl position='bottomright' />
             {children}
         </MapContainer>
