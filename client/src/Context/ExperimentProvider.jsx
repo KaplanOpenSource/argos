@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 import { createNewName, parseUrlParams, replaceUrlParams, splitLast } from "../Utils/utils";
 import * as jsonpatch from 'fast-json-patch';
 import { fetchAllExperiments, saveExperimentWithData } from "./FetchExperiment";
+import { RealMapName } from "../constants/constants";
 
 export const experimentContext = createContext();
 
@@ -227,16 +228,18 @@ export const ExperimentProvider = ({ children }) => {
     }
 
     const setDeviceLocation = (trial, deviceTypeName, deviceItemName, latlng) => {
+        const mapName = currTrial.shownMapName || RealMapName;
         const devicesOnTrial = [...(trial.devicesOnTrial || [])].filter(t => {
             return t.deviceItemName !== deviceItemName || t.deviceTypeName !== deviceTypeName;
         });
-        devicesOnTrial.push({ deviceTypeName, deviceItemName, location: { name: RealMapName, coordinates: latlng } });
+        devicesOnTrial.push({ deviceTypeName, deviceItemName, location: { name: mapName, coordinates: latlng } });
         const data = { ...trial, devicesOnTrial };
         setTrialData(data);
     }
 
     const setLocationsToStackDevices = (latlngs) => {
         const { experiment, trialType, trial } = currTrial;
+        const mapName = currTrial.shownMapName || RealMapName;
         if (experiment && trial && selection.length > 0 && latlngs.length > 0) {
             const newSelection = [];
             let devicesOnTrial = [...(trial.devicesOnTrial || [])];
@@ -248,7 +251,7 @@ export const ExperimentProvider = ({ children }) => {
                     devicesOnTrial = devicesOnTrial.filter(t => {
                         return t.deviceItemName !== deviceItemName || t.deviceTypeName !== deviceTypeName;
                     });
-                    devicesOnTrial.push({ deviceTypeName, deviceItemName, location: { name: RealMapName, coordinates: latlngs[i] } });
+                    devicesOnTrial.push({ deviceTypeName, deviceItemName, location: { name: mapName, coordinates: latlngs[i] } });
                 }
             }
             const data = { ...trial, devicesOnTrial };
