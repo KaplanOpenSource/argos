@@ -127,6 +127,7 @@ export const ExperimentRow = ({ data, setData }) => {
                             setData={newData => {
                                 setData({ ...data, imageStandalone: changeByName(data.imageStandalone, itemData.name, newData) });
                             }}
+                            experiment={data}
                         />
                     ))
                 }

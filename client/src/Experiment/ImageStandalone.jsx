@@ -11,7 +11,7 @@ import { useContext } from "react";
 import { experimentContext } from "../Context/ExperimentProvider";
 import { useWholeMap } from "../Map/WholeMapContext";
 
-export const ImageStandalone = ({ data, setData }) => {
+export const ImageStandalone = ({ data, setData, experiment }) => {
     const { setShownMap } = useContext(experimentContext);
     const { mapObject } = useWholeMap();
     return (
@@ -27,10 +27,13 @@ export const ImageStandalone = ({ data, setData }) => {
                         <DeleteIcon />
                     </IconButton>
                     <UploadImageIcon
-                        onChangeFile={(path, height, width) => setData({
+                        imageName={data.name}
+                        experimentName={experiment.name}
+                        onChangeFile={(path, height, width, filename) => setData({
                             ...data, path, height, width,
                             xleft: 0, ybottom: 0,
                             xright: width, ytop: height,
+                            filename
                         })}
                     />
                     <IconButton

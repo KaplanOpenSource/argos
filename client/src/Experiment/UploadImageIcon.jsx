@@ -6,7 +6,7 @@ import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import HourglassBottomIcon from '@mui/icons-material/HourglassBottom';
 import { baseUrl } from "../Context/FetchExperiment";
 
-export const UploadImageIcon = ({ onChangeFile }) => {
+export const UploadImageIcon = ({ onChangeFile, imageName, experimentName }) => {
     const inputFile = useRef(null);
     const [working, setWorking] = useState(false);
 
@@ -40,6 +40,8 @@ export const UploadImageIcon = ({ onChangeFile }) => {
         if (height && width) {
             const formData = new FormData();
             formData.append('file', file);
+            formData.append('imageName', imageName);
+            formData.append('experimentName', experimentName);
             const resp = await fetch(baseUrl + "/upload", {
                 method: 'POST',
                 body: formData,
@@ -49,7 +51,7 @@ export const UploadImageIcon = ({ onChangeFile }) => {
             if (error) {
                 alert(error);
             } else {
-                onChangeFile(ret.path, height, width)
+                onChangeFile(ret.path, height, width, ret.filename)
             }
         }
 

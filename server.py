@@ -9,7 +9,7 @@ from werkzeug.utils import secure_filename
 
 EXPERIMENTS_PATH = "data/experiments"
 UPLOAD_FOLDER = "data/uploads"
-ALLOWED_EXTENSIONS = {"txt", "pdf", "png", "jpg", "jpeg", "gif"}
+ALLOWED_EXTENSIONS = {".txt", ".png", ".jpg", ".jpeg", ".gif"}
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--port", default=8080, help="needs to be synced with client port, look at client/src/constants.js")
@@ -97,30 +97,41 @@ def experimentSetReq(name):
     return {"error": "invalid experiment name"}
 
 
-def allowed_file(filename):
-    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
-
-
 @app.route("/upload", methods=["POST"])
 def upload():
+    imageName = request.form.get("imageName")
+    experimentName = request.form.get("experimentName")
+    if not validate_name(experimentName) or not validate_name(imageName):
+        return {"error": "invalid image name or experiment name"}
+
     if "file" not in request.files:  # check if the post request has the file part
         return {"error": "No file part"}
     file = request.files["file"]
-    if file.filename == "":  # If the user does not select a file, the browser submits an empty file without a filename.
-        return {"error": "No selected file"}
-    if not file or not allowed_file(file.filename):
+    ext = os.path.splitext(file.filename)[1] if file is not None else ""
+    if ext not in ALLOWED_EXTENSIONS:
         return {"error": "File not allowed"}
-    ts = datetime.now().isoformat().replace("-", "").replace(".", "_")
-    filename = secure_filename(ts + "_" + file.filename)
-    os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-    file.save(os.path.join(UPLOAD_FOLDER, filename))
-    path = url_for("download_file", name=filename)
-    return {"path": path}
+    # ts = datetime.now().isoformat().replace("-", "").replace(".", "_")
+    # filename = secure_filename(ts + "_" + file.filename)
+    filename = os.path.join(UPLOAD_FOLDER, experimentName, imageName + ext)
+    print("saving: " + filename)
+    os.makedirs(os.path.dirname(filename), exist_ok=True)
+    file.save(filename)
+    path = url_for("download_file", experimentName=experimentName, imageName=imageName)
+    return {"path": path, "filename": imageName + ext}
 
 
-@app.route("/uploads/<name>")
-def download_file(name):
-    return send_from_directory(UPLOAD_FOLDER, name)
+@app.route("/uploads/<experimentName>/<imageName>")
+def download_file(experimentName, imageName):
+    if not validate_name(experimentName) or not validate_name(imageName):
+        return {"error": "invalid image name or experiment name"}
+
+    parentdir = os.path.join(UPLOAD_FOLDER, experimentName)
+    filenames = os.listdir(parentdir) if os.path.exists(parentdir) else []
+    filenames = [f for f in filenames if os.path.splitext(f)[0] == imageName]
+    if len(filenames) == 0:
+        return {"error": "unable to find image"}
+
+    return send_from_directory(parentdir, filenames[0])
 
 
 if __name__ == "__main__":  # pragma: no cover
