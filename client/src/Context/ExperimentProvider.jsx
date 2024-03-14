@@ -230,7 +230,7 @@ export const ExperimentProvider = ({ children }) => {
         const devicesOnTrial = [...(trial.devicesOnTrial || [])].filter(t => {
             return t.deviceItemName !== deviceItemName || t.deviceTypeName !== deviceTypeName;
         });
-        devicesOnTrial.push({ deviceTypeName, deviceItemName, location: { name: 'OSMMap', coordinates: latlng } });
+        devicesOnTrial.push({ deviceTypeName, deviceItemName, location: { name: RealMapName, coordinates: latlng } });
         const data = { ...trial, devicesOnTrial };
         setTrialData(data);
     }
@@ -248,7 +248,7 @@ export const ExperimentProvider = ({ children }) => {
                     devicesOnTrial = devicesOnTrial.filter(t => {
                         return t.deviceItemName !== deviceItemName || t.deviceTypeName !== deviceTypeName;
                     });
-                    devicesOnTrial.push({ deviceTypeName, deviceItemName, location: { name: 'OSMMap', coordinates: latlngs[i] } });
+                    devicesOnTrial.push({ deviceTypeName, deviceItemName, location: { name: RealMapName, coordinates: latlngs[i] } });
                 }
             }
             const data = { ...trial, devicesOnTrial };

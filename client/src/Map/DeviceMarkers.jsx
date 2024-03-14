@@ -1,14 +1,16 @@
 import { useContext } from "react";
 import { Marker } from "react-leaflet";
 import { experimentContext } from "../Context/ExperimentProvider";
+import { RealMapName } from "../constants/constants";
 
 export const DeviceMarkers = ({ }) => {
     const { currTrial } = useContext(experimentContext);
     const devicesOnTrial = (currTrial.trial || {}).devicesOnTrial || [];
-    // console.log('devices:\n' + devicesOnTrial.map(d => `${d.deviceItemName}: ${d.location.coordinates.map(x => Math.round(x * 1e7) / 1e7)}`).join('\n'));
+    const mapName = currTrial.shownMapName || RealMapName;
+    const devicesOnTrialMap = devicesOnTrial.filter(d => d.location.name === mapName);
     return (
         <>
-            {devicesOnTrial.map(d => {
+            {devicesOnTrialMap.map(d => {
                 if (!d.location.coordinates) {
                     console.log('no coordinates on device:', JSON.stringify(d));
                     return null;
