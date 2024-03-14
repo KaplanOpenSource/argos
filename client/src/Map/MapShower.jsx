@@ -29,7 +29,7 @@ export const MapShower = ({ children }) => {
         >
             {shownMap
                 ? <ImageOverlay
-                    url={baseUrl + shownMap.path}
+                    url={baseUrl + shownMap.url}
                     bounds={[[shownMap.ytop, shownMap.xleft], [shownMap.ybottom, shownMap.xright]]}
                 />
                 : <TileLayer
