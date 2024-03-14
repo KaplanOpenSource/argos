@@ -9,9 +9,11 @@ import MapIcon from '@mui/icons-material/Map';
 import OpenInFullIcon from '@mui/icons-material/OpenInFull';
 import { useContext } from "react";
 import { experimentContext } from "../Context/ExperimentProvider";
+import { ActionOnMapContext } from "../App/App";
 
 export const ImageStandalone = ({ data, setData, experiment }) => {
     const { setShownMap } = useContext(experimentContext);
+    const { addActionOnMap } = useContext(ActionOnMapContext);
     return (
         <TreeRow
             key={data.name}
@@ -40,7 +42,7 @@ export const ImageStandalone = ({ data, setData, experiment }) => {
                         <MapIcon />
                     </IconButton>
                     <IconButton
-                        // onClick={() => mapObject.fitBounds([[data.height, 0], [0, data.width]])}
+                        onClick={() => addActionOnMap((mapObject) => mapObject.fitBounds([[data.height, 0], [0, data.width]]))}
                     >
                         <OpenInFullIcon />
                     </IconButton>
