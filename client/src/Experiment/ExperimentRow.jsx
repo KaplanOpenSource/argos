@@ -31,7 +31,7 @@ export const ExperimentRow = ({ data, setData }) => {
                         field="endDate"
                     />
                     <IconButton
-                        onClick={() => downloadJsonFile(`experiment_${data.name}.json`, data)}
+                        onClick={() => downloadJsonFile(data)}
                     >
                         <DownloadIcon />
                     </IconButton>
