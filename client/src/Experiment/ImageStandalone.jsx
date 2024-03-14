@@ -9,11 +9,11 @@ import MapIcon from '@mui/icons-material/Map';
 import OpenInFullIcon from '@mui/icons-material/OpenInFull';
 import { useContext } from "react";
 import { experimentContext } from "../Context/ExperimentProvider";
-import { ActionOnMapContext } from "../App/App";
+import { ActionsOnMapContext } from "../Map/ActionsOnMapContext";
 
 export const ImageStandalone = ({ data, setData, experiment }) => {
     const { setShownMap } = useContext(experimentContext);
-    const { addActionOnMap } = useContext(ActionOnMapContext);
+    const { addActionOnMap } = useContext(ActionsOnMapContext);
     return (
         <TreeRow
             key={data.name}

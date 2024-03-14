@@ -10,33 +10,15 @@ import { EditToolBox } from '../EditToolBox/EditToolBox';
 import { ShapeProvider } from '../EditToolBox/ShapeContext';
 import { createContext, useEffect, useState } from 'react';
 import { useMap } from 'react-leaflet';
-
-export const ActionOnMapContext = createContext();
-
-const ActionOnMapDoer = ({ actionsOnMap, setActionsOnMap }) => {
-  const mapObject = useMap();
-  useEffect(() => {
-    if (mapObject && actionsOnMap.length > 0) {
-      const act = actionsOnMap[0];
-      setActionsOnMap(actionsOnMap.slice(1));
-      act(mapObject);
-    }
-  }, [mapObject, actionsOnMap]);
-  return null;
-}
+import { ActionsOnMapDoer, ActionsOnMapProvider } from '../Map/ActionsOnMapContext';
 
 export function App() {
   const [showEditBox, setShowEditBox] = useState(false);
   const [markedPoints, setMarkedPoints] = useState([]);
 
-  const [actionsOnMap, setActionsOnMap] = useState([]);
-  const addActionOnMap = (newAction) => {
-    setActionsOnMap([...actionsOnMap, newAction])
-  }
-
   return (
     <>
-      <ActionOnMapContext.Provider value={{ addActionOnMap }}>
+      <ActionsOnMapProvider>
         <AppHeader
         />
         <Grid container direction={'row'} justifyContent="space-between" alignItems="flex-start">
@@ -61,9 +43,7 @@ export function App() {
             />
             <DeviceMarkers
             />
-            <ActionOnMapDoer
-              actionsOnMap={actionsOnMap}
-              setActionsOnMap={setActionsOnMap}
+            <ActionsOnMapDoer
             />
           </MapShower>
 
@@ -76,7 +56,7 @@ export function App() {
             setShowEditBox={setShowEditBox}
           ></EditToolBox>
         </ShapeProvider>
-      </ActionOnMapContext.Provider>
+      </ActionsOnMapProvider>
     </>
   )
 }
