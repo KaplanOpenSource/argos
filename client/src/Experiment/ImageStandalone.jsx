@@ -29,8 +29,8 @@ export const ImageStandalone = ({ data, setData, experiment }) => {
                     <UploadImageIcon
                         imageName={data.name}
                         experimentName={experiment.name}
-                        onChangeFile={(path, height, width, filename) => setData({
-                            ...data, path, height, width,
+                        onChangeFile={(url, height, width, filename) => setData({
+                            ...data, url, height, width,
                             xleft: 0, ybottom: 0,
                             xright: width, ytop: height,
                             filename

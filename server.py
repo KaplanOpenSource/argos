@@ -116,8 +116,8 @@ def upload():
     print("saving: " + filename)
     os.makedirs(os.path.dirname(filename), exist_ok=True)
     file.save(filename)
-    path = url_for("download_file", experimentName=experimentName, imageName=imageName)
-    return {"path": path, "filename": imageName + ext}
+    url = url_for("download_file", experimentName=experimentName, imageName=imageName)
+    return {"url": url, "filename": imageName + ext}
 
 
 @app.route("/uploads/<experimentName>/<imageName>")

@@ -51,7 +51,7 @@ export const UploadImageIcon = ({ onChangeFile, imageName, experimentName }) => 
             if (error) {
                 alert(error);
             } else {
-                onChangeFile(ret.path, height, width, ret.filename)
+                onChangeFile(ret.url, height, width, ret.filename)
             }
         }
 
