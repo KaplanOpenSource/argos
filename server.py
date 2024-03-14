@@ -97,6 +97,15 @@ def experimentSetReq(name):
     return {"error": "invalid experiment name"}
 
 
+def filenames_for_image(experimentName, imageName):
+    parentdir = os.path.join(UPLOAD_FOLDER, experimentName)
+    if not os.path.exists(parentdir):
+        return []
+    filenames = os.listdir(parentdir)
+    filenames = [os.path.join(parentdir, f) for f in filenames if os.path.splitext(f)[0] == imageName]
+    return filenames
+
+
 @app.route("/upload", methods=["POST"])
 def upload():
     imageName = request.form.get("imageName")
@@ -110,14 +119,19 @@ def upload():
     ext = os.path.splitext(file.filename)[1] if file is not None else ""
     if ext not in ALLOWED_EXTENSIONS:
         return {"error": "File not allowed"}
-    # ts = datetime.now().isoformat().replace("-", "").replace(".", "_")
+
+    ts = datetime.now().isoformat().replace("-", "").replace(".", "_")
     # filename = secure_filename(ts + "_" + file.filename)
-    filename = os.path.join(UPLOAD_FOLDER, experimentName, imageName + ext)
+    filenames = filenames_for_image(experimentName, imageName)
+    for f in filenames:
+        os.remove(f)
+
+    filename = filenames[0]
     print("saving: " + filename)
     os.makedirs(os.path.dirname(filename), exist_ok=True)
     file.save(filename)
     url = url_for("download_file", experimentName=experimentName, imageName=imageName)
-    return {"url": url, "filename": imageName + ext}
+    return {"url": url + "?" + ts, "filename": imageName + ext}
 
 
 @app.route("/uploads/<experimentName>/<imageName>")
@@ -125,13 +139,11 @@ def download_file(experimentName, imageName):
     if not validate_name(experimentName) or not validate_name(imageName):
         return {"error": "invalid image name or experiment name"}
 
-    parentdir = os.path.join(UPLOAD_FOLDER, experimentName)
-    filenames = os.listdir(parentdir) if os.path.exists(parentdir) else []
-    filenames = [f for f in filenames if os.path.splitext(f)[0] == imageName]
+    filenames = filenames_for_image(experimentName, imageName)
     if len(filenames) == 0:
         return {"error": "unable to find image"}
 
-    return send_from_directory(parentdir, filenames[0])
+    return send_from_directory(os.path.dirname(filenames[0]), os.path.basename(filenames[0]))
 
 
 if __name__ == "__main__":  # pragma: no cover

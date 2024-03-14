@@ -5,7 +5,7 @@ export const ImageOnServer = ({ data }) => {
     if (!data.url) {
         return null;
     }
-    const src = baseUrl + data.url + "?";
+    const src = baseUrl + data.url;
     let { width, height } = data;
     if (Math.max(width, height) > 500 && Math.min(width, height) > 0) {
         if (width > height) {
