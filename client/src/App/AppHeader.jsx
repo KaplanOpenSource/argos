@@ -1,6 +1,8 @@
 import MenuIcon from '@mui/icons-material/Menu';
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
+import MapIcon from '@mui/icons-material/Map';
+import PublicIcon from '@mui/icons-material/Public';
 import {
     AppBar, Button, IconButton, Toolbar, Typography
 } from '@mui/material';
@@ -10,7 +12,7 @@ import { Redo, Undo } from '@mui/icons-material';
 
 export const AppHeader = ({ }) => {
     const { undoOperation, redoOperation, currTrial, setCurrTrial, setShowExperiments } = useContext(experimentContext);
-    const { experimentName, trialTypeName, trialName } = currTrial;
+    const { experimentName, trialTypeName, trialName, shownMapName } = currTrial;
     return (
         <AppBar position="static"
         // style={{ maxHeight: '5em' }}
@@ -76,6 +78,17 @@ export const AppHeader = ({ }) => {
                                 &nbsp;:&nbsp;
                                 {trialName}
                             </Typography>
+                            {shownMapName
+                                ? <>
+                                    <MapIcon />
+                                    <Typography variant="body1" paddingRight={1}>
+                                        {shownMapName}
+                                    </Typography>
+                                </>
+                                : <>
+                                    <PublicIcon />
+                                </>
+                            }
                         </>
                         : null
                 }

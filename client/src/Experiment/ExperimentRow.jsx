@@ -7,14 +7,14 @@ import { DateProperty } from "../Utils/DateProperty";
 import { IconButton } from "@mui/material";
 import DownloadIcon from '@mui/icons-material/Download';
 import DeleteIcon from '@mui/icons-material/Delete';
+import PublicIcon from '@mui/icons-material/Public';
 import { changeByName, downloadJsonFile } from "../Utils/utils";
 import { experimentContext } from "../Context/ExperimentProvider";
-import { Save } from "@mui/icons-material";
 import { ImageStandalone } from "./ImageStandalone";
 import { ImageEmbedded } from "./ImageEmbedded";
 
 export const ExperimentRow = ({ data, setData }) => {
-    const { showExperiments, currTrial, deleteExperiment } = useContext(experimentContext);
+    const { showExperiments, currTrial, deleteExperiment, setShownMap } = useContext(experimentContext);
     return (
         <TreeRow
             key={data.name}
@@ -91,6 +91,13 @@ export const ExperimentRow = ({ data, setData }) => {
                 fieldName='imageEmbedded'
                 nameTemplate='New Embedded Image'
                 setData={setData}
+                components={
+                    <IconButton
+                        onClick={() => setShownMap(undefined)}
+                    >
+                        <PublicIcon />
+                    </IconButton>
+                }
             >
                 {
                     (data.imageEmbedded || []).map(itemData => (
