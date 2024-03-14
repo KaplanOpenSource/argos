@@ -33,7 +33,7 @@ const initialState = {
 const reducer = (state, action) => {
     switch (action.type) {
         case actions.SET_ALL_EXPS: {
-            return { ...state, experiments: action.payload };
+            return { ...state, experiments: action.payload || [] };
         }
         case actions.ADD_EXP: {
             const name = createNewName(state.experiments, 'New Experiment');
@@ -264,7 +264,7 @@ export const ExperimentProvider = ({ children }) => {
     useEffect(() => {
         (async () => {
             const exp = await fetchAllExperiments();
-            dispatch({ type: actions.SET_ALL_EXPS, payload: exp });
+            dispatch({ type: actions.SET_ALL_EXPS, payload: exp || [] });
             const { experimentName, trialTypeName, trialName } = parseUrlParams();
             setCurrTrial({ experimentName, trialTypeName, trialName });
         })()

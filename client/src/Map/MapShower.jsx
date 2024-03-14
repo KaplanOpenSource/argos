@@ -5,7 +5,6 @@ import { useContext } from 'react';
 import { ImageOverlay, MapContainer, TileLayer, ZoomControl } from 'react-leaflet';
 import { experimentContext } from '../Context/ExperimentProvider';
 import { baseUrl } from '../Context/FetchExperiment';
-import { WholeMapContextSetter } from './WholeMapContext';
 
 L.Icon.Default.imagePath = 'leaflet-images/';
 
@@ -28,7 +27,6 @@ export const MapShower = ({ children }) => {
             maxZoom={30}
             contextmenu={true}
         >
-            <WholeMapContextSetter />
             {shownMap
                 ? <ImageOverlay
                     url={baseUrl + shownMap.path}
