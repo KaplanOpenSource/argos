@@ -6,11 +6,14 @@ import { UploadImageIcon } from "./UploadImageIcon";
 import { baseUrl } from "../Context/FetchExperiment";
 import { ImageOnServer } from "./ImageOnServer";
 import MapIcon from '@mui/icons-material/Map';
+import OpenInFullIcon from '@mui/icons-material/OpenInFull';
 import { useContext } from "react";
 import { experimentContext } from "../Context/ExperimentProvider";
+import { useWholeMap } from "../Map/WholeMapContext";
 
 export const ImageStandalone = ({ data, setData }) => {
     const { setShownMap } = useContext(experimentContext);
+    const { mapObject } = useWholeMap();
     return (
         <TreeRow
             key={data.name}
@@ -34,6 +37,11 @@ export const ImageStandalone = ({ data, setData }) => {
                         onClick={() => setShownMap(data.name)}
                     >
                         <MapIcon />
+                    </IconButton>
+                    <IconButton
+                        onClick={() => mapObject.fitBounds([[data.height, 0], [0, data.width]])}
+                    >
+                        <OpenInFullIcon />
                     </IconButton>
                 </>
             }

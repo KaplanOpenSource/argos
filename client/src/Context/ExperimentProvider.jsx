@@ -38,6 +38,7 @@ const reducer = (state, action) => {
         case actions.ADD_EXP: {
             const name = createNewName(state.experiments, 'New Experiment');
             const newExp = {
+                version: '3.0.0',
                 name,
                 startDate: dayjs().startOf('day'),
                 endDate: dayjs().startOf('day').add(7, 'day'),

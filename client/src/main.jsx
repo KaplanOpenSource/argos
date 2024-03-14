@@ -8,13 +8,16 @@ import '@fontsource/roboto/700.css';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { ExperimentProvider } from './Context/ExperimentProvider';
+import { WholeMapProvider } from './Map/WholeMapContext';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <LocalizationProvider dateAdapter={AdapterDayjs}>
     <React.StrictMode>
-      <ExperimentProvider>
-        <App />
-      </ExperimentProvider>
+      <WholeMapProvider>
+        <ExperimentProvider>
+          <App />
+        </ExperimentProvider>
+      </WholeMapProvider>
     </React.StrictMode>
   </LocalizationProvider>
 )
