@@ -29,9 +29,9 @@ export const ImageStandalone = ({ data, setData, experiment }) => {
                     <UploadImageIcon
                         imageName={data.name}
                         experimentName={experiment.name}
-                        onChangeFile={(url, height, width) => setData({
+                        onChangeFile={(filename, height, width) => setData({
                             ...data,
-                            url,
+                            filename,
                             height,
                             width,
                             xleft: 0,
@@ -80,6 +80,7 @@ export const ImageStandalone = ({ data, setData, experiment }) => {
                 </Stack>
                 <ImageOnServer
                     data={data}
+                    experiment={experiment}
                 />
             </Stack>
         </TreeRow>

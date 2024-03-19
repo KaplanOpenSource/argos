@@ -6,11 +6,14 @@ export const downloadJsonFile = async (experiment) => {
     const zip = JSZip();
     zip.file("data.json", JSON.stringify(experiment));
     for (const img of experiment.imageStandalone) {
-        const resp = await fetch(baseUrl + img.url);
-        const image = await resp.blob();
-        const ext = img.url.split('.').pop();
-        const filename = `images/${img.name}.${ext}` 
-        zip.file(filename, image, { binary: true });
+        if (img.filename) {
+            const src = baseUrl + "/uploads/" + experiment.name + "/" + img.filename;
+            const resp = await fetch(src);
+            const image = await resp.blob();
+            const ext = img.filename.split('.').pop();
+            const filename = `images/${img.name}.${ext}`
+            zip.file(filename, image, { binary: true });
+        }
     }
     // expToDownload.maps.forEach(img => {
     //     zip.file(`images/${img.imageName}`, img.imageUrl, {

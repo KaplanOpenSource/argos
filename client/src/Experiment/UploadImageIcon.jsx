@@ -47,11 +47,12 @@ export const UploadImageIcon = ({ onChangeFile, imageName, experimentName }) => 
                 body: formData,
             });
             const ret = await resp.json();
+            console.log('uploaded:', ret);
             const error = (ret || { error: 'invalid server reply' }).error;
             if (error) {
                 alert(error);
             } else {
-                onChangeFile(ret.url, height, width)
+                onChangeFile(ret.filename, height, width)
             }
         }
 

@@ -100,7 +100,7 @@ def experimentSetReq(name):
         file.write(str)
 
     images_data = json_data.get("imageStandalone", [])
-    images = [os.path.basename(im["url"]) for im in images_data if "url" in im]
+    images = [os.path.basename(im["filename"]) for im in images_data if "filename" in im]
     exp_img_folder = os.path.join(UPLOAD_FOLDER, new_name)
     if os.path.exists(exp_img_folder):
         for f in os.listdir(exp_img_folder):
@@ -133,11 +133,11 @@ def upload():
     # basename = imageName + "_" + ts + ext
     exp_folder = os.path.join(UPLOAD_FOLDER, experimentName)
     filepath = os.path.join(exp_folder, filename)
-    print("saving: " + filepath)
+    print("saving: " + filename + " on " + exp_folder)
     os.makedirs(exp_folder, exist_ok=True)
     file.save(filepath)
-    url = url_for("download_file", experimentName=experimentName, filename=filename)
-    return {"url": url}
+    # url = url_for("download_file", experimentName=experimentName, filename=filename)
+    return {"filename": filename}
 
 
 @app.route("/uploads/<experimentName>/<filename>")

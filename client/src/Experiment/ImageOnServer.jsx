@@ -1,11 +1,11 @@
 import { Typography } from "@mui/material";
 import { baseUrl } from "../Context/FetchExperiment";
 
-export const ImageOnServer = ({ data }) => {
-    if (!data.url) {
+export const ImageOnServer = ({ data, experiment }) => {
+    if (!data.filename) {
         return null;
     }
-    const src = baseUrl + data.url;
+    const src = baseUrl + "/uploads/" + experiment.name + "/" + data.filename;
     let { width, height } = data;
     if (Math.max(width, height) > 500 && Math.min(width, height) > 0) {
         if (width > height) {
