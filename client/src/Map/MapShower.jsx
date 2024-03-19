@@ -2,9 +2,10 @@ import { CRS } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useContext } from 'react';
 
-import { ImageOverlay, MapContainer, TileLayer, ZoomControl } from 'react-leaflet';
+import { MapContainer, ZoomControl } from 'react-leaflet';
 import { experimentContext } from '../Context/ExperimentProvider';
-import { baseUrl } from '../Context/FetchExperiment';
+import { RealMap } from './RealMap';
+import { ImageMap } from './ImageMap';
 
 L.Icon.Default.imagePath = 'leaflet-images/';
 
@@ -28,16 +29,13 @@ export const MapShower = ({ children }) => {
             contextmenu={true}
         >
             {shownMap
-                ? <ImageOverlay
-                    url={baseUrl + shownMap.url}
-                    bounds={[[shownMap.ytop, shownMap.xleft], [shownMap.ybottom, shownMap.xright]]}
+                ? <ImageMap
+                    experiment={currTrial.experiment}
+                    image={shownMap}
                 />
-                : <TileLayer
-                    attribution='&copy; <a href="https://carto.com">Carto</a> contributors'
-                    url='https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}.png'
-                // attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                // url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                />}
+                : <RealMap
+                />
+            }
             <ZoomControl position='bottomright' />
             {children}
         </MapContainer>
