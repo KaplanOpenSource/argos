@@ -15,7 +15,7 @@ export const ImagePlacementEditor = ({ experiment, image }) => {
 
     const setPointWithoutChange = (setter, lat, lng) => {
         const x = (lng - image.xleft) / (image.xright - image.xleft) * image.width;
-        const y = (lat - image.ybottom) / (image.upper - image.ybottom) * image.height;
+        const y = (lat - image.ybottom) / (image.ytop - image.ybottom) * image.height;
         setter({ lat, lng, x, y });
     }
 
