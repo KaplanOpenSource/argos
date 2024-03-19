@@ -192,6 +192,7 @@ export const ExperimentProvider = ({ children }) => {
 
     const [showExperiments, setShowExperiments] = useState(true);
     const [selection, setSelection] = useState([]);
+    const [showImagePlacement, setShowImagePlacement] = useState(false);
 
     const currTrialByIndices = () => {
         if (state.currTrial.trialName) {
@@ -308,6 +309,8 @@ export const ExperimentProvider = ({ children }) => {
         setDeviceLocation,
         setLocationsToStackDevices,
         setShownMap: (shownMapName) => dispatch({ type: actions.SET_SHOWN_MAP, shownMapName }),
+        showImagePlacement,
+        setShowImagePlacement,
     };
 
     return (

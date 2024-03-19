@@ -4,14 +4,24 @@ import CloseIcon from '@mui/icons-material/Close';
 import MapIcon from '@mui/icons-material/Map';
 import PublicIcon from '@mui/icons-material/Public';
 import {
-    AppBar, Button, IconButton, Toolbar, Typography
+    AppBar, Button, IconButton, Toolbar, Tooltip, Typography
 } from '@mui/material';
 import { experimentContext } from '../Context/ExperimentProvider';
 import { useContext } from 'react';
 import { Redo, Undo } from '@mui/icons-material';
+import EditLocationAltIcon from '@mui/icons-material/EditLocationAlt';
+import EditLocationOutlinedIcon from '@mui/icons-material/EditLocationOutlined';
 
 export const AppHeader = ({ }) => {
-    const { undoOperation, redoOperation, currTrial, setCurrTrial, setShowExperiments } = useContext(experimentContext);
+    const {
+        undoOperation,
+        redoOperation,
+        currTrial,
+        setCurrTrial,
+        setShowExperiments,
+        showImagePlacement,
+        setShowImagePlacement,
+    } = useContext(experimentContext);
     const { experimentName, trialTypeName, trialName, shownMapName } = currTrial;
     return (
         <AppBar position="static"
@@ -89,6 +99,19 @@ export const AppHeader = ({ }) => {
                                     <PublicIcon />
                                 </>
                             }
+                            <Tooltip
+                                title="Edit image placement"
+                            >
+                                <IconButton
+                                    color='inherit'
+                                    onClick={() => setShowImagePlacement(!showImagePlacement)}
+                                >
+                                    {showImagePlacement
+                                        ? <EditLocationAltIcon />
+                                        : <EditLocationOutlinedIcon />
+                                    }
+                                </IconButton>
+                            </Tooltip>
                         </>
                         : null
                 }

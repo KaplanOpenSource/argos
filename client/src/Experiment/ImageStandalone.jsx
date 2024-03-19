@@ -1,19 +1,26 @@
-import { IconButton, Stack, Typography } from "@mui/material"
+import { useContext } from "react";
+import { IconButton, Stack, Tooltip, Typography } from "@mui/material"
 import { TreeRow } from "../App/TreeRow"
-import DeleteIcon from '@mui/icons-material/Delete';
 import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
-import { UploadImageIcon } from "./UploadImageIcon";
 import { baseUrl } from "../Context/FetchExperiment";
 import { ImageOnServer } from "./ImageOnServer";
+import { UploadImageIcon } from "./UploadImageIcon";
+import DeleteIcon from '@mui/icons-material/Delete';
 import MapIcon from '@mui/icons-material/Map';
 import OpenInFullIcon from '@mui/icons-material/OpenInFull';
-import { useContext } from "react";
+import EditLocationAltIcon from '@mui/icons-material/EditLocationAlt';
+import EditLocationOutlinedIcon from '@mui/icons-material/EditLocationOutlined';
 import { experimentContext } from "../Context/ExperimentProvider";
 import { ActionsOnMapContext } from "../Map/ActionsOnMapContext";
 
 export const ImageStandalone = ({ data, setData, experiment }) => {
-    const { setShownMap } = useContext(experimentContext);
     const { addActionOnMap } = useContext(ActionsOnMapContext);
+    const {
+        currTrial,
+        setShownMap,
+        showImagePlacement,
+        setShowImagePlacement,
+    } = useContext(experimentContext);
     console.log(data)
     return (
         <TreeRow
@@ -41,16 +48,36 @@ export const ImageStandalone = ({ data, setData, experiment }) => {
                             ytop: height,
                         })}
                     />
-                    <IconButton
-                        onClick={() => setShownMap(data.name)}
+                    <Tooltip
+                        title="Switch to this image"
                     >
-                        <MapIcon />
-                    </IconButton>
-                    <IconButton
-                        onClick={() => addActionOnMap((mapObject) => mapObject.fitBounds([[data.height, 0], [0, data.width]]))}
+                        <IconButton
+                            onClick={() => setShownMap(data.name)}
+                        >
+                            <MapIcon />
+                        </IconButton>
+                    </Tooltip>
+                    <Tooltip
+                        title="Fit image to screen"
                     >
-                        <OpenInFullIcon />
-                    </IconButton>
+                        <IconButton
+                            onClick={() => addActionOnMap((mapObject) => mapObject.fitBounds([[data.height, 0], [0, data.width]]))}
+                        >
+                            <OpenInFullIcon />
+                        </IconButton>
+                    </Tooltip>
+                    <Tooltip
+                        title="Edit image placement"
+                    >
+                        <IconButton
+                            onClick={() => setShowImagePlacement(!showImagePlacement)}
+                        >
+                            {(showImagePlacement && currTrial.shownMapName === data.name && currTrial.experimentName === experiment.name)
+                                ? <EditLocationAltIcon />
+                                : <EditLocationOutlinedIcon />
+                            }
+                        </IconButton>
+                    </Tooltip>
                 </>
             }
         >
