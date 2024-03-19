@@ -64,6 +64,14 @@ const reducer = (state, action) => {
             if (i === -1) {
                 return state;
             }
+            if (data.name !== data.name.trim()) {
+                alert("Invalid experiment name, has trailing or leading spaces");
+                return state;
+            }
+            if (state.experiments.find((e, ei) => e.name === data.name && ei !== i)) {
+                alert("Duplicate experiment name");
+                return state;
+            }
             const redoPatch = jsonpatch.compare(state.experiments[i], data);
             if (redoPatch.length === 0) {
                 return state;
@@ -71,13 +79,14 @@ const reducer = (state, action) => {
             const experiments = state.experiments.slice();
             const undoPatch = jsonpatch.compare(data, experiments[i]);
             const undoStack = [...state.undoStack, { name, undoPatch, redoPatch }]
+            const serverUpdates = [...state.serverUpdates, { name, exp: data }];
             experiments[i] = data;
             return {
                 ...state,
                 experiments,
                 undoStack,
                 redoStack: [],
-                serverUpdates: [...state.serverUpdates, { name, exp: data }],
+                serverUpdates,
             };
         }
         case actions.UNDO: {
