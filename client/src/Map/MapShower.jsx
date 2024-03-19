@@ -11,7 +11,11 @@ import { ImagePlacementEditor } from './ImagePlacementEditor';
 L.Icon.Default.imagePath = 'leaflet-images/';
 
 export const MapShower = ({ children }) => {
-    const { currTrial, showImagePlacement } = useContext(experimentContext);
+    const {
+        currTrial,
+        showImagePlacement,
+        setExperiment
+    } = useContext(experimentContext);
     const shownMap = ((currTrial.experiment || {}).imageStandalone || [])[currTrial.shownMapIndex];
     return (
         <MapContainer
@@ -38,7 +42,12 @@ export const MapShower = ({ children }) => {
                     {showImagePlacement
                         ? <ImagePlacementEditor
                             experiment={currTrial.experiment}
-                            image={shownMap}
+                            imageData={shownMap}
+                            setImageData={v => {
+                                const exp = { ...currTrial.experiment, imageStandalone: [...currTrial.experiment.imageStandalone] };
+                                exp.imageStandalone[currTrial.shownMapIndex] = v;
+                                setExperiment(exp);
+                            }}
                         />
                         : null}
                 </>
