@@ -6,11 +6,12 @@ import { MapContainer, ZoomControl } from 'react-leaflet';
 import { experimentContext } from '../Context/ExperimentProvider';
 import { RealMap } from './RealMap';
 import { ImageMap } from './ImageMap';
+import { ImagePlacementEditor } from './ImagePlacementEditor';
 
 L.Icon.Default.imagePath = 'leaflet-images/';
 
 export const MapShower = ({ children }) => {
-    const { currTrial } = useContext(experimentContext);
+    const { currTrial, showImagePlacement } = useContext(experimentContext);
     const shownMap = ((currTrial.experiment || {}).imageStandalone || [])[currTrial.shownMapIndex];
     return (
         <MapContainer
@@ -29,10 +30,18 @@ export const MapShower = ({ children }) => {
             contextmenu={true}
         >
             {shownMap
-                ? <ImageMap
-                    experiment={currTrial.experiment}
-                    image={shownMap}
-                />
+                ? <>
+                    <ImageMap
+                        experiment={currTrial.experiment}
+                        image={shownMap}
+                    />
+                    {showImagePlacement
+                        ? <ImagePlacementEditor
+                            experiment={currTrial.experiment}
+                            image={shownMap}
+                        />
+                        : null}
+                </>
                 : <RealMap
                 />
             }
