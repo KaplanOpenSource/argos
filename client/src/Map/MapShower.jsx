@@ -46,7 +46,7 @@ export const MapShower = ({ children }) => {
                             setImageData={v => {
                                 const exp = { ...currTrial.experiment, imageStandalone: [...currTrial.experiment.imageStandalone] };
                                 exp.imageStandalone[currTrial.shownMapIndex] = v;
-                                setExperiment(exp);
+                                setExperiment(currTrial.experiment.name, exp);
                             }}
                         />
                         : null}

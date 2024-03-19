@@ -63,7 +63,7 @@ export const ImagePlacementEditor = ({ experiment, imageData, setImageData }) =>
             setAnchorLatLng={({ lat, lng }) => setPointWithoutChange(setAnchor, lat, lng)}
             setAnotherLatLng={({ lat, lng }) => setPointWithoutChange(setAnotherPoint, lat, lng)}
         >
-            <Popup permanent>
+            <Popup>
                 <TextFieldDebounceOutlined
                     InputProps={{ style: { width: '100px' } }}
                     label="Span in meters"
