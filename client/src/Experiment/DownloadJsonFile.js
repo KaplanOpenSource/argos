@@ -8,7 +8,7 @@ export const downloadJsonFile = async (experiment) => {
     for (const img of experiment.imageStandalone) {
         const resp = await fetch(baseUrl + img.url);
         const image = await resp.blob();
-        const ext = img.filename.split('.').pop();
+        const ext = img.url.split('.').pop();
         const filename = `images/${img.name}.${ext}` 
         zip.file(filename, image, { binary: true });
     }

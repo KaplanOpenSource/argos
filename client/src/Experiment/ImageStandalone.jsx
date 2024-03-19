@@ -29,11 +29,15 @@ export const ImageStandalone = ({ data, setData, experiment }) => {
                     <UploadImageIcon
                         imageName={data.name}
                         experimentName={experiment.name}
-                        onChangeFile={(url, height, width, filename) => setData({
-                            ...data, url, height, width,
-                            xleft: 0, ybottom: 0,
-                            xright: width, ytop: height,
-                            filename
+                        onChangeFile={(url, height, width) => setData({
+                            ...data,
+                            url,
+                            height,
+                            width,
+                            xleft: 0,
+                            ybottom: 0,
+                            xright: width,
+                            ytop: height,
                         })}
                     />
                     <IconButton

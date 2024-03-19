@@ -126,29 +126,35 @@ def upload():
         return {"error": "File not allowed"}
 
     ts = datetime.now().isoformat().replace("-", "").replace(".", "_")
-    # filename = secure_filename(ts + "_" + file.filename)
-    filenames = filenames_for_image(experimentName, imageName)
-    for f in filenames:
-        os.remove(f)
+    filename = secure_filename(imageName + "_" + ts + ext)
+    # filenames = filenames_for_image(experimentName, imageName)
+    # for f in filenames:
+    #     os.remove(f)
 
-    filename = os.path.join(UPLOAD_FOLDER, experimentName, imageName + ext)
-    print("saving: " + filename)
-    os.makedirs(os.path.dirname(filename), exist_ok=True)
-    file.save(filename)
-    url = url_for("download_file", experimentName=experimentName, imageName=imageName)
-    return {"url": url + "?" + ts, "filename": imageName + ext}
+    # basename = imageName + "_" + ts + ext
+    exp_folder = os.path.join(UPLOAD_FOLDER, experimentName)
+    filepath = os.path.join(exp_folder, filename)
+    print("saving: " + filepath)
+    os.makedirs(exp_folder, exist_ok=True)
+    file.save(filepath)
+    url = url_for("download_file", experimentName=experimentName, filename=filename)
+    return {"url": url}
 
 
-@app.route("/uploads/<experimentName>/<imageName>")
-def download_file(experimentName, imageName):
-    if not validate_name(experimentName) or not validate_name(imageName):
-        return {"error": "invalid image name or experiment name"}
-
-    filenames = filenames_for_image(experimentName, imageName)
-    if len(filenames) == 0:
+@app.route("/uploads/<experimentName>/<filename>")
+def download_file(experimentName, filename):
+    if not validate_name(experimentName):
+        return {"error": "invalid experiment name"}
+    if filename != secure_filename(filename):
         return {"error": "unable to find image"}
+    filepath = os.path.join(UPLOAD_FOLDER, experimentName, filename)
+    if not os.path.exists(filepath):
+        return {"error": "invalid image name"}
 
-    return send_from_directory(os.path.dirname(filenames[0]), os.path.basename(filenames[0]))
+    # filenames = filenames_for_image(experimentName, imageName)
+    # if len(filenames) == 0:
+
+    return send_from_directory(os.path.dirname(filepath), os.path.basename(filepath))
 
 
 if __name__ == "__main__":  # pragma: no cover
