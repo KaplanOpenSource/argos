@@ -99,16 +99,15 @@ def experimentSetReq(name):
     with open(os.path.join(EXPERIMENTS_PATH, new_name + ".json"), "w") as file:
         file.write(str)
 
+    images_data = json_data.get("imageStandalone", [])
+    images = [os.path.basename(im["url"]) for im in images_data if "url" in im]
+    exp_img_folder = os.path.join(UPLOAD_FOLDER, new_name)
+    if os.path.exists(exp_img_folder):
+        for f in os.listdir(exp_img_folder):
+            if f not in images:
+                os.remove(os.path.join(exp_img_folder, f))
+
     return {"ok": True}
-
-
-def filenames_for_image(experimentName, imageName):
-    parentdir = os.path.join(UPLOAD_FOLDER, experimentName)
-    if not os.path.exists(parentdir):
-        return []
-    filenames = os.listdir(parentdir)
-    filenames = [os.path.join(parentdir, f) for f in filenames if os.path.splitext(f)[0] == imageName]
-    return filenames
 
 
 @app.route("/upload", methods=["POST"])
