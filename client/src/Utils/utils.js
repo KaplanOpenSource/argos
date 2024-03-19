@@ -1,6 +1,3 @@
-import JSZip from "jszip";
-import { saveAs } from 'file-saver';
-
 export function camelCaseToWords(s) {
     const result = s.replace(/([A-Z])/g, ' $1');
     return result.charAt(0).toUpperCase() + result.slice(1);
@@ -37,36 +34,6 @@ export function parseUrlParams() {
         ret[k] = u.searchParams.get(k);
     }
     return ret;
-}
-
-export function downloadJsonFile(experiment) {
-    // const element = document.createElement("a");
-    // const textFile = new Blob([JSON.stringify(jsonData)], { type: 'text/plain' });
-    // element.href = URL.createObjectURL(textFile);
-    // element.download = filename;
-    // document.body.appendChild(element);
-    // element.click();
-    // document.body.removeChild(element);
-
-    const zip = JSZip();
-    zip.file("data.json", JSON.stringify(experiment));
-    // expToDownload.maps.forEach(img => {
-    //     zip.file(`images/${img.imageName}`, img.imageUrl, {
-    //         binary: true
-    //     });
-    // });
-
-    // logImages.forEach(array => {
-    //     array.forEach(img => {
-    //         zip.file(`images/${img.imageName}`, img.imageUrl, {
-    //             binary: true
-    //         });
-    //     });
-    // })
-
-    zip.generateAsync({ type: "blob" }).then(function (blob) {
-        saveAs(blob, `experiment_${experiment.name}.zip`);
-    });
 }
 
 export function changeByName(arr, name, newData) {

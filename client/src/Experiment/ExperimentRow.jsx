@@ -8,10 +8,11 @@ import { IconButton } from "@mui/material";
 import DownloadIcon from '@mui/icons-material/Download';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PublicIcon from '@mui/icons-material/Public';
-import { changeByName, downloadJsonFile } from "../Utils/utils";
+import { changeByName } from "../Utils/utils";
 import { experimentContext } from "../Context/ExperimentProvider";
 import { ImageStandalone } from "./ImageStandalone";
 import { ImageEmbedded } from "./ImageEmbedded";
+import { downloadJsonFile } from "./DownloadJsonFile";
 
 export const ExperimentRow = ({ data, setData }) => {
     const { showExperiments, currTrial, deleteExperiment, setShownMap } = useContext(experimentContext);
