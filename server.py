@@ -3,6 +3,7 @@ from datetime import datetime
 import os
 import re
 import json
+import shutil
 from flask import Flask, send_from_directory, request, redirect, url_for
 from flask_cors import CORS, cross_origin
 from werkzeug.utils import secure_filename
@@ -81,6 +82,8 @@ def experimentSetReq(name):
     if json_str == b"":  # undefined was received
         if os.path.exists(oldpath):
             os.remove(oldpath)
+        if os.path.exists(os.path.join(UPLOAD_FOLDER, name)):
+            shutil.rmtree(os.path.join(UPLOAD_FOLDER, name))
         return {"ok": True}
 
     json_data = json.loads(json_str)
@@ -96,6 +99,8 @@ def experimentSetReq(name):
     if new_name != name:
         if os.path.exists(oldpath):
             os.remove(oldpath)
+        if os.path.exists(os.path.join(UPLOAD_FOLDER, name)):
+            os.rename(os.path.join(UPLOAD_FOLDER, name), os.path.join(UPLOAD_FOLDER, new_name))
     with open(os.path.join(EXPERIMENTS_PATH, new_name + ".json"), "w") as file:
         file.write(str)
 
@@ -126,11 +131,6 @@ def upload():
 
     ts = datetime.now().isoformat().replace("-", "").replace(".", "_")
     filename = secure_filename(imageName + "_" + ts + ext)
-    # filenames = filenames_for_image(experimentName, imageName)
-    # for f in filenames:
-    #     os.remove(f)
-
-    # basename = imageName + "_" + ts + ext
     exp_folder = os.path.join(UPLOAD_FOLDER, experimentName)
     filepath = os.path.join(exp_folder, filename)
     print("saving: " + filename + " on " + exp_folder)
@@ -149,9 +149,6 @@ def download_file(experimentName, filename):
     filepath = os.path.join(UPLOAD_FOLDER, experimentName, filename)
     if not os.path.exists(filepath):
         return {"error": "invalid image name"}
-
-    # filenames = filenames_for_image(experimentName, imageName)
-    # if len(filenames) == 0:
 
     return send_from_directory(os.path.dirname(filepath), os.path.basename(filepath))
 
