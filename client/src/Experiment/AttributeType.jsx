@@ -3,6 +3,7 @@ import { TreeRow } from "../App/TreeRow";
 import { AttributeValue, VALUE_TYPE_SELECT, valueTypeDefault, valueTypes } from "./AttributeValue";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { TreeSublist } from "../App/TreeSublist";
+import { BooleanProperty } from "../Utils/BooleanProperty";
 
 export const AttributeType = ({ data, setData }) => {
     return (
@@ -48,7 +49,11 @@ export const AttributeType = ({ data, setData }) => {
                     setData={setData}
                     components={
                         <>
-                        
+                            <BooleanProperty
+                                label={'multiple'}
+                                data={data.multiple}
+                                setData={v => setData({ ...data, multiple: v })}
+                            />
                         </>
                     }
                 >

@@ -1,7 +1,8 @@
 import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
 import { DateProperty } from "../Utils/DateProperty";
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { Checkbox, FormControl, InputLabel, ListItemText, MenuItem, Select } from "@mui/material";
 import { BooleanProperty } from "../Utils/BooleanProperty";
+import { SelectProperty } from "../Utils/SelectProperty";
 
 export const VALUE_TYPE_STRING = "String";
 export const VALUE_TYPE_NUMBER = "Number";
@@ -47,20 +48,12 @@ export const AttributeValue = ({ type, label, data, setData, attrType }) => {
             )
         case VALUE_TYPE_SELECT: {
             return (
-                <FormControl>
-                    <InputLabel>{label}</InputLabel>
-                    <Select
-                        value={data}
-                        label={label}
-                        onChange={(event) => {
-                            setData(event.target.value);
-                        }}
-                    >
-                        {(attrType.options || []).map(o => (
-                            <MenuItem key={o.name} value={o.name}>{o.name}</MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
+                <SelectProperty
+                    data={data}
+                    setData={setData}
+                    label={label}
+                    options={attrType.options}
+                />
             )
         }
         default:
