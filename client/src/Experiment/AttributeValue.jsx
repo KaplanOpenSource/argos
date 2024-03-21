@@ -53,6 +53,7 @@ export const AttributeValue = ({ type, label, data, setData, attrType }) => {
                     setData={setData}
                     label={label}
                     options={attrType.options}
+                    multiple={attrType.multiple}
                 />
             )
         }
