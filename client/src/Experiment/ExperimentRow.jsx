@@ -14,7 +14,7 @@ import { ImageStandalone } from "./ImageStandalone";
 import { ImageEmbedded } from "./ImageEmbedded";
 import { downloadJsonFile } from "./DownloadJsonFile";
 
-export const ExperimentRow = ({ data, setData }) => {
+export const ExperimentRow = ({ data, setData, children }) => {
     const { showExperiments, currTrial, deleteExperiment, setShownMap } = useContext(experimentContext);
     return (
         <TreeRow
@@ -41,6 +41,7 @@ export const ExperimentRow = ({ data, setData }) => {
                     >
                         <DeleteIcon />
                     </IconButton>
+                    {children}
                 </>
             }
         >

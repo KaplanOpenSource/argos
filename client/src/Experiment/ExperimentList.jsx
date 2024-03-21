@@ -5,7 +5,10 @@ import { TreeView } from '@mui/x-tree-view/TreeView';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import AddIcon from '@mui/icons-material/Add';
-import { Button, IconButton, Paper, Typography } from "@mui/material";
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import { Button, IconButton, Paper, Tooltip, Typography } from "@mui/material";
+import { deepClone } from "fast-json-patch";
+import { createNewName } from "../Utils/utils";
 
 export const ExperimentList = ({ }) => {
     const { experiments, setExperiment, addExperiment, showExperiments, setShowExperiments, currTrial } = useContext(experimentContext);
@@ -15,7 +18,14 @@ export const ExperimentList = ({ }) => {
     const { experimentName, trialTypeName, trialName } = currTrial;
     useEffect(() => {
         if (trialName) {
-            setExpanded([experimentName, experimentName + "_trialTypes", trialTypeName, trialTypeName + "_trials", experimentName + "_deviceTypes", trialName]);
+            setExpanded([
+                experimentName,
+                experimentName + "_trialTypes",
+                trialTypeName,
+                trialTypeName + "_trials",
+                experimentName + "_deviceTypes",
+                trialName
+            ]);
         }
     }, [`${experimentName}:${trialTypeName}:${trialName}`]);
 
@@ -65,11 +75,24 @@ export const ExperimentList = ({ }) => {
                 // }}
                 disableSelection
             >
-                {((showExperiments || !currTrial.experiment) ? experiments : [currTrial.experiment]).map(e => (
-                    <ExperimentRow key={e.name}
-                        data={e}
-                        setData={val => setExperiment(e.name, val)}
-                    />
+                {((showExperiments || !currTrial.experiment) ? experiments : [currTrial.experiment]).map(exp => (
+                    <ExperimentRow key={exp.name}
+                        data={exp}
+                        setData={val => setExperiment(exp.name, val)}
+                    >
+                        <Tooltip title="Clone experiment" placement="top">
+                            <IconButton
+                                onClick={event => {
+                                    event.stopPropagation();
+                                    const cloned = deepClone(exp);
+                                    cloned.name = createNewName(experiments, exp.name + " cloned");
+                                    addExperiment(cloned);
+                                }}
+                            >
+                                <ContentCopyIcon />
+                            </IconButton>
+                        </Tooltip>
+                    </ExperimentRow>
                 ))}
             </TreeView>
         </Paper>

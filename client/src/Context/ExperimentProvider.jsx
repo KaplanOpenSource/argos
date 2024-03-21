@@ -36,8 +36,8 @@ const reducer = (state, action) => {
             return { ...state, experiments: action.payload || [] };
         }
         case actions.ADD_EXP: {
-            const name = createNewName(state.experiments, 'New Experiment');
-            const newExp = {
+            const name = createNewName(state.experiments, action.data ? action.data.name : 'New Experiment');
+            const newExp = action.data ? action.data : {
                 version: '3.0.0',
                 name,
                 startDate: dayjs().startOf('day'),
@@ -220,8 +220,8 @@ export const ExperimentProvider = ({ children }) => {
         dispatch({ type: actions.DEL_EXP, name: name });
     }
 
-    const addExperiment = async () => {
-        dispatch({ type: actions.ADD_EXP });
+    const addExperiment = async (newExp = undefined) => {
+        dispatch({ type: actions.ADD_EXP, data: newExp });
     }
 
     const setExperiment = (name, data) => {
