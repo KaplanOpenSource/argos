@@ -2,7 +2,6 @@ import { FormControlLabel, IconButton, MenuItem, Select, Switch } from "@mui/mat
 import { TreeRow } from "../App/TreeRow";
 import { AttributeValue, VALUE_TYPE_SELECT, valueTypeDefault, valueTypes } from "./AttributeValue";
 import DeleteIcon from '@mui/icons-material/Delete';
-import { TreeItem } from "@mui/x-tree-view/TreeItem";
 import { TreeSublist } from "../App/TreeSublist";
 
 export const AttributeType = ({ data, setData }) => {
@@ -77,6 +76,7 @@ export const AttributeType = ({ data, setData }) => {
                 type={data.type || valueTypeDefault}
                 data={data.defaultValue}
                 setData={val => setData({ ...data, defaultValue: val })}
+                attrType={data}
             />
         </TreeRow>
     )

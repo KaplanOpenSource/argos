@@ -21,6 +21,7 @@ export const AttributeItemList = ({ attributeTypes, data, setData }) => {
                             type={attrType.type || valueTypeDefault}
                             data={value}
                             setData={setValue}
+                            attrType={attrType}
                         />
                     )
                 })

@@ -18,7 +18,7 @@ export const valueTypes = [
 ];
 export const valueTypeDefault = VALUE_TYPE_STRING;
 
-export const AttributeValue = ({ type, label, data, setData }) => {
+export const AttributeValue = ({ type, label, data, setData, attrType }) => {
     switch (type) {
         case VALUE_TYPE_NUMBER:
             return (
@@ -56,24 +56,19 @@ export const AttributeValue = ({ type, label, data, setData }) => {
                 />
             )
         case VALUE_TYPE_SELECT: {
-            const id = data.name + "-select";
-            const idLabel = data.name + "-select-label";
             return (
-                <FormControl fullWidth>
-                    <InputLabel id={idLabel}>{label}</InputLabel>
+                <FormControl>
+                    <InputLabel>{label}</InputLabel>
                     <Select
-                        labelId={idLabel}
-                        // id="demo-simple-select"
                         value={data}
                         label={label}
                         onChange={(event) => {
                             setData(event.target.value);
                         }}
                     >
-                        {/* {(data.options || []).map(o => ())} */}
-                        <MenuItem value={10}>Ten</MenuItem>
-                        <MenuItem value={20}>Twenty</MenuItem>
-                        <MenuItem value={30}>Thirty</MenuItem>
+                        {(attrType.options || []).map(o => (
+                            <MenuItem key={o.name} value={o.name}>{o.name}</MenuItem>
+                        ))}
                     </Select>
                 </FormControl>
             )
