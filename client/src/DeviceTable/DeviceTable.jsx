@@ -22,7 +22,6 @@ export const DeviceTable = ({ }) => {
             }}
         >
             <Button
-            // onClick={() => setShowExperiments(!showExperiments)}
             >
                 Selected Devices
             </Button>

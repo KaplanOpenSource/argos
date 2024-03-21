@@ -8,7 +8,7 @@ import { GridOn } from "@mui/icons-material";
 import { AttributeItemList } from "./AttributeItemList";
 
 export const Trial = ({ data, setData, experiment, trialType, children }) => {
-    const { currTrial, setCurrTrial, setShowExperiments, experiments } = useContext(experimentContext);
+    const { currTrial, setCurrTrial } = useContext(experimentContext);
     return (
         <TreeRow
             key={data.name}
@@ -24,7 +24,6 @@ export const Trial = ({ data, setData, experiment, trialType, children }) => {
                         <IconButton
                             onClick={() => {
                                 setCurrTrial({ experimentName: experiment.name, trialTypeName: trialType.name, trialName: data.name });
-                                setShowExperiments(false);
                             }}
                         >
                             <GridOn color={data === currTrial.trial ? "primary" : ""} />

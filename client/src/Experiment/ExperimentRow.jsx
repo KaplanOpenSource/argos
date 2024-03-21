@@ -15,7 +15,7 @@ import { ImageEmbedded } from "./ImageEmbedded";
 import { downloadJsonFile } from "./DownloadJsonFile";
 
 export const ExperimentRow = ({ data, setData, children }) => {
-    const { showExperiments, currTrial, deleteExperiment, setShownMap } = useContext(experimentContext);
+    const { deleteExperiment, setShownMap } = useContext(experimentContext);
     return (
         <TreeRow
             key={data.name}
@@ -54,7 +54,7 @@ export const ExperimentRow = ({ data, setData, children }) => {
                 setData={setData}
             >
                 {
-                    ((showExperiments || !currTrial.trialType) ? (data.trialTypes || []) : [currTrial.trialType]).map(itemData => (
+                    (data.trialTypes || []).map(itemData => (
                         <TrialType
                             key={itemData.name}
                             data={itemData}

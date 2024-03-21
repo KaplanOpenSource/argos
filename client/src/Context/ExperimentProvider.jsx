@@ -190,7 +190,6 @@ export const ExperimentProvider = ({ children }) => {
     const [state, dispatch] = useReducer(reducer, initialState);
     const experiments = state.experiments;
 
-    const [showExperiments, setShowExperiments] = useState(true);
     const [selection, setSelection] = useState([]);
     const [showImagePlacement, setShowImagePlacement] = useState(false);
 
@@ -300,8 +299,6 @@ export const ExperimentProvider = ({ children }) => {
         setCurrTrial,
         currTrial,
         setTrialData,
-        showExperiments,
-        setShowExperiments,
         selection,
         setSelection,
         undoOperation: () => dispatch({ type: actions.UNDO }),

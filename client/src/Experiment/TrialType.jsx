@@ -14,7 +14,7 @@ import { AttributeTypesDialogButton } from "./AttributeTypesDialogButton";
 import { deepClone } from "fast-json-patch";
 
 export const TrialType = ({ data, setData, experiment }) => {
-    const { showExperiments, currTrial } = useContext(experimentContext);
+    const { currTrial } = useContext(experimentContext);
     return (
         <TreeRow
             key={data.name}
@@ -49,7 +49,7 @@ export const TrialType = ({ data, setData, experiment }) => {
             }
         >
             {
-                ((showExperiments || !currTrial.trial) ? (data.trials || []) : [currTrial.trial]).map(itemData => (
+                (data.trials || []).map(itemData => (
                     <Trial
                         key={itemData.name}
                         data={itemData}

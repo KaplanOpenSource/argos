@@ -18,7 +18,6 @@ export const AppHeader = ({ }) => {
         redoOperation,
         currTrial,
         setCurrTrial,
-        setShowExperiments,
         showImagePlacement,
         setShowImagePlacement,
     } = useContext(experimentContext);
@@ -63,20 +62,11 @@ export const AppHeader = ({ }) => {
                 {
                     trialName
                         ? <>
-                            {/* <Button
-                                color="inherit"
-                                variant='outlined'
-                                style={{ marginRight: 10 }}
-                                onClick={() => setShowExperiments(!showExperiments)}
-                            >
-                                {showExperiments ? 'Hide' : 'Show'} Experiments
-                            </Button> */}
                             <IconButton
                                 edge="start"
                                 color="inherit"
                                 onClick={() => {
                                     setCurrTrial();
-                                    setShowExperiments(true);
                                 }}
                             >
                                 <CloseIcon />

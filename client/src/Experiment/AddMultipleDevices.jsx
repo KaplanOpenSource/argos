@@ -3,7 +3,6 @@ import { Box, IconButton, Paper, Popover, Stack, Tooltip } from "@mui/material"
 import { useState } from "react"
 import { TextFieldDebounce } from "../Utils/TextFieldDebounce";
 import { AttributeItemList } from "./AttributeItemList";
-import { TreeItem } from "@mui/x-tree-view/TreeItem";
 
 export const AddMultipleDevices = ({ deviceType, addDevices }) => {
     const [anchorEl, setAnchorEl] = useState(null);

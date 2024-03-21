@@ -11,7 +11,7 @@ import { deepClone } from "fast-json-patch";
 import { createNewName } from "../Utils/utils";
 
 export const ExperimentList = ({ }) => {
-    const { experiments, setExperiment, addExperiment, showExperiments, setShowExperiments, currTrial } = useContext(experimentContext);
+    const { experiments, setExperiment, addExperiment, currTrial } = useContext(experimentContext);
 
     const [expanded, setExpanded] = useState([]);
 
@@ -45,7 +45,7 @@ export const ExperimentList = ({ }) => {
             }}
         >
             <Button
-                onClick={() => setShowExperiments(!showExperiments)}
+            // onClick={() => setShowExperiments(!showExperiments)}
             >
                 Experiments
             </Button>
@@ -54,7 +54,6 @@ export const ExperimentList = ({ }) => {
                 color="inherit"
                 onClick={() => {
                     addExperiment();
-                    setShowExperiments(true);
                 }}
             >
                 <AddIcon />
@@ -75,7 +74,7 @@ export const ExperimentList = ({ }) => {
                 // }}
                 disableSelection
             >
-                {((showExperiments || !currTrial.experiment) ? experiments : [currTrial.experiment]).map(exp => (
+                {experiments.map(exp => (
                     <ExperimentRow key={exp.name}
                         data={exp}
                         setData={val => setExperiment(exp.name, val)}
