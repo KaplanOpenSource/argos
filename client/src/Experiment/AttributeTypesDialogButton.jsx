@@ -7,11 +7,13 @@ import { TreeSublist } from "../App/TreeSublist";
 import { AttributeType } from "./AttributeType";
 import { changeByName } from "../Utils/utils";
 import { TreeView } from "@mui/x-tree-view/TreeView";
+import { valueTypeDefault } from "./AttributeValue";
 
 export const AttributeTypesDialogButton = ({ data, setData }) => {
     const [anchorEl, setAnchorEl] = useState(null);
     return (
-        <ClickAwayListener onClickAway={() => setAnchorEl(null)}>
+        // ClickAwayListener onClickAway={() => setAnchorEl(null)}>
+        <>
             <Box sx={{ position: 'relative' }}>
                 <Tooltip title="Edit attribute types" placement="top">
                     <IconButton
@@ -44,7 +46,7 @@ export const AttributeTypesDialogButton = ({ data, setData }) => {
                                 setData={setData}
                                 newDataCreator={() => {
                                     return {
-                                        type: 'String',
+                                        type: valueTypeDefault,
                                     }
                                 }}
                             >
@@ -67,6 +69,7 @@ export const AttributeTypesDialogButton = ({ data, setData }) => {
                     </Paper>
                 </Popper>
             </Box>
-        </ClickAwayListener>
+        </>
+        // </ClickAwayListener>
     )
 }

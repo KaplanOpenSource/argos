@@ -1,6 +1,6 @@
 import { FormControlLabel, IconButton, MenuItem, Select, Switch } from "@mui/material";
 import { TreeRow } from "../App/TreeRow";
-import { AttributeValue } from "./AttributeValue";
+import { AttributeValue, valueTypeDefault, valueTypes } from "./AttributeValue";
 import DeleteIcon from '@mui/icons-material/Delete';
 
 export const AttributeType = ({ data, setData }) => {
@@ -21,13 +21,14 @@ export const AttributeType = ({ data, setData }) => {
                         }
                     />
                     <Select
-                        value={data.type || 'String'}
+                        value={data.type || valueTypeDefault}
                         size="small"
                         label="Type"
                         onChange={(e) => setData({ ...data, type: e.target.value })}
                     >
-                        <MenuItem value={'String'}>String</MenuItem>
-                        <MenuItem value={'Number'}>Number</MenuItem>
+                        {valueTypes.map(t => (
+                            <MenuItem key={t} value={t}>{t}</MenuItem>
+                        ))}
                     </Select>
                     <IconButton
                         onClick={() => setData(undefined)}
@@ -39,7 +40,7 @@ export const AttributeType = ({ data, setData }) => {
         >
             <AttributeValue
                 label='Default'
-                type={data.type || 'String'}
+                type={data.type || valueTypeDefault}
                 data={data.defaultValue}
                 setData={val => setData({ ...data, defaultValue: val })}
             />
