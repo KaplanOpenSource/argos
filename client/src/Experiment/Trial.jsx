@@ -16,9 +16,10 @@ export const Trial = ({ data, setData, experiment, trialType, children }) => {
             setData={setData}
             components={
                 <>
-                    <DateProperty data={data} setData={setData}
+                    <DateProperty
+                        data={data.createdDate}
+                        setData={val => setData({ ...data, createdDate: val })}
                         label="Created Date"
-                        field="createdDate"
                     />
                     <Tooltip title="Select trial for editing" placement="top">
                         <IconButton

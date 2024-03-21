@@ -23,13 +23,15 @@ export const ExperimentRow = ({ data, setData, children }) => {
             setData={setData}
             components={
                 <>
-                    <DateProperty data={data} setData={setData}
+                    <DateProperty
+                        data={data.startDate}
+                        setData={val => setData({ ...data, startDate: val })}
                         label="Start Date"
-                        field="startDate"
                     />
-                    <DateProperty data={data} setData={setData}
+                    <DateProperty
+                        data={data.endDate}
+                        setData={val => setData({ ...data, endDate: val })}
                         label="End Date"
-                        field="endDate"
                     />
                     <IconButton
                         onClick={() => downloadJsonFile(data)}

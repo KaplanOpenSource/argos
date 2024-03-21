@@ -7,7 +7,8 @@ export const DateProperty = ({ label, field, data, setData }) => {
             label={label}
             slotProps={{
                 textField: {
-                    fullWidth: false, size: 'small',
+                    fullWidth: false,
+                    size: 'small',
                     inputProps: {
                         style: {
                             width: '100px'
@@ -16,8 +17,8 @@ export const DateProperty = ({ label, field, data, setData }) => {
                 }
             }}
             format='DD/MM/YYYY'
-            value={dayjs(data[field])}
-            onChange={(val) => setData({ ...data, [field]: val })}
+            value={dayjs(data)}
+            onChange={(val) => setData(val)}
         />
     )
 }
