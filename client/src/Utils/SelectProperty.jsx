@@ -1,4 +1,4 @@
-import { Box, Checkbox, Chip, FormControl, InputLabel, ListItemText, MenuItem, Select } from "@mui/material";
+import { Box, Chip, FormControl, InputLabel, ListItemText, MenuItem, Select } from "@mui/material";
 
 function makeArray(val) {
     return ((typeof val === 'string' ? val.split(',') : val) || []);
@@ -28,7 +28,6 @@ export const SelectProperty = ({ label, data, setData, options, multiple }) => {
             </FormControl>
         )
     } else {
-        console.log('data', data)
         return (
             <FormControl>
                 <InputLabel>{label}</InputLabel>
@@ -38,10 +37,10 @@ export const SelectProperty = ({ label, data, setData, options, multiple }) => {
                     onChange={(event) => setData(makeArray(event.target.value))}
                     size="small"
                     renderValue={(selected) => {
-                        console.log('selected', selected)
+                        const sarr = makeArray(selected);
                         return (
-                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0 }}>
-                                {makeArray(selected).map((value) => (
+                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                                {sarr.map((value) => (
                                     <Chip key={value} label={value} size="small" />
                                 ))}
                             </Box>
