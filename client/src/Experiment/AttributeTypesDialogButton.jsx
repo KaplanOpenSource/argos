@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Box, ClickAwayListener, IconButton, Paper, Popper } from "@mui/material";
+import { Box, ClickAwayListener, IconButton, Paper, Popper, Tooltip } from "@mui/material";
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
@@ -13,12 +13,14 @@ export const AttributeTypesDialogButton = ({ data, setData }) => {
     return (
         <ClickAwayListener onClickAway={() => setAnchorEl(null)}>
             <Box sx={{ position: 'relative' }}>
-                <IconButton
-                    onClick={(e) => { e.stopPropagation(); setAnchorEl(anchorEl ? null : e.currentTarget); }}
-                    color={Boolean(anchorEl) ? "primary" : ""}
-                >
-                    <AccountTreeIcon />
-                </IconButton>
+                <Tooltip title="Edit attribute types" placement="top">
+                    <IconButton
+                        onClick={(e) => { e.stopPropagation(); setAnchorEl(anchorEl ? null : e.currentTarget); }}
+                        color={Boolean(anchorEl) ? "primary" : ""}
+                    >
+                        <AccountTreeIcon />
+                    </IconButton>
+                </Tooltip>
                 <Popper
                     open={Boolean(anchorEl)}
                     anchorEl={anchorEl}

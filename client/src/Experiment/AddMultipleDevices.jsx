@@ -27,7 +27,7 @@ export const AddMultipleDevices = ({ deviceType, addDevices }) => {
 
     return (
         <>
-            <Tooltip title={"Add Multiple"} placement="right">
+            <Tooltip title={"Add multiple devices"} placement="top">
                 <IconButton
                     color={open ? "primary" : ""}
                     onClick={(e) => {
