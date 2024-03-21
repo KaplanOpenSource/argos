@@ -9,7 +9,9 @@ import { changeByName, createNewName } from "../Utils/utils";
 import { IconButton, Tooltip } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { AttributeTypesDialogButton } from "./AttributeTypesDialogButton";
+import { deepClone } from "fast-json-patch";
 
 export const TrialType = ({ data, setData, experiment }) => {
     const { showExperiments, currTrial } = useContext(experimentContext);
@@ -56,7 +58,21 @@ export const TrialType = ({ data, setData, experiment }) => {
                         }}
                         experiment={experiment}
                         trialType={data}
-                    />
+                    >
+                        <Tooltip title="Clone trial" placement="top">
+                            <IconButton
+                                onClick={e => {
+                                    e.stopPropagation();
+                                    const cloned = deepClone(itemData);
+                                    cloned.name = createNewName(data.trials, itemData.name + " cloned");
+                                    cloned.createdDate = dayjs().startOf('day');
+                                    setData({ ...data, trials: [...(data.trials || []), cloned] });
+                                }}
+                            >
+                                <ContentCopyIcon />
+                            </IconButton>
+                        </Tooltip>
+                    </Trial>
                 ))
             }
         </TreeRow>
