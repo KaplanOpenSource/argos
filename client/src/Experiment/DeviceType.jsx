@@ -4,7 +4,8 @@ import { TreeSublist } from "../App/TreeSublist";
 import { AttributeType } from "./AttributeType";
 import { IconButton } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
-import { changeByName } from "../Utils/utils";
+import AddIcon from '@mui/icons-material/Add';
+import { changeByName, createNewName } from "../Utils/utils";
 import { AddMultipleDevices } from "./AddMultipleDevices";
 import { AttributeTypesDialogButton } from "./AttributeTypesDialogButton";
 
@@ -25,6 +26,21 @@ export const DeviceType = ({ data, setData }) => {
                         data={data}
                         setData={setData}
                     />
+                    <AddMultipleDevices
+                        deviceType={data}
+                        addDevices={newDevices => {
+                            setData({ ...data, devices: [...(data.devices || []), ...newDevices] })
+                        }}
+                    />
+                    <IconButton
+                        onClick={e => {
+                            e.stopPropagation();
+                            const name = createNewName(data.devices, 'New Device');
+                            setData({ ...data, devices: [...(data.devices || []), { name }] });
+                        }}
+                    >
+                        <AddIcon />
+                    </IconButton>
                 </>
             }
         >
@@ -34,12 +50,6 @@ export const DeviceType = ({ data, setData }) => {
                 fieldName='devices'
                 nameTemplate='New Device'
                 setData={setData}
-                components={
-                    <AddMultipleDevices
-                        deviceType={data}
-                        addDevices={newDevices => setData({ ...data, devices: [...(data.devices || []), ...newDevices] })}
-                    />
-                }
             >
                 {
                     (data.devices || []).map(itemData => (

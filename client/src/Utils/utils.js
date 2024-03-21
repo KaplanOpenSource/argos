@@ -4,7 +4,7 @@ export function camelCaseToWords(s) {
 }
 
 export function createNewName(currentNamedItems, nameTemplate, separator = ' ') {
-    if (!currentNamedItems.find(t => t.name === nameTemplate)) {
+    if (!(currentNamedItems || []).find(t => t.name === nameTemplate)) {
         return nameTemplate;
     }
     for (let i = 1; ; ++i) {
