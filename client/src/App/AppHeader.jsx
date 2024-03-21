@@ -3,7 +3,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import MapIcon from '@mui/icons-material/Map';
 import PublicIcon from '@mui/icons-material/Public';
 import {
-    AppBar, IconButton, Toolbar, Tooltip, Typography
+    AppBar, Box, IconButton, Stack, Toolbar, Tooltip, Typography
 } from '@mui/material';
 import { experimentContext } from '../Context/ExperimentProvider';
 import { useContext } from 'react';
@@ -36,11 +36,17 @@ export const AppHeader = ({ }) => {
                 >
                     <MenuIcon />
                 </IconButton>
-                <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                    Argos
-                </Typography>
-                <VersionId
-                />
+                <Stack
+                    direction={'row'}
+                    spacing={2}
+                    sx={{ flexGrow: 1 }}
+                >
+                    <Typography variant="h6" component="div">
+                        Argos
+                    </Typography>
+                    <VersionId
+                    />
+                </Stack>
                 <IconButton
                     // size="large"
                     edge="start"

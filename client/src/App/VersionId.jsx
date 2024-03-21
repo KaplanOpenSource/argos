@@ -22,10 +22,10 @@ export const VersionId = ({ }) => {
     return (
         <Typography variant="body2"
             sx={{
-                marginInline: 5,
+                alignSelf: 'center',
             }}
         >
-            {commitId}
+            version: {commitId}
         </Typography>
     )
 }
