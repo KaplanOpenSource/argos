@@ -11,7 +11,7 @@ export const AttributeItemList = ({ attributeTypes, data, setData }) => {
                         key={attrType.name}
                         label={attrType.name}
                         type={attrType.type || valueTypeDefault}
-                        data={(attributes.find(t => t.name === attrType.name) || { value: '' }).value}
+                        data={(attributes.find(t => t.name === attrType.name) || { value: attrType.defaultValue }).value}
                         setData={newData => {
                             const attrValue = { name: attrType.name, value: newData };
                             setData({ ...data, attributes: changeByName(attributes, attrType.name, attrValue) });
