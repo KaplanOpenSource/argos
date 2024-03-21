@@ -3,7 +3,11 @@ rm argos.zip
 git archive --format=zip -o argos.zip HEAD
 
 echo $'\nbuild client\n====='
-cd client/ && npm install && npm run build && cd -
+cd client/
+npm install
+npm run build
+cd -
+git rev-parse HEAD > client/dist/commit.txt
 
 echo $'\nadd client to deploy archive\n====='
 zip -ur argos.zip client/dist/

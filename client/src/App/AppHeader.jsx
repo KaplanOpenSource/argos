@@ -1,16 +1,16 @@
 import MenuIcon from '@mui/icons-material/Menu';
-import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
 import MapIcon from '@mui/icons-material/Map';
 import PublicIcon from '@mui/icons-material/Public';
 import {
-    AppBar, Button, IconButton, Toolbar, Tooltip, Typography
+    AppBar, IconButton, Toolbar, Tooltip, Typography
 } from '@mui/material';
 import { experimentContext } from '../Context/ExperimentProvider';
 import { useContext } from 'react';
 import { Redo, Undo } from '@mui/icons-material';
 import EditLocationAltIcon from '@mui/icons-material/EditLocationAlt';
 import EditLocationOutlinedIcon from '@mui/icons-material/EditLocationOutlined';
+import { VersionId } from './VersionId';
 
 export const AppHeader = ({ }) => {
     const {
@@ -39,6 +39,8 @@ export const AppHeader = ({ }) => {
                 <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                     Argos
                 </Typography>
+                <VersionId
+                />
                 <IconButton
                     // size="large"
                     edge="start"
