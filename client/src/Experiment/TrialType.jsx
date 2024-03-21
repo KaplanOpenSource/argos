@@ -5,9 +5,10 @@ import { TreeSublist } from "../App/TreeSublist";
 import { AttributeType } from "./AttributeType";
 import dayjs from "dayjs";
 import { experimentContext } from "../Context/ExperimentProvider";
-import { changeByName } from "../Utils/utils";
-import { IconButton } from "@mui/material";
+import { changeByName, createNewName } from "../Utils/utils";
+import { IconButton, Tooltip } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
+import AddIcon from '@mui/icons-material/Add';
 
 export const TrialType = ({ data, setData, experiment }) => {
     const { showExperiments, currTrial } = useContext(experimentContext);
@@ -23,6 +24,18 @@ export const TrialType = ({ data, setData, experiment }) => {
                     >
                         <DeleteIcon />
                     </IconButton>
+                    <Tooltip title="Add new trial" placement="top">
+                        <IconButton
+                            onClick={e => {
+                                e.stopPropagation();
+                                const name = createNewName(data.trials, 'New Trial');
+                                const createdDate = dayjs().startOf('day');
+                                setData({ ...data, trials: [...(data.trials || []), { name, createdDate }] });
+                            }}
+                        >
+                            <AddIcon />
+                        </IconButton>
+                    </Tooltip>
                 </>
             }
         >
