@@ -23,6 +23,7 @@ export const VersionId = ({ }) => {
         <Typography variant="body2"
             sx={{
                 alignSelf: 'center',
+                fontSize: 'xx-small',
             }}
         >
             version: {commitId}
