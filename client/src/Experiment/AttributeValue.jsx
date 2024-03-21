@@ -8,11 +8,13 @@ export const VALUE_TYPE_STRING = "String";
 export const VALUE_TYPE_NUMBER = "Number";
 export const VALUE_TYPE_DATE = "Date";
 export const VALUE_TYPE_BOOLEAN = "Boolean";
+export const VALUE_TYPE_SELECT = "Select";
 export const valueTypes = [
     VALUE_TYPE_STRING,
     VALUE_TYPE_NUMBER,
     VALUE_TYPE_BOOLEAN,
     VALUE_TYPE_DATE,
+    VALUE_TYPE_SELECT,
 ];
 export const valueTypeDefault = VALUE_TYPE_STRING;
 

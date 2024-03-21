@@ -1,7 +1,9 @@
 import { FormControlLabel, IconButton, MenuItem, Select, Switch } from "@mui/material";
 import { TreeRow } from "../App/TreeRow";
-import { AttributeValue, valueTypeDefault, valueTypes } from "./AttributeValue";
+import { AttributeValue, VALUE_TYPE_SELECT, valueTypeDefault, valueTypes } from "./AttributeValue";
 import DeleteIcon from '@mui/icons-material/Delete';
+import { TreeItem } from "@mui/x-tree-view/TreeItem";
+import { TreeSublist } from "../App/TreeSublist";
 
 export const AttributeType = ({ data, setData }) => {
     return (
@@ -38,6 +40,37 @@ export const AttributeType = ({ data, setData }) => {
                 </>
             }
         >
+            {data.type === VALUE_TYPE_SELECT &&
+                <TreeSublist
+                    parentKey={data.name}
+                    data={data}
+                    fieldName='options'
+                    nameTemplate='New Option'
+                    setData={setData}
+                >
+                    {
+                        (data.options || []).map(itemData => (
+                            <TreeRow
+                                key={itemData.name}
+                                data={itemData}
+                                setData={newData => {
+                                    setData({ ...data, options: changeByName(data.options, itemData.name, newData) });
+                                }}
+                                components={
+                                    <>
+                                        <IconButton
+                                            onClick={() => setData({ ...data, options: data.options.filter(t => t.name !== itemData.name) })}
+                                        >
+                                            <DeleteIcon />
+                                        </IconButton>
+                                    </>
+                                }
+                            >
+                            </TreeRow>
+                        ))
+                    }
+                </TreeSublist>
+            }
             <AttributeValue
                 label='Default'
                 type={data.type || valueTypeDefault}
