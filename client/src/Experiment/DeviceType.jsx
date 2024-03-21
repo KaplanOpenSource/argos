@@ -9,7 +9,6 @@ import { AddMultipleDevices } from "./AddMultipleDevices";
 import { AttributeTypesDialogButton } from "./AttributeTypesDialogButton";
 
 export const DeviceType = ({ data, setData }) => {
-    // console.log(anchorEl)
     return (
         <TreeRow
             key={data.name}
@@ -23,6 +22,8 @@ export const DeviceType = ({ data, setData }) => {
                         <DeleteIcon />
                     </IconButton>
                     <AttributeTypesDialogButton
+                        data={data}
+                        setData={setData}
                     />
                 </>
             }
@@ -53,32 +54,6 @@ export const DeviceType = ({ data, setData }) => {
                     ))
                 }
             </TreeSublist>
-
-            <TreeSublist
-                parentKey={data.name}
-                data={data}
-                fieldName='attributeTypes'
-                nameTemplate='New Attribute Type'
-                setData={setData}
-                newDataCreator={() => {
-                    return {
-                        type: 'String',
-                    }
-                }}
-            >
-                {
-                    (data.attributeTypes || []).map(itemData => (
-                        <AttributeType
-                            key={itemData.name}
-                            data={itemData}
-                            setData={newData => {
-                                setData({ ...data, attributeTypes: changeByName(data.attributeTypes, itemData.name, newData) });
-                            }}
-                        />
-                    ))
-                }
-            </TreeSublist>
-
         </TreeRow>
     )
 }

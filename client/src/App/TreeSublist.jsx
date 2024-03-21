@@ -37,7 +37,8 @@ export const TreeSublist = ({ nameTemplate, fieldName, data, setData, newDataCre
                                 alignItems: 'flex-start',
                             }}
                             // color="inherit"
-                            onClick={() => {
+                            onClick={e => {
+                                e.stopPropagation();
                                 const theData = newDataCreator ? newDataCreator() : {};
                                 theData.name = createNewName(items, nameTemplate);
                                 setData({ ...data, [fieldName]: [...items, theData] });

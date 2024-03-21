@@ -1,8 +1,14 @@
 import { useState } from "react";
-import { Box, IconButton, Popper } from "@mui/material";
+import { Box, IconButton, Paper, Popper } from "@mui/material";
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import { TreeSublist } from "../App/TreeSublist";
+import { AttributeType } from "./AttributeType";
+import { changeByName } from "../Utils/utils";
+import { TreeView } from "@mui/x-tree-view/TreeView";
 
-export const AttributeTypesDialogButton = ({ }) => {
+export const AttributeTypesDialogButton = ({ data, setData }) => {
     const [anchorEl, setAnchorEl] = useState(null);
     return (
         <>
@@ -15,12 +21,47 @@ export const AttributeTypesDialogButton = ({ }) => {
             <Popper
                 open={Boolean(anchorEl)}
                 anchorEl={anchorEl}
-                placement="right"
+                placement="right-start"
                 sx={{ zIndex: 1000 }}
             >
-                <Box sx={{ border: 1, p: 1 }}>
-                    The content of the Popper.
-                </Box>
+                <Paper sx={{ border: 1, p: 1 }}
+                    onClick={e => e.stopPropagation()}
+                >
+                    <TreeView
+                        defaultCollapseIcon={<ExpandMoreIcon />}
+                        defaultExpandIcon={<ChevronRightIcon />}
+                        disableSelection
+                        defaultExpanded={[data.name + '_' + 'attributeTypes']}
+                    >
+                        <TreeSublist
+                            parentKey={data.name}
+                            data={data}
+                            fieldName='attributeTypes'
+                            nameTemplate='New Attribute Type'
+                            setData={setData}
+                            newDataCreator={() => {
+                                return {
+                                    type: 'String',
+                                }
+                            }}
+                        >
+                            {
+                                (data.attributeTypes || []).map(itemData => (
+                                    <AttributeType
+                                        key={itemData.name}
+                                        data={itemData}
+                                        setData={newData => {
+                                            setData({
+                                                ...data,
+                                                attributeTypes: changeByName(data.attributeTypes, itemData.name, newData)
+                                            });
+                                        }}
+                                    />
+                                ))
+                            }
+                        </TreeSublist>
+                    </TreeView>
+                </Paper>
             </Popper>
         </>
     )
