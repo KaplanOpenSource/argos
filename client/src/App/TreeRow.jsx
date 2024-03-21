@@ -3,7 +3,7 @@ import { Box, TextField } from "@mui/material";
 import { TreeItem } from "@mui/x-tree-view/TreeItem";
 import { TextFieldDebounce } from "../Utils/TextFieldDebounce";
 
-export const TreeRow = ({ data, setData, components, children }) => {
+export const TreeRow = ({ data, setData, components, withDescription = true, children }) => {
     const { name } = data;
     return (
         <TreeItem
@@ -37,15 +37,17 @@ export const TreeRow = ({ data, setData, components, children }) => {
             }
             sx={{ padding: '5px' }}
         >
-            <TextFieldDebounce
-                sx={{ padding: '5px' }}
-                variant="outlined"
-                size="small"
-                label="Description"
-                InputLabelProps={{ shrink: true }}
-                value={data.description}
-                onChange={val => setData({ ...data, description: val })}
-            />
+            {withDescription &&
+                <TextFieldDebounce
+                    sx={{ padding: '5px' }}
+                    variant="outlined"
+                    size="small"
+                    label="Description"
+                    InputLabelProps={{ shrink: true }}
+                    value={data.description}
+                    onChange={val => setData({ ...data, description: val })}
+                />
+            }
             {children}
         </TreeItem>
     )

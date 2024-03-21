@@ -56,6 +56,7 @@ export const AttributeType = ({ data, setData }) => {
                                 setData={newData => {
                                     setData({ ...data, options: changeByName(data.options, itemData.name, newData) });
                                 }}
+                                withDescription={false}
                                 components={
                                     <>
                                         <IconButton
