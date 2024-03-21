@@ -17,11 +17,13 @@ export const DeviceType = ({ data, setData }) => {
             setData={setData}
             components={
                 <>
-                    <IconButton
-                        onClick={() => setData(undefined)}
-                    >
-                        <DeleteIcon />
-                    </IconButton>
+                    <Tooltip title="Delete device type" placement="top">
+                        <IconButton
+                            onClick={() => setData(undefined)}
+                        >
+                            <DeleteIcon />
+                        </IconButton>
+                    </Tooltip>
                     <Tooltip title="Add new device" placement="top">
                         <IconButton
                             onClick={e => {

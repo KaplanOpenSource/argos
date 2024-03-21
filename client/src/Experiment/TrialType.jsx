@@ -9,6 +9,7 @@ import { changeByName, createNewName } from "../Utils/utils";
 import { IconButton, Tooltip } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
+import { AttributeTypesDialogButton } from "./AttributeTypesDialogButton";
 
 export const TrialType = ({ data, setData, experiment }) => {
     const { showExperiments, currTrial } = useContext(experimentContext);
@@ -19,11 +20,13 @@ export const TrialType = ({ data, setData, experiment }) => {
             setData={setData}
             components={
                 <>
-                    <IconButton
-                        onClick={() => setData(undefined)}
-                    >
-                        <DeleteIcon />
-                    </IconButton>
+                    <Tooltip title="Delete trial type" placement="top">
+                        <IconButton
+                            onClick={() => setData(undefined)}
+                        >
+                            <DeleteIcon />
+                        </IconButton>
+                    </Tooltip>
                     <Tooltip title="Add new trial" placement="top">
                         <IconButton
                             onClick={e => {
@@ -36,61 +39,26 @@ export const TrialType = ({ data, setData, experiment }) => {
                             <AddIcon />
                         </IconButton>
                     </Tooltip>
+                    <AttributeTypesDialogButton
+                        data={data}
+                        setData={setData}
+                    />
                 </>
             }
         >
-            <TreeSublist
-                parentKey={data.name}
-                data={data}
-                fieldName='trials'
-                nameTemplate='New Trial'
-                setData={setData}
-                newDataCreator={() => {
-                    return {
-                        createdDate: dayjs().startOf('day'),
-                    }
-                }}
-            >
-                {
-                    ((showExperiments || !currTrial.trial) ? (data.trials || []) : [currTrial.trial]).map(itemData => (
-                        <Trial
-                            key={itemData.name}
-                            data={itemData}
-                            setData={newData => {
-                                setData({ ...data, trials: changeByName(data.trials, itemData.name, newData) });
-                            }}
-                            experiment={experiment}
-                            trialType={data}
-                        />
-                    ))
-                }
-            </TreeSublist>
-
-            <TreeSublist
-                parentKey={data.name}
-                data={data}
-                fieldName='attributeTypes'
-                nameTemplate='New Attribute Type'
-                setData={setData}
-                newDataCreator={() => {
-                    return {
-                        type: 'String',
-                    }
-                }}
-            >
-                {
-                    (data.attributeTypes || []).map(itemData => (
-                        <AttributeType
-                            key={itemData.name}
-                            data={itemData}
-                            setData={newData => {
-                                setData({ ...data, attributeTypes: changeByName(data.attributeTypes, itemData.name, newData) });
-                            }}
-                        />
-                    ))
-                }
-            </TreeSublist>
-
+            {
+                ((showExperiments || !currTrial.trial) ? (data.trials || []) : [currTrial.trial]).map(itemData => (
+                    <Trial
+                        key={itemData.name}
+                        data={itemData}
+                        setData={newData => {
+                            setData({ ...data, trials: changeByName(data.trials, itemData.name, newData) });
+                        }}
+                        experiment={experiment}
+                        trialType={data}
+                    />
+                ))
+            }
         </TreeRow>
     )
 }
