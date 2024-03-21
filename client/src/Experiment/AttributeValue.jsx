@@ -1,8 +1,7 @@
-import { TextFieldDebounce, TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
-import { DatePicker } from "@mui/x-date-pickers";
-import dayjs from "dayjs";
+import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
 import { DateProperty } from "../Utils/DateProperty";
-import { FormControl, FormControlLabel, FormGroup, InputLabel, MenuItem, Select, Switch } from "@mui/material";
+import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { BooleanProperty } from "../Utils/BooleanProperty";
 
 export const VALUE_TYPE_STRING = "String";
 export const VALUE_TYPE_NUMBER = "Number";
@@ -31,20 +30,11 @@ export const AttributeValue = ({ type, label, data, setData, attrType }) => {
             )
         case VALUE_TYPE_BOOLEAN: {
             return (
-                <FormGroup>
-                    <FormControlLabel
-                        control={
-                            <Switch
-                                checked={data || false}
-                                onChange={(e) => {
-                                    e.stopPropagation();
-                                    setData(!!e.target.checked);
-                                }}
-                            />
-                        }
-                        label={label}
-                    />
-                </FormGroup>
+                <BooleanProperty
+                    data={data}
+                    setData={setData}
+                    label={label}
+                />
             )
         }
         case VALUE_TYPE_DATE:

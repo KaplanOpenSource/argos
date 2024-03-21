@@ -46,6 +46,11 @@ export const AttributeType = ({ data, setData }) => {
                     fieldName='options'
                     nameTemplate='New Option'
                     setData={setData}
+                    components={
+                        <>
+                        
+                        </>
+                    }
                 >
                     {
                         (data.options || []).map(itemData => (
