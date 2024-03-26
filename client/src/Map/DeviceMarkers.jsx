@@ -1,7 +1,8 @@
 import { useContext } from "react";
-import { Marker } from "react-leaflet";
+import { Marker, Popup } from "react-leaflet";
 import { experimentContext } from "../Context/ExperimentProvider";
 import { RealMapName } from "../constants/constants";
+import { SingleDevicePropertiesView } from "./SingleDevicePropertiesView";
 
 export const DeviceMarkers = ({ }) => {
     const { currTrial } = useContext(experimentContext);
@@ -20,7 +21,15 @@ export const DeviceMarkers = ({ }) => {
                         key={d.deviceTypeName + '_' + d.deviceItemName}
                         position={d.location.coordinates}
                     >
+                        <Popup>
+                            <SingleDevicePropertiesView
+                                entityItem={d}
+                                // entityType={entityType}
+                                devLocation={d.location.coordinates}
+                            >
 
+                            </SingleDevicePropertiesView>
+                        </Popup>
                     </Marker>
                 )
             })}
