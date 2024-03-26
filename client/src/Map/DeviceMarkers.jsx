@@ -5,7 +5,7 @@ import { RealMapName } from "../constants/constants";
 import { SingleDevicePropertiesView } from "./SingleDevicePropertiesView";
 
 export const DeviceMarkers = ({ }) => {
-    const { currTrial } = useContext(experimentContext);
+    const { currTrial, setTrialData } = useContext(experimentContext);
     const devicesOnTrial = (currTrial.trial || {}).devicesOnTrial || [];
     const mapName = currTrial.shownMapName || RealMapName;
     const devicesOnTrialMap = devicesOnTrial.filter(d => d.location.name === mapName);
@@ -24,6 +24,12 @@ export const DeviceMarkers = ({ }) => {
                         <Popup>
                             <SingleDevicePropertiesView
                                 deviceOnTrial={d}
+                                setDeviceOnTrial={newDeviceData => {
+                                    const data = { ...currTrial.trial, devicesOnTrial: devicesOnTrial.slice() };
+                                    const index = devicesOnTrial.findIndex(t => d.deviceTypeName === t.deviceTypeName && t.deviceItemName === d.deviceItemName);
+                                    data.devicesOnTrial[index] = newDeviceData;
+                                    setTrialData(data);
+                                }}
                             >
                             </SingleDevicePropertiesView>
                         </Popup>

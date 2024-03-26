@@ -18,7 +18,7 @@ import { experimentContext } from '../Context/ExperimentProvider';
 import { SelectDeviceButton } from '../Experiment/SelectDeviceButton';
 import { AttributeItemList } from '../Experiment/AttributeItemList';
 
-export const SingleDevicePropertiesView = ({ deviceOnTrial, children }) => {
+export const SingleDevicePropertiesView = ({ deviceOnTrial, setDeviceOnTrial, children }) => {
     const [isEditLocation, setIsEditLocation] = useState(false);
 
     const { currTrial, setLocationsToDevices } = useContext(experimentContext);
@@ -109,7 +109,7 @@ export const SingleDevicePropertiesView = ({ deviceOnTrial, children }) => {
             <AttributeItemList
                 attributeTypes={deviceType.attributeTypes}
                 data={deviceOnTrial}
-            // setData={setData}
+                setData={setDeviceOnTrial}
             />
             {/* <Grid container
                 direction='column'
