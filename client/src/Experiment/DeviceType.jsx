@@ -60,6 +60,7 @@ export const DeviceType = ({ data, setData }) => {
                         }}
                         deviceType={data}
                         showAttributes={false}
+                        withDescription={true}
                     />
                 ))
             }
