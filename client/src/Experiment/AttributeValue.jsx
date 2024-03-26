@@ -65,7 +65,7 @@ export const AttributeValue = ({ type, label, data, setData, attrType }) => {
                 <TextFieldDebounceOutlined
                     label={label}
                     onChange={val => setData(val)}
-                    value={data}
+                    value={data || ''}
                 />
             )
     }
