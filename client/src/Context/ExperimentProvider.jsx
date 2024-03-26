@@ -237,36 +237,32 @@ export const ExperimentProvider = ({ children }) => {
         setExperiment(currTrial.experimentName, e)
     }
 
-    const setDeviceLocation = (trial, deviceTypeName, deviceItemName, latlng) => {
+    const setLocationsToDevices = (latlngs, deviceTypeItems) => {
+        const { trial } = currTrial;
         const mapName = currTrial.shownMapName || RealMapName;
-        const devicesOnTrial = [...(trial.devicesOnTrial || [])].filter(t => {
-            return t.deviceItemName !== deviceItemName || t.deviceTypeName !== deviceTypeName;
-        });
-        devicesOnTrial.push({ deviceTypeName, deviceItemName, location: { name: mapName, coordinates: latlng } });
-        const data = { ...trial, devicesOnTrial };
-        setTrialData(data);
-    }
-
-    const setLocationsToStackDevices = (latlngs) => {
-        const { experiment, trialType, trial } = currTrial;
-        const mapName = currTrial.shownMapName || RealMapName;
-        if (experiment && trial && selection.length > 0 && latlngs.length > 0) {
-            const newSelection = [];
+        let count = 0;
+        if (trial && deviceTypeItems.length > 0 && latlngs.length > 0) {
             let devicesOnTrial = [...(trial.devicesOnTrial || [])];
-            for (let i = 0; i < selection.length; ++i) {
-                if (i >= latlngs.length) {
-                    newSelection.push(selection[i]);
-                } else {
-                    const { deviceTypeName, deviceItemName } = selection[i];
+            for (let i = 0; i < deviceTypeItems.length; ++i) {
+                if (i < latlngs.length) {
+                    const { deviceTypeName, deviceItemName } = deviceTypeItems[i];
                     devicesOnTrial = devicesOnTrial.filter(t => {
                         return t.deviceItemName !== deviceItemName || t.deviceTypeName !== deviceTypeName;
                     });
                     devicesOnTrial.push({ deviceTypeName, deviceItemName, location: { name: mapName, coordinates: latlngs[i] } });
+                    count++;
                 }
             }
             const data = { ...trial, devicesOnTrial };
             setTrialData(data);
-            setSelection(newSelection);
+        }
+        return count;
+    }
+
+    const setLocationsToStackDevices = (latlngs) => {
+        const count = setLocationsToDevices(latlngs, selection);
+        if (count > 0) {
+            setSelection(selection.slice(count));
         }
     }
 
@@ -303,7 +299,7 @@ export const ExperimentProvider = ({ children }) => {
         setSelection,
         undoOperation: () => dispatch({ type: actions.UNDO }),
         redoOperation: () => dispatch({ type: actions.REDO }),
-        setDeviceLocation,
+        setLocationsToDevices,
         setLocationsToStackDevices,
         setShownMap: (shownMapName) => dispatch({ type: actions.SET_SHOWN_MAP, shownMapName }),
         showImagePlacement,
