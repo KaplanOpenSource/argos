@@ -23,9 +23,9 @@ export const DeviceMarkers = ({ }) => {
                     >
                         <Popup>
                             <SingleDevicePropertiesView
-                                entityItem={d}
+                                deviceOnTrial={d}
                                 // entityType={entityType}
-                                devLocation={d.location.coordinates}
+                                // devLocation={d.location.coordinates}
                             >
 
                             </SingleDevicePropertiesView>

@@ -14,7 +14,12 @@ import {
 // import { ContainedEntity } from './ContainedEntity';
 import { ButtonTooltip } from '../Utils/ButtonTooltip';
 
-export const SingleDevicePropertiesView = ({ entityType, entityItem, devLocation, children }) => {
+export const SingleDevicePropertiesView = ({ deviceOnTrial, children }) => {
+    const { deviceTypeName, deviceItemName } = deviceOnTrial;
+    const entityType = deviceTypeName;
+    const entityItem = deviceItemName;
+    const devLocation = deviceOnTrial.location.coordinates;
+
     // const { setEntityProperties, setEntityLocations, entities } = useEntities();
     // const { selection, popTopSelection } = useSelection();
     const [isEditLocation, setIsEditLocation] = useState(false);
@@ -66,14 +71,16 @@ export const SingleDevicePropertiesView = ({ entityType, entityItem, devLocation
     // const parentHierarchy = findEntityParentHierarchy(entityItem.key);
     // const parentEntity = parentHierarchy[0];
 
+    console.log(entityItem)
+
     return (
         <>
             <Typography variant='h6'>
-                {entityItem.name}
+                {deviceItemName}
             </Typography>
-            {/* <Typography variant='p'>
-                {entityType.name}
-            </Typography> */}
+            <Typography variant='p'>
+                {deviceTypeName}
+            </Typography>
             <br />
             {
                 isEditLocation
