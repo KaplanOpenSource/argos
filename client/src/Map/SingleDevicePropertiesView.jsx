@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useContext, useState } from 'react';
 import {
     Grid, Typography
 } from '@mui/material';
@@ -13,31 +13,39 @@ import {
 // import { useSelection } from './SelectionContext';
 // import { ContainedEntity } from './ContainedEntity';
 import { ButtonTooltip } from '../Utils/ButtonTooltip';
+import { experimentContext } from '../Context/ExperimentProvider';
 
 export const SingleDevicePropertiesView = ({ deviceOnTrial, children }) => {
+    const [isEditLocation, setIsEditLocation] = useState(false);
+
+    const { currTrial } = useContext(experimentContext);
+    const experiment = currTrial.experiment || {};
     const { deviceTypeName, deviceItemName } = deviceOnTrial;
-    const entityType = deviceTypeName;
-    const entityItem = deviceItemName;
+    const deviceType = (experiment.deviceTypes || []).find(t => t.name === deviceTypeName);
+    const deviceItem = (deviceType || []).devices.find(t => t.name === deviceItemName);
+    if (!deviceItem) {
+        return null;
+    }
+
     const devLocation = deviceOnTrial.location.coordinates;
 
     // const { setEntityProperties, setEntityLocations, entities } = useEntities();
     // const { selection, popTopSelection } = useSelection();
-    const [isEditLocation, setIsEditLocation] = useState(false);
     // const [changedValues, setChangedValues] = useState({});
 
-    // const propertyKeys = entityType.properties
+    // const propertyKeys = deviceType.properties
     //     .filter(({ type }) => isEditLocation ? true : type !== 'location')
     //     .flatMap(({ key, type }) => type === 'location' ? [key + '_lat', key + '_lng'] : [key]);
 
     // const allSame = !Object.values(changedValues).some(v => v !== undefined);
 
     // const handleSaveEntityProperties = () => {
-    //     entitySaveForTextFields({ entityType, entityItem, changedValues, setEntityProperties, setEntityLocations });
+    //     entitySaveForTextFields({ deviceType, deviceItem, changedValues, setEntityProperties, setEntityLocations });
     //     setChangedValues({});
     //     setIsEditLocation(false);
     // }
 
-    // const containsEntities = [entityItem.containsEntities || []].flatMap(x => x);
+    // const containsEntities = [deviceItem.containsEntities || []].flatMap(x => x);
 
     // // TODO: switch to use the EntitiesContext function
     // const findEntityParent = (containedKey) => {
@@ -68,10 +76,10 @@ export const SingleDevicePropertiesView = ({ deviceOnTrial, children }) => {
     //     setEntityProperties(parentEntityObj.key, [], newContainsEntities);
     // }
 
-    // const parentHierarchy = findEntityParentHierarchy(entityItem.key);
+    // const parentHierarchy = findEntityParentHierarchy(deviceItem.key);
     // const parentEntity = parentHierarchy[0];
 
-    console.log(entityItem)
+    console.log(deviceType, deviceItem)
 
     return (
         <>
@@ -104,8 +112,8 @@ export const SingleDevicePropertiesView = ({ deviceOnTrial, children }) => {
                     //         key={key}
                     //     >
                     //         <TextFieldEntityProperty
-                    //             entityItem={entityItem}
-                    //             entityType={entityType}
+                    //             deviceItem={deviceItem}
+                    //             deviceType={deviceType}
                     //             propertyKey={key}
                     //             changedValue={changedValues[key]}
                     //             setChangedValue={newVal => {
@@ -147,7 +155,7 @@ export const SingleDevicePropertiesView = ({ deviceOnTrial, children }) => {
                         if (newContainedParent) {
                             disconnectEntityParent(newContainedParent, newContained)
                         }
-                        setEntityProperties(entityItem.key, [], [...containsEntities, newContained]);
+                        setEntityProperties(deviceItem.key, [], [...containsEntities, newContained]);
                     }
                 }}
             >
@@ -160,9 +168,9 @@ export const SingleDevicePropertiesView = ({ deviceOnTrial, children }) => {
                     parent:
                     <br />
                     <ContainedEntity
-                        key={'P' + entityItem.key}
+                        key={'P' + deviceItem.key}
                         childEntityItemKey={parentEntity.key}
-                        disconnectEntity={() => disconnectEntityParent(parentEntity, entityItem.key)}
+                        disconnectEntity={() => disconnectEntityParent(parentEntity, deviceItem.key)}
                     />
                 </Fragment>
             }
@@ -174,7 +182,7 @@ export const SingleDevicePropertiesView = ({ deviceOnTrial, children }) => {
                         <ContainedEntity
                             key={'E' + e.key}
                             childEntityItemKey={e}
-                            disconnectEntity={() => disconnectEntityParent(entityItem, e)}
+                            disconnectEntity={() => disconnectEntityParent(deviceItem, e)}
                         />
                     ))}
                 </Fragment>
