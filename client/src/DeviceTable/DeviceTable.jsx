@@ -47,6 +47,7 @@ export const DeviceTable = ({ }) => {
                                 data={deviceItem}
                                 // setData={setData}
                                 deviceType={deviceType}
+                                showDeviceOnTrialAttr={true}
                             />
                         )
                     })

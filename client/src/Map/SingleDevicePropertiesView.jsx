@@ -32,16 +32,6 @@ export const SingleDevicePropertiesView = ({ deviceOnTrial, setDeviceOnTrial, ch
 
     const devLocation = deviceOnTrial.location.coordinates;
 
-    // const { setEntityProperties, setEntityLocations, entities } = useEntities();
-    // const { selection, popTopSelection } = useSelection();
-    // const [changedValues, setChangedValues] = useState({});
-
-    // const propertyKeys = deviceType.properties
-    //     .filter(({ type }) => isEditLocation ? true : type !== 'location')
-    //     .flatMap(({ key, type }) => type === 'location' ? [key + '_lat', key + '_lng'] : [key]);
-
-    // const allSame = !Object.values(changedValues).some(v => v !== undefined);
-
     // const handleSaveEntityProperties = () => {
     //     entitySaveForTextFields({ deviceType, deviceItem, changedValues, setEntityProperties, setEntityLocations });
     //     setChangedValues({});

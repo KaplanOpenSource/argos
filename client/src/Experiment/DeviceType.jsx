@@ -59,6 +59,7 @@ export const DeviceType = ({ data, setData }) => {
                             setData({ ...data, devices: changeByName(data.devices, itemData.name, newData) });
                         }}
                         deviceType={data}
+                        showDeviceOnTrialAttr={false}
                     />
                 ))
             }

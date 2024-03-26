@@ -31,11 +31,12 @@ export const TreeRow = ({ data, setData, components, withDescription = true, chi
                         InputLabelProps={{ shrink: true }}
                         value={name}
                         onChange={val => setData({ ...data, name: val })}
+                        disabled={!setData}
                     />
                     {components}
                 </Box>
             }
-            // sx={{ padding: '5px' }}
+        // sx={{ padding: '5px' }}
         >
             {withDescription &&
                 <TextFieldDebounce
@@ -46,6 +47,7 @@ export const TreeRow = ({ data, setData, components, withDescription = true, chi
                     InputLabelProps={{ shrink: true }}
                     value={data.description}
                     onChange={val => setData({ ...data, description: val })}
+                    disabled={!setData}
                 />
             }
             {children}

@@ -9,12 +9,12 @@ import { LocationOff, LocationOffOutlined } from "@mui/icons-material";
 import { useContext } from "react";
 import { experimentContext } from "../Context/ExperimentProvider";
 
-export const DeviceItem = ({ data, setData, deviceType }) => {
-    const { currTrial, setLocationsToDevices } = useContext(experimentContext);
+export const DeviceItem = ({ data, setData, deviceType, showDeviceOnTrialAttr }) => {
+    const { currTrial, setLocationsToDevices, setTrialData } = useContext(experimentContext);
     const devicesOnTrial = (currTrial.trial || {}).devicesOnTrial || [];
     const mapName = currTrial.shownMapName || RealMapName;
-    const devicesOnTrialMap = devicesOnTrial.filter(d => d.location.name === mapName);
-    const deviceTrial = devicesOnTrialMap.find(d => d.deviceTypeName === deviceType.name && d.deviceItemName === data.name);
+    const index = devicesOnTrial.findIndex(d => d.location.name === mapName && d.deviceTypeName === deviceType.name && d.deviceItemName === data.name);
+    const deviceTrial = devicesOnTrial[index];
     const hasLocation = deviceTrial && deviceTrial.location && deviceTrial.location.coordinates;
     return (
         <TreeRow
@@ -27,27 +27,37 @@ export const DeviceItem = ({ data, setData, deviceType }) => {
                         deviceItem={data}
                         deviceType={deviceType}
                     />
-                    <IconButton
-                        size="small"
-                        onClick={() => setData(undefined)}
-                    >
-                        <DeleteIcon />
-                    </IconButton>
-                    <ButtonTooltip
-                        tooltip={hasLocation ? "Remove location" : "Has no location"}
-                        onClick={() => setLocationsToDevices([{ deviceTypeName: deviceType.name, deviceItemName: data.name }], [undefined])}
-                        disabled={!hasLocation}
-                    >
-                        {hasLocation ? <LocationOff /> : <LocationOffOutlined />}
-                    </ButtonTooltip>
+                    {setData &&
+                        <IconButton
+                            size="small"
+                            onClick={() => setData(undefined)}
+                        >
+                            <DeleteIcon />
+                        </IconButton>
+                    }
+                    {currTrial.trial &&
+                        <ButtonTooltip
+                            tooltip={hasLocation ? "Remove location" : "Has no location"}
+                            onClick={() => setLocationsToDevices([{ deviceTypeName: deviceType.name, deviceItemName: data.name }], [undefined])}
+                            disabled={!hasLocation}
+                        >
+                            {hasLocation ? <LocationOff /> : <LocationOffOutlined />}
+                        </ButtonTooltip>
+                    }
                 </>
             }
         >
-            <AttributeItemList
-                attributeTypes={deviceType.attributeTypes}
-                data={data}
-                setData={setData}
-            />
+            {currTrial.trial && showDeviceOnTrialAttr &&
+                <AttributeItemList
+                    attributeTypes={deviceType.attributeTypes}
+                    data={deviceTrial}
+                    setData={newDeviceData => {
+                        const data = { ...currTrial.trial, devicesOnTrial: devicesOnTrial.slice() };
+                        data.devicesOnTrial[index] = newDeviceData;
+                        setTrialData(data);
+                    }}
+                />
+            }
         </TreeRow>
     )
 }

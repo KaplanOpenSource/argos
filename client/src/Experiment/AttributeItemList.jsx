@@ -2,7 +2,7 @@ import { changeByName } from "../Utils/utils";
 import { AttributeValue, valueTypeDefault } from "./AttributeValue";
 
 export const AttributeItemList = ({ attributeTypes, data, setData }) => {
-    const attributes = data.attributes || [];
+    const attributes = (data || {}).attributes || [];
 
     return (
         <>
