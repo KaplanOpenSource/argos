@@ -19,14 +19,13 @@ export const ButtonTooltip = ({ onClick, tooltip, disabled, children, ...restPro
             {children}
         </IconButton>
     );
-    if (disabled) {
-        return button;
-    } else {
-        return (
-            <Tooltip title={tooltip}>
-                {button}
-            </Tooltip>
-        )
-    }
+    return (
+        <Tooltip title={tooltip}>
+            {disabled
+                ? <span>{button}</span>
+                : button
+            }
+        </Tooltip>
+    )
 }
 
