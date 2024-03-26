@@ -2,12 +2,15 @@ import { Button, Paper } from "@mui/material"
 import { TreeView } from "@mui/x-tree-view/TreeView"
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { useContext } from "react";
+import AccountTreeIcon from '@mui/icons-material/AccountTree';
+import { useContext, useState } from "react";
 import { experimentContext } from "../Context/ExperimentProvider";
 import { DeviceItem } from "../Experiment/DeviceItem";
+import { ButtonTooltip } from "../Utils/ButtonTooltip";
 
 export const DeviceTable = ({ }) => {
     const { selection, currTrial } = useContext(experimentContext);
+    const [showAttributes, setShowAttributes] = useState(false);
     return (
         <Paper
             style={{
@@ -21,10 +24,16 @@ export const DeviceTable = ({ }) => {
                 overflowY: 'visible'
             }}
         >
-            <Button
-            >
+            <Button>
                 Selected Devices
             </Button>
+            <ButtonTooltip
+                tooltip={showAttributes ? "Hide attributes" : "Show attributes"}
+                onClick={() => setShowAttributes(!showAttributes)}
+                color={showAttributes ? "primary" : ""}
+            >
+                <AccountTreeIcon />
+            </ButtonTooltip>
             <TreeView
                 defaultCollapseIcon={<ExpandMoreIcon />}
                 defaultExpandIcon={<ChevronRightIcon />}
@@ -47,7 +56,7 @@ export const DeviceTable = ({ }) => {
                                 data={deviceItem}
                                 // setData={setData}
                                 deviceType={deviceType}
-                                showDeviceOnTrialAttr={true}
+                                showAttributes={showAttributes}
                             />
                         )
                     })

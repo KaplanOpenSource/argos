@@ -9,7 +9,7 @@ import { LocationOff, LocationOffOutlined } from "@mui/icons-material";
 import { useContext } from "react";
 import { experimentContext } from "../Context/ExperimentProvider";
 
-export const DeviceItem = ({ data, setData, deviceType, showDeviceOnTrialAttr }) => {
+export const DeviceItem = ({ data, setData, deviceType, showAttributes }) => {
     const { currTrial, setLocationsToDevices, setTrialData } = useContext(experimentContext);
     const devicesOnTrial = (currTrial.trial || {}).devicesOnTrial || [];
     const mapName = currTrial.shownMapName || RealMapName;
@@ -21,6 +21,7 @@ export const DeviceItem = ({ data, setData, deviceType, showDeviceOnTrialAttr })
             key={data.name}
             data={data}
             setData={setData}
+            withDescription={showAttributes}
             components={
                 <>
                     <SelectDeviceButton
@@ -47,7 +48,7 @@ export const DeviceItem = ({ data, setData, deviceType, showDeviceOnTrialAttr })
                 </>
             }
         >
-            {currTrial.trial && showDeviceOnTrialAttr &&
+            {currTrial.trial && showAttributes &&
                 <AttributeItemList
                     attributeTypes={deviceType.attributeTypes}
                     data={deviceTrial}
