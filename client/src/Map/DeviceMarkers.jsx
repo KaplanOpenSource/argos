@@ -8,33 +8,35 @@ export const DeviceMarkers = ({ }) => {
     const { currTrial, setTrialData } = useContext(experimentContext);
     const devicesOnTrial = (currTrial.trial || {}).devicesOnTrial || [];
     const mapName = currTrial.shownMapName || RealMapName;
-    const devicesOnTrialMap = devicesOnTrial.filter(d => d.location.name === mapName);
     return (
         <>
-            {devicesOnTrialMap.map(d => {
-                if (!d || !d.location || !d.location.coordinates) {
-                    console.log('no coordinates on device:', JSON.stringify(d));
-                    return null;
+            {devicesOnTrial.map((deviceOnTrial, index) => {
+                const { location, deviceTypeName, deviceItemName } = deviceOnTrial || {};
+                if (location && location.name === mapName) {
+                    const { coordinates } = location;
+                    if (!coordinates) {
+                        console.log('no coordinates on device:', JSON.stringify(deviceOnTrial));
+                        return null;
+                    }
+                    return (
+                        <Marker
+                            key={deviceTypeName + '_' + deviceItemName}
+                            position={coordinates}
+                        >
+                            <Popup>
+                                <SingleDevicePropertiesView
+                                    deviceOnTrial={deviceOnTrial}
+                                    setDeviceOnTrial={newDeviceData => {
+                                        const data = { ...currTrial.trial, devicesOnTrial: devicesOnTrial.slice() };
+                                        data.devicesOnTrial[index] = newDeviceData;
+                                        setTrialData(data);
+                                    }}
+                                >
+                                </SingleDevicePropertiesView>
+                            </Popup>
+                        </Marker>
+                    )
                 }
-                return (
-                    <Marker
-                        key={d.deviceTypeName + '_' + d.deviceItemName}
-                        position={d.location.coordinates}
-                    >
-                        <Popup>
-                            <SingleDevicePropertiesView
-                                deviceOnTrial={d}
-                                setDeviceOnTrial={newDeviceData => {
-                                    const data = { ...currTrial.trial, devicesOnTrial: devicesOnTrial.slice() };
-                                    const index = devicesOnTrial.findIndex(t => d.deviceTypeName === t.deviceTypeName && t.deviceItemName === d.deviceItemName);
-                                    data.devicesOnTrial[index] = newDeviceData;
-                                    setTrialData(data);
-                                }}
-                            >
-                            </SingleDevicePropertiesView>
-                        </Popup>
-                    </Marker>
-                )
             })}
         </>
     )

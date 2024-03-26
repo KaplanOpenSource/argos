@@ -144,25 +144,6 @@ export const SingleDevicePropertiesView = ({ deviceOnTrial, setDeviceOnTrial, ch
             >
                 <LocationOff />
             </ButtonTooltip>
-
-            {/* <ButtonTooltip
-                key='check'
-                color='primary'
-                // disabled={allSame}
-                tooltip={'Save entity properties'}
-                onClick={() => handleSaveEntityProperties()}
-            >
-                <Check />
-            </ButtonTooltip>
-            <ButtonTooltip
-                key='close'
-                color='secondary'
-                // disabled={allSame}
-                tooltip={'Revert entity properties'}
-                onClick={() => { setChangedValues({}); setIsEditLocation(false); }}
-            >
-                <Close />
-            </ButtonTooltip> */}
             {/* <ButtonTooltip
                 key='merge'
                 color='primary'
