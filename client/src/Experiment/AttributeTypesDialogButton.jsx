@@ -17,6 +17,7 @@ export const AttributeTypesDialogButton = ({ data, setData }) => {
             <Box sx={{ position: 'relative' }}>
                 <Tooltip title="Edit attribute types" placement="top">
                     <IconButton
+                        size="small"
                         onClick={(e) => { e.stopPropagation(); setAnchorEl(anchorEl ? null : e.currentTarget); }}
                         color={Boolean(anchorEl) ? "primary" : ""}
                     >

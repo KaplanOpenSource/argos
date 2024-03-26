@@ -34,11 +34,13 @@ export const ExperimentRow = ({ data, setData, children }) => {
                         label="End Date"
                     />
                     <IconButton
+                        size="small"
                         onClick={() => downloadJsonFile(data)}
                     >
                         <DownloadIcon />
                     </IconButton>
                     <IconButton
+                        size="small"
                         onClick={() => deleteExperiment(data.name)}
                     >
                         <DeleteIcon />

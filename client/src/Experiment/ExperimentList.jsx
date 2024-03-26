@@ -81,6 +81,7 @@ export const ExperimentList = ({ }) => {
                     >
                         <Tooltip title="Clone experiment" placement="top">
                             <IconButton
+                                size="small"
                                 onClick={event => {
                                     event.stopPropagation();
                                     const cloned = deepClone(exp);

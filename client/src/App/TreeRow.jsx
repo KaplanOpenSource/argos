@@ -35,7 +35,7 @@ export const TreeRow = ({ data, setData, components, withDescription = true, chi
                     {components}
                 </Box>
             }
-            sx={{ padding: '5px' }}
+            // sx={{ padding: '5px' }}
         >
             {withDescription &&
                 <TextFieldDebounce

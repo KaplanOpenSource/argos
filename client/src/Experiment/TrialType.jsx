@@ -24,6 +24,7 @@ export const TrialType = ({ data, setData, experiment }) => {
                 <>
                     <Tooltip title="Delete trial type" placement="top">
                         <IconButton
+                            size="small"
                             onClick={() => setData(undefined)}
                         >
                             <DeleteIcon />
@@ -31,6 +32,7 @@ export const TrialType = ({ data, setData, experiment }) => {
                     </Tooltip>
                     <Tooltip title="Add new trial" placement="top">
                         <IconButton
+                            size="small"
                             onClick={e => {
                                 e.stopPropagation();
                                 const name = createNewName(data.trials, 'New Trial');
@@ -61,6 +63,7 @@ export const TrialType = ({ data, setData, experiment }) => {
                     >
                         <Tooltip title="Clone trial" placement="top">
                             <IconButton
+                                size="small"
                                 onClick={e => {
                                     e.stopPropagation();
                                     const cloned = deepClone(itemData);

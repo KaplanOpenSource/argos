@@ -17,6 +17,7 @@ export const DeviceItem = ({ data, setData, deviceType }) => {
                         deviceType={deviceType}
                     />
                     <IconButton
+                        size="small"
                         onClick={() => setData(undefined)}
                     >
                         <DeleteIcon />

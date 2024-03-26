@@ -28,6 +28,7 @@ export const AddMultipleDevices = ({ deviceType, addDevices }) => {
         <>
             <Tooltip title={"Add multiple devices"} placement="top">
                 <IconButton
+                    size="small"
                     color={open ? "primary" : ""}
                     onClick={(e) => {
                         e.stopPropagation();

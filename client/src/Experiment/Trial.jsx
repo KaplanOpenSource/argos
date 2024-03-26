@@ -23,6 +23,7 @@ export const Trial = ({ data, setData, experiment, trialType, children }) => {
                     />
                     <Tooltip title="Select trial for editing" placement="top">
                         <IconButton
+                            size="small"
                             onClick={() => {
                                 setCurrTrial({ experimentName: experiment.name, trialTypeName: trialType.name, trialName: data.name });
                             }}
@@ -32,6 +33,7 @@ export const Trial = ({ data, setData, experiment, trialType, children }) => {
                     </Tooltip>
                     <Tooltip title="Delete trial" placement="top">
                         <IconButton
+                            size="small"
                             onClick={() => setData(undefined)}
                         >
                             <DeleteIcon />

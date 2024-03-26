@@ -19,6 +19,7 @@ export const DeviceType = ({ data, setData }) => {
                 <>
                     <Tooltip title="Delete device type" placement="top">
                         <IconButton
+                            size="small"
                             onClick={() => setData(undefined)}
                         >
                             <DeleteIcon />
@@ -26,6 +27,7 @@ export const DeviceType = ({ data, setData }) => {
                     </Tooltip>
                     <Tooltip title="Add new device" placement="top">
                         <IconButton
+                            size="small"
                             onClick={e => {
                                 e.stopPropagation();
                                 const name = createNewName(data.devices, 'New Device');
