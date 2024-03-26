@@ -237,7 +237,7 @@ export const ExperimentProvider = ({ children }) => {
         setExperiment(currTrial.experimentName, e)
     }
 
-    const setLocationsToDevices = (latlngs, deviceTypeItems) => {
+    const setLocationsToDevices = (deviceTypeItems, latlngs) => {
         const { trial } = currTrial;
         const mapName = currTrial.shownMapName || RealMapName;
         let count = 0;
@@ -249,7 +249,11 @@ export const ExperimentProvider = ({ children }) => {
                     devicesOnTrial = devicesOnTrial.filter(t => {
                         return t.deviceItemName !== deviceItemName || t.deviceTypeName !== deviceTypeName;
                     });
-                    devicesOnTrial.push({ deviceTypeName, deviceItemName, location: { name: mapName, coordinates: latlngs[i] } });
+                    const coordinates = latlngs[i];
+                    if (coordinates) {
+                        const location = { name: mapName, coordinates };
+                        devicesOnTrial.push({ deviceTypeName, deviceItemName, location });
+                    }
                     count++;
                 }
             }
@@ -260,7 +264,7 @@ export const ExperimentProvider = ({ children }) => {
     }
 
     const setLocationsToStackDevices = (latlngs) => {
-        const count = setLocationsToDevices(latlngs, selection);
+        const count = setLocationsToDevices(selection, latlngs);
         if (count > 0) {
             setSelection(selection.slice(count));
         }

@@ -6,6 +6,7 @@ import {
     Check,
     Close,
     Edit,
+    LocationOff,
     MergeType,
 } from "@mui/icons-material";
 // import { useEntities } from './EntitiesContext.jsx';
@@ -19,7 +20,7 @@ import { SelectDeviceButton } from '../Experiment/SelectDeviceButton';
 export const SingleDevicePropertiesView = ({ deviceOnTrial, children }) => {
     const [isEditLocation, setIsEditLocation] = useState(false);
 
-    const { currTrial } = useContext(experimentContext);
+    const { currTrial, setLocationsToDevices } = useContext(experimentContext);
     const experiment = currTrial.experiment || {};
     const { deviceTypeName, deviceItemName } = deviceOnTrial;
     const deviceType = (experiment.deviceTypes || []).find(t => t.name === deviceTypeName);
@@ -130,6 +131,12 @@ export const SingleDevicePropertiesView = ({ deviceOnTrial, children }) => {
                 deviceItem={deviceItem}
                 deviceType={deviceType}
             />
+            <ButtonTooltip
+                tooltip="Remove location"
+                onClick={() => setLocationsToDevices([{ deviceTypeName, deviceItemName }], [undefined])}
+            >
+                <LocationOff />
+            </ButtonTooltip>
             {/* <ButtonTooltip
                 key='check'
                 color='primary'
