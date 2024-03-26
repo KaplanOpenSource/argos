@@ -1,7 +1,7 @@
 import { PlaylistAdd } from "@mui/icons-material";
-import { IconButton } from "@mui/material";
 import { useContext } from "react";
 import { experimentContext } from "../Context/ExperimentProvider";
+import { ButtonTooltip } from "../Utils/ButtonTooltip";
 
 export const SelectDeviceButton = ({ deviceType, deviceItem }) => {
     const { selection, setSelection } = useContext(experimentContext);
@@ -10,7 +10,8 @@ export const SelectDeviceButton = ({ deviceType, deviceItem }) => {
     });
     const isSelected = selectedIndex !== -1;
     return (
-        <IconButton
+        <ButtonTooltip
+            tooltip={isSelected ? "Remove from list" : "Add to list"}
             onClick={(e) => {
                 e.stopPropagation();
                 if (isSelected) {
@@ -21,6 +22,6 @@ export const SelectDeviceButton = ({ deviceType, deviceItem }) => {
             }}
         >
             <PlaylistAdd color={isSelected ? "primary" : ""} />
-        </IconButton>
+        </ButtonTooltip>
     )
 }

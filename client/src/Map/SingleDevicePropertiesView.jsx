@@ -80,7 +80,7 @@ export const SingleDevicePropertiesView = ({ deviceOnTrial, children }) => {
     // const parentHierarchy = findEntityParentHierarchy(deviceItem.key);
     // const parentEntity = parentHierarchy[0];
 
-    console.log(deviceType, deviceItem)
+    // console.log(deviceType, deviceItem)
 
     return (
         <>
@@ -130,7 +130,7 @@ export const SingleDevicePropertiesView = ({ deviceOnTrial, children }) => {
                 deviceItem={deviceItem}
                 deviceType={deviceType}
             />
-            <ButtonTooltip
+            {/* <ButtonTooltip
                 key='check'
                 color='primary'
                 // disabled={allSame}
@@ -147,8 +147,8 @@ export const SingleDevicePropertiesView = ({ deviceOnTrial, children }) => {
                 onClick={() => { setChangedValues({}); setIsEditLocation(false); }}
             >
                 <Close />
-            </ButtonTooltip>
-            <ButtonTooltip
+            </ButtonTooltip> */}
+            {/* <ButtonTooltip
                 key='merge'
                 color='primary'
                 disabled={false}
@@ -165,7 +165,7 @@ export const SingleDevicePropertiesView = ({ deviceOnTrial, children }) => {
                 }}
             >
                 <MergeType />
-            </ButtonTooltip>
+            </ButtonTooltip> */}
             {children}
             {/* {parentEntity === undefined ? null :
                 <Fragment key={'p'}>
