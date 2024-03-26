@@ -14,6 +14,7 @@ import {
 // import { ContainedEntity } from './ContainedEntity';
 import { ButtonTooltip } from '../Utils/ButtonTooltip';
 import { experimentContext } from '../Context/ExperimentProvider';
+import { SelectDeviceButton } from '../Experiment/SelectDeviceButton';
 
 export const SingleDevicePropertiesView = ({ deviceOnTrial, children }) => {
     const [isEditLocation, setIsEditLocation] = useState(false);
@@ -125,6 +126,10 @@ export const SingleDevicePropertiesView = ({ deviceOnTrial, children }) => {
                     // ))
                 }
             </Grid>
+            <SelectDeviceButton
+                deviceItem={deviceItem}
+                deviceType={deviceType}
+            />
             <ButtonTooltip
                 key='check'
                 color='primary'

@@ -1,17 +1,10 @@
 import { IconButton } from "@mui/material";
 import { TreeRow } from "../App/TreeRow";
-import { useContext } from "react";
-import { experimentContext } from "../Context/ExperimentProvider";
 import DeleteIcon from '@mui/icons-material/Delete';
-import { PlaylistAdd } from "@mui/icons-material";
 import { AttributeItemList } from "./AttributeItemList";
+import { SelectDeviceButton } from "./SelectDeviceButton";
 
 export const DeviceItem = ({ data, setData, deviceType }) => {
-    const { selection, setSelection } = useContext(experimentContext);
-    const selectedIndex = selection.findIndex(({ deviceTypeName, deviceItemName }) => {
-        return deviceTypeName === deviceType.name && deviceItemName === data.name;
-    });
-    const isSelected = selectedIndex !== -1;
     return (
         <TreeRow
             key={data.name}
@@ -19,18 +12,10 @@ export const DeviceItem = ({ data, setData, deviceType }) => {
             setData={setData}
             components={
                 <>
-                    <IconButton
-                        onClick={(e) => {
-                            if (isSelected) {
-                                setSelection(selection.filter((_, i) => i !== selectedIndex));
-                            } else {
-                                setSelection([...selection, { deviceTypeName: deviceType.name, deviceItemName: data.name }]);
-                            }
-                            e.stopPropagation();
-                        }}
-                    >
-                        <PlaylistAdd color={isSelected ? "primary" : ""} />
-                    </IconButton>
+                    <SelectDeviceButton
+                        deviceItem={data}
+                        deviceType={deviceType}
+                    />
                     <IconButton
                         onClick={() => setData(undefined)}
                     >
