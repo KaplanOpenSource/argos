@@ -16,6 +16,7 @@ import {
 import { ButtonTooltip } from '../Utils/ButtonTooltip';
 import { experimentContext } from '../Context/ExperimentProvider';
 import { SelectDeviceButton } from '../Experiment/SelectDeviceButton';
+import { AttributeItemList } from '../Experiment/AttributeItemList';
 
 export const SingleDevicePropertiesView = ({ deviceOnTrial, children }) => {
     const [isEditLocation, setIsEditLocation] = useState(false);
@@ -81,7 +82,7 @@ export const SingleDevicePropertiesView = ({ deviceOnTrial, children }) => {
     // const parentHierarchy = findEntityParentHierarchy(deviceItem.key);
     // const parentEntity = parentHierarchy[0];
 
-    // console.log(deviceType, deviceItem)
+    // console.log(deviceType, deviceItem, deviceOnTrial)
 
     return (
         <>
@@ -104,29 +105,35 @@ export const SingleDevicePropertiesView = ({ deviceOnTrial, children }) => {
                         </ButtonTooltip>
                     </>
             }
-            <Grid container
+            <br />
+            <AttributeItemList
+                attributeTypes={deviceType.attributeTypes}
+                data={deviceOnTrial}
+            // setData={setData}
+            />
+            {/* <Grid container
                 direction='column'
                 spacing={1}
             >
                 {
-                    // propertyKeys.map(key => (
-                    //     <Grid item
-                    //         key={key}
-                    //     >
-                    //         <TextFieldEntityProperty
-                    //             deviceItem={deviceItem}
-                    //             deviceType={deviceType}
-                    //             propertyKey={key}
-                    //             changedValue={changedValues[key]}
-                    //             setChangedValue={newVal => {
-                    //                 setChangedValues({ ...changedValues, [key]: newVal });
-                    //             }}
-                    //             parentHierarchy={parentHierarchy}
-                    //         />
-                    //     </Grid>
-                    // ))
+                    propertyKeys.map(key => (
+                        <Grid item
+                            key={key}
+                        >
+                            <TextFieldEntityProperty
+                                deviceItem={deviceItem}
+                                deviceType={deviceType}
+                                propertyKey={key}
+                                changedValue={changedValues[key]}
+                                setChangedValue={newVal => {
+                                    setChangedValues({ ...changedValues, [key]: newVal });
+                                }}
+                                parentHierarchy={parentHierarchy}
+                            />
+                        </Grid>
+                    ))
                 }
-            </Grid>
+            </Grid> */}
             <SelectDeviceButton
                 deviceItem={deviceItem}
                 deviceType={deviceType}
@@ -137,6 +144,7 @@ export const SingleDevicePropertiesView = ({ deviceOnTrial, children }) => {
             >
                 <LocationOff />
             </ButtonTooltip>
+
             {/* <ButtonTooltip
                 key='check'
                 color='primary'

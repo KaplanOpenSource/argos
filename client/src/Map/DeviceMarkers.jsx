@@ -12,7 +12,7 @@ export const DeviceMarkers = ({ }) => {
     return (
         <>
             {devicesOnTrialMap.map(d => {
-                if (!d.location.coordinates) {
+                if (!d || !d.location || !d.location.coordinates) {
                     console.log('no coordinates on device:', JSON.stringify(d));
                     return null;
                 }
@@ -24,10 +24,7 @@ export const DeviceMarkers = ({ }) => {
                         <Popup>
                             <SingleDevicePropertiesView
                                 deviceOnTrial={d}
-                                // entityType={entityType}
-                                // devLocation={d.location.coordinates}
                             >
-
                             </SingleDevicePropertiesView>
                         </Popup>
                     </Marker>

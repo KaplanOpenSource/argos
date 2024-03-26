@@ -14,7 +14,8 @@ export const DeviceItem = ({ data, setData, deviceType }) => {
     const devicesOnTrial = (currTrial.trial || {}).devicesOnTrial || [];
     const mapName = currTrial.shownMapName || RealMapName;
     const devicesOnTrialMap = devicesOnTrial.filter(d => d.location.name === mapName);
-    const hasLocation = devicesOnTrialMap.find(d => d.deviceTypeName === deviceType.name && d.deviceItemName === data.name);
+    const deviceTrial = devicesOnTrialMap.find(d => d.deviceTypeName === deviceType.name && d.deviceItemName === data.name);
+    const hasLocation = deviceTrial && deviceTrial.location && deviceTrial.location.coordinates;
     return (
         <TreeRow
             key={data.name}
