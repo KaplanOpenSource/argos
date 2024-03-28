@@ -11,6 +11,16 @@ import { ButtonTooltip } from "../Utils/ButtonTooltip";
 export const DeviceTable = ({ }) => {
     const { selection, currTrial } = useContext(experimentContext);
     const [showAttributes, setShowAttributes] = useState(false);
+
+    const shownDevices = [];
+    for (const { deviceTypeName, deviceItemName } of selection || []) {
+        const deviceType = (currTrial.experiment || {}).deviceTypes.find(x => x.name === deviceTypeName);
+        const deviceItem = ((deviceType || {}).devices || []).find(x => x.name === deviceItemName);
+        if (deviceType && deviceItem) {
+            shownDevices.push({ deviceType, deviceItem, deviceTypeName, deviceItemName });
+        }
+    };
+
     return (
         <Paper
             style={{
@@ -43,24 +53,15 @@ export const DeviceTable = ({ }) => {
                 }}
                 disableSelection
             >
-                {
-                    (selection || []).map(({ deviceTypeName, deviceItemName }) => {
-                        if (!currTrial.experiment) return null;
-                        const deviceType = currTrial.experiment.deviceTypes.find(x => x.name === deviceTypeName);
-                        if (!deviceType) return null;
-                        const deviceItem = deviceType.devices.find(x => x.name === deviceItemName);
-                        if (!deviceItem) return null;
-                        return (
-                            <DeviceItem
-                                key={deviceItemName}
-                                data={deviceItem}
-                                // setData={setData}
-                                deviceType={deviceType}
-                                showAttributes={showAttributes}
-                            />
-                        )
-                    })
-                }
+                {shownDevices.map(({ deviceType, deviceItem, deviceTypeName, deviceItemName }) => (
+                    <DeviceItem
+                        key={deviceItemName}
+                        data={deviceItem}
+                        // setData={setData}
+                        deviceType={deviceType}
+                        showAttributes={showAttributes}
+                    />
+                ))}
             </TreeView>
         </Paper>
     )
