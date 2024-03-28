@@ -4,14 +4,17 @@ import { experimentContext } from "../Context/ExperimentProvider";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 
 export const SelectDeviceButton = ({ deviceType, deviceItem }) => {
-    const { selection, setSelection } = useContext(experimentContext);
+    const { selection, setSelection, currTrial } = useContext(experimentContext);
     const selectedIndex = selection.findIndex(({ deviceTypeName, deviceItemName }) => {
         return deviceTypeName === deviceType.name && deviceItemName === deviceItem.name;
     });
     const isSelected = selectedIndex !== -1;
+    const hasTrial = currTrial.trial;
     return (
         <ButtonTooltip
-            tooltip={isSelected ? "Remove from list" : "Add to list"}
+            tooltip={hasTrial
+                ? (isSelected ? "Remove from selected devices" : "Select device")
+                : "Selecting devices is possible only when a trial is edited"}
             onClick={(e) => {
                 e.stopPropagation();
                 if (isSelected) {
@@ -20,8 +23,9 @@ export const SelectDeviceButton = ({ deviceType, deviceItem }) => {
                     setSelection([...selection, { deviceTypeName: deviceType.name, deviceItemName: deviceItem.name }]);
                 }
             }}
+            disabled={!hasTrial}
         >
-            <PlaylistAdd color={isSelected ? "primary" : ""} />
+            <PlaylistAdd color={hasTrial && isSelected ? "primary" : ""} />
         </ButtonTooltip>
     )
 }
