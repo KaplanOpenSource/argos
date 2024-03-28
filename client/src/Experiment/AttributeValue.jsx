@@ -17,7 +17,7 @@ export const valueTypes = [
 ];
 export const valueTypeDefault = VALUE_TYPE_STRING;
 
-export const AttributeValue = ({ type, label, data, setData, attrType }) => {
+export const AttributeValue = ({ type, label, data, setData, attrType, disabled }) => {
     switch (type) {
         case VALUE_TYPE_NUMBER:
             return (
@@ -26,6 +26,7 @@ export const AttributeValue = ({ type, label, data, setData, attrType }) => {
                     type="number"
                     onChange={val => setData(val)}
                     value={data}
+                    disabled={disabled}
                 />
             )
         case VALUE_TYPE_BOOLEAN: {
@@ -65,6 +66,7 @@ export const AttributeValue = ({ type, label, data, setData, attrType }) => {
                     label={label}
                     onChange={val => setData(val)}
                     value={data || ''}
+                    disabled={disabled}
                 />
             )
     }

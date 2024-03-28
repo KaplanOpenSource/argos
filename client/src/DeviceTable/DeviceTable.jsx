@@ -61,6 +61,7 @@ export const DeviceTable = ({ }) => {
                         deviceType={deviceType}
                         showAttributes={showAttributes}
                         devicesEnclosingList={shownDevices}
+                        scope={'Trial'}
                     />
                 ))}
             </TreeView>

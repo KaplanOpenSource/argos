@@ -61,8 +61,9 @@ export const DeviceType = ({ data, setData }) => {
                             setData({ ...data, devices: changeByName(data.devices, itemData.name, newData) });
                         }}
                         deviceType={data}
-                        showAttributes={false}
+                        showAttributes={true}
                         withDescription={true}
+                        scope={'Experiment'}
                         devicesEnclosingList={devicesEnclosingList}
                     />
                 ))

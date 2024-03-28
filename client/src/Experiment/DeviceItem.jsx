@@ -9,7 +9,7 @@ import { LocationOff, LocationOffOutlined } from "@mui/icons-material";
 import { useContext } from "react";
 import { experimentContext } from "../Context/ExperimentProvider";
 
-export const DeviceItem = ({ data, setData, deviceType, showAttributes, withDescription, devicesEnclosingList }) => {
+export const DeviceItem = ({ data, setData, deviceType, showAttributes, withDescription, devicesEnclosingList, scope }) => {
     const { currTrial, setLocationsToDevices, setTrialData } = useContext(experimentContext);
     const devicesOnTrial = (currTrial.trial || {}).devicesOnTrial || [];
     const mapName = currTrial.shownMapName || RealMapName;
@@ -58,6 +58,7 @@ export const DeviceItem = ({ data, setData, deviceType, showAttributes, withDesc
                         data.devicesOnTrial[index] = newDeviceData;
                         setTrialData(data);
                     }}
+                    scope={scope}
                 />
             }
         </TreeRow>

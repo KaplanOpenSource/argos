@@ -1,7 +1,7 @@
 import { changeByName } from "../Utils/utils";
 import { AttributeValue, valueTypeDefault } from "./AttributeValue";
 
-export const AttributeItemList = ({ attributeTypes, data, setData }) => {
+export const AttributeItemList = ({ attributeTypes, data, setData, scope }) => {
     const attributes = (data || {}).attributes || [];
 
     return (
@@ -14,6 +14,7 @@ export const AttributeItemList = ({ attributeTypes, data, setData }) => {
                         const attrValue = { name: attrType.name, value: val };
                         setData({ ...data, attributes: changeByName(attributes, attrType.name, attrValue) });
                     };
+                    const attrTypeScope = attrType.scope || "Trial";
                     return (
                         <AttributeValue
                             key={attrType.name}
@@ -22,6 +23,7 @@ export const AttributeItemList = ({ attributeTypes, data, setData }) => {
                             data={value}
                             setData={setValue}
                             attrType={attrType}
+                            disabled={scope !== attrTypeScope}
                         />
                     )
                 })
