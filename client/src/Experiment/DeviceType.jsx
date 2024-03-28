@@ -10,6 +10,10 @@ import { AddMultipleDevices } from "./AddMultipleDevices";
 import { AttributeTypesDialogButton } from "./AttributeTypesDialogButton";
 
 export const DeviceType = ({ data, setData }) => {
+    const devicesEnclosingList = (data.devices || []).map(item => {
+        return { deviceTypeName: data.name, deviceItemName: item.name };
+    });
+
     return (
         <TreeRow
             key={data.name}
@@ -61,6 +65,7 @@ export const DeviceType = ({ data, setData }) => {
                         deviceType={data}
                         showAttributes={false}
                         withDescription={true}
+                        devicesEnclosingList={devicesEnclosingList}
                     />
                 ))
             }
