@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import TextField from '@mui/material/TextField';
 import debounce from 'lodash.debounce';
+import { Tooltip } from '@mui/material';
 
-export const TextFieldDebounce = ({ value, onChange, debounceMs = 500, ...props }) => {
+export const TextFieldDebounce = ({ value, onChange, debounceMs = 500, tooltipTitle="", ...props }) => {
     const [innerValue, setInnerValue] = useState(value);
 
     // Update inner value when external value changes
@@ -27,11 +28,16 @@ export const TextFieldDebounce = ({ value, onChange, debounceMs = 500, ...props 
     }, [debouncedOnChange]);
 
     return (
-        <TextField
-            {...props} // Pass any additional props to the TextField
-            value={innerValue}
-            onChange={handleChange}
-        />
+        <Tooltip
+            title={tooltipTitle}
+            placement='top'
+        >
+            <TextField
+                {...props} // Pass any additional props to the TextField
+                value={innerValue}
+                onChange={handleChange}
+            />
+        </Tooltip>
     );
 };
 

@@ -1,25 +1,31 @@
+import { Tooltip } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers"
 import dayjs from 'dayjs';
 
-export const DateProperty = ({ label, data, setData, ...restProps }) => {
+export const DateProperty = ({ label, data, setData, tooltipTitle = "", ...restProps }) => {
     return (
-        <DatePicker
-            label={label}
-            slotProps={{
-                textField: {
-                    fullWidth: false,
-                    size: 'small',
-                    inputProps: {
-                        style: {
-                            width: '100px'
+        // <Tooltip
+        //     title={tooltipTitle}
+        //     placement='top'
+        // >
+            <DatePicker
+                label={label}
+                slotProps={{
+                    textField: {
+                        fullWidth: false,
+                        size: 'small',
+                        inputProps: {
+                            style: {
+                                width: '100px'
+                            }
                         }
                     }
-                }
-            }}
-            format='DD/MM/YYYY'
-            value={dayjs(data)}
-            onChange={(val) => setData(val)}
-            {...restProps}
-        />
+                }}
+                format='DD/MM/YYYY'
+                value={dayjs(data)}
+                onChange={(val) => setData(val)}
+                {...restProps}
+            />
+        // </Tooltip>
     )
 }

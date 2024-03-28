@@ -2,6 +2,7 @@ import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
 import { DateProperty } from "../Utils/DateProperty";
 import { BooleanProperty } from "../Utils/BooleanProperty";
 import { SelectProperty } from "../Utils/SelectProperty";
+import { Tooltip } from "@mui/material";
 
 export const VALUE_TYPE_STRING = "String";
 export const VALUE_TYPE_NUMBER = "Number";
@@ -17,7 +18,7 @@ export const valueTypes = [
 ];
 export const valueTypeDefault = VALUE_TYPE_STRING;
 
-export const AttributeValue = ({ type, label, data, setData, attrType, disabled }) => {
+export const AttributeValue = ({ type, label, data, setData, attrType, ...restProps }) => {
     switch (type) {
         case VALUE_TYPE_NUMBER:
             return (
@@ -26,7 +27,7 @@ export const AttributeValue = ({ type, label, data, setData, attrType, disabled 
                     type="number"
                     onChange={val => setData(val)}
                     value={data}
-                    disabled={disabled}
+                    {...restProps}
                 />
             )
         case VALUE_TYPE_BOOLEAN: {
@@ -35,7 +36,7 @@ export const AttributeValue = ({ type, label, data, setData, attrType, disabled 
                     data={data}
                     setData={setData}
                     label={label}
-                    disabled={disabled}
+                    {...restProps}
                 />
             )
         }
@@ -45,7 +46,7 @@ export const AttributeValue = ({ type, label, data, setData, attrType, disabled 
                     data={data}
                     setData={setData}
                     label={label}
-                    disabled={disabled}
+                    {...restProps}
                 />
             )
         case VALUE_TYPE_SELECT: {
@@ -56,7 +57,7 @@ export const AttributeValue = ({ type, label, data, setData, attrType, disabled 
                     label={label}
                     options={attrType.options}
                     multiple={attrType.multiple}
-                    disabled={disabled}
+                    {...restProps}
                 />
             )
         }
@@ -69,7 +70,7 @@ export const AttributeValue = ({ type, label, data, setData, attrType, disabled 
                     label={label}
                     onChange={val => setData(val)}
                     value={data || ''}
-                    disabled={disabled}
+                    {...restProps}
                 />
             )
     }
