@@ -1,8 +1,6 @@
 import { useContext } from "react";
 import { TreeRow } from "../App/TreeRow";
 import { Trial } from "./Trial";
-import { TreeSublist } from "../App/TreeSublist";
-import { AttributeType } from "./AttributeType";
 import dayjs from "dayjs";
 import { experimentContext } from "../Context/ExperimentProvider";
 import { changeByName, createNewName } from "../Utils/utils";
@@ -46,6 +44,7 @@ export const TrialType = ({ data, setData, experiment }) => {
                     <AttributeTypesDialogButton
                         data={data}
                         setData={setData}
+                        omitExperimentScope={true}
                     />
                 </>
             }

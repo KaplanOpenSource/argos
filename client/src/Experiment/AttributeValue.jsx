@@ -1,6 +1,5 @@
 import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
 import { DateProperty } from "../Utils/DateProperty";
-import { Checkbox, FormControl, InputLabel, ListItemText, MenuItem, Select } from "@mui/material";
 import { BooleanProperty } from "../Utils/BooleanProperty";
 import { SelectProperty } from "../Utils/SelectProperty";
 

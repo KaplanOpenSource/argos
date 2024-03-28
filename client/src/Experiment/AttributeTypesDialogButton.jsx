@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Box, ClickAwayListener, IconButton, Paper, Popper, Tooltip } from "@mui/material";
+import { Box, IconButton, Paper, Popper, Tooltip } from "@mui/material";
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
@@ -9,7 +9,7 @@ import { changeByName } from "../Utils/utils";
 import { TreeView } from "@mui/x-tree-view/TreeView";
 import { valueTypeDefault } from "./AttributeValue";
 
-export const AttributeTypesDialogButton = ({ data, setData }) => {
+export const AttributeTypesDialogButton = ({ data, setData, omitExperimentScope }) => {
     const [anchorEl, setAnchorEl] = useState(null);
     return (
         // ClickAwayListener onClickAway={() => setAnchorEl(null)}>
@@ -62,6 +62,7 @@ export const AttributeTypesDialogButton = ({ data, setData }) => {
                                                     attributeTypes: changeByName(data.attributeTypes, itemData.name, newData)
                                                 });
                                             }}
+                                            omitExperimentScope={omitExperimentScope}
                                         />
                                     ))
                                 }

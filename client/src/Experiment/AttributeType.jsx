@@ -4,8 +4,10 @@ import { AttributeValue, VALUE_TYPE_SELECT, valueTypeDefault, valueTypes } from 
 import DeleteIcon from '@mui/icons-material/Delete';
 import { TreeSublist } from "../App/TreeSublist";
 import { BooleanProperty } from "../Utils/BooleanProperty";
+import { SelectProperty } from "../Utils/SelectProperty";
 
-export const AttributeType = ({ data, setData }) => {
+export const AttributeType = ({ data, setData, omitExperimentScope }) => {
+    const scopes = omitExperimentScope ? ["Trial", "Constant"] : ["Trial", "Experiment", "Constant"];
     return (
         <TreeRow
             key={data.name}
@@ -22,16 +24,18 @@ export const AttributeType = ({ data, setData }) => {
                             />
                         }
                     />
-                    <Select
-                        value={data.type || valueTypeDefault}
-                        size="small"
+                    <SelectProperty
                         label="Type"
-                        onChange={(e) => setData({ ...data, type: e.target.value })}
-                    >
-                        {valueTypes.map(t => (
-                            <MenuItem key={t} value={t}>{t}</MenuItem>
-                        ))}
-                    </Select>
+                        data={data.type || valueTypeDefault}
+                        setData={type => setData({ ...data, type })}
+                        options={valueTypes.map(name => { return { name } })}
+                    />
+                    <SelectProperty
+                        label="Scope"
+                        data={data.scope || "Trial"}
+                        setData={scope => setData({ ...data, scope })}
+                        options={scopes.map(name => { return { name } })}
+                    />
                     <IconButton
                         onClick={() => setData(undefined)}
                     >

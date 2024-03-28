@@ -1,7 +1,5 @@
 import { TreeRow } from "../App/TreeRow";
 import { DeviceItem } from "./DeviceItem";
-import { TreeSublist } from "../App/TreeSublist";
-import { AttributeType } from "./AttributeType";
 import { IconButton, Tooltip } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
