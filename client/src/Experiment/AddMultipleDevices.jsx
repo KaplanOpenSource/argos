@@ -21,7 +21,7 @@ export const AddMultipleDevices = ({ deviceType, addDevices }) => {
             newDevices.push({ name, ...attrValues });
         }
         addDevices(newDevices);
-        setOpen(false);
+        setAnchorEl(null);
     }
 
     return (
