@@ -3,7 +3,7 @@ import { Box, Chip, FormControl, InputLabel, ListItemText, MenuItem, Select } fr
 function makeArray(val) {
     return ((typeof val === 'string' ? val.split(',') : val) || []);
 }
-export const SelectProperty = ({ label, data, setData, options, multiple }) => {
+export const SelectProperty = ({ label, data, setData, options, multiple, ...restProps }) => {
     if (!multiple) {
         return (
             <FormControl>
@@ -15,6 +15,7 @@ export const SelectProperty = ({ label, data, setData, options, multiple }) => {
                         setData(event.target.value);
                     }}
                     size="small"
+                    {...restProps}
                 >
                     {(options || []).map(o => (
                         <MenuItem
@@ -47,6 +48,7 @@ export const SelectProperty = ({ label, data, setData, options, multiple }) => {
                         )
                     }}
                     multiple
+                    {...restProps}
                 >
                     {(options || []).map(o => (
                         <MenuItem

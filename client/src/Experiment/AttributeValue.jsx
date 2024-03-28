@@ -35,6 +35,7 @@ export const AttributeValue = ({ type, label, data, setData, attrType, disabled 
                     data={data}
                     setData={setData}
                     label={label}
+                    disabled={disabled}
                 />
             )
         }
@@ -44,6 +45,7 @@ export const AttributeValue = ({ type, label, data, setData, attrType, disabled 
                     data={data}
                     setData={setData}
                     label={label}
+                    disabled={disabled}
                 />
             )
         case VALUE_TYPE_SELECT: {
@@ -54,6 +56,7 @@ export const AttributeValue = ({ type, label, data, setData, attrType, disabled 
                     label={label}
                     options={attrType.options}
                     multiple={attrType.multiple}
+                    disabled={disabled}
                 />
             )
         }

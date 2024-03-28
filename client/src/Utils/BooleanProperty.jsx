@@ -1,6 +1,6 @@
 import { FormControlLabel, FormGroup, Switch } from "@mui/material";
 
-export const BooleanProperty = ({ data, setData, label }) => (
+export const BooleanProperty = ({ data, setData, label, ...restProps }) => (
     <FormGroup>
         <FormControlLabel
             control={
@@ -13,6 +13,7 @@ export const BooleanProperty = ({ data, setData, label }) => (
                 />
             }
             label={label}
+            {...restProps}
         />
     </FormGroup>
 )

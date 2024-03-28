@@ -1,7 +1,7 @@
 import { DatePicker } from "@mui/x-date-pickers"
 import dayjs from 'dayjs';
 
-export const DateProperty = ({ label, data, setData }) => {
+export const DateProperty = ({ label, data, setData, ...restProps }) => {
     return (
         <DatePicker
             label={label}
@@ -19,6 +19,7 @@ export const DateProperty = ({ label, data, setData }) => {
             format='DD/MM/YYYY'
             value={dayjs(data)}
             onChange={(val) => setData(val)}
+            {...restProps}
         />
     )
 }
