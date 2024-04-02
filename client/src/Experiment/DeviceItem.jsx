@@ -24,6 +24,10 @@ export const DeviceItem = ({ data, setData, deviceType, showAttributes, withDesc
         setTrialData(data);
     };
 
+    const deleteDevice = () => {
+        setData(undefined);
+    }
+
     return (
         <TreeRow
             key={data.name}
@@ -40,7 +44,7 @@ export const DeviceItem = ({ data, setData, deviceType, showAttributes, withDesc
                     {setData &&
                         <IconButton
                             size="small"
-                            onClick={() => setData(undefined)}
+                            onClick={deleteDevice}
                         >
                             <DeleteIcon />
                         </IconButton>
