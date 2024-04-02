@@ -27,7 +27,7 @@ export const AttributeItemList = ({ attributeTypes, data, setData, scope, device
                         setData({ ...data, attributes: changeByName(attributes, attrType.name, attrValue) });
                     };
                     const disabled = scope !== attrTypeScope;
-                    const tooltipTitle = !disabled ? "" : attrType.name + " can be updated only on " + attrTypeScope + " level";
+                    const tooltipTitle = !disabled ? "" : `${attrType.name} can be updated only on ${attrTypeScope} level (this is the ${scope} level)`;
                     return (
                         <AttributeValue
                             key={attrType.name}

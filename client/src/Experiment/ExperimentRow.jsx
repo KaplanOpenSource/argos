@@ -56,6 +56,25 @@ export const ExperimentRow = ({ data, setData, children }) => {
                 fieldName='trialTypes'
                 nameTemplate='New Trial Type'
                 setData={setData}
+                newDataCreator={() => {
+                    return {
+                        attributeTypes: [
+                            {
+                                "type": "Date",
+                                "name": "TrialStart",
+                            },
+                            {
+                                "type": "Date",
+                                "name": "TrialEnd",
+                            },
+                            {
+                                "type": "Boolean",
+                                "name": "StoreDataPerDevice",
+                                "defaultValue": false
+                            },
+                        ]
+                    }
+                }}
             >
                 {
                     (data.trialTypes || []).map(itemData => (

@@ -39,8 +39,9 @@ export const TreeSublist = ({ nameTemplate, fieldName, data, setData, newDataCre
                             // color="inherit"
                             onClick={e => {
                                 e.stopPropagation();
-                                const theData = newDataCreator ? newDataCreator() : {};
-                                theData.name = createNewName(items, nameTemplate);
+                                const name = createNewName(items, nameTemplate);
+                                const noNameData = newDataCreator ? newDataCreator() : {};
+                                const theData = { name, ...noNameData };
                                 setData({ ...data, [fieldName]: [...items, theData] });
                             }}
                         >

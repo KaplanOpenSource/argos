@@ -6,6 +6,7 @@ import { useContext } from "react";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { GridOn } from "@mui/icons-material";
 import { AttributeItemList } from "./AttributeItemList";
+import { SCOPE_TRIAL } from "./AttributeType";
 
 export const Trial = ({ data, setData, experiment, trialType, children }) => {
     const { currTrial, setCurrTrial } = useContext(experimentContext);
@@ -47,6 +48,7 @@ export const Trial = ({ data, setData, experiment, trialType, children }) => {
                 attributeTypes={trialType.attributeTypes}
                 data={data}
                 setData={setData}
+                scope={SCOPE_TRIAL}
             />
         </TreeRow>
     )
