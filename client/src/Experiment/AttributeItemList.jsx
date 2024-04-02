@@ -13,14 +13,14 @@ export const AttributeItemList = ({ attributeTypes, data, setData, scope, device
                     const attrTypeScope = attrType.scope || SCOPE_TRIAL;
                     const attr = attributes.find(t => t.name === attrType.name);
                     let value = attrType.defaultValue;
-                    if (scope === SCOPE_TRIAL) {
-                        if (attr) {
-                            value = attr.value;
+                    if (attr) {
+                        value = attr.value;
+                    }
+                    if (deviceItem) {
+                        const attrDev = (deviceItem.attributes || []).find(t => t.name === attrType.name);
+                        if (attrDev) {
+                            value = attrDev.value;
                         }
-                    // } else if (scope === SCOPE_EXPERIMENT) {
-                    //     if (deviceItem) {
-                    //         value = attr.value;
-                    //     }
                     }
                     const setValue = (val) => {
                         const attrValue = { name: attrType.name, value: val };

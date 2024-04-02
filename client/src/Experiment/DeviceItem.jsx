@@ -63,6 +63,7 @@ export const DeviceItem = ({ data, setData, deviceType, showAttributes, withDesc
                     data={scope === SCOPE_TRIAL ? deviceTrial : data}
                     setData={scope === SCOPE_TRIAL ? setAttrListOnTrial : setData}
                     scope={scope}
+                    deviceItem={scope === SCOPE_TRIAL ? data : null}
                 />
             }
         </TreeRow>
