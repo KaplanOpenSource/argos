@@ -1,4 +1,4 @@
-import { FormControlLabel, IconButton, MenuItem, Select, Switch } from "@mui/material";
+import { FormControlLabel, IconButton, Switch } from "@mui/material";
 import { TreeRow } from "../App/TreeRow";
 import { AttributeValue, VALUE_TYPE_SELECT, valueTypeDefault, valueTypes } from "./AttributeValue";
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -6,8 +6,13 @@ import { TreeSublist } from "../App/TreeSublist";
 import { BooleanProperty } from "../Utils/BooleanProperty";
 import { SelectProperty } from "../Utils/SelectProperty";
 
+export const SCOPE_TRIAL = "Trial";
+export const SCOPE_EXPERIMENT = "Experiment";
+export const SCOPE_CONSTANT = "Constant";
+export const SCOPES_OF_DEVICE = [SCOPE_TRIAL, SCOPE_EXPERIMENT, SCOPE_CONSTANT];
+export const SCOPES_OF_TRIAL = [SCOPE_TRIAL, SCOPE_CONSTANT];
 export const AttributeType = ({ data, setData, omitExperimentScope }) => {
-    const scopes = omitExperimentScope ? ["Trial", "Constant"] : ["Trial", "Experiment", "Constant"];
+    const scopes = omitExperimentScope ? SCOPES_OF_TRIAL : SCOPES_OF_DEVICE;
     return (
         <TreeRow
             key={data.name}
@@ -32,7 +37,7 @@ export const AttributeType = ({ data, setData, omitExperimentScope }) => {
                     />
                     <SelectProperty
                         label="Scope"
-                        data={data.scope || "Trial"}
+                        data={data.scope || SCOPE_TRIAL}
                         setData={scope => setData({ ...data, scope })}
                         options={scopes.map(name => { return { name } })}
                     />

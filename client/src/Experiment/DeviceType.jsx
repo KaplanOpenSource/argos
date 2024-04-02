@@ -6,6 +6,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { changeByName, createNewName } from "../Utils/utils";
 import { AddMultipleDevices } from "./AddMultipleDevices";
 import { AttributeTypesDialogButton } from "./AttributeTypesDialogButton";
+import { SCOPE_EXPERIMENT } from "./AttributeType";
 
 export const DeviceType = ({ data, setData }) => {
     const devicesEnclosingList = (data.devices || []).map(item => {
@@ -63,7 +64,7 @@ export const DeviceType = ({ data, setData }) => {
                         deviceType={data}
                         showAttributes={true}
                         withDescription={true}
-                        scope={'Experiment'}
+                        scope={SCOPE_EXPERIMENT}
                         devicesEnclosingList={devicesEnclosingList}
                     />
                 ))

@@ -1,6 +1,7 @@
 import { Tooltip } from "@mui/material";
 import { changeByName } from "../Utils/utils";
 import { AttributeValue, valueTypeDefault } from "./AttributeValue";
+import { SCOPE_TRIAL } from "./AttributeType";
 
 export const AttributeItemList = ({ attributeTypes, data, setData, scope }) => {
     const attributes = (data || {}).attributes || [];
@@ -15,7 +16,7 @@ export const AttributeItemList = ({ attributeTypes, data, setData, scope }) => {
                         const attrValue = { name: attrType.name, value: val };
                         setData({ ...data, attributes: changeByName(attributes, attrType.name, attrValue) });
                     };
-                    const attrTypeScope = attrType.scope || "Trial";
+                    const attrTypeScope = attrType.scope || SCOPE_TRIAL;
                     const disabled = scope !== attrTypeScope;
                     const tooltipTitle = !disabled ? "" : attrType.name + " can be updated only on " + attrTypeScope + " level";
                     return (
