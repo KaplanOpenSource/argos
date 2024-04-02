@@ -33,7 +33,6 @@ export const DeviceItem = ({ data, setData, deviceType, showAttributes, withDesc
             key={data.name}
             data={data}
             setData={setData}
-            withDescription={withDescription}
             components={
                 <>
                     <SelectDeviceButton

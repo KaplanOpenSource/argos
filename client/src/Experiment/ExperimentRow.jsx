@@ -4,7 +4,7 @@ import { TreeRow } from "../App/TreeRow";
 import { DeviceType } from "./DeviceType";
 import { TreeSublist } from "../App/TreeSublist";
 import { DateProperty } from "../Utils/DateProperty";
-import { IconButton } from "@mui/material";
+import { IconButton, Stack } from "@mui/material";
 import DownloadIcon from '@mui/icons-material/Download';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PublicIcon from '@mui/icons-material/Public';
@@ -13,6 +13,7 @@ import { experimentContext } from "../Context/ExperimentProvider";
 import { ImageStandalone } from "./ImageStandalone";
 import { ImageEmbedded } from "./ImageEmbedded";
 import { downloadJsonFile } from "./DownloadJsonFile";
+import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
 
 export const ExperimentRow = ({ data, setData, children }) => {
     const { deleteExperiment, setShownMap } = useContext(experimentContext);
@@ -49,7 +50,15 @@ export const ExperimentRow = ({ data, setData, children }) => {
                 </>
             }
         >
-
+            <Stack direction='column' alignItems="stretch">
+                <TextFieldDebounceOutlined
+                    label="Description"
+                    value={data.description}
+                    onChange={val => setData({ ...data, description: val })}
+                    multiline={true}
+                    rows={2}
+                />
+            </Stack>
             <TreeSublist
                 parentKey={data.name}
                 data={data}

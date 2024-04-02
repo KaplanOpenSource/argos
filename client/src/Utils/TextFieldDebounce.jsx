@@ -3,7 +3,7 @@ import TextField from '@mui/material/TextField';
 import debounce from 'lodash.debounce';
 import { Tooltip } from '@mui/material';
 
-export const TextFieldDebounce = ({ value, onChange, debounceMs = 500, tooltipTitle="", ...props }) => {
+export const TextFieldDebounce = ({ value, onChange, debounceMs = 500, tooltipTitle = "", ...props }) => {
     const [innerValue, setInnerValue] = useState(value);
 
     // Update inner value when external value changes
@@ -45,7 +45,11 @@ export const TextFieldDebounceOutlined = ({ ...props }) => {
     return (
         <TextFieldDebounce
             {...props}
-            sx={{ padding: '5px' }}
+            sx={{
+                paddingTop: '5px',
+                paddingBottom: '5px',
+                ...(props.sx || {})
+            }}
             variant="outlined"
             size="small"
             InputLabelProps={{ shrink: true }}

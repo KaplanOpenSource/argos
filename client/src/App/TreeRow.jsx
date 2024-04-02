@@ -38,18 +38,6 @@ export const TreeRow = ({ data, setData, components, withDescription = true, chi
             }
         // sx={{ padding: '5px' }}
         >
-            {withDescription &&
-                <TextFieldDebounce
-                    sx={{ padding: '5px' }}
-                    variant="outlined"
-                    size="small"
-                    label="Description"
-                    InputLabelProps={{ shrink: true }}
-                    value={data.description}
-                    onChange={val => setData({ ...data, description: val })}
-                    disabled={!setData}
-                />
-            }
             {children}
         </TreeItem>
     )

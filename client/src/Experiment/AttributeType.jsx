@@ -74,7 +74,6 @@ export const AttributeType = ({ data, setData, isOfDevice }) => {
                                 setData={newData => {
                                     setData({ ...data, options: changeByName(data.options, itemData.name, newData) });
                                 }}
-                                withDescription={false}
                                 components={
                                     <>
                                         <IconButton
