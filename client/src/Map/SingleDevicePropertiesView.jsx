@@ -17,6 +17,7 @@ import { ButtonTooltip } from '../Utils/ButtonTooltip';
 import { experimentContext } from '../Context/ExperimentProvider';
 import { SelectDeviceButton } from '../Experiment/SelectDeviceButton';
 import { AttributeItemList } from '../Experiment/AttributeItemList';
+import { SCOPE_TRIAL } from '../Experiment/AttributeType';
 
 export const SingleDevicePropertiesView = ({ deviceOnTrial, setDeviceOnTrial, children }) => {
     const [isEditLocation, setIsEditLocation] = useState(false);
@@ -100,6 +101,8 @@ export const SingleDevicePropertiesView = ({ deviceOnTrial, setDeviceOnTrial, ch
                 attributeTypes={deviceType.attributeTypes}
                 data={deviceOnTrial}
                 setData={setDeviceOnTrial}
+                scope={SCOPE_TRIAL}
+                deviceItem={deviceItem}
             />
             {/* <Grid container
                 direction='column'
