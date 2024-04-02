@@ -44,7 +44,7 @@ export const TrialType = ({ data, setData, experiment }) => {
                     <AttributeTypesDialogButton
                         data={data}
                         setData={setData}
-                        omitExperimentScope={true}
+                        isOfDevice={false}
                     />
                 </>
             }

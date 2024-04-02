@@ -11,8 +11,8 @@ export const SCOPE_EXPERIMENT = "Experiment";
 export const SCOPE_CONSTANT = "Constant";
 export const SCOPES_OF_DEVICE = [SCOPE_TRIAL, SCOPE_EXPERIMENT, SCOPE_CONSTANT];
 export const SCOPES_OF_TRIAL = [SCOPE_TRIAL, SCOPE_CONSTANT];
-export const AttributeType = ({ data, setData, omitExperimentScope }) => {
-    const scopes = omitExperimentScope ? SCOPES_OF_TRIAL : SCOPES_OF_DEVICE;
+export const AttributeType = ({ data, setData, isOfDevice }) => {
+    const scopes = isOfDevice ? SCOPES_OF_DEVICE : SCOPES_OF_TRIAL;
     return (
         <TreeRow
             key={data.name}

@@ -7,7 +7,7 @@ import { useContext, useState } from "react";
 import { experimentContext } from "../Context/ExperimentProvider";
 import { DeviceItem } from "../Experiment/DeviceItem";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
-import { SCOPES_OF_TRIAL } from "../Experiment/AttributeType";
+import { SCOPE_TRIAL } from "../Experiment/AttributeType";
 
 export const DeviceTable = ({ }) => {
     const { selection, currTrial } = useContext(experimentContext);
@@ -62,7 +62,7 @@ export const DeviceTable = ({ }) => {
                         deviceType={deviceType}
                         showAttributes={showAttributes}
                         devicesEnclosingList={shownDevices}
-                        scope={SCOPES_OF_TRIAL}
+                        scope={SCOPE_TRIAL}
                     />
                 ))}
             </TreeView>

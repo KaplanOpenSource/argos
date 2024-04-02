@@ -9,7 +9,7 @@ import { changeByName } from "../Utils/utils";
 import { TreeView } from "@mui/x-tree-view/TreeView";
 import { valueTypeDefault } from "./AttributeValue";
 
-export const AttributeTypesDialogButton = ({ data, setData, omitExperimentScope }) => {
+export const AttributeTypesDialogButton = ({ data, setData, isOfDevice }) => {
     const [anchorEl, setAnchorEl] = useState(null);
     return (
         // ClickAwayListener onClickAway={() => setAnchorEl(null)}>
@@ -62,7 +62,7 @@ export const AttributeTypesDialogButton = ({ data, setData, omitExperimentScope 
                                                     attributeTypes: changeByName(data.attributeTypes, itemData.name, newData)
                                                 });
                                             }}
-                                            omitExperimentScope={omitExperimentScope}
+                                            isOfDevice={isOfDevice}
                                         />
                                     ))
                                 }

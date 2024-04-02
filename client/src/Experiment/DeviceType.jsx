@@ -49,6 +49,7 @@ export const DeviceType = ({ data, setData }) => {
                     <AttributeTypesDialogButton
                         data={data}
                         setData={setData}
+                        isOfDevice={true}
                     />
                 </>
             }
