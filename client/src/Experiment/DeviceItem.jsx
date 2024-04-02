@@ -8,6 +8,7 @@ import { RealMapName } from "../constants/constants";
 import { LocationOff, LocationOffOutlined } from "@mui/icons-material";
 import { useContext } from "react";
 import { experimentContext } from "../Context/ExperimentProvider";
+import { SCOPE_TRIAL } from "./AttributeType";
 
 export const DeviceItem = ({ data, setData, deviceType, showAttributes, withDescription, devicesEnclosingList, scope }) => {
     const { currTrial, setLocationsToDevices, setTrialData } = useContext(experimentContext);
@@ -16,6 +17,13 @@ export const DeviceItem = ({ data, setData, deviceType, showAttributes, withDesc
     const index = devicesOnTrial.findIndex(d => d.location.name === mapName && d.deviceTypeName === deviceType.name && d.deviceItemName === data.name);
     const deviceTrial = devicesOnTrial[index];
     const hasLocation = deviceTrial && deviceTrial.location && deviceTrial.location.coordinates;
+
+    const setAttrListOnTrial = newDeviceData => {
+        const data = { ...currTrial.trial, devicesOnTrial: devicesOnTrial.slice() };
+        data.devicesOnTrial[index] = newDeviceData;
+        setTrialData(data);
+    };
+
     return (
         <TreeRow
             key={data.name}
@@ -52,12 +60,8 @@ export const DeviceItem = ({ data, setData, deviceType, showAttributes, withDesc
             {currTrial.trial && showAttributes &&
                 <AttributeItemList
                     attributeTypes={deviceType.attributeTypes}
-                    data={deviceTrial}
-                    setData={newDeviceData => {
-                        const data = { ...currTrial.trial, devicesOnTrial: devicesOnTrial.slice() };
-                        data.devicesOnTrial[index] = newDeviceData;
-                        setTrialData(data);
-                    }}
+                    data={scope === SCOPE_TRIAL ? deviceTrial : data}
+                    setData={scope === SCOPE_TRIAL ? setAttrListOnTrial : setData}
                     scope={scope}
                 />
             }
