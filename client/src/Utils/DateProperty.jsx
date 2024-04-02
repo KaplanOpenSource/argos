@@ -20,11 +20,14 @@ export const DateProperty = ({ label, data, setData, tooltipTitle = "", ...restP
                                     width: '100px'
                                 }
                             }
-                        }
+                        },
+                        actionBar: {
+                            actions: ['today', 'clear'],
+                        },
                     }}
                     format='DD/MM/YYYY'
-                    value={dayjs(data)}
-                    onChange={(val) => setData(val)}
+                    value={data ? dayjs(data) : null}
+                    onChange={(val) => { setData(val); console.log(val) }}
                     {...restProps}
                 />
             </div>
