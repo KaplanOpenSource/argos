@@ -26,7 +26,7 @@ export const SingleDevicePropertiesView = ({ deviceOnTrial, setDeviceOnTrial, ch
     const experiment = currTrial.experiment || {};
     const { deviceTypeName, deviceItemName } = deviceOnTrial;
     const deviceType = (experiment.deviceTypes || []).find(t => t.name === deviceTypeName);
-    const deviceItem = (deviceType || []).devices.find(t => t.name === deviceItemName);
+    const deviceItem = ((deviceType || []).devices || []).find(t => t.name === deviceItemName);
     if (!deviceItem) {
         return null;
     }
