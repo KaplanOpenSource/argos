@@ -7,6 +7,7 @@ import { experimentContext } from '../Context/ExperimentProvider';
 import { RealMap } from './RealMap';
 import { ImageMap } from './ImageMap';
 import { ImagePlacementEditor } from './ImagePlacementEditor';
+import { MapCoordinates } from './MapCoordinates';
 
 L.Icon.Default.imagePath = 'leaflet-images/';
 
