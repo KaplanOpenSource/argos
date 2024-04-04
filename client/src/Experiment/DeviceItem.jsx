@@ -24,12 +24,6 @@ export const DeviceItem = ({ data, setData, deviceType, showAttributes, devicesE
         setTrialData(data);
     };
 
-    // const deleteDevice = () => {
-    //     setData(undefined);
-    //     const devs = devicesOnTrial.filter(d => !(d.deviceTypeName === deviceType.name && d.deviceItemName === data.name));
-    //     setTrialData({ ...currTrial.trial, devicesOnTrial: devs });
-    // }
-
     return (
         <TreeRow
             key={data.name}

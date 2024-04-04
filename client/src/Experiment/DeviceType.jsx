@@ -7,8 +7,12 @@ import { changeByName, createNewName } from "../Utils/utils";
 import { AddMultipleDevices } from "./AddMultipleDevices";
 import { AttributeTypesDialogButton } from "./AttributeTypesDialogButton";
 import { SCOPE_EXPERIMENT } from "./AttributeType";
+import { useContext } from "react";
+import { experimentContext } from "../Context/ExperimentProvider";
 
 export const DeviceType = ({ data, setData, experiment }) => {
+    const { deleteDeviceType } = useContext(experimentContext);
+
     const devicesEnclosingList = (data.devices || []).map(item => {
         return { deviceTypeName: data.name, deviceItemName: item.name };
     });
@@ -23,7 +27,7 @@ export const DeviceType = ({ data, setData, experiment }) => {
                     <Tooltip title="Delete device type" placement="top">
                         <IconButton
                             size="small"
-                            onClick={() => setData(undefined)}
+                            onClick={() => deleteDeviceType({ experimentName: experiment.name, deviceTypeName: data.name })}
                         >
                             <DeleteIcon />
                         </IconButton>

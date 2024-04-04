@@ -276,7 +276,7 @@ export const ExperimentProvider = ({ children }) => {
             console.log(`unknown experiment ${experimentName}`);
             return;
         }
-        const dt = e.deviceTypes.find(t => t.name === deviceTypeName);
+        const dt = (e.deviceTypes || []).find(t => t.name === deviceTypeName);
         if (dt && dt.devices) {
             dt.devices = dt.devices.filter(d => d.name !== deviceItemName);
         }
@@ -284,6 +284,23 @@ export const ExperimentProvider = ({ children }) => {
             for (const tr of (tt.trials || [])) {
                 if (tr && tr.devicesOnTrial) {
                     tr.devicesOnTrial = tr.devicesOnTrial.filter(d => !(d.deviceTypeName === deviceTypeName && d.deviceItemName === deviceItemName));
+                }
+            }
+        }
+        setExperiment(currTrial.experimentName, e)
+    }
+
+    const deleteDeviceType = ({ experimentName, deviceTypeName }) => {
+        const e = jsonpatch.deepClone(state.experiments.find(e => e.name === experimentName));
+        if (!e) {
+            console.log(`unknown experiment ${experimentName}`);
+            return;
+        }
+        e.deviceTypes = (e.deviceTypes || []).filter(t => t.name !== deviceTypeName);
+        for (const tt of e.trialTypes) {
+            for (const tr of (tt.trials || [])) {
+                if (tr && tr.devicesOnTrial) {
+                    tr.devicesOnTrial = tr.devicesOnTrial.filter(d => d.deviceTypeName !== deviceTypeName);
                 }
             }
         }
@@ -320,6 +337,7 @@ export const ExperimentProvider = ({ children }) => {
         currTrial,
         setTrialData,
         deleteDevice,
+        deleteDeviceType,
         selection,
         setSelection,
         undoOperation: () => dispatch({ type: actions.UNDO }),
