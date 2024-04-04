@@ -11,6 +11,7 @@ import { Redo, Undo } from '@mui/icons-material';
 import EditLocationAltIcon from '@mui/icons-material/EditLocationAlt';
 import EditLocationOutlinedIcon from '@mui/icons-material/EditLocationOutlined';
 import { VersionId } from './VersionId';
+import { ButtonTooltip } from '../Utils/ButtonTooltip';
 
 export const AppHeader = ({ }) => {
     const {
@@ -47,69 +48,68 @@ export const AppHeader = ({ }) => {
                     <VersionId
                     />
                 </Stack>
-                <IconButton
-                    // size="large"
-                    edge="start"
+                <ButtonTooltip
                     color="inherit"
-                    aria-label="menu"
-                    sx={{ mr: 2 }}
+                    // sx={{ mr: 2 }}
                     onClick={() => undoOperation()}
+                    tooltip={"Undo"}
                 >
                     <Undo />
-                </IconButton>
-                <IconButton
-                    // size="large"
-                    edge="start"
+                </ButtonTooltip>
+                <ButtonTooltip
                     color="inherit"
-                    aria-label="menu"
-                    sx={{ mr: 2 }}
+                    // sx={{ mr: 2 }}
                     onClick={() => redoOperation()}
+                    tooltip={"Redo"}
                 >
                     <Redo />
-                </IconButton>
+                </ButtonTooltip>
                 {
                     trialName
                         ? <>
-                            <IconButton
-                                edge="start"
+                            <ButtonTooltip
                                 color="inherit"
                                 onClick={() => {
                                     setCurrTrial();
                                 }}
+                                tooltip={"Stop editing this trial"}
                             >
                                 <CloseIcon />
-                            </IconButton>
-                            <Typography variant="body1" paddingRight={1}>
-                                {experimentName}
-                                &nbsp;:&nbsp;
-                                {trialTypeName}
-                                &nbsp;:&nbsp;
-                                {trialName}
-                            </Typography>
-                            {shownMapName
-                                ? <>
-                                    <MapIcon />
-                                    <Typography variant="body1" paddingRight={1}>
-                                        {shownMapName}
-                                    </Typography>
-                                </>
-                                : <>
-                                    <PublicIcon />
-                                </>
-                            }
+                            </ButtonTooltip>
                             <Tooltip
-                                title="Edit image placement"
+                                title="Experiment and trial currently edited"
                             >
-                                <IconButton
-                                    color='inherit'
-                                    onClick={() => setShowImagePlacement(!showImagePlacement)}
-                                >
-                                    {showImagePlacement
-                                        ? <EditLocationAltIcon />
-                                        : <EditLocationOutlinedIcon />
-                                    }
-                                </IconButton>
+                                <Typography variant="body1" paddingRight={1}>
+                                    {experimentName}
+                                    &nbsp;:&nbsp;
+                                    {trialTypeName}
+                                    &nbsp;:&nbsp;
+                                    {trialName}
+                                </Typography>
                             </Tooltip>
+                            {shownMapName
+                                ? <Tooltip title={"Shown map"}>
+                                    <Stack direction={"row"}>
+                                        <MapIcon />
+                                        <Typography variant="body1" paddingRight={1}>
+                                            {shownMapName}
+                                        </Typography>
+                                    </Stack>
+                                </Tooltip>
+                                : <Tooltip title={"Real map with embedding"}>
+                                    <PublicIcon />
+                                </Tooltip>
+                            }
+                            <ButtonTooltip
+                                color='inherit'
+                                onClick={() => setShowImagePlacement(!showImagePlacement)}
+                                tooltip="Edit image placement"
+                            >
+                                {showImagePlacement
+                                    ? <EditLocationAltIcon />
+                                    : <EditLocationOutlinedIcon />
+                                }
+                            </ButtonTooltip>
                         </>
                         : null
                 }
