@@ -4,10 +4,10 @@ import { baseUrl } from "../Context/FetchExperiment";
 
 export const downloadJsonFile = async (experiment) => {
     const zip = JSZip();
-    zip.file("data.json", JSON.stringify(experiment));
+    zip.file(`${experiment.name}.json`, JSON.stringify(experiment));
     for (const img of (experiment.imageStandalone || [])) {
         if (img.filename) {
-            const src = baseUrl + "/uploads/" + experiment.name + "/" + img.filename;
+            const src = `${baseUrl}/uploads/${experiment.name}/${img.filename}`;
             const resp = await fetch(src);
             const image = await resp.blob();
             const ext = img.filename.split('.').pop();
