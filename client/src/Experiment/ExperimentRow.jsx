@@ -14,6 +14,7 @@ import { ImageStandalone } from "./ImageStandalone";
 import { ImageEmbedded } from "./ImageEmbedded";
 import { downloadJsonFile } from "./DownloadJsonFile";
 import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
+import { ButtonTooltip } from "../Utils/ButtonTooltip";
 
 export const ExperimentRow = ({ data, setData, children }) => {
     const { deleteExperiment, setShownMap } = useContext(experimentContext);
@@ -34,18 +35,18 @@ export const ExperimentRow = ({ data, setData, children }) => {
                         setData={val => setData({ ...data, endDate: val })}
                         label="End Date"
                     />
-                    <IconButton
-                        size="small"
+                    <ButtonTooltip
+                        tooltip={"Download experiment"}
                         onClick={() => downloadJsonFile(data)}
                     >
                         <DownloadIcon />
-                    </IconButton>
-                    <IconButton
-                        size="small"
+                    </ButtonTooltip>
+                    <ButtonTooltip
+                        tooltip={"Delete experiment"}
                         onClick={() => deleteExperiment(data.name)}
                     >
                         <DeleteIcon />
-                    </IconButton>
+                    </ButtonTooltip>
                     {children}
                 </>
             }

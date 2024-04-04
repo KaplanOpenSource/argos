@@ -114,13 +114,6 @@ export const AppHeader = ({ }) => {
                         : null
                 }
                 {/* <Button color="inherit">Login</Button> */}
-                {/* <IconButton
-                    edge="start"
-                    color="inherit"
-                    onClick={() => addExperiment()}
-                >
-                    <AddIcon />
-                </IconButton> */}
             </Toolbar>
         </AppBar>
     )

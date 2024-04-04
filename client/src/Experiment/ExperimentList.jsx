@@ -10,7 +10,8 @@ import { Button, IconButton, Paper, Tooltip, Typography } from "@mui/material";
 import { deepClone } from "fast-json-patch";
 import { createNewName } from "../Utils/utils";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
-import { CloseFullscreen, OpenInFull } from "@mui/icons-material";
+import { CloseFullscreen, OpenInFull, Upload } from "@mui/icons-material";
+import { uploadExperiment } from "./UploadExperiment";
 
 export const ExperimentList = ({ fullscreen, setFullscreen }) => {
     const { experiments, setExperiment, addExperiment, currTrial } = useContext(experimentContext);
@@ -57,12 +58,16 @@ export const ExperimentList = ({ fullscreen, setFullscreen }) => {
                 Experiments
             </Button>
             <ButtonTooltip
-                onClick={() => {
-                    addExperiment();
-                }}
+                onClick={() => addExperiment()}
                 tooltip={"Add experiment"}
             >
                 <AddIcon />
+            </ButtonTooltip>
+            <ButtonTooltip
+                onClick={() => uploadExperiment()}
+                tooltip={"Upload experiment"}
+            >
+                <Upload />
             </ButtonTooltip>
             <ButtonTooltip
                 onClick={() => {
@@ -83,9 +88,6 @@ export const ExperimentList = ({ fullscreen, setFullscreen }) => {
                 }}
                 expanded={expanded}
                 onNodeToggle={(event, nodeIds) => setExpanded(nodeIds)}
-                // style={{
-                //     zIndex:1000
-                // }}
                 disableSelection
             >
                 {experiments.map(exp => (
@@ -93,19 +95,16 @@ export const ExperimentList = ({ fullscreen, setFullscreen }) => {
                         data={exp}
                         setData={val => setExperiment(exp.name, val)}
                     >
-                        <Tooltip title="Clone experiment" placement="top">
-                            <IconButton
-                                size="small"
-                                onClick={event => {
-                                    event.stopPropagation();
-                                    const cloned = deepClone(exp);
-                                    cloned.name = createNewName(experiments, exp.name + " cloned");
-                                    addExperiment(cloned);
-                                }}
-                            >
-                                <ContentCopyIcon />
-                            </IconButton>
-                        </Tooltip>
+                        <ButtonTooltip
+                            tooltip="Clone experiment"
+                            onClick={() => {
+                                const cloned = deepClone(exp);
+                                cloned.name = createNewName(experiments, exp.name + " cloned");
+                                addExperiment(cloned);
+                            }}
+                        >
+                            <ContentCopyIcon />
+                        </ButtonTooltip>
                     </ExperimentRow>
                 ))}
             </TreeView>
