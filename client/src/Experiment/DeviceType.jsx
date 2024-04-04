@@ -8,7 +8,7 @@ import { AddMultipleDevices } from "./AddMultipleDevices";
 import { AttributeTypesDialogButton } from "./AttributeTypesDialogButton";
 import { SCOPE_EXPERIMENT } from "./AttributeType";
 
-export const DeviceType = ({ data, setData }) => {
+export const DeviceType = ({ data, setData, experiment }) => {
     const devicesEnclosingList = (data.devices || []).map(item => {
         return { deviceTypeName: data.name, deviceItemName: item.name };
     });
@@ -67,6 +67,7 @@ export const DeviceType = ({ data, setData }) => {
                         withDescription={true}
                         scope={SCOPE_EXPERIMENT}
                         devicesEnclosingList={devicesEnclosingList}
+                        experiment={experiment}
                     />
                 ))
             }

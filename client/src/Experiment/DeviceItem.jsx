@@ -10,8 +10,8 @@ import { useContext } from "react";
 import { experimentContext } from "../Context/ExperimentProvider";
 import { SCOPE_TRIAL } from "./AttributeType";
 
-export const DeviceItem = ({ data, setData, deviceType, showAttributes, withDescription, devicesEnclosingList, scope }) => {
-    const { currTrial, setLocationsToDevices, setTrialData } = useContext(experimentContext);
+export const DeviceItem = ({ data, setData, deviceType, showAttributes, devicesEnclosingList, scope, experiment }) => {
+    const { currTrial, setLocationsToDevices, setTrialData, deleteDevice } = useContext(experimentContext);
     const devicesOnTrial = (currTrial.trial || {}).devicesOnTrial || [];
     const mapName = currTrial.shownMapName || RealMapName;
     const index = devicesOnTrial.findIndex(d => d.location.name === mapName && d.deviceTypeName === deviceType.name && d.deviceItemName === data.name);
@@ -24,9 +24,11 @@ export const DeviceItem = ({ data, setData, deviceType, showAttributes, withDesc
         setTrialData(data);
     };
 
-    const deleteDevice = () => {
-        setData(undefined);
-    }
+    // const deleteDevice = () => {
+    //     setData(undefined);
+    //     const devs = devicesOnTrial.filter(d => !(d.deviceTypeName === deviceType.name && d.deviceItemName === data.name));
+    //     setTrialData({ ...currTrial.trial, devicesOnTrial: devs });
+    // }
 
     return (
         <TreeRow
@@ -40,10 +42,10 @@ export const DeviceItem = ({ data, setData, deviceType, showAttributes, withDesc
                         deviceType={deviceType}
                         devicesEnclosingList={devicesEnclosingList}
                     />
-                    {setData &&
+                    {setData && experiment &&
                         <IconButton
                             size="small"
-                            onClick={deleteDevice}
+                            onClick={() => deleteDevice({ experimentName: experiment.name, deviceTypeName: deviceType.name, deviceItemName: data.name })}
                         >
                             <DeleteIcon />
                         </IconButton>

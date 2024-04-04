@@ -114,6 +114,7 @@ export const ExperimentRow = ({ data, setData, children }) => {
                             setData={newData => {
                                 setData({ ...data, deviceTypes: changeByName(data.deviceTypes, itemData.name, newData) });
                             }}
+                            experiment={data}
                         />
                     ))
                 }

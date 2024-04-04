@@ -219,7 +219,7 @@ export const ExperimentProvider = ({ children }) => {
         dispatch({ type: actions.DEL_EXP, name: name });
     }
 
-    const addExperiment = async (newExp = undefined) => {
+    const addExperiment = (newExp = undefined) => {
         dispatch({ type: actions.ADD_EXP, data: newExp });
     }
 
@@ -270,6 +270,19 @@ export const ExperimentProvider = ({ children }) => {
         }
     }
 
+    const deleteDevice = ({ experimentName, deviceItemName, deviceTypeName }) => {
+        const e = jsonpatch.deepClone(state.experiments.find(e => e.name === experimentName));
+        if (!e) {
+            console.log(`unknown experiment ${experimentName}`);
+            return;
+        }
+        const dt = e.deviceTypes.find(t => t.name === deviceTypeName);
+        if (dt && dt.devices) {
+            dt.devices = dt.devices.filter(d => d.name !== deviceItemName);
+        }
+        setExperiment(currTrial.experimentName, e)
+    }
+
     useEffect(() => {
         (async () => {
             const exp = await fetchAllExperiments();
@@ -299,6 +312,7 @@ export const ExperimentProvider = ({ children }) => {
         setCurrTrial,
         currTrial,
         setTrialData,
+        deleteDevice,
         selection,
         setSelection,
         undoOperation: () => dispatch({ type: actions.UNDO }),
