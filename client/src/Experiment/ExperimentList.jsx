@@ -9,8 +9,10 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { Button, IconButton, Paper, Tooltip, Typography } from "@mui/material";
 import { deepClone } from "fast-json-patch";
 import { createNewName } from "../Utils/utils";
+import { ButtonTooltip } from "../Utils/ButtonTooltip";
+import { CloseFullscreen, OpenInFull } from "@mui/icons-material";
 
-export const ExperimentList = ({ }) => {
+export const ExperimentList = ({ fullscreen, setFullscreen }) => {
     const { experiments, setExperiment, addExperiment, currTrial } = useContext(experimentContext);
 
     const [expanded, setExpanded] = useState([]);
@@ -34,7 +36,8 @@ export const ExperimentList = ({ }) => {
             style={{
                 zIndex: 1000,
                 position: 'relative',
-                maxWidth: 'fit-content',
+                maxWidth: fullscreen ? undefined : 'fit-content',
+                width: fullscreen ? '100%' : undefined,
                 // maxHeight: '500px',
                 // maxWidth: showExperiments ? undefined : 'fit-content',
                 // right: showExperiments ? '0px' : undefined,
@@ -45,19 +48,30 @@ export const ExperimentList = ({ }) => {
             }}
         >
             <Button
-            // onClick={() => setShowExperiments(!showExperiments)}
+                // onClick={() => setShowExperiments(!showExperiments)}
+                disableRipple={true}
+                disableFocusRipple={true}
+                disableTouchRipple={true}
+            // style={{ color: "primary" }}
             >
                 Experiments
             </Button>
-            <IconButton
-                edge="start"
-                color="inherit"
+            <ButtonTooltip
                 onClick={() => {
                     addExperiment();
                 }}
+                tooltip={"Add experiment"}
             >
                 <AddIcon />
-            </IconButton>
+            </ButtonTooltip>
+            <ButtonTooltip
+                onClick={() => {
+                    setFullscreen(!fullscreen);
+                }}
+                tooltip={fullscreen ? "Show experiment list on side" : "Expand experiment list on screen"}
+            >
+                {fullscreen ? <CloseFullscreen /> : <OpenInFull />}
+            </ButtonTooltip>
             <TreeView
                 defaultCollapseIcon={<ExpandMoreIcon />}
                 defaultExpandIcon={<ChevronRightIcon />}

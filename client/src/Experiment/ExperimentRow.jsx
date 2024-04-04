@@ -50,7 +50,7 @@ export const ExperimentRow = ({ data, setData, children }) => {
                 </>
             }
         >
-            <Stack direction='column' alignItems="stretch">
+            <Stack direction='column' alignItems="stretch" sx={{ paddingRight: '5px' }}>
                 <TextFieldDebounceOutlined
                     label="Description"
                     value={data.description}

@@ -15,6 +15,7 @@ import { ActionsOnMapDoer, ActionsOnMapProvider } from '../Map/ActionsOnMapConte
 export function App() {
   const [showEditBox, setShowEditBox] = useState(false);
   const [markedPoints, setMarkedPoints] = useState([]);
+  const [fullscreen, setFullscreen] = useState(false);
 
   return (
     <>
@@ -23,9 +24,13 @@ export function App() {
         />
         <Stack direction={'row'} justifyContent="space-between" alignItems="flex-start">
           <ExperimentList
+            fullscreen={fullscreen}
+            setFullscreen={setFullscreen}
           />
-          <DeviceTable
-          />
+          {fullscreen ? null :
+            <DeviceTable
+            />
+          }
         </Stack>
 
         <ShapeProvider>

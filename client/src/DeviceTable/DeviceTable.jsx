@@ -35,7 +35,11 @@ export const DeviceTable = ({ }) => {
                 overflowY: 'visible'
             }}
         >
-            <Button>
+            <Button
+                disableRipple={true}
+                disableFocusRipple={true}
+                disableTouchRipple={true}
+            >
                 Selected Devices
             </Button>
             <ButtonTooltip
