@@ -3,11 +3,9 @@ import dayjs from 'dayjs';
 import { createNewName, parseUrlParams, replaceUrlParams, splitLast } from "../Utils/utils";
 import * as jsonpatch from 'fast-json-patch';
 import { fetchAllExperiments, saveExperimentWithData } from "./FetchExperiment";
-import { RealMapName } from "../constants/constants";
+import { RealMapName, argosJsonVersion } from "../constants/constants";
 
 export const experimentContext = createContext();
-
-// export const useExperiment = useContext(experimentContext);
 
 const actions = {
     SET_ALL_EXPS: "SET_ALL_EXPS",
@@ -38,7 +36,7 @@ const reducer = (state, action) => {
         case actions.ADD_EXP: {
             const name = createNewName(state.experiments, action.data ? action.data.name : 'New Experiment');
             const newExp = action.data ? action.data : {
-                version: '3.0.0',
+                version: argosJsonVersion,
                 name,
                 startDate: dayjs().startOf('day'),
                 endDate: dayjs().startOf('day').add(7, 'day'),

@@ -6,12 +6,12 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import AddIcon from '@mui/icons-material/Add';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import { Button, IconButton, Paper, Tooltip, Typography } from "@mui/material";
+import { Button, Paper } from "@mui/material";
 import { deepClone } from "fast-json-patch";
 import { createNewName } from "../Utils/utils";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
-import { CloseFullscreen, OpenInFull, Upload } from "@mui/icons-material";
-import { uploadExperiment } from "./UploadExperiment";
+import { CloseFullscreen, OpenInFull } from "@mui/icons-material";
+import { UploadExperimentIcon } from "./UploadExperimentIcon";
 
 export const ExperimentList = ({ fullscreen, setFullscreen }) => {
     const { experiments, setExperiment, addExperiment, currTrial } = useContext(experimentContext);
@@ -63,12 +63,8 @@ export const ExperimentList = ({ fullscreen, setFullscreen }) => {
             >
                 <AddIcon />
             </ButtonTooltip>
-            <ButtonTooltip
-                onClick={() => uploadExperiment()}
-                tooltip={"Upload experiment"}
-            >
-                <Upload />
-            </ButtonTooltip>
+            <UploadExperimentIcon
+            />
             <ButtonTooltip
                 onClick={() => {
                     setFullscreen(!fullscreen);
