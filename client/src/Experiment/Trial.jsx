@@ -4,13 +4,29 @@ import { TreeRow } from "../App/TreeRow";
 import { experimentContext } from "../Context/ExperimentProvider";
 import { useContext } from "react";
 import DeleteIcon from '@mui/icons-material/Delete';
-import { GridOn } from "@mui/icons-material";
+import { GridOn, MergeType, ReadMore } from "@mui/icons-material";
 import { AttributeItemList } from "./AttributeItemList";
 import { SCOPE_TRIAL } from "./AttributeType";
-import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
+import MergeIcon from '@mui/icons-material/Merge';
+import { ButtonTooltip } from "../Utils/ButtonTooltip";
 
 export const Trial = ({ data, setData, experiment, trialType, children }) => {
-    const { currTrial, setCurrTrial } = useContext(experimentContext);
+    const { currTrial, setCurrTrial, selection } = useContext(experimentContext);
+
+    const cloneDevices = () => {
+        const devicesOnTrial = [...(data.devicesOnTrial || [])];
+        const devicesOnTrialCurr = [...(currTrial.trial.devicesOnTrial || [])];
+        for (const { deviceTypeName, deviceItemName } of selection) {
+            if (!devicesOnTrial.find(t => t.deviceItemName === deviceItemName && t.deviceTypeName === deviceTypeName)) {
+                const dev = devicesOnTrialCurr.find(t => t.deviceItemName === deviceItemName && t.deviceTypeName === deviceTypeName);
+                if (dev) {
+                    devicesOnTrial.push(dev);
+                }
+            }
+        }
+        setData({ ...data, devicesOnTrial });
+    }
+
     return (
         <TreeRow
             key={data.name}
@@ -41,6 +57,13 @@ export const Trial = ({ data, setData, experiment, trialType, children }) => {
                             <DeleteIcon />
                         </IconButton>
                     </Tooltip>
+                    <ButtonTooltip
+                        tooltip={'Place selected devices into this trial as are on current trial'}
+                        disabled={data === currTrial.trial || selection.length === 0}
+                        onClick={cloneDevices}
+                    >
+                        <ReadMore sx={{ rotate: '180deg' }} />
+                    </ButtonTooltip>
                     {children}
                 </>
             }
