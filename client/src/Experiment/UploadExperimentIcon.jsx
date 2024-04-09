@@ -42,34 +42,23 @@ export const UploadExperimentIcon = ({ }) => {
                 if ((experiment || {}).version === argosJsonVersion) {
                     experiment.name = createNewName(experiments, experiment.name);
                     addExperiment(experiment);
-                }
-                const imageFiles = Object.values(zip.files).filter(x => x.name.startsWith('images/') && !x.dir);
-                if (imageFiles.length > 0) {
-                    for (const im of imageFiles) {
-                        const imageBlob = await im.async('blob');
-                        const imageFileName = im.name.split('/').at(-1);
-                        const imageName = imageFileName.replace(/\.[^/.]+$/, "");
-                        console.log(imageBlob, imageName)
-                        await UploadImage(imageBlob, imageName, experiment.name, (filename, height, width) => {
-                            const imageData = experiment.imageStandalone.find(x => x.name === imageName) || {};
-                            imageData.filename = filename;
-                            imageData.height = height;
-                            imageData.width = width;
-                        }, imageFileName);
+                    const imageFiles = Object.values(zip.files).filter(x => x.name.startsWith('images/') && !x.dir);
+                    if (imageFiles.length > 0) {
+                        for (const im of imageFiles) {
+                            const imageBlob = await im.async('blob');
+                            const imageFileName = im.name.split('/').at(-1);
+                            const imageName = imageFileName.replace(/\.[^/.]+$/, "");
+                            console.log(imageBlob, imageName)
+                            await UploadImage(imageBlob, imageName, experiment.name, (filename, height, width) => {
+                                const imageData = experiment.imageStandalone.find(x => x.name === imageName) || {};
+                                imageData.filename = filename;
+                                imageData.height = height;
+                                imageData.width = width;
+                            }, imageFileName);
+                        }
+                        setExperiment(experiment.name, experiment);
                     }
-                    setExperiment(experiment.name, experiment);
                 }
-                // zip.files()
-                // const text = await new Promise(resolve => {
-                //     const reader = new FileReader();
-                //     reader.onload = (e) => resolve(e.target.result);
-                //     reader.readAsBinaryString(file);
-                // });
-                // const experiment = JSON.parse(text);
-                // if ((experiment || {}).version === argosJsonVersion) {
-                //     experiment.name = createNewName(experiments, experiment.name);
-                //     addExperiment(experiment);
-                // }
             }
         } catch (error) {
             alert(`problem uploading:\n${error}`)
