@@ -36,17 +36,22 @@ export const Trial = ({ data, setData, experiment, trialType, children }) => {
         const json = {
             type: 'FeatureCollection',
             features: devicesOnTrial.map(d => {
+                const coordinates = d.location.coordinates.slice().reverse();
+                const properties = {
+                    name: d.deviceItemName,
+                    type: d.deviceTypeName,
+                    MapName: d.location.name || RealMapName,
+                };
+                for (const { name, value } of d.attributes || []) {
+                    properties[name] = value;
+                }
                 return {
                     type: 'Feature',
                     geometry: {
                         type: 'Point',
-                        coordinates: d.location.coordinates.slice().reverse(),
+                        coordinates,
                     },
-                    properties: {
-                        name: d.deviceItemName,
-                        type: d.deviceTypeName,
-                        MapName: d.location.name || RealMapName,
-                    }
+                    properties
                 }
             })
         };
