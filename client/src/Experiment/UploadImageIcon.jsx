@@ -4,58 +4,18 @@ import {
 } from "@mui/material";
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import HourglassBottomIcon from '@mui/icons-material/HourglassBottom';
-import { baseUrl } from "../Context/FetchExperiment";
+import { UploadImage } from "./UploadImage";
 
 export const UploadImageIcon = ({ onChangeFile, imageName, experimentName }) => {
     const inputFile = useRef(null);
     const [working, setWorking] = useState(false);
 
-    const onButtonClick = () => {
-        // `current` points to the mounted file input element
-        inputFile.current.click();
-    };
-
-    const getImageSize = async (imageFile) => {
-        return new Promise(resolve => {
-            const img = new Image();
-            img.onload = () => {
-                resolve([img.naturalHeight, img.naturalWidth])
-            };
-            img.src = window.URL.createObjectURL(imageFile);
-        })
-    }
-
     const handleChangeFile = async (event) => {
         event.stopPropagation();
         event.preventDefault();
-
-        const file = event.target.files[0];
-        if (!file) {
-            return;
-        }
-
         setWorking(true);
 
-        const [height, width] = await getImageSize(file);
-        if (height && width) {
-            const formData = new FormData();
-            formData.append('file', file);
-            formData.append('imageName', imageName);
-            formData.append('experimentName', experimentName);
-            const resp = await fetch(baseUrl + "/upload", {
-                method: 'POST',
-                body: formData,
-            });
-            const ret = await resp.json();
-            console.log('uploaded:', ret);
-            const error = (ret || { error: 'invalid server reply' }).error;
-            if (error) {
-                alert(error);
-            } else {
-                onChangeFile(ret.filename, height, width)
-            }
-        }
-
+        UploadImage(event.target.files[0], imageName, experimentName, onChangeFile);
         setWorking(false);
     };
 
@@ -70,7 +30,10 @@ export const UploadImageIcon = ({ onChangeFile, imageName, experimentName }) => 
                 accept="image/*"
             />
             <IconButton
-                onClick={onButtonClick}
+                onClickCapture={e => {
+                    e.stopPropagation();
+                    inputFile.current.click(); // `current` is the file input element
+                }}
                 disabled={working}
             >
                 {working
