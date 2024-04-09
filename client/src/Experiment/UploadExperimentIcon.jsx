@@ -6,10 +6,11 @@ import { argosJsonVersion } from "../constants/constants";
 import { createNewName } from "../Utils/utils";
 import { experimentContext } from "../Context/ExperimentProvider";
 import JSZip from "jszip";
+import { UploadImage } from "./UploadImage";
 
 export const UploadExperimentIcon = ({ }) => {
     const inputFile = useRef(null);
-    const { experiments, addExperiment } = useContext(experimentContext);
+    const { experiments, addExperiment, setExperiment } = useContext(experimentContext);
     const [working, setWorking] = useState(false);
 
     const handleChangeFile = async (event) => {
@@ -33,17 +34,30 @@ export const UploadExperimentIcon = ({ }) => {
                     addExperiment(experiment);
                 }
             } else if (file.name.endsWith('.zip')) {
-                const zip = JSZip();
-                await zip.loadAsync(file);
+                const zip = await JSZip().loadAsync(file);
                 const jsonFile = Object.values(zip.files).filter(x => x.name.endsWith('.json'))[0];
                 console.log(zip);
-                console.log(Object.keys(zip.files));
-                console.log(jsonFile);
                 const text = await jsonFile.async('text');
                 const experiment = JSON.parse(text);
                 if ((experiment || {}).version === argosJsonVersion) {
                     experiment.name = createNewName(experiments, experiment.name);
                     addExperiment(experiment);
+                }
+                const imageFiles = Object.values(zip.files).filter(x => x.name.startsWith('images/') && !x.dir);
+                if (imageFiles.length > 0) {
+                    for (const im of imageFiles) {
+                        const imageBlob = await im.async('blob');
+                        const imageFileName = im.name.split('/').at(-1);
+                        const imageName = imageFileName.replace(/\.[^/.]+$/, "");
+                        console.log(imageBlob, imageName)
+                        await UploadImage(imageBlob, imageName, experiment.name, (filename, height, width) => {
+                            const imageData = experiment.imageStandalone.find(x => x.name === imageName) || {};
+                            imageData.filename = filename;
+                            imageData.height = height;
+                            imageData.width = width;
+                        }, imageFileName);
+                    }
+                    setExperiment(experiment.name, experiment);
                 }
                 // zip.files()
                 // const text = await new Promise(resolve => {

@@ -10,14 +10,14 @@ const getImageSize = async (imageFile) => {
     })
 }
 
-export const UploadImage = async (fileBlob, imageName, experimentName, imageDetailsCallback) => {
+export const UploadImage = async (fileBlob, imageName, experimentName, imageDetailsCallback, blobFilenameOptional) => {
     if (!fileBlob) {
         return;
     }
     const [height, width] = await getImageSize(fileBlob);
     if (height && width) {
         const formData = new FormData();
-        formData.append('file', fileBlob);
+        formData.append('file', fileBlob, blobFilenameOptional);
         formData.append('imageName', imageName);
         formData.append('experimentName', experimentName);
         const resp = await fetch(baseUrl + "/upload", {

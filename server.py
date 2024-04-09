@@ -127,7 +127,7 @@ def upload():
     file = request.files["file"]
     ext = os.path.splitext(file.filename)[1] if file is not None else ""
     if ext not in ALLOWED_EXTENSIONS:
-        return {"error": "File not allowed"}
+        return {"error": "File not allowed, ext=" + ext}
 
     ts = datetime.now().isoformat().replace("-", "").replace(".", "_")
     filename = secure_filename(imageName + "_" + ts + ext)

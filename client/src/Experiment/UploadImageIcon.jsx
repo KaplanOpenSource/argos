@@ -14,7 +14,6 @@ export const UploadImageIcon = ({ onChangeFile, imageName, experimentName }) => 
         event.stopPropagation();
         event.preventDefault();
         setWorking(true);
-
         UploadImage(event.target.files[0], imageName, experimentName, onChangeFile);
         setWorking(false);
     };
@@ -32,6 +31,7 @@ export const UploadImageIcon = ({ onChangeFile, imageName, experimentName }) => 
             <IconButton
                 onClickCapture={e => {
                     e.stopPropagation();
+                    e.preventDefault();
                     inputFile.current.click(); // `current` is the file input element
                 }}
                 disabled={working}
