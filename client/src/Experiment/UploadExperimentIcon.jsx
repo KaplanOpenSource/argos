@@ -39,7 +39,8 @@ export const UploadExperimentIcon = ({ }) => {
                 console.log(zip);
                 const text = await jsonFile.async('text');
                 const experiment = JSON.parse(text);
-                if ((experiment || {}).version === argosJsonVersion) {
+                const version = (experiment || {}).version;
+                if (version === argosJsonVersion) {
                     experiment.name = createNewName(experiments, experiment.name);
                     addExperiment(experiment);
                     const imageFiles = Object.values(zip.files).filter(x => x.name.startsWith('images/') && !x.dir);
@@ -58,6 +59,8 @@ export const UploadExperimentIcon = ({ }) => {
                         }
                         setExperiment(experiment.name, experiment);
                     }
+                // } else if (version.startsWith('2.0.0')) {
+
                 }
             }
         } catch (error) {

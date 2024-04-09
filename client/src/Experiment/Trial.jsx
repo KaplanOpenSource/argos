@@ -1,14 +1,15 @@
-import { Button, IconButton, Stack, Tooltip } from "@mui/material";
+import { IconButton, Tooltip } from "@mui/material";
 import { DateProperty } from "../Utils/DateProperty";
 import { TreeRow } from "../App/TreeRow";
 import { experimentContext } from "../Context/ExperimentProvider";
 import { useContext } from "react";
 import DeleteIcon from '@mui/icons-material/Delete';
-import { GridOn, MergeType, ReadMore } from "@mui/icons-material";
+import { Download, Grid3x3, GridOn, ReadMore } from "@mui/icons-material";
 import { AttributeItemList } from "./AttributeItemList";
 import { SCOPE_TRIAL } from "./AttributeType";
-import MergeIcon from '@mui/icons-material/Merge';
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
+import { RealMapName } from "../constants/constants";
+import { saveAs } from "file-saver";
 
 export const Trial = ({ data, setData, experiment, trialType, children }) => {
     const { currTrial, setCurrTrial, selection } = useContext(experimentContext);
@@ -27,6 +28,32 @@ export const Trial = ({ data, setData, experiment, trialType, children }) => {
         setData({ ...data, devicesOnTrial });
     }
 
+    const downloadGeojson = () => {
+        const devicesOnTrial = [...(data.devicesOnTrial || [])].filter(d => {
+            return d.location && d.location.coordinates && d.location.coordinates.length === 2;
+        });
+
+        const json = {
+            type: 'FeatureCollection',
+            features: devicesOnTrial.map(d => {
+                return {
+                    type: 'Feature',
+                    geometry: {
+                        type: 'Point',
+                        coordinates: d.location.coordinates.slice().reverse(),
+                    },
+                    properties: {
+                        name: d.deviceItemName,
+                        type: d.deviceTypeName,
+                        MapName: d.location.name || RealMapName,
+                    }
+                }
+            })
+        };
+        const filename = `trial_${experiment.name}_${trialType.name}_${data.name}.geojson`;
+        const blob = new Blob([JSON.stringify(json, null, 2)], { type: 'application/json' })
+        saveAs(blob, filename);
+    }
     return (
         <TreeRow
             key={data.name}
@@ -63,6 +90,12 @@ export const Trial = ({ data, setData, experiment, trialType, children }) => {
                         onClick={cloneDevices}
                     >
                         <ReadMore sx={{ rotate: '180deg' }} />
+                    </ButtonTooltip>
+                    <ButtonTooltip
+                        tooltip={'Download geojson'}
+                        onClick={downloadGeojson}
+                    >
+                        <Download />
                     </ButtonTooltip>
                     {children}
                 </>
