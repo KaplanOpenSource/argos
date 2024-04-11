@@ -16,10 +16,9 @@ export const AddContainedButton = ({ deviceItem, deviceType, deviceOnTrial }) =>
         && topSelected.containedIn.deviceTypeName === deviceType.name;
 
     let disabled = currTrial.trial && selection.length === 0;
-    if (selection.length > 1) {
+    if (selection.length >= 1) {
         disabled = deviceItemName === deviceItem.name && deviceTypeName === deviceType.name;
     }
-
 
     const handleClick = () => {
         if (!disabled) {
