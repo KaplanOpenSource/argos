@@ -76,7 +76,7 @@ export const ContainedDevice = ({
                     // color='secondary'
                     disabled={false}
                     tooltip={'Disconnect this entity'}
-                    // onClick={disconnectEntity}
+                    onClick={disconnectDevice}
                     style={{ marginLeft: "auto" }}
                 >
                     <Clear />
