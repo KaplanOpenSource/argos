@@ -1,5 +1,4 @@
 import React from 'react';
-// import { useEntities } from './EntitiesContext';
 import {
     Clear,
     NearMe
@@ -9,28 +8,17 @@ import {
     Typography
 } from '@mui/material';
 import { ButtonTooltip } from '../../Utils/ButtonTooltip';
-// import { usePopupSwitch } from './PopupSwitchContext';
+import { usePopupSwitch } from '../../Map/PopupSwitchContext';
 
 export const ContainedDevice = ({
     deviceItemName,
+    deviceTypeName,
     disconnectDevice,
 }) => {
-    // const { entities } = useEntities();
-    // const { switchToPopup } = usePopupSwitch();
-
-    // const search = (() => {
-    //     for (const entityType of entities) {
-    //         for (const entityItem of entityType.items) {
-    //             if (entityItem.key === childEntityItemKey) {
-    //                 return { entityType, entityItem };
-    //             }
-    //         }
-    //     }
-    // })();
-
-    // const showEntity = () => {
-    //     switchToPopup(childEntityItemKey);
-    // }
+    const { switchToPopup } = usePopupSwitch();
+    const showEntity = () => {
+        switchToPopup(deviceTypeName + ' : ' + deviceItemName);
+    }
 
     return (
         <Paper
@@ -60,16 +48,16 @@ export const ContainedDevice = ({
                     </>
                 )} */}
             </Typography>
-            {/* <ButtonTooltip
+            <ButtonTooltip
                 key='show'
                 // color='default'
                 disabled={false}
                 tooltip={'Show this entity'}
-                // onClick={showEntity}
+                onClick={showEntity}
                 style={{ marginLeft: "auto" }}
             >
                 <NearMe />
-            </ButtonTooltip> */}
+            </ButtonTooltip>
             {!disconnectDevice ? null :
                 <ButtonTooltip
                     key='remove'

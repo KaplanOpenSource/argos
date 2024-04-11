@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { experimentContext } from "../Context/ExperimentProvider";
 import { RealMapName } from "../constants/constants";
 import { DeviceMarker } from "./DeviceMarker";
+import { PopupSwitchProvider } from "./PopupSwitchContext";
 
 export const DeviceMarkersShown = ({ }) => {
     const { currTrial, setTrialData } = useContext(experimentContext);
@@ -13,7 +14,7 @@ export const DeviceMarkersShown = ({ }) => {
     }
     const shownDevices = devicesOnTrial.filter(({ location }) => location && location.coordinates && location.name === mapName);
     return (
-        <>
+        <PopupSwitchProvider>
             {shownDevices.map((deviceOnTrial, index) => (
                 <DeviceMarker
                     key={index}
@@ -25,6 +26,6 @@ export const DeviceMarkersShown = ({ }) => {
                     }}
                 />
             ))}
-        </>
+        </PopupSwitchProvider>
     )
 }

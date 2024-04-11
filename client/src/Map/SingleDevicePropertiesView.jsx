@@ -137,6 +137,7 @@ export const SingleDevicePropertiesView = ({ deviceOnTrial, setDeviceOnTrial, ch
                     <ContainedDevice
                         key={'parent ' + deviceItemName + '_' + deviceTypeName}
                         deviceItemName={deviceOnTrial.containedIn.deviceItemName}
+                        deviceTypeName={deviceOnTrial.containedIn.deviceTypeName}
                         disconnectDevice={() => {
                             const newdev = { ...deviceOnTrial };
                             delete newdev.containedIn;
@@ -153,6 +154,7 @@ export const SingleDevicePropertiesView = ({ deviceOnTrial, setDeviceOnTrial, ch
                         <ContainedDevice
                             key={'contained ' + dev.deviceItemName + '_' + dev.deviceTypeName}
                             deviceItemName={dev.deviceItemName}
+                            deviceTypeName={dev.deviceTypeName}
                             disconnectDevice={() => {
                                 const devs = [...devicesOnTrial];
                                 devs[index] = { ...dev };
