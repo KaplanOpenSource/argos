@@ -9,7 +9,6 @@ import {
     LocationOff,
     MergeType,
 } from "@mui/icons-material";
-// import { useEntities } from './EntitiesContext.jsx';
 // import { TextFieldEntityProperty, entitySaveForTextFields } from './TextFieldEntityProperty';
 // import { useSelection } from './SelectionContext';
 // import { ContainedEntity } from './ContainedEntity';
@@ -24,7 +23,7 @@ import { ContainedDevice } from '../Experiment/Contained/ContainedDevice';
 export const SingleDevicePropertiesView = ({ deviceOnTrial, setDeviceOnTrial, children }) => {
     const [isEditLocation, setIsEditLocation] = useState(false);
 
-    const { currTrial, setLocationsToDevices } = useContext(experimentContext);
+    const { currTrial, setLocationsToDevices, setTrialData } = useContext(experimentContext);
     const experiment = currTrial.experiment || {};
     const { deviceTypeName, deviceItemName } = deviceOnTrial;
     const deviceType = (experiment.deviceTypes || []).find(t => t.name === deviceTypeName);
@@ -33,19 +32,15 @@ export const SingleDevicePropertiesView = ({ deviceOnTrial, setDeviceOnTrial, ch
     const devLocation = deviceOnTrial.location.coordinates;
 
     const devicesOnTrial = (currTrial.trial || {}).devicesOnTrial || [];
-    const containedDevices = devicesOnTrial.filter(t => {
-        return t.containedIn
-            && t.containedIn.deviceItemName === deviceItemName
-            && t.containedIn.deviceTypeName === deviceTypeName;
-    });
-
-    // const handleSaveEntityProperties = () => {
-    //     entitySaveForTextFields({ deviceType, deviceItem, changedValues, setEntityProperties, setEntityLocations });
-    //     setChangedValues({});
-    //     setIsEditLocation(false);
-    // }
-
-    // const containsEntities = [deviceItem.containsEntities || []].flatMap(x => x);
+    const containedDevicesIndices = devicesOnTrial
+        .map((dev, index) => {
+            return { dev, index };
+        })
+        .filter(({ dev }) => {
+            return dev.containedIn
+                && dev.containedIn.deviceItemName === deviceItemName
+                && dev.containedIn.deviceTypeName === deviceTypeName;
+        });
 
     // // TODO: switch to use the EntitiesContext function
     // const findEntityParent = (containedKey) => {
@@ -115,29 +110,6 @@ export const SingleDevicePropertiesView = ({ deviceOnTrial, setDeviceOnTrial, ch
                     This device exists on trial but not on experiment, please remove.
                 </Typography>
             }
-            {/* <Grid container
-                direction='column'
-                spacing={1}
-            >
-                {
-                    propertyKeys.map(key => (
-                        <Grid item
-                            key={key}
-                        >
-                            <TextFieldEntityProperty
-                                deviceItem={deviceItem}
-                                deviceType={deviceType}
-                                propertyKey={key}
-                                changedValue={changedValues[key]}
-                                setChangedValue={newVal => {
-                                    setChangedValues({ ...changedValues, [key]: newVal });
-                                }}
-                                parentHierarchy={parentHierarchy}
-                            />
-                        </Grid>
-                    ))
-                }
-            </Grid> */}
             {deviceItem &&
                 <SelectDeviceButton
                     deviceItem={deviceItem}
@@ -162,27 +134,29 @@ export const SingleDevicePropertiesView = ({ deviceOnTrial, setDeviceOnTrial, ch
                 <>
                     <br />
                     parent:
-                    {/* <br /> */}
                     <ContainedDevice
                         deviceItemName={deviceOnTrial.containedIn.deviceItemName}
                         disconnectDevice={() => {
-                            const newdev = {...deviceOnTrial };
+                            const newdev = { ...deviceOnTrial };
                             delete newdev.containedIn;
                             setDeviceOnTrial(newdev);
                         }}
-                    // disconnectDevice={() => disconnectEntityParent(parentEntity, deviceItem.key)}
                     />
                 </>
             )}
-            {containedDevices.length > 0 && (
+            {containedDevicesIndices.length > 0 && (
                 <>
                     <br />
                     contained:
-                    {/* <br /> */}
-                    {containedDevices.map(d => (
+                    {containedDevicesIndices.map(({ dev, index }) => (
                         <ContainedDevice
-                            deviceItemName={d.deviceItemName}
-                        // disconnectDevice={() => disconnectEntityParent(deviceItem, e)}
+                            deviceItemName={dev.deviceItemName}
+                            disconnectDevice={() => {
+                                const devs = [...devicesOnTrial];
+                                devs[index] = { ...dev };
+                                delete devs[index].containedIn;
+                                setTrialData({ ...currTrial.trial, devicesOnTrial: devs });
+                            }}
                         />
                     ))}
                 </>
