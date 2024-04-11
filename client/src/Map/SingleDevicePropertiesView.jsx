@@ -18,6 +18,7 @@ import { experimentContext } from '../Context/ExperimentProvider';
 import { SelectDeviceButton } from '../Experiment/SelectDeviceButton';
 import { AttributeItemList } from '../Experiment/AttributeItemList';
 import { SCOPE_TRIAL } from '../Experiment/AttributeType';
+import { AddContainedButton } from '../Experiment/Contained/AddContainedButton';
 
 export const SingleDevicePropertiesView = ({ deviceOnTrial, setDeviceOnTrial, children }) => {
     const [isEditLocation, setIsEditLocation] = useState(false);
@@ -141,24 +142,13 @@ export const SingleDevicePropertiesView = ({ deviceOnTrial, setDeviceOnTrial, ch
             >
                 <LocationOff />
             </ButtonTooltip>
-            {/* <ButtonTooltip
-                key='merge'
-                color='primary'
-                disabled={false}
-                tooltip={'Add contained entity'}
-                onClick={() => {
-                    if (selection.length) {
-                        const newContained = popTopSelection();
-                        const newContainedParent = findEntityParent(newContained);
-                        if (newContainedParent) {
-                            disconnectEntityParent(newContainedParent, newContained)
-                        }
-                        setEntityProperties(deviceItem.key, [], [...containsEntities, newContained]);
-                    }
-                }}
-            >
-                <MergeType />
-            </ButtonTooltip> */}
+            {deviceItem &&
+                <AddContainedButton
+                    deviceItem={deviceItem}
+                    deviceType={deviceType}
+                    deviceOnTrial={deviceOnTrial}
+                />
+            }
             {children}
             {/* {parentEntity === undefined ? null :
                 <Fragment key={'p'}>
