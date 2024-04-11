@@ -55,6 +55,7 @@ export const ContainedDevice = ({
                 tooltip={'Show this entity'}
                 onClick={showEntity}
                 style={{ marginLeft: "auto" }}
+                closeTooltipOnClick={true}
             >
                 <NearMe />
             </ButtonTooltip>
