@@ -4,7 +4,7 @@ import { MapShower } from '../Map/MapShower';
 import { DeviceTable } from '../DeviceTable/DeviceTable';
 import { Stack } from '@mui/material';
 import { MapPlacer } from '../Map/MapPlacer';
-import { DeviceMarkers } from '../Map/DeviceMarkers';
+import { DeviceMarkersShown } from '../Map/DeviceMarkersShown';
 import { MapPositionOnUrl } from '../Map/MapPositionOnUrl';
 import { EditToolBox } from '../EditToolBox/EditToolBox';
 import { ShapeProvider } from '../EditToolBox/ShapeContext';
@@ -44,7 +44,7 @@ export function App() {
               markedPoints={markedPoints}
               setMarkedPoints={setMarkedPoints}
             />
-            <DeviceMarkers
+            <DeviceMarkersShown
             />
             <ActionsOnMapDoer
             />
