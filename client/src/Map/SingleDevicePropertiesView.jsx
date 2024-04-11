@@ -33,6 +33,13 @@ export const SingleDevicePropertiesView = ({ deviceOnTrial, setDeviceOnTrial, ch
     const devLocation = deviceOnTrial.location.coordinates;
     console.log(deviceOnTrial)
 
+    const devicesOnTrial = (currTrial.trial || {}).devicesOnTrial || [];
+    const containedDevices = devicesOnTrial.filter(t => {
+        return t.containedIn
+            && t.containedIn.deviceItemName === deviceItemName
+            && t.containedIn.deviceTypeName === deviceTypeName;
+    });
+
     // const handleSaveEntityProperties = () => {
     //     entitySaveForTextFields({ deviceType, deviceItem, changedValues, setEntityProperties, setEntityLocations });
     //     setChangedValues({});
@@ -156,32 +163,26 @@ export const SingleDevicePropertiesView = ({ deviceOnTrial, setDeviceOnTrial, ch
                 <>
                     <br />
                     parent:
-                    <br />
+                    {/* <br /> */}
                     <ContainedDevice
                         deviceItemName={deviceOnTrial.containedIn.deviceItemName}
-                    // key={'P' + deviceItem.key}
-                    // childEntityItemKey={parentEntity.key}
-                    // disconnectEntity={() => disconnectEntityParent(parentEntity, deviceItem.key)}
+                    // disconnectDevice={() => disconnectEntityParent(parentEntity, deviceItem.key)}
                     />
                 </>
             )}
-            {/* {parentEntity === undefined ? null :
-                <Fragment key={'p'}>
-                </Fragment>
-            }
-            {containsEntities.length === 0 ? null :
-                <Fragment key={'e'}>
+            {containedDevices.length > 0 && (
+                <>
                     <br />
                     contained:
-                    {containsEntities.map(e => (
-                        <ContainedEntity
-                            key={'E' + e.key}
-                            childEntityItemKey={e}
-                            disconnectEntity={() => disconnectEntityParent(deviceItem, e)}
+                    {/* <br /> */}
+                    {containedDevices.map(d => (
+                        <ContainedDevice
+                            deviceItemName={d.deviceItemName}
+                        // disconnectDevice={() => disconnectEntityParent(deviceItem, e)}
                         />
                     ))}
-                </Fragment>
-            } */}
+                </>
+            )}
         </>
     )
 }

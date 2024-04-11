@@ -13,8 +13,7 @@ import { ButtonTooltip } from '../../Utils/ButtonTooltip';
 
 export const ContainedDevice = ({
     deviceItemName,
-    childEntityItemKey,
-    disconnectEntity,
+    disconnectDevice,
 }) => {
     // const { entities } = useEntities();
     // const { switchToPopup } = usePopupSwitch();
@@ -61,7 +60,7 @@ export const ContainedDevice = ({
                     </>
                 )} */}
             </Typography>
-            <ButtonTooltip
+            {/* <ButtonTooltip
                 key='show'
                 // color='default'
                 disabled={false}
@@ -70,17 +69,19 @@ export const ContainedDevice = ({
                 style={{ marginLeft: "auto" }}
             >
                 <NearMe />
-            </ButtonTooltip>
-            <ButtonTooltip
-                key='remove'
-                // color='secondary'
-                disabled={false}
-                tooltip={'Disconnect this entity'}
-                // onClick={disconnectEntity}
-                style={{ marginLeft: "auto" }}
-            >
-                <Clear />
-            </ButtonTooltip>
+            </ButtonTooltip> */}
+            {!disconnectDevice ? null :
+                <ButtonTooltip
+                    key='remove'
+                    // color='secondary'
+                    disabled={false}
+                    tooltip={'Disconnect this entity'}
+                    // onClick={disconnectEntity}
+                    style={{ marginLeft: "auto" }}
+                >
+                    <Clear />
+                </ButtonTooltip>
+            }
         </Paper>
     )
 }
