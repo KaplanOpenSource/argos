@@ -19,6 +19,7 @@ import { SelectDeviceButton } from '../Experiment/SelectDeviceButton';
 import { AttributeItemList } from '../Experiment/AttributeItemList';
 import { SCOPE_TRIAL } from '../Experiment/AttributeType';
 import { AddContainedButton } from '../Experiment/Contained/AddContainedButton';
+import { ContainedDevice } from '../Experiment/Contained/ContainedDevice';
 
 export const SingleDevicePropertiesView = ({ deviceOnTrial, setDeviceOnTrial, children }) => {
     const [isEditLocation, setIsEditLocation] = useState(false);
@@ -30,6 +31,7 @@ export const SingleDevicePropertiesView = ({ deviceOnTrial, setDeviceOnTrial, ch
     const deviceItem = ((deviceType || []).devices || []).find(t => t.name === deviceItemName);
 
     const devLocation = deviceOnTrial.location.coordinates;
+    console.log(deviceOnTrial)
 
     // const handleSaveEntityProperties = () => {
     //     entitySaveForTextFields({ deviceType, deviceItem, changedValues, setEntityProperties, setEntityLocations });
@@ -150,16 +152,20 @@ export const SingleDevicePropertiesView = ({ deviceOnTrial, setDeviceOnTrial, ch
                 />
             }
             {children}
-            {/* {parentEntity === undefined ? null :
-                <Fragment key={'p'}>
+            {deviceOnTrial.containedIn && (
+                <>
                     <br />
                     parent:
                     <br />
-                    <ContainedEntity
-                        key={'P' + deviceItem.key}
-                        childEntityItemKey={parentEntity.key}
-                        disconnectEntity={() => disconnectEntityParent(parentEntity, deviceItem.key)}
+                    <ContainedDevice
+                    // key={'P' + deviceItem.key}
+                    // childEntityItemKey={parentEntity.key}
+                    // disconnectEntity={() => disconnectEntityParent(parentEntity, deviceItem.key)}
                     />
+                </>
+            )}
+            {/* {parentEntity === undefined ? null :
+                <Fragment key={'p'}>
                 </Fragment>
             }
             {containsEntities.length === 0 ? null :
