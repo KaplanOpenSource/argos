@@ -27,9 +27,6 @@ export const SingleDevicePropertiesView = ({ deviceOnTrial, setDeviceOnTrial, ch
     const { deviceTypeName, deviceItemName } = deviceOnTrial;
     const deviceType = (experiment.deviceTypes || []).find(t => t.name === deviceTypeName);
     const deviceItem = ((deviceType || []).devices || []).find(t => t.name === deviceItemName);
-    if (!deviceItem) {
-        return null;
-    }
 
     const devLocation = deviceOnTrial.location.coordinates;
 
@@ -97,13 +94,18 @@ export const SingleDevicePropertiesView = ({ deviceOnTrial, setDeviceOnTrial, ch
                     </>
             }
             <br />
-            <AttributeItemList
-                attributeTypes={deviceType.attributeTypes}
-                data={deviceOnTrial}
-                setData={setDeviceOnTrial}
-                scope={SCOPE_TRIAL}
-                deviceItem={deviceItem}
-            />
+            {deviceItem
+                ? <AttributeItemList
+                    attributeTypes={deviceType.attributeTypes}
+                    data={deviceOnTrial}
+                    setData={setDeviceOnTrial}
+                    scope={SCOPE_TRIAL}
+                    deviceItem={deviceItem}
+                />
+                : <Typography variant='body2'>
+                    This device exists on trial but not on experiment, please remove.
+                </Typography>
+            }
             {/* <Grid container
                 direction='column'
                 spacing={1}
@@ -127,10 +129,12 @@ export const SingleDevicePropertiesView = ({ deviceOnTrial, setDeviceOnTrial, ch
                     ))
                 }
             </Grid> */}
-            <SelectDeviceButton
-                deviceItem={deviceItem}
-                deviceType={deviceType}
-            />
+            {deviceItem &&
+                <SelectDeviceButton
+                    deviceItem={deviceItem}
+                    deviceType={deviceType}
+                />
+            }
             <ButtonTooltip
                 tooltip="Remove location"
                 onClick={() => setLocationsToDevices([{ deviceTypeName, deviceItemName }], [undefined])}
