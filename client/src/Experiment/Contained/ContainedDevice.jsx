@@ -12,6 +12,7 @@ import { ButtonTooltip } from '../../Utils/ButtonTooltip';
 // import { usePopupSwitch } from './PopupSwitchContext';
 
 export const ContainedDevice = ({
+    deviceItemName,
     childEntityItemKey,
     disconnectEntity,
 }) => {
@@ -53,6 +54,7 @@ export const ContainedDevice = ({
                     display: 'inline-block'
                 }}
             >
+                {deviceItemName}
                 {/* {!search ? 'unknown ' + childEntityItemKey : (
                     <>
                         {search.entityItem.name}

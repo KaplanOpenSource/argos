@@ -158,6 +158,7 @@ export const SingleDevicePropertiesView = ({ deviceOnTrial, setDeviceOnTrial, ch
                     parent:
                     <br />
                     <ContainedDevice
+                        deviceItemName={deviceOnTrial.containedIn.deviceItemName}
                     // key={'P' + deviceItem.key}
                     // childEntityItemKey={parentEntity.key}
                     // disconnectEntity={() => disconnectEntityParent(parentEntity, deviceItem.key)}
