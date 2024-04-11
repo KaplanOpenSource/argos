@@ -31,7 +31,6 @@ export const SingleDevicePropertiesView = ({ deviceOnTrial, setDeviceOnTrial, ch
     const deviceItem = ((deviceType || []).devices || []).find(t => t.name === deviceItemName);
 
     const devLocation = deviceOnTrial.location.coordinates;
-    console.log(deviceOnTrial)
 
     const devicesOnTrial = (currTrial.trial || {}).devicesOnTrial || [];
     const containedDevices = devicesOnTrial.filter(t => {
