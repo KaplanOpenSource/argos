@@ -10,13 +10,15 @@ import { Button, Paper } from "@mui/material";
 import { deepClone } from "fast-json-patch";
 import { createNewName } from "../Utils/utils";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
-import { CloseFullscreen, OpenInFull } from "@mui/icons-material";
+import { CellTower, CloseFullscreen, OpenInFull } from "@mui/icons-material";
 import { UploadExperimentIcon } from "./UploadExperimentIcon";
+import { DeviceTypesList } from "./DeviceTypesList";
 
 export const ExperimentList = ({ fullscreen, setFullscreen }) => {
     const { experiments, setExperiment, addExperiment, currTrial } = useContext(experimentContext);
 
     const [expanded, setExpanded] = useState([]);
+    const [showDevicesOnly, setShowDevicesOnly] = useState(false);
 
     const { experimentName, trialTypeName, trialName } = currTrial;
     useEffect(() => {
@@ -73,6 +75,16 @@ export const ExperimentList = ({ fullscreen, setFullscreen }) => {
             >
                 {fullscreen ? <CloseFullscreen /> : <OpenInFull />}
             </ButtonTooltip>
+            <ButtonTooltip
+                onClick={() => {
+                    setShowDevicesOnly(!showDevicesOnly);
+                }}
+                tooltip={showDevicesOnly ? "Show all experiments and trials" : "Show only devices of current trial"}
+                color={showDevicesOnly ? "primary" : ""}
+                disabled={!currTrial.trial}
+            >
+                <CellTower />
+            </ButtonTooltip>
             <TreeView
                 defaultCollapseIcon={<ExpandMoreIcon />}
                 defaultExpandIcon={<ChevronRightIcon />}
@@ -86,23 +98,30 @@ export const ExperimentList = ({ fullscreen, setFullscreen }) => {
                 onNodeToggle={(event, nodeIds) => setExpanded(nodeIds)}
                 disableSelection
             >
-                {experiments.map(exp => (
-                    <ExperimentRow key={exp.name}
-                        data={exp}
-                        setData={val => setExperiment(exp.name, val)}
-                    >
-                        <ButtonTooltip
-                            tooltip="Clone experiment"
-                            onClick={() => {
-                                const cloned = deepClone(exp);
-                                cloned.name = createNewName(experiments, exp.name + " cloned");
-                                addExperiment(cloned);
-                            }}
+                {(showDevicesOnly && currTrial.trial)
+                    ? <DeviceTypesList
+                        data={currTrial.experiment}
+                        setData={val => setExperiment(currTrial.experiment.name, val)}
+                    />
+                    : experiments.map(exp => (
+                        <ExperimentRow key={exp.name}
+                            data={exp}
+                            setData={val => setExperiment(exp.name, val)}
+                            showDevicesOnly={showDevicesOnly && currTrial.trial}
                         >
-                            <ContentCopyIcon />
-                        </ButtonTooltip>
-                    </ExperimentRow>
-                ))}
+                            <ButtonTooltip
+                                tooltip="Clone experiment"
+                                onClick={() => {
+                                    const cloned = deepClone(exp);
+                                    cloned.name = createNewName(experiments, exp.name + " cloned");
+                                    addExperiment(cloned);
+                                }}
+                            >
+                                <ContentCopyIcon />
+                            </ButtonTooltip>
+                        </ExperimentRow>
+                    ))
+                }
             </TreeView>
         </Paper>
     )

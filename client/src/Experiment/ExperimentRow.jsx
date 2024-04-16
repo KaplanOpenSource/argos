@@ -15,6 +15,7 @@ import { ImageEmbedded } from "./ImageEmbedded";
 import { downloadJsonFile } from "./DownloadJsonFile";
 import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
+import { DeviceTypesList } from "./DeviceTypesList";
 
 export const ExperimentRow = ({ data, setData, children }) => {
     const { deleteExperiment, setShownMap } = useContext(experimentContext);
@@ -107,18 +108,10 @@ export const ExperimentRow = ({ data, setData, children }) => {
                 nameTemplate='New Device Type'
                 setData={setData}
             >
-                {
-                    (data.deviceTypes || []).map(itemData => (
-                        <DeviceType
-                            key={itemData.name}
-                            data={itemData}
-                            setData={newData => {
-                                setData({ ...data, deviceTypes: changeByName(data.deviceTypes, itemData.name, newData) });
-                            }}
-                            experiment={data}
-                        />
-                    ))
-                }
+                <DeviceTypesList
+                    data={data}
+                    setData={setData}
+                />
             </TreeSublist>
 
             <TreeSublist
