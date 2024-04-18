@@ -104,7 +104,7 @@ def experimentSetReq(name):
     with open(os.path.join(EXPERIMENTS_PATH, new_name + ".json"), "w") as file:
         file.write(str)
 
-    images_data = json_data.get("imageStandalone", [])
+    images_data = json_data.get("imageStandalone", []) + json_data.get("imageEmbedded", [])
     images = [os.path.basename(im["filename"]) for im in images_data if "filename" in im]
     exp_img_folder = os.path.join(UPLOAD_FOLDER, new_name)
     if os.path.exists(exp_img_folder):

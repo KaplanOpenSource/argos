@@ -136,6 +136,7 @@ export const ExperimentRow = ({ data, setData, children }) => {
                             setData={newData => {
                                 setData({ ...data, imageEmbedded: changeByName(data.imageEmbedded, itemData.name, newData) });
                             }}
+                            experiment={data}
                         />
                     ))
                 }
