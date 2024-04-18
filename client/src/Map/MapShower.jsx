@@ -17,7 +17,9 @@ export const MapShower = ({ children }) => {
         showImagePlacement,
         setExperiment
     } = useContext(experimentContext);
+
     const shownMap = ((currTrial.experiment || {}).imageStandalone || [])[currTrial.shownMapIndex];
+    const embeddedMaps = (currTrial.experiment || {}).imageEmbedded || [];
     return (
         <MapContainer
             zoom={15}
@@ -52,8 +54,16 @@ export const MapShower = ({ children }) => {
                         />
                         : null}
                 </>
-                : <RealMap
-                />
+                : <>
+                    <RealMap
+                    />
+                    {embeddedMaps.map(m => (
+                        <ImageMap
+                            experiment={currTrial.experiment}
+                            image={m}
+                        />
+                    ))}
+                </>
             }
             <ZoomControl position='bottomright' />
             {children}
