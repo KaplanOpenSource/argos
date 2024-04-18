@@ -1,17 +1,15 @@
 import { useContext } from "react";
-import { IconButton, Stack, Tooltip, Typography } from "@mui/material"
+import { Stack } from "@mui/material"
 import { TreeRow } from "../App/TreeRow"
 import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
-import { baseUrl } from "../Context/FetchExperiment";
 import { ImageOnServer } from "./ImageOnServer";
 import { UploadImageIcon } from "./UploadImageIcon";
 import DeleteIcon from '@mui/icons-material/Delete';
 import MapIcon from '@mui/icons-material/Map';
-import OpenInFullIcon from '@mui/icons-material/OpenInFull';
-import EditLocationAltIcon from '@mui/icons-material/EditLocationAlt';
-import EditLocationOutlinedIcon from '@mui/icons-material/EditLocationOutlined';
 import { experimentContext } from "../Context/ExperimentProvider";
 import { ActionsOnMapContext } from "../Map/ActionsOnMapContext";
+import { ButtonTooltip } from "../Utils/ButtonTooltip";
+import { EditLocationAlt, EditLocationOutlined, OpenInFull } from "@mui/icons-material";
 
 export const ImageStandalone = ({ data, setData, experiment }) => {
     const { addActionOnMap } = useContext(ActionsOnMapContext);
@@ -29,11 +27,12 @@ export const ImageStandalone = ({ data, setData, experiment }) => {
             setData={setData}
             components={
                 <>
-                    <IconButton
+                    <ButtonTooltip
+                        tooltip="Delete image"
                         onClick={() => setData(undefined)}
                     >
                         <DeleteIcon />
-                    </IconButton>
+                    </ButtonTooltip>
                     <UploadImageIcon
                         imageName={data.name}
                         experimentName={experiment.name}
@@ -48,36 +47,28 @@ export const ImageStandalone = ({ data, setData, experiment }) => {
                             ytop: height,
                         })}
                     />
-                    <Tooltip
-                        title="Switch to this image"
+                    <ButtonTooltip
+                        tooltip={currTrial.experiment ? "Switch to this image" : "First choose a trial before switching to this image"}
+                        onClick={() => setShownMap(data.name)}
+                        disabled={!currTrial.experiment}
                     >
-                        <IconButton
-                            onClick={() => setShownMap(data.name)}
-                        >
-                            <MapIcon />
-                        </IconButton>
-                    </Tooltip>
-                    <Tooltip
-                        title="Fit image to screen"
+                        <MapIcon />
+                    </ButtonTooltip>
+                    <ButtonTooltip
+                        tooltip="Fit image to screen"
+                        onClick={() => addActionOnMap((mapObject) => mapObject.fitBounds([[data.height, 0], [0, data.width]]))}
                     >
-                        <IconButton
-                            onClick={() => addActionOnMap((mapObject) => mapObject.fitBounds([[data.height, 0], [0, data.width]]))}
-                        >
-                            <OpenInFullIcon />
-                        </IconButton>
-                    </Tooltip>
-                    <Tooltip
-                        title="Edit image placement"
+                        <OpenInFull />
+                    </ButtonTooltip>
+                    <ButtonTooltip
+                        tooltip="Edit image placement"
+                        onClick={() => setShowImagePlacement(!showImagePlacement)}
                     >
-                        <IconButton
-                            onClick={() => setShowImagePlacement(!showImagePlacement)}
-                        >
-                            {(showImagePlacement && currTrial.shownMapName === data.name && currTrial.experimentName === experiment.name)
-                                ? <EditLocationAltIcon />
-                                : <EditLocationOutlinedIcon />
-                            }
-                        </IconButton>
-                    </Tooltip>
+                        {(showImagePlacement && currTrial.shownMapName === data.name && currTrial.experimentName === experiment.name)
+                            ? <EditLocationAlt />
+                            : <EditLocationOutlined />
+                        }
+                    </ButtonTooltip>
                 </>
             }
         >
