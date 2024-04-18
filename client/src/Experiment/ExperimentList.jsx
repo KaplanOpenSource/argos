@@ -112,9 +112,8 @@ export const ExperimentList = ({ fullscreen, setFullscreen }) => {
                             <ButtonTooltip
                                 tooltip="Clone experiment"
                                 onClick={() => {
-                                    const cloned = deepClone(exp);
-                                    cloned.name = createNewName(experiments, exp.name + " cloned");
-                                    addExperiment(cloned);
+                                    const name = createNewName(experiments, exp.name + " cloned");
+                                    addExperiment({...deepClone(exp), name});
                                 }}
                             >
                                 <ContentCopyIcon />
