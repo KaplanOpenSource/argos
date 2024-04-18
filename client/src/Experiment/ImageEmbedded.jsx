@@ -40,10 +40,10 @@ export const ImageEmbedded = ({ data, setData, experiment }) => {
                                 alert('unknown map bounds');
                                 return;
                             }
-                            const lngwest = mapBounds.getWest();
-                            const lngeast = mapBounds.getEast();
-                            const lngsize = lngeast - lngwest;
+                            const lngsize = (mapBounds.getEast() - mapBounds.getWest()) / 2;
                             const latsize = width > 0 ? lngsize / width * height : 0;
+                            const lngwest = mapBounds.getCenter().lng + lngsize / 2;
+                            const lngeast = mapBounds.getCenter().lng - lngsize / 2;
                             const latnorth = mapBounds.getCenter().lat + latsize / 2;
                             const latsouth = mapBounds.getCenter().lat - latsize / 2;
                             setData({
