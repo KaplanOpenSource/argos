@@ -8,6 +8,9 @@ export const ImageMap = ({ experiment, image }) => {
     } else if (image.latnorth || image.latsouth) {
         bounds = [[image.latnorth, image.lngwest], [image.latsouth, image.lngeast]];
     }
+    if (!bounds) {
+        return null;
+    }
     return (
         <ImageOverlay
             url={baseUrl + "/uploads/" + experiment.name + "/" + image.filename}

@@ -11,13 +11,13 @@ import { Stack } from "@mui/material";
 import { ActionsOnMapContext } from "../Map/ActionsOnMapContext";
 
 export const ImageEmbedded = ({ data, setData, experiment }) => {
-    const { addActionOnMap } = useContext(ActionsOnMapContext);
+    const { addActionOnMap, mapBounds } = useContext(ActionsOnMapContext);
     const {
         currTrial,
-        setShownMap,
         showImagePlacement,
         setShowImagePlacement,
     } = useContext(experimentContext);
+
     return (
         <TreeRow
             key={data.name}
@@ -34,16 +34,29 @@ export const ImageEmbedded = ({ data, setData, experiment }) => {
                     <UploadImageIcon
                         imageName={data.name}
                         experimentName={experiment.name}
-                        onChangeFile={(filename, height, width) => setData({
-                            ...data,
-                            filename,
-                            height,
-                            width,
-                            latnorth: 32.1,
-                            lngwest: 34.7,
-                            latsouth: 32.07,
-                            lngeast: 34.8,
-                        })}
+                        onChangeFile={(filename, height, width) => {
+                            console.log(mapBounds);
+                            if (!mapBounds) {
+                                alert('unknown map bounds');
+                                return;
+                            }
+                            const lngwest = mapBounds.getWest();
+                            const lngeast = mapBounds.getEast();
+                            const lngsize = lngeast - lngwest;
+                            const latsize = width > 0 ? lngsize / width * height : 0;
+                            const latnorth = mapBounds.getCenter().lat + latsize / 2;
+                            const latsouth = mapBounds.getCenter().lat - latsize / 2;
+                            setData({
+                                ...data,
+                                filename,
+                                height,
+                                width,
+                                latnorth,
+                                lngwest,
+                                latsouth,
+                                lngeast,
+                            });
+                        }}
                     />
                     <ButtonTooltip
                         tooltip="Fit image to screen"
@@ -55,7 +68,7 @@ export const ImageEmbedded = ({ data, setData, experiment }) => {
                         tooltip="Edit image placement"
                         onClick={() => setShowImagePlacement(!showImagePlacement)}
                     >
-                        {(showImagePlacement && currTrial.shownMapName === data.name && currTrial.experimentName === experiment.name)
+                        {(showImagePlacement && currTrial.experimentName === experiment.name)
                             ? <EditLocationAlt />
                             : <EditLocationOutlined />
                         }

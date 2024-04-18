@@ -12,6 +12,7 @@ import { useContext, useState } from 'react';
 import { ActionsOnMapDoer, ActionsOnMapProvider } from '../Map/ActionsOnMapContext';
 import { MapCoordinates } from '../Map/MapCoordinates';
 import { experimentContext } from '../Context/ExperimentProvider';
+import { MapEventer } from '../Map/MapEventer';
 
 export function App() {
   const [showEditBox, setShowEditBox] = useState(false);
