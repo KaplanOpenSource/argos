@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { experimentContext } from "../Context/ExperimentProvider";
-import { MapClickEventer } from "./MapClickEventer";
+import { MapEventer } from "./MapEventer";
 import { MarkedShape } from "./MarkedShape";
 import { useShape } from "../EditToolBox/ShapeContext";
 import { CHOOSE_SHAPE, FREEPOSITIONING_SHAPE, POINT_SHAPE } from "../EditToolBox/utils/constants";
@@ -15,7 +15,8 @@ export const MapPlacer = ({
         shapeData,
     } = useShape();
 
-    const onMapClick = (latlng, mapObj) => {
+    const onMapClick = (e, mapObj) => {
+        const latlng = [e.latlng.lat, e.latlng.lng];
         if (!shapeData.noControlPoints) {
             if (!shapeData.maxPoints) {
                 setMarkedPoints([...markedPoints, latlng]);
@@ -41,8 +42,9 @@ export const MapPlacer = ({
 
     return (
         <>
-            <MapClickEventer
-                onMapClick={onMapClick}
+            <MapEventer
+                mapEvents={{ click: onMapClick }}
+                directlyOnMap={true}
             />
             <MarkedShape
                 markedPoints={markedPoints}
