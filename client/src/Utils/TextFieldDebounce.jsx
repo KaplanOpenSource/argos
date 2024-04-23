@@ -34,7 +34,7 @@ export const TextFieldDebounce = ({ value, onChange, debounceMs = 500, tooltipTi
         >
             <TextField
                 {...props} // Pass any additional props to the TextField
-                value={innerValue}
+                value={innerValue === undefined ? "" : innerValue}
                 onChange={handleChange}
             />
         </Tooltip>

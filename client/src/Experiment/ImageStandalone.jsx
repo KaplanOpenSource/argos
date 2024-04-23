@@ -76,24 +76,24 @@ export const ImageStandalone = ({ data, setData, experiment }) => {
                 <Stack direction={'row'}>
                     <TextFieldDebounceOutlined
                         label="X Left"
-                        value={data.xleft || ""}
+                        value={data.xleft}
                         onChange={val => setData({ ...data, xleft: val })}
                     />
                     <TextFieldDebounceOutlined
                         label="Y Top"
-                        value={data.ytop || ""}
+                        value={data.ytop}
                         onChange={val => setData({ ...data, ytop: val })}
                     />
                 </Stack>
                 <Stack direction={'row'}>
                     <TextFieldDebounceOutlined
                         label="X Right"
-                        value={data.xright || ""}
+                        value={data.xright}
                         onChange={val => setData({ ...data, xright: val })}
                     />
                     <TextFieldDebounceOutlined
                         label="Y Bottom"
-                        value={data.ybottom || ""}
+                        value={data.ybottom}
                         onChange={val => setData({ ...data, ybottom: val })}
                     />
                 </Stack>

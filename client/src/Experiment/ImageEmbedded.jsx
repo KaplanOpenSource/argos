@@ -79,24 +79,24 @@ export const ImageEmbedded = ({ data, setData, experiment }) => {
             <Stack direction={'row'}>
                 <TextFieldDebounceOutlined
                     label="Lng West"
-                    value={data.lngwest || ""}
+                    value={data.lngwest}
                     onChange={val => setData({ ...data, lngwest: val })}
                 />
                 <TextFieldDebounceOutlined
                     label="Lat North"
-                    value={data.latnorth || ""}
+                    value={data.latnorth}
                     onChange={val => setData({ ...data, latnorth: val })}
                 />
             </Stack>
             <Stack direction={'row'}>
                 <TextFieldDebounceOutlined
                     label="Lng East"
-                    value={data.lngeast || ""}
+                    value={data.lngeast}
                     onChange={val => setData({ ...data, lngeast: val })}
                 />
                 <TextFieldDebounceOutlined
                     label="Lat South"
-                    value={data.latsouth || ""}
+                    value={data.latsouth}
                     onChange={val => setData({ ...data, latsouth: val })}
                 />
             </Stack>
