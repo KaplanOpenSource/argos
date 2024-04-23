@@ -3,10 +3,24 @@ import { AnchorPointsDiagonal } from "./AnchorPointsDiagonal";
 import { Tooltip } from "react-leaflet";
 import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
 import { Stack } from "@mui/material";
+import { latLng } from "leaflet";
 
-export const ImagePlacementEditor = ({ imageData, setImageData }) => {
-    const [anchor, setAnchor] = useState({ lat: imageData.ybottom, lng: imageData.xleft, x: 0, y: 0 });
-    const [anotherPoint, setAnotherPoint] = useState({ lat: imageData.ybottom, lng: imageData.xright, x: imageData.width, y: 0 });
+const distLatLngPythagoras = (p0, p1) => {
+    return Math.sqrt(Math.pow(p0.lat - p1.lat, 2) + Math.pow(p0.lng - p1.lng, 2));
+}
+export const ImagePlacementEditor = ({ imageData, setImageData, startDiagonal = false, distLatLng = distLatLngPythagoras }) => {
+    const [anchor, setAnchor] = useState({
+        lat: imageData.ybottom,
+        lng: imageData.xleft,
+        x: 0,
+        y: 0,
+    });
+    const [anotherPoint, setAnotherPoint] = useState({
+        lat: startDiagonal ? imageData.ytop : imageData.ybottom,
+        lng: imageData.xright,
+        x: imageData.width,
+        y: startDiagonal ? imageData.height : 0,
+    });
 
     const round9 = (n) => {
         return Math.round(n * 1e9) / 1e9;
@@ -20,10 +34,6 @@ export const ImagePlacementEditor = ({ imageData, setImageData }) => {
         const x = (lng - imageData.xleft) / (imageData.xright - imageData.xleft) * imageData.width;
         const y = (lat - imageData.ybottom) / (imageData.ytop - imageData.ybottom) * imageData.height;
         return ({ lat, lng, x, y });
-    }
-
-    const distLatLng = (p0, p1) => {
-        return Math.sqrt(Math.pow(p0.lat - p1.lat, 2) + Math.pow(p0.lng - p1.lng, 2));
     }
 
     const distXY = (p0, p1) => {
@@ -108,6 +118,7 @@ export const ImagePlacementEditorLngLat = ({ imageData, setImageData, ...props }
         <ImagePlacementEditor
             imageData={xyData}
             setImageData={setXyData}
+            distLatLng={(p1, p2) => latLng(p1).distanceTo(latLng(p2))}
             {...props}
         />
     )

@@ -73,6 +73,7 @@ export const MapShower = ({ children }) => {
                                         exp.imageEmbedded[i] = v;
                                         setExperiment(currTrial.experiment.name, exp);
                                     }}
+                                    startDiagonal={true}
                                     key={'embeddedmapeditor_' + i}
                                 />
                                 : null}
