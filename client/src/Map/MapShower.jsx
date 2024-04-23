@@ -10,28 +10,44 @@ import { ImagePlacementEditor, ImagePlacementEditorLngLat } from './ImagePlaceme
 
 L.Icon.Default.imagePath = 'leaflet-images/';
 
-const StandaloneImageLayer = ({ experiment, setExperiment, shownMap, shownMapIndex, showImagePlacement }) => {
-    return (
-        <>
-            <ImageMap
-                experiment={experiment}
-                image={shownMap}
-                key={'imagemap'}
-            />
-            {showImagePlacement
-                ? <ImagePlacementEditor
-                    imageData={shownMap}
-                    setImageData={v => {
-                        const exp = { ...experiment, imageStandalone: [...experiment.imageStandalone] };
-                        exp.imageStandalone[shownMapIndex] = v;
-                        setExperiment(experiment.name, exp);
-                    }}
-                    key={'imagemapeditor'}
-                />
-                : null}
-        </>
-    )
-}
+const StandaloneImageLayer = ({ experiment, setExperiment, shownMap, shownMapIndex, showImagePlacement }) => (<>
+    <ImageMap
+        experiment={experiment}
+        image={shownMap}
+        key={'imagemap'}
+    />
+    {showImagePlacement
+        ? <ImagePlacementEditor
+            imageData={shownMap}
+            setImageData={v => {
+                const exp = { ...experiment, imageStandalone: [...experiment.imageStandalone] };
+                exp.imageStandalone[shownMapIndex] = v;
+                setExperiment(experiment.name, exp);
+            }}
+            key={'imagemapeditor'}
+        />
+        : null}
+</>)
+
+const EmbeddedImageLayer = ({ experiment, setExperiment, embMap, i, showImagePlacement }) => (<>
+    <ImageMap
+        experiment={experiment}
+        image={embMap}
+        key={'embeddedmap_' + i}
+    />
+    {showImagePlacement
+        ? <ImagePlacementEditorLngLat
+            imageData={embMap}
+            setImageData={v => {
+                const exp = { ...experiment, imageEmbedded: [...experiment.imageEmbedded] };
+                exp.imageEmbedded[i] = v;
+                setExperiment(experiment.name, exp);
+            }}
+            startDiagonal={true}
+            key={'embeddedmapeditor_' + i}
+        />
+        : null}
+</>)
 
 export const MapShower = ({ children }) => {
     const {
@@ -65,31 +81,21 @@ export const MapShower = ({ children }) => {
                     shownMap={shownMap}
                     shownMapIndex={currTrial.shownMapIndex}
                     showImagePlacement={showImagePlacement}
+                    key={'standalone'}
                 />
                 : <>
                     <RealMap
                         key={'realmap'}
                     />
                     {embeddedMaps.map((embMap, i) => (
-                        <>
-                            <ImageMap
-                                experiment={currTrial.experiment}
-                                image={embMap}
-                                key={'embeddedmap_' + i}
-                            />
-                            {showImagePlacement
-                                ? <ImagePlacementEditorLngLat
-                                    imageData={embMap}
-                                    setImageData={v => {
-                                        const exp = { ...currTrial.experiment, imageEmbedded: [...currTrial.experiment.imageEmbedded] };
-                                        exp.imageEmbedded[i] = v;
-                                        setExperiment(currTrial.experiment.name, exp);
-                                    }}
-                                    startDiagonal={true}
-                                    key={'embeddedmapeditor_' + i}
-                                />
-                                : null}
-                        </>
+                        <EmbeddedImageLayer
+                            experiment={currTrial.experiment}
+                            setExperiment={setExperiment}
+                            embMap={embMap}
+                            i={i}
+                            showImagePlacement={showImagePlacement}
+                            key={'embedded_' + i}
+                        />
                     ))}
                 </>
             }
