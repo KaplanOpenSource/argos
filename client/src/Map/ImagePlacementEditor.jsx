@@ -30,12 +30,9 @@ export const ImagePlacementEditor = ({ experiment, imageData, setImageData }) =>
         return Math.sqrt(Math.pow(p0.x - p1.x, 2) + Math.pow(p0.y - p1.y, 2));
     }
 
-    const changeDist = (newDist) => {
+    const changeDistMeters = (newDist) => {
         const dxy = distXY(anotherPoint, anchor);
-        // const dx = Math.abs(anotherPoint.x - anchor.x);
-        // const dy = Math.abs(anotherPoint.y - anchor.y);
         if (newDist > 1e-3 && dxy > 1e-3) {
-
             const oldDist = distLatLng(anchor, anotherPoint);
             const factorOldToNew = newDist / oldDist;
             const dlng = (anotherPoint.lng - anchor.lng) * factorOldToNew;
@@ -51,6 +48,18 @@ export const ImagePlacementEditor = ({ experiment, imageData, setImageData }) =>
             const lng = anchor.lng + dlng;
             const lat = anchor.lat + dlat;
             setAnotherPoint({ ...anotherPoint, lng, lat });
+        }
+    }
+
+    const changeDistPixels = (newDist) => {
+        const dxy = distXY(anotherPoint, anchor);
+        if (newDist > 1e-3 && dxy > 1e-3) {
+            const factorOldToNew = newDist / dxy;
+            const dlng = (anotherPoint.lng - anchor.lng) * factorOldToNew;
+            const dlat = (anotherPoint.lat - anchor.lat) * factorOldToNew;
+            const lng = anchor.lng + dlng;
+            const lat = anchor.lat + dlat;
+            setAnotherPoint(calcPointXY({ lng, lat }));
         }
     }
 
@@ -74,14 +83,13 @@ export const ImagePlacementEditor = ({ experiment, imageData, setImageData }) =>
                         InputProps={{ style: { width: '150px' } }}
                         label="Span in meters"
                         value={roundDec(distLatLng(anchor, anotherPoint))}
-                        onChange={(newDist) => changeDist(newDist)}
+                        onChange={(newDist) => changeDistMeters(newDist)}
                     />
                     <TextFieldDebounceOutlined
                         InputProps={{ style: { width: '150px' } }}
                         label="Span in Pixels"
                         value={roundDec(distXY(anchor, anotherPoint))}
-                        onChange={() => { }}
-                        disabled={true}
+                        onChange={(newDist) => changeDistPixels(newDist)}
                     />
                 </Stack>
             </Tooltip>
