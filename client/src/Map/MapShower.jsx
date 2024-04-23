@@ -29,22 +29,22 @@ const StandaloneImageLayer = ({ experiment, setExperiment, shownMap, shownMapInd
         : null}
 </>)
 
-const EmbeddedImageLayer = ({ experiment, setExperiment, embMap, i, showImagePlacement }) => (<>
+const EmbeddedImageLayer = ({ experiment, setExperiment, shownMap, shownMapIndex, showImagePlacement }) => (<>
     <ImageMap
         experiment={experiment}
-        image={embMap}
-        key={'embeddedmap_' + i}
+        image={shownMap}
+        key={'embeddedmap_' + shownMapIndex}
     />
     {showImagePlacement
         ? <ImagePlacementEditorLngLat
-            imageData={embMap}
+            imageData={shownMap}
             setImageData={v => {
                 const exp = { ...experiment, imageEmbedded: [...experiment.imageEmbedded] };
-                exp.imageEmbedded[i] = v;
+                exp.imageEmbedded[shownMapIndex] = v;
                 setExperiment(experiment.name, exp);
             }}
             startDiagonal={true}
-            key={'embeddedmapeditor_' + i}
+            key={'embeddedmapeditor_' + shownMapIndex}
         />
         : null}
 </>)
@@ -91,8 +91,8 @@ export const MapShower = ({ children }) => {
                         <EmbeddedImageLayer
                             experiment={currTrial.experiment}
                             setExperiment={setExperiment}
-                            embMap={embMap}
-                            i={i}
+                            shownMap={embMap}
+                            shownMapIndex={i}
                             showImagePlacement={showImagePlacement}
                             key={'embedded_' + i}
                         />
