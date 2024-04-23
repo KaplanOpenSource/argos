@@ -40,6 +40,7 @@ export const MapShower = ({ children }) => {
                     <ImageMap
                         experiment={currTrial.experiment}
                         image={shownMap}
+                        key={'imagemap'}
                     />
                     {showImagePlacement
                         ? <ImagePlacementEditor
@@ -50,16 +51,19 @@ export const MapShower = ({ children }) => {
                                 exp.imageStandalone[currTrial.shownMapIndex] = v;
                                 setExperiment(currTrial.experiment.name, exp);
                             }}
+                            key={'imagemapeditor'}
                         />
                         : null}
                 </>
                 : <>
                     <RealMap
+                        key={'realmap'}
                     />
-                    {embeddedMaps.map(m => (
+                    {embeddedMaps.map((m, i) => (
                         <ImageMap
                             experiment={currTrial.experiment}
                             image={m}
+                            key={'embeddedmap_' + i}
                         />
                     ))}
                 </>

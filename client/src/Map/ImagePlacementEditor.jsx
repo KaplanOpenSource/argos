@@ -16,10 +16,10 @@ export const ImagePlacementEditor = ({ experiment, imageData, setImageData }) =>
         return Math.round(num * 1000) / 1000;
     }
 
-    const setPointWithoutChange = (setter, lat, lng) => {
+    const calcPointXY = ({ lat, lng }) => {
         const x = (lng - imageData.xleft) / (imageData.xright - imageData.xleft) * imageData.width;
         const y = (lat - imageData.ybottom) / (imageData.ytop - imageData.ybottom) * imageData.height;
-        setter({ lat, lng, x, y });
+        return ({ lat, lng, x, y });
     }
 
     const distLatLng = (p0, p1) => {
@@ -60,8 +60,8 @@ export const ImagePlacementEditor = ({ experiment, imageData, setImageData }) =>
             anotherLatLng={{ lat: anotherPoint.lat, lng: anotherPoint.lng }}
             anchorXY={{ x: anchor.x, y: anchor.y }}
             anotherXY={{ x: anotherPoint.x, y: anotherPoint.y }}
-            setAnchorLatLng={({ lat, lng }) => setPointWithoutChange(setAnchor, lat, lng)}
-            setAnotherLatLng={({ lat, lng }) => setPointWithoutChange(setAnotherPoint, lat, lng)}
+            setAnchorLatLng={({ lat, lng }) => setAnchor(calcPointXY({ lat, lng }))}
+            setAnotherLatLng={({ lat, lng }) => setAnotherPoint(calcPointXY({ lat, lng }))}
         >
             <Tooltip
                 position={{ lat: (anchor.lat + anotherPoint.lat) / 2, lng: (anchor.lng + anotherPoint.lng) / 2 }}
