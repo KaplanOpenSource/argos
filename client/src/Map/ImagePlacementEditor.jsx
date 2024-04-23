@@ -4,7 +4,7 @@ import { Tooltip } from "react-leaflet";
 import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
 import { Stack } from "@mui/material";
 
-export const ImagePlacementEditor = ({ experiment, imageData, setImageData }) => {
+export const ImagePlacementEditor = ({ imageData, setImageData }) => {
     const [anchor, setAnchor] = useState({ lat: imageData.ybottom, lng: imageData.xleft, x: 0, y: 0 });
     const [anotherPoint, setAnotherPoint] = useState({ lat: imageData.ybottom, lng: imageData.xright, x: imageData.width, y: 0 });
 
@@ -94,5 +94,21 @@ export const ImagePlacementEditor = ({ experiment, imageData, setImageData }) =>
                 </Stack>
             </Tooltip>
         </AnchorPointsDiagonal>
+    )
+}
+
+export const ImagePlacementEditorLngLat = ({ imageData, setImageData, ...props }) => {
+    const { width, height, lngwest, lngeast, latnorth, latsouth } = imageData;
+    const xyData = { width, height, xleft: lngwest, xright: lngeast, ytop: latnorth, ybottom: latsouth };
+    const setXyData = (newData) => {
+        const { ybottom, ytop, xleft, xright } = newData;
+        setImageData({ ...imageData, latsouth: ybottom, latnorth: ytop, lngwest: xleft, lngeast: xright })
+    };
+    return (
+        <ImagePlacementEditor
+            imageData={xyData}
+            setImageData={setXyData}
+            {...props}
+        />
     )
 }

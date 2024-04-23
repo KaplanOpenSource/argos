@@ -6,7 +6,7 @@ import { MapContainer, ZoomControl } from 'react-leaflet';
 import { experimentContext } from '../Context/ExperimentProvider';
 import { RealMap } from './RealMap';
 import { ImageMap } from './ImageMap';
-import { ImagePlacementEditor } from './ImagePlacementEditor';
+import { ImagePlacementEditor, ImagePlacementEditorLngLat } from './ImagePlacementEditor';
 
 L.Icon.Default.imagePath = 'leaflet-images/';
 
@@ -44,7 +44,6 @@ export const MapShower = ({ children }) => {
                     />
                     {showImagePlacement
                         ? <ImagePlacementEditor
-                            experiment={currTrial.experiment}
                             imageData={shownMap}
                             setImageData={v => {
                                 const exp = { ...currTrial.experiment, imageStandalone: [...currTrial.experiment.imageStandalone] };
@@ -59,12 +58,25 @@ export const MapShower = ({ children }) => {
                     <RealMap
                         key={'realmap'}
                     />
-                    {embeddedMaps.map((m, i) => (
-                        <ImageMap
-                            experiment={currTrial.experiment}
-                            image={m}
-                            key={'embeddedmap_' + i}
-                        />
+                    {embeddedMaps.map((embMap, i) => (
+                        <>
+                            <ImageMap
+                                experiment={currTrial.experiment}
+                                image={embMap}
+                                key={'embeddedmap_' + i}
+                            />
+                            {showImagePlacement
+                                ? <ImagePlacementEditorLngLat
+                                    imageData={embMap}
+                                    setImageData={v => {
+                                        const exp = { ...currTrial.experiment, imageEmbedded: [...currTrial.experiment.imageEmbedded] };
+                                        exp.imageEmbedded[i] = v;
+                                        setExperiment(currTrial.experiment.name, exp);
+                                    }}
+                                    key={'embeddedmapeditor_' + i}
+                                />
+                                : null}
+                        </>
                     ))}
                 </>
             }
