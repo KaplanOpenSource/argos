@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { AnchorPointsDiagonal } from "./AnchorPointsDiagonal";
-import { Popup, Tooltip } from "react-leaflet";
+import { Tooltip } from "react-leaflet";
 import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
+import { Stack } from "@mui/material";
 
 export const ImagePlacementEditor = ({ experiment, imageData, setImageData }) => {
     const [anchor, setAnchor] = useState({ lat: imageData.ybottom, lng: imageData.xleft, x: 0, y: 0 });
@@ -66,13 +67,23 @@ export const ImagePlacementEditor = ({ experiment, imageData, setImageData }) =>
                 position={{ lat: (anchor.lat + anotherPoint.lat) / 2, lng: (anchor.lng + anotherPoint.lng) / 2 }}
                 permanent={true}
                 direction="top"
+                interactive={true}
             >
-                <TextFieldDebounceOutlined
-                    InputProps={{ style: { width: '150px' } }}
-                    label="Span in meters"
-                    value={roundDec(distLatLng(anchor, anotherPoint))}
-                    onChange={(newDist) => changeDist(newDist)}
-                />
+                <Stack>
+                    <TextFieldDebounceOutlined
+                        InputProps={{ style: { width: '150px' } }}
+                        label="Span in meters"
+                        value={roundDec(distLatLng(anchor, anotherPoint))}
+                        onChange={(newDist) => changeDist(newDist)}
+                    />
+                    <TextFieldDebounceOutlined
+                        InputProps={{ style: { width: '150px' } }}
+                        label="Span in Pixels"
+                        value={roundDec(distXY(anchor, anotherPoint))}
+                        onChange={() => { }}
+                        disabled={true}
+                    />
+                </Stack>
             </Tooltip>
         </AnchorPointsDiagonal>
     )

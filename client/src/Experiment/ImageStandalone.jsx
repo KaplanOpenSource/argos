@@ -58,7 +58,10 @@ export const ImageStandalone = ({ data, setData, experiment }) => {
                     </ButtonTooltip>
                     <ButtonTooltip
                         tooltip="Fit image to screen"
-                        onClick={() => addActionOnMap((mapObject) => mapObject.fitBounds([[data.height, 0], [0, data.width]]))}
+                        onClick={() => addActionOnMap((mapObject) => {
+                            mapObject.fitBounds([[data.ytop, data.xleft], [data.ybottom, data.xright]]);
+                        })}
+                        disabled={(data || {}).ytop === undefined}
                     >
                         <OpenInFull />
                     </ButtonTooltip>

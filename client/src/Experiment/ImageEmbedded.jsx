@@ -60,7 +60,10 @@ export const ImageEmbedded = ({ data, setData, experiment }) => {
                     />
                     <ButtonTooltip
                         tooltip="Fit image to screen"
-                        onClick={() => addActionOnMap((mapObject) => mapObject.fitBounds([[data.latnorth, data.lngwest], [data.latsouth, data.lngeast]]))}
+                        onClick={() => addActionOnMap((mapObject) => {
+                            mapObject.fitBounds([[data.latnorth, data.lngwest], [data.latsouth, data.lngeast]]);
+                        })}
+                        disabled={(data || {}).latnorth === undefined}
                     >
                         <OpenInFull />
                     </ButtonTooltip>
