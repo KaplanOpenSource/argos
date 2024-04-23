@@ -7,6 +7,7 @@ import { experimentContext } from '../Context/ExperimentProvider';
 import { RealMap } from './RealMap';
 import { ImageMap } from './ImageMap';
 import { ImagePlacementEditor, ImagePlacementEditorLngLat } from './ImagePlacementEditor';
+import { MapEventer } from './MapEventer';
 
 L.Icon.Default.imagePath = 'leaflet-images/';
 
@@ -66,7 +67,7 @@ export const MapShower = ({ children }) => {
                 // height: "100%", width: '100%',
                 position: 'absolute', top: '5em', bottom: 0, right: 0, left: 0
             }}
-            crs={CRS.EPSG3857}
+            crs={shownMap ? CRS.Simple : CRS.EPSG3857}
             // bounds={posbounds}
             center={[32.081128, 34.779729]}
             zoomControl={false}
@@ -74,6 +75,11 @@ export const MapShower = ({ children }) => {
             maxZoom={30}
             contextmenu={true}
         >
+            <MapEventer directlyOnMap={false}
+                mapEvents={{
+                    layeradd: (e, mo) => {mo.options.crs = shownMap ? CRS.Simple : CRS.EPSG3857; console.log(mo.options)}
+                }}
+            />
             {shownMap
                 ? <StandaloneImageLayer
                     experiment={currTrial.experiment}
