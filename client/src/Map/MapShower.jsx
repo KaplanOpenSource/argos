@@ -10,6 +10,29 @@ import { ImagePlacementEditor, ImagePlacementEditorLngLat } from './ImagePlaceme
 
 L.Icon.Default.imagePath = 'leaflet-images/';
 
+const StandaloneImageLayer = ({ experiment, setExperiment, shownMap, shownMapIndex, showImagePlacement }) => {
+    return (
+        <>
+            <ImageMap
+                experiment={experiment}
+                image={shownMap}
+                key={'imagemap'}
+            />
+            {showImagePlacement
+                ? <ImagePlacementEditor
+                    imageData={shownMap}
+                    setImageData={v => {
+                        const exp = { ...experiment, imageStandalone: [...experiment.imageStandalone] };
+                        exp.imageStandalone[shownMapIndex] = v;
+                        setExperiment(experiment.name, exp);
+                    }}
+                    key={'imagemapeditor'}
+                />
+                : null}
+        </>
+    )
+}
+
 export const MapShower = ({ children }) => {
     const {
         currTrial,
@@ -36,24 +59,13 @@ export const MapShower = ({ children }) => {
             contextmenu={true}
         >
             {shownMap
-                ? <>
-                    <ImageMap
-                        experiment={currTrial.experiment}
-                        image={shownMap}
-                        key={'imagemap'}
-                    />
-                    {showImagePlacement
-                        ? <ImagePlacementEditor
-                            imageData={shownMap}
-                            setImageData={v => {
-                                const exp = { ...currTrial.experiment, imageStandalone: [...currTrial.experiment.imageStandalone] };
-                                exp.imageStandalone[currTrial.shownMapIndex] = v;
-                                setExperiment(currTrial.experiment.name, exp);
-                            }}
-                            key={'imagemapeditor'}
-                        />
-                        : null}
-                </>
+                ? <StandaloneImageLayer
+                    experiment={currTrial.experiment}
+                    setExperiment={setExperiment}
+                    shownMap={shownMap}
+                    shownMapIndex={currTrial.shownMapIndex}
+                    showImagePlacement={showImagePlacement}
+                />
                 : <>
                     <RealMap
                         key={'realmap'}
