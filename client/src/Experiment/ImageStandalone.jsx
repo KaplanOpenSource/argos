@@ -19,7 +19,9 @@ export const ImageStandalone = ({ data, setData, experiment }) => {
         showImagePlacement,
         setShowImagePlacement,
     } = useContext(experimentContext);
-    console.log(data)
+
+    const isBeingEdit = showImagePlacement && currTrial.shownMapName === data.name && currTrial.experimentName === experiment.name;
+
     return (
         <TreeRow
             key={data.name}
@@ -64,7 +66,7 @@ export const ImageStandalone = ({ data, setData, experiment }) => {
                         tooltip="Edit image placement"
                         onClick={() => setShowImagePlacement(!showImagePlacement)}
                     >
-                        {(showImagePlacement && currTrial.shownMapName === data.name && currTrial.experimentName === experiment.name)
+                        {isBeingEdit
                             ? <EditLocationAlt />
                             : <EditLocationOutlined />
                         }

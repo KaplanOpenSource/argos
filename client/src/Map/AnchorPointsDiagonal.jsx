@@ -3,7 +3,7 @@ import { ChosenMarker } from "./ChosenMarker.jsx";
 import { DashedPolyline } from "./DashedPolyline.jsx";
 import { MarkedPoint } from "./MarkedPoint.jsx";
 
-export const AnchorPointsDiagonal = ({ anchorLatLng, anotherLatLng, setAnchorLatLng, setAnotherLatLng, anchorXY, anotherXY, children }) => {
+export const AnchorPointsDiagonal = ({ anchorLatLng, anotherLatLng, setAnchorLatLng, setAnotherLatLng, anchorXY, anotherXY, children, ...props }) => {
     const anchorPoint = [anchorLatLng.lat, anchorLatLng.lng];
     const anotherPoint = [anotherLatLng.lat, anotherLatLng.lng];
 
@@ -35,6 +35,7 @@ export const AnchorPointsDiagonal = ({ anchorLatLng, anotherLatLng, setAnchorLat
                     anchorPoint,
                     anotherPoint
                 ]}
+                {...props}
             >
                 {children}
             </DashedPolyline>

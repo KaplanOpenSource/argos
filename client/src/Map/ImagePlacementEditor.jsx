@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { AnchorPointsDiagonal } from "./AnchorPointsDiagonal";
-import { Popup } from "react-leaflet";
+import { Popup, Tooltip } from "react-leaflet";
 import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
 
 export const ImagePlacementEditor = ({ experiment, imageData, setImageData }) => {
@@ -20,7 +20,6 @@ export const ImagePlacementEditor = ({ experiment, imageData, setImageData }) =>
         const y = (lat - imageData.ybottom) / (imageData.ytop - imageData.ybottom) * imageData.height;
         setter({ lat, lng, x, y });
     }
-
 
     const distLatLng = (p0, p1) => {
         return Math.sqrt(Math.pow(p0.lat - p1.lat, 2) + Math.pow(p0.lng - p1.lng, 2));
@@ -63,14 +62,18 @@ export const ImagePlacementEditor = ({ experiment, imageData, setImageData }) =>
             setAnchorLatLng={({ lat, lng }) => setPointWithoutChange(setAnchor, lat, lng)}
             setAnotherLatLng={({ lat, lng }) => setPointWithoutChange(setAnotherPoint, lat, lng)}
         >
-            <Popup>
+            <Tooltip
+                position={{ lat: (anchor.lat + anotherPoint.lat) / 2, lng: (anchor.lng + anotherPoint.lng) / 2 }}
+                permanent={true}
+                direction="top"
+            >
                 <TextFieldDebounceOutlined
-                    InputProps={{ style: { width: '100px' } }}
+                    InputProps={{ style: { width: '150px' } }}
                     label="Span in meters"
                     value={roundDec(distLatLng(anchor, anotherPoint))}
                     onChange={(newDist) => changeDist(newDist)}
                 />
-            </Popup>
+            </Tooltip>
         </AnchorPointsDiagonal>
     )
 }
