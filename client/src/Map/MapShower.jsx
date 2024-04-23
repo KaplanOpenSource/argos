@@ -17,7 +17,7 @@ const StandaloneImageLayer = ({ experiment, setExperiment, shownMap, shownMapInd
         image={shownMap}
         key={'imagemap'}
     />
-    {showImagePlacement
+    {showImagePlacement && shownMap && shownMap.xleft !== undefined
         ? <ImagePlacementEditor
             imageData={shownMap}
             setImageData={v => {
@@ -36,7 +36,7 @@ const EmbeddedImageLayer = ({ experiment, setExperiment, shownMap, shownMapIndex
         image={shownMap}
         key={'embeddedmap_' + shownMapIndex}
     />
-    {showImagePlacement
+    {showImagePlacement && shownMap && shownMap.latnorth !== undefined
         ? <ImagePlacementEditorLngLat
             imageData={shownMap}
             setImageData={v => {
@@ -59,6 +59,7 @@ export const MapShower = ({ children }) => {
 
     const shownMap = ((currTrial.experiment || {}).imageStandalone || [])[currTrial.shownMapIndex];
     const embeddedMaps = (currTrial.experiment || {}).imageEmbedded || [];
+
     return (
         <MapContainer
             zoom={15}
@@ -77,7 +78,7 @@ export const MapShower = ({ children }) => {
         >
             <MapEventer directlyOnMap={false}
                 mapEvents={{
-                    layeradd: (e, mo) => {mo.options.crs = shownMap ? CRS.Simple : CRS.EPSG3857; console.log(mo.options)}
+                    layeradd: (_, mapObject) => mapObject.options.crs = shownMap ? CRS.Simple : CRS.EPSG3857
                 }}
             />
             {shownMap
