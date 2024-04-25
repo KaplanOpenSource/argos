@@ -4,10 +4,30 @@ import { Tooltip } from "react-leaflet";
 import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
 import { Stack } from "@mui/material";
 import { latLng } from "leaflet";
+import { distLatLngPythagoras, distXY, round9, roundDec } from "../Utils/GeometryUtils";
 
-const distLatLngPythagoras = (p0, p1) => {
-    return Math.sqrt(Math.pow(p0.lat - p1.lat, 2) + Math.pow(p0.lng - p1.lng, 2));
+const calcBoxFromSpecificCoords = (lat0, lng0, lat1, lng1, x0, y0, x1, y1, xsize, ysize) => {
+    if (Math.abs(x1 - x0) < 1e-6 || Math.abs(y1 - y0) < 1e-6) {
+        alert("Control points have similar X or Y coord");
+        return false;
+    }
+    const right = lng0 + (lng1 - lng0) / (x1 - x0) * (xsize - x0);
+    const left = lng1 - (lng1 - lng0) / (x1 - x0) * x1;
+    const lower = lat0 + (lat1 - lat0) / (y1 - y0) * (ysize - y0);
+    const upper = lat1 - (lat1 - lat0) / (y1 - y0) * y1;
+    return { lower, right, upper, left };
 }
+
+// const calcBoxFromPoints = (p0, p1, imageSize) => {
+//     return calcBoxFromSpecificCoords(
+//         p0.lat, p0.lng,
+//         p1.lat, p1.lng,
+//         p0.x, p0.y,
+//         p1.x, p1.y,
+//         imageSize.x, imageSize.y);
+// }
+
+
 export const ImagePlacementEditor = ({ imageData, setImageData, startDiagonal = false, distLatLng = distLatLngPythagoras }) => {
     const [anchor, setAnchor] = useState({
         lat: imageData.ybottom,
@@ -22,43 +42,33 @@ export const ImagePlacementEditor = ({ imageData, setImageData, startDiagonal = 
         y: startDiagonal ? imageData.height : 0,
     });
 
-    const round9 = (n) => {
-        return Math.round(n * 1e9) / 1e9;
-    }
-
-    const roundDec = (num) => {
-        return Math.round(num * 1000) / 1000;
-    }
-
     const calcPointXY = ({ lat, lng }) => {
         const x = (lng - imageData.xleft) / (imageData.xright - imageData.xleft) * imageData.width;
         const y = (lat - imageData.ybottom) / (imageData.ytop - imageData.ybottom) * imageData.height;
         return ({ lat, lng, x, y });
     }
 
-    const distXY = (p0, p1) => {
-        return Math.sqrt(Math.pow(p0.x - p1.x, 2) + Math.pow(p0.y - p1.y, 2));
-    }
-
     const changeDistMeters = (newDist) => {
         const dxy = distXY(anotherPoint, anchor);
-        if (newDist > 1e-3 && dxy > 1e-3) {
-            const oldDist = distLatLng(anchor, anotherPoint);
-            const factorOldToNew = newDist / oldDist;
-            const dlng = (anotherPoint.lng - anchor.lng) * factorOldToNew;
-            const dlat = (anotherPoint.lat - anchor.lat) * factorOldToNew;
-
-            const factorPixelToMeter = newDist / dxy;
-            const left = round9(anchor.lng - anchor.x * factorPixelToMeter);
-            const lower = round9(anchor.lat - anchor.y * factorPixelToMeter);
-            const right = round9(left + imageData.width * factorPixelToMeter);
-            const upper = round9(lower + imageData.height * factorPixelToMeter);
-            setImageData({ ...imageData, ybottom: lower, ytop: upper, xleft: left, xright: right });
-
-            const lng = anchor.lng + dlng;
-            const lat = anchor.lat + dlat;
-            setAnotherPoint({ ...anotherPoint, lng, lat });
+        if (newDist < 1e-3 || dxy < 1e-3) {
+            return;
         }
+        const oldDist = distLatLng(anchor, anotherPoint);
+        const factorOldToNew = newDist / oldDist;
+        const dlng = (anotherPoint.lng - anchor.lng) * factorOldToNew;
+        const dlat = (anotherPoint.lat - anchor.lat) * factorOldToNew;
+        const lng = anchor.lng + dlng;
+        const lat = anchor.lat + dlat;
+
+        const dlnglat = distLatLngPythagoras(anchor, { lng, lat });
+        const factorPixelToMeter = dlnglat / dxy;
+        const left = round9(anchor.lng - anchor.x * factorPixelToMeter);
+        const lower = round9(anchor.lat - anchor.y * factorPixelToMeter);
+        const right = round9(left + imageData.width * factorPixelToMeter);
+        const upper = round9(lower + imageData.height * factorPixelToMeter);
+        setImageData({ ...imageData, ybottom: lower, ytop: upper, xleft: left, xright: right });
+
+        setAnotherPoint({ ...anotherPoint, lng, lat });
     }
 
     const changeDistPixels = (newDist) => {

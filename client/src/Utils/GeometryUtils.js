@@ -148,3 +148,19 @@ export const rectByAngle = (points, angle) => {
     // return [p0, [p1[0], p0[1]], p1, [p0[0], p1[1]]];
     return points.concat([points[0], points[0], points[0], points[0]]).slice(0, 4);
 }
+
+export const distLatLngPythagoras = (p0, p1) => {
+    return Math.sqrt(Math.pow(p0.lat - p1.lat, 2) + Math.pow(p0.lng - p1.lng, 2));
+}
+
+export const round9 = (n) => {
+    return Math.round(n * 1e9) / 1e9;
+}
+
+export const roundDec = (num) => {
+    return Math.round(num * 1000) / 1000;
+}
+
+export const distXY = (p0, p1) => {
+    return Math.sqrt(Math.pow(p0.x - p1.x, 2) + Math.pow(p0.y - p1.y, 2));
+}
