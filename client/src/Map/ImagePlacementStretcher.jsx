@@ -5,18 +5,6 @@ import { LineUtil, Point, latLng } from "leaflet";
 
 const MarkerStretcher = ({ position, setPosition, antipos }) => {
     const [pos, setpos] = useState(position)
-    // const position = {
-    //     lat: imageData[fieldNameLat],
-    //     lng: imageData[fieldNameLng],
-    // };
-
-    // const setPosition = ({ lat, lng }) => {
-    //     setImageData({
-    //         ...imageData,
-    //         [fieldNameLat]: lat,
-    //         [fieldNameLng]: lng
-    //     })
-    // };
 
     const handleChangePosition = (e) => {
         setpos(e.target.getLatLng())
@@ -36,11 +24,6 @@ const MarkerStretcher = ({ position, setPosition, antipos }) => {
             position={position}
             eventHandlers={{
                 dragend: handleChangePosition
-                // dragend: e => setImageData({
-                //     ...imageData,
-                //     [fieldNameLat]: e.target.getLatLng().lat,
-                //     [fieldNameLng]: e.target.getLatLng().lng
-                // })
             }}
         />
     )
@@ -50,15 +33,10 @@ export const ImagePlacementStretcher = ({ imageData, setImageData }) => {
     // console.log(imageData);
     return (
         <>
-            <MarkerStretcher
-                position={{ lat: latsouth, lng: lngeast }}
-                setPosition={({ lat, lng }) => setImageData({ ...imageData, latsouth: lat, lngeast: lng })}
-                antipos={{ lat: latnorth, lng: lngwest }}
-            />
-            {/* // imageData={imageData} setImageData={setImageData} fieldNameLat={'latsouth'} fieldNameLng={'lngeast'} /> */}
-            {/* <MarkerStretcher imageData={imageData} setImageData={setImageData} fieldNameLat={'latnorth'} fieldNameLng={'lngeast'} />
-            <MarkerStretcher imageData={imageData} setImageData={setImageData} fieldNameLat={'latsouth'} fieldNameLng={'lngwest'} />
-            <MarkerStretcher imageData={imageData} setImageData={setImageData} fieldNameLat={'latnorth'} fieldNameLng={'lngwest'} /> */}
+            <MarkerStretcher position={{ lat: latsouth, lng: lngeast }} setPosition={({ lat, lng }) => setImageData({ ...imageData, latsouth: lat, lngeast: lng })} antipos={{ lat: latnorth, lng: lngwest }} />
+            <MarkerStretcher position={{ lat: latsouth, lng: lngwest }} setPosition={({ lat, lng }) => setImageData({ ...imageData, latsouth: lat, lngwest: lng })} antipos={{ lat: latnorth, lng: lngeast }} />
+            <MarkerStretcher position={{ lat: latnorth, lng: lngeast }} setPosition={({ lat, lng }) => setImageData({ ...imageData, latnorth: lat, lngeast: lng })} antipos={{ lat: latsouth, lng: lngwest }} />
+            <MarkerStretcher position={{ lat: latnorth, lng: lngwest }} setPosition={({ lat, lng }) => setImageData({ ...imageData, latnorth: lat, lngwest: lng })} antipos={{ lat: latsouth, lng: lngeast }} />
         </>
     )
 }

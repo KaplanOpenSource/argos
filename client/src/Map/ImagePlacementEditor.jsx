@@ -5,6 +5,7 @@ import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
 import { Stack } from "@mui/material";
 import { latLng } from "leaflet";
 import { distLatLngPythagoras, distXY, round9, roundDec } from "../Utils/GeometryUtils";
+import { PlacementDraggableMarker } from "./PlacementDraggableMarker";
 
 const calcBoxFromSpecificCoords = (lat0, lng0, lat1, lng1, x0, y0, x1, y1, xsize, ysize) => {
     if (Math.abs(x1 - x0) < 1e-6 || Math.abs(y1 - y0) < 1e-6) {
@@ -124,12 +125,23 @@ export const ImagePlacementEditorLngLat = ({ imageData, setImageData, ...props }
         const { ybottom, ytop, xleft, xright } = newData;
         setImageData({ ...imageData, latsouth: ybottom, latnorth: ytop, lngwest: xleft, lngeast: xright })
     };
-    return (
+    const center = { lng: (lngeast + lngwest) / 2, lat: (latnorth + latsouth) / 2 };
+    return (<>
+        <PlacementDraggableMarker
+            location={center}
+            setLocation={({ lng, lat }) => setImageData({
+                ...imageData,
+                latsouth: latsouth + (lat - center.lat),
+                latnorth: latnorth + (lat - center.lat),
+                lngwest: lngwest + (lng - center.lng),
+                lngeast: lngeast + (lng - center.lng),
+            })}
+        />
         <ImagePlacementEditor
             imageData={xyData}
             setImageData={setXyData}
             distLatLng={(p1, p2) => latLng(p1).distanceTo(latLng(p2))}
             {...props}
         />
-    )
+    </>)
 }
