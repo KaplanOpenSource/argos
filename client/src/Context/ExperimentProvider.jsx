@@ -340,6 +340,8 @@ export const ExperimentProvider = ({ children }) => {
         setSelection,
         undoOperation: () => dispatch({ type: actions.UNDO }),
         redoOperation: () => dispatch({ type: actions.REDO }),
+        undoPossible: state.undoStack.length > 0,
+        redoPossible: state.redoStack.length > 0,
         setLocationsToDevices,
         setLocationsToStackDevices,
         setShownMap: (shownMapName) => dispatch({ type: actions.SET_SHOWN_MAP, shownMapName }),

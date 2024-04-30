@@ -17,6 +17,8 @@ export const AppHeader = ({ }) => {
     const {
         undoOperation,
         redoOperation,
+        undoPossible,
+        redoPossible,
         currTrial,
         setCurrTrial,
         showImagePlacement,
@@ -53,6 +55,7 @@ export const AppHeader = ({ }) => {
                     // sx={{ mr: 2 }}
                     onClick={() => undoOperation()}
                     tooltip={"Undo"}
+                    disabled={!undoPossible}
                 >
                     <Undo />
                 </ButtonTooltip>
@@ -61,6 +64,7 @@ export const AppHeader = ({ }) => {
                     // sx={{ mr: 2 }}
                     onClick={() => redoOperation()}
                     tooltip={"Redo"}
+                    disabled={!redoPossible}
                 >
                     <Redo />
                 </ButtonTooltip>
