@@ -1,12 +1,12 @@
 import { CRS } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 
 import { MapContainer, ZoomControl } from 'react-leaflet';
 import { experimentContext } from '../Context/ExperimentProvider';
 import { RealMap } from './RealMap';
 import { ImageMap } from './ImageMap';
-import { ImagePlacementEditor, ImagePlacementEditorLngLat } from './ImagePlacementEditor';
+import { ImagePlacementEditor } from './ImagePlacementEditor';
 import { MapEventer } from './MapEventer';
 import { ImagePlacementStretcher } from './ImagePlacementStretcher';
 
@@ -32,8 +32,6 @@ const StandaloneImageLayer = ({ experiment, setExperiment, shownMap, shownMapInd
 </>)
 
 const EmbeddedImageLayer = ({ experiment, setExperiment, shownMap, shownMapIndex, showImagePlacement }) => {
-    const [rectangleBounds, setRectangleBounds] = useState(null);
-
     return (<>
         <ImageMap
             experiment={experiment}
@@ -49,26 +47,6 @@ const EmbeddedImageLayer = ({ experiment, setExperiment, shownMap, shownMapIndex
                     setExperiment(experiment.name, exp);
                 }}
             />
-            // <EditControl
-            //     position='topright'
-            //     onEdited={this._onEditPath}
-            //     onCreated={this._onCreate}
-            //     onDeleted={this._onDeleted}
-            //     draw={{
-            //         rectangle: false
-            //     }}
-            // />
-            // <RectangleDraw aspectRatio={2} onRectangleDrawn={(bounds) => setRectangleBounds(bounds)} />
-            // ? <ImagePlacementEditorLngLat
-            //     imageData={shownMap}
-            //     setImageData={v => {
-            //         const exp = { ...experiment, imageEmbedded: [...experiment.imageEmbedded] };
-            //         exp.imageEmbedded[shownMapIndex] = v;
-            //         setExperiment(experiment.name, exp);
-            //     }}
-            //     // startDiagonal={true}
-            //     key={'embeddedmapeditor_' + shownMapIndex}
-            // />
             : null}
     </>)
 }
