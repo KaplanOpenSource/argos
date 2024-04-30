@@ -1,3 +1,6 @@
+cd "$(dirname "$0")" && cd ..
+echo "Script executed from: ${PWD}"
+
 echo $'\ncreate deploy archive from git\n====='
 rm argos.zip
 git archive --format=zip -o argos.zip HEAD
