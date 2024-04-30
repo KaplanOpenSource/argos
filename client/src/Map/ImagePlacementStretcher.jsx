@@ -21,7 +21,6 @@ export const ImagePlacementStretcher = ({ imageData, setImageData }) => {
             };
             const isChanged = Object.entries(newdata).find(([k, v]) => imageData[k] !== v);
             if (isChanged) {
-                console.log('edited!', newdata);
                 setImageData({ ...imageData, ...newdata });
             }
         })
