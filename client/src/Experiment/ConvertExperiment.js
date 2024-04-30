@@ -1,7 +1,6 @@
 import { argosJsonVersion } from "../constants/constants";
 
 export const ConvertExperiment = (oldExp) => {
-    throw new Error("hello")
     const version = (oldExp || {}).version;
     if (!version.startsWith('2.0.0')) {
         alert(`unknown version ${version}`);
@@ -10,6 +9,7 @@ export const ConvertExperiment = (oldExp) => {
     console.log('version 2:', oldExp)
     const top = oldExp.experiment;
     const trialTypes = oldExp.trialSets.map(t => convertTrialType(t, oldExp));
+    const deviceTypes = oldExp.entityTypes.map(t => convertDeviceType(t, oldExp));
     return {
         version: argosJsonVersion,
         name: top.name,
@@ -17,6 +17,7 @@ export const ConvertExperiment = (oldExp) => {
         startDate: top.begin,
         endDate: top.end,
         trialTypes,
+        deviceTypes,
     };
 }
 
@@ -35,3 +36,20 @@ const convertTrial = (oldTrial, oldTrialType, oldExp) => {
         name: oldTrial.name,
     }
 }
+
+const convertDeviceType = (oldDeviceType, oldExp) => {
+    const devices = oldExp.entities
+        .filter(r => r.entitiesTypeKey === oldDeviceType.key)
+        .map(r => convertDevice(r, oldDeviceType, oldExp));
+    return {
+        name: oldDeviceType.name,
+        devices,
+    }
+}
+
+const convertDevice = (oldDevice, oldDeviceType, oldExp) => {
+    return {
+        name: oldDevice.name,
+    }
+}
+
