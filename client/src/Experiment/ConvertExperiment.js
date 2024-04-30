@@ -8,8 +8,8 @@ export const ConvertExperiment = (oldExp) => {
     }
     console.log('version 2:', oldExp)
     const top = oldExp.experiment;
-    const trialTypes = oldExp.trialSets.map(t => convertTrialType(t, oldExp));
-    const deviceTypes = oldExp.entityTypes.map(t => convertDeviceType(t, oldExp));
+    const trialTypes = (oldExp.trialSets || []).map(t => convertTrialType(t, oldExp));
+    const deviceTypes = (oldExp.entityTypes || []).map(t => convertDeviceType(t, oldExp));
     return {
         version: argosJsonVersion,
         name: top.name,
@@ -22,7 +22,7 @@ export const ConvertExperiment = (oldExp) => {
 }
 
 const convertTrialType = (oldTrialType, oldExp) => {
-    const trials = oldExp.trials
+    const trials = (oldExp.trials || [])
         .filter(r => r.trialSetKey === oldTrialType.key)
         .map(r => convertTrial(r, oldTrialType, oldExp));
     return {
@@ -32,13 +32,29 @@ const convertTrialType = (oldTrialType, oldExp) => {
 }
 
 const convertTrial = (oldTrial, oldTrialType, oldExp) => {
+    const devicesOnTrial = (oldTrial.entities || []).map(e => convertDeviceOnTrial(e, oldTrial, oldTrialType, oldExp));
     return {
         name: oldTrial.name,
+        createdDate: oldTrial.created,
+        devicesOnTrial,
+    }
+}
+
+const convertDeviceOnTrial = (oldDeviceOnTrial, oldTrial, oldTrialType, oldExp) => {
+    const oldDeviceType = (oldExp.entityTypes || []).find(et => et.key === oldDeviceOnTrial.entitiesTypeKey);
+    const oldDeviceItem = (oldExp.entities || []).find(ei => ei.key === oldDeviceOnTrial.key);
+    const locationType = (oldDeviceType.properties || []).find(p => p.type === 'location');
+    const locationItem = (oldDeviceOnTrial.properties || []).find(p => p.key === locationType.key);
+    const location = JSON.parse(locationItem.val);
+    return {
+        deviceTypeName: oldDeviceType.name,
+        deviceItemName: oldDeviceItem.name,
+        location,
     }
 }
 
 const convertDeviceType = (oldDeviceType, oldExp) => {
-    const devices = oldExp.entities
+    const devices = (oldExp.entities || [])
         .filter(r => r.entitiesTypeKey === oldDeviceType.key)
         .map(r => convertDevice(r, oldDeviceType, oldExp));
     return {
