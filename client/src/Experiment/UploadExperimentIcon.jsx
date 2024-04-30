@@ -7,11 +7,17 @@ import { createNewName } from "../Utils/utils";
 import { experimentContext } from "../Context/ExperimentProvider";
 import JSZip from "jszip";
 import { UploadImage } from "./UploadImage";
+import { ConvertExperiment } from "./ConvertExperiment";
 
 export const UploadExperimentIcon = ({ }) => {
     const inputFile = useRef(null);
     const { experiments, addExperiment, setExperiment } = useContext(experimentContext);
     const [working, setWorking] = useState(false);
+
+    const addExperimentRename = (experiment) => {
+        experiment.name = createNewName(experiments, experiment.name);
+        addExperiment(experiment);
+    }
 
     const handleChangeFile = async (event) => {
         try {
@@ -29,9 +35,14 @@ export const UploadExperimentIcon = ({ }) => {
                     reader.readAsText(file);
                 });
                 const experiment = JSON.parse(text);
-                if ((experiment || {}).version === argosJsonVersion) {
-                    experiment.name = createNewName(experiments, experiment.name);
-                    addExperiment(experiment);
+                const version = (experiment || {}).version;
+                if (version === argosJsonVersion) {
+                    addExperimentRename(experiment);
+                } else if (version.startsWith('2.0.0')) {
+                    const newExp = ConvertExperiment(experiment);
+                    if (newExp) {
+                        addExperimentRename(newExp);
+                    }
                 }
             } else if (file.name.endsWith('.zip')) {
                 const zip = await JSZip().loadAsync(file);
@@ -41,8 +52,7 @@ export const UploadExperimentIcon = ({ }) => {
                 const experiment = JSON.parse(text);
                 const version = (experiment || {}).version;
                 if (version === argosJsonVersion) {
-                    experiment.name = createNewName(experiments, experiment.name);
-                    addExperiment(experiment);
+                    addExperimentRename(experiment);
                     const imageFiles = Object.values(zip.files).filter(x => x.name.startsWith('images/') && !x.dir);
                     if (imageFiles.length > 0) {
                         for (const im of imageFiles) {
@@ -60,10 +70,11 @@ export const UploadExperimentIcon = ({ }) => {
                         setExperiment(experiment.name, experiment);
                     }
                 } else if (version.startsWith('2.0.0')) {
-                    console.log('version 2:', experiment)
+                    console.log('version 2 with zip:', experiment)
                 }
             }
         } catch (error) {
+            console.log(error)
             alert(`problem uploading:\n${error}`)
         }
         setWorking(false);

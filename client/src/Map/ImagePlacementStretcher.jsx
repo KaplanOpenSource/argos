@@ -37,32 +37,3 @@ export const ImagePlacementStretcher = ({ imageData, setImageData }) => {
         </>
     )
 }
-
-//     <MarkerStretcher position={{ lat: latsouth, lng: lngeast }} dragPosition={({ lat, lng }) => setRect({ ...rect, latsouth: lat, lngeast: lng })} antipos={{ lat: latnorth, lng: lngwest }} />
-//     <MarkerStretcher position={{ lat: latsouth, lng: lngwest }} dragPosition={({ lat, lng }) => setRect({ ...rect, latsouth: lat, lngwest: lng })} antipos={{ lat: latnorth, lng: lngeast }} />
-//     <MarkerStretcher position={{ lat: latnorth, lng: lngeast }} dragPosition={({ lat, lng }) => setRect({ ...rect, latnorth: lat, lngeast: lng })} antipos={{ lat: latsouth, lng: lngwest }} />
-// <MarkerStretcher position={{ lat: latnorth, lng: lngwest }} dragPosition={({ lat, lng }) => setRect({ ...rect, latnorth: lat, lngwest: lng })} antipos={{ lat: latsouth, lng: lngeast }} />
-
-// const MarkerStretcher = ({ position, setPosition, dragPosition, antipos }) => {
-//     const handleChangePosition = (e) => {
-//         const clicked = pos2arr(e.target.getLatLng());
-//         const anti = pos2arr(antipos);
-//         const old = pos2arr(position);
-//         const distToClicked = distance(anti, clicked);
-//         const distToOld = distance(anti, old);
-//         const n = lerpPoint(anti, old, distToClicked / distToOld);
-//         const newpos = { lng: n[0], lat: n[1] };
-//         dragPosition(newpos);
-//     }
-
-//     return (
-//         <Marker
-//             draggable={true}
-//             position={position}
-//             eventHandlers={{
-//                 drag: handleChangePosition
-//             }}
-//             icon={CustomIcon()}
-//         />
-//     )
-// }
