@@ -3,31 +3,7 @@ import { AnchorPointsDiagonal } from "./AnchorPointsDiagonal";
 import { Tooltip } from "react-leaflet";
 import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
 import { Stack } from "@mui/material";
-import { latLng } from "leaflet";
 import { distLatLngPythagoras, distXY, round9, roundDec } from "../Utils/GeometryUtils";
-import { PlacementDraggableMarker } from "./PlacementDraggableMarker";
-
-const calcBoxFromSpecificCoords = (lat0, lng0, lat1, lng1, x0, y0, x1, y1, xsize, ysize) => {
-    if (Math.abs(x1 - x0) < 1e-6 || Math.abs(y1 - y0) < 1e-6) {
-        alert("Control points have similar X or Y coord");
-        return false;
-    }
-    const right = lng0 + (lng1 - lng0) / (x1 - x0) * (xsize - x0);
-    const left = lng1 - (lng1 - lng0) / (x1 - x0) * x1;
-    const lower = lat0 + (lat1 - lat0) / (y1 - y0) * (ysize - y0);
-    const upper = lat1 - (lat1 - lat0) / (y1 - y0) * y1;
-    return { lower, right, upper, left };
-}
-
-// const calcBoxFromPoints = (p0, p1, imageSize) => {
-//     return calcBoxFromSpecificCoords(
-//         p0.lat, p0.lng,
-//         p1.lat, p1.lng,
-//         p0.x, p0.y,
-//         p1.x, p1.y,
-//         imageSize.x, imageSize.y);
-// }
-
 
 export const ImagePlacementEditor = ({ imageData, setImageData, startDiagonal = false, distLatLng = distLatLngPythagoras }) => {
     const [anchor, setAnchor] = useState({
@@ -116,32 +92,4 @@ export const ImagePlacementEditor = ({ imageData, setImageData, startDiagonal = 
             </Tooltip>
         </AnchorPointsDiagonal>
     )
-}
-
-export const ImagePlacementEditorLngLat = ({ imageData, setImageData, ...props }) => {
-    const { width, height, lngwest, lngeast, latnorth, latsouth } = imageData;
-    const xyData = { width, height, xleft: lngwest, xright: lngeast, ytop: latnorth, ybottom: latsouth };
-    const setXyData = (newData) => {
-        const { ybottom, ytop, xleft, xright } = newData;
-        setImageData({ ...imageData, latsouth: ybottom, latnorth: ytop, lngwest: xleft, lngeast: xright })
-    };
-    const center = { lng: (lngeast + lngwest) / 2, lat: (latnorth + latsouth) / 2 };
-    return (<>
-        <PlacementDraggableMarker
-            location={center}
-            setLocation={({ lng, lat }) => setImageData({
-                ...imageData,
-                latsouth: latsouth + (lat - center.lat),
-                latnorth: latnorth + (lat - center.lat),
-                lngwest: lngwest + (lng - center.lng),
-                lngeast: lngeast + (lng - center.lng),
-            })}
-        />
-        <ImagePlacementEditor
-            imageData={xyData}
-            setImageData={setXyData}
-            distLatLng={(p1, p2) => latLng(p1).distanceTo(latLng(p2))}
-            {...props}
-        />
-    </>)
 }
