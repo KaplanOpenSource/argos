@@ -1,6 +1,6 @@
 import { CRS } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 
 import { MapContainer, ZoomControl } from 'react-leaflet';
 import { experimentContext } from '../Context/ExperimentProvider';
@@ -8,6 +8,7 @@ import { RealMap } from './RealMap';
 import { ImageMap } from './ImageMap';
 import { ImagePlacementEditor, ImagePlacementEditorLngLat } from './ImagePlacementEditor';
 import { MapEventer } from './MapEventer';
+import { ImagePlacementStretcher } from './ImagePlacementStretcher';
 
 L.Icon.Default.imagePath = 'leaflet-images/';
 
@@ -30,25 +31,47 @@ const StandaloneImageLayer = ({ experiment, setExperiment, shownMap, shownMapInd
         : null}
 </>)
 
-const EmbeddedImageLayer = ({ experiment, setExperiment, shownMap, shownMapIndex, showImagePlacement }) => (<>
-    <ImageMap
-        experiment={experiment}
-        image={shownMap}
-        key={'embeddedmap_' + shownMapIndex}
-    />
-    {showImagePlacement && shownMap && shownMap.latnorth !== undefined
-        ? <ImagePlacementEditorLngLat
-            imageData={shownMap}
-            setImageData={v => {
-                const exp = { ...experiment, imageEmbedded: [...experiment.imageEmbedded] };
-                exp.imageEmbedded[shownMapIndex] = v;
-                setExperiment(experiment.name, exp);
-            }}
-            startDiagonal={true}
-            key={'embeddedmapeditor_' + shownMapIndex}
+const EmbeddedImageLayer = ({ experiment, setExperiment, shownMap, shownMapIndex, showImagePlacement }) => {
+    const [rectangleBounds, setRectangleBounds] = useState(null);
+
+    return (<>
+        <ImageMap
+            experiment={experiment}
+            image={shownMap}
+            key={'embeddedmap_' + shownMapIndex}
         />
-        : null}
-</>)
+        {showImagePlacement && shownMap && shownMap.latnorth !== undefined
+            ? <ImagePlacementStretcher
+                imageData={shownMap}
+                setImageData={v => {
+                    const exp = { ...experiment, imageEmbedded: [...experiment.imageEmbedded] };
+                    exp.imageEmbedded[shownMapIndex] = v;
+                    setExperiment(experiment.name, exp);
+                }}
+            />
+            // <EditControl
+            //     position='topright'
+            //     onEdited={this._onEditPath}
+            //     onCreated={this._onCreate}
+            //     onDeleted={this._onDeleted}
+            //     draw={{
+            //         rectangle: false
+            //     }}
+            // />
+            // <RectangleDraw aspectRatio={2} onRectangleDrawn={(bounds) => setRectangleBounds(bounds)} />
+            // ? <ImagePlacementEditorLngLat
+            //     imageData={shownMap}
+            //     setImageData={v => {
+            //         const exp = { ...experiment, imageEmbedded: [...experiment.imageEmbedded] };
+            //         exp.imageEmbedded[shownMapIndex] = v;
+            //         setExperiment(experiment.name, exp);
+            //     }}
+            //     // startDiagonal={true}
+            //     key={'embeddedmapeditor_' + shownMapIndex}
+            // />
+            : null}
+    </>)
+}
 
 export const MapShower = ({ children }) => {
     const {

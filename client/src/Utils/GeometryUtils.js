@@ -1,12 +1,16 @@
-export const lerp = (from, to, t) => {
+export const pos2arr = function (lnglat) {
+    return [lnglat.lng, lnglat.lat];
+}
+
+export const lerp = function (from, to, t) {
     return from * (1 - t) + to * t;
 };
 
-export const lerpYX = (from, to, t0, t1) => {
+export const lerpYX = function (from, to, t0, t1) {
     return [lerp(from[0], to[0], t0), lerp(from[1], to[1], t1)];
 };
 
-export const lerpPoint = (from, to, t) => {
+export const lerpPoint = function (from, to, t) {
     return lerpYX(from, to, t, t);
 };
 
