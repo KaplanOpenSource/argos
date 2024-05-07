@@ -68,54 +68,57 @@ export const AppHeader = ({ }) => {
                 >
                     <Redo />
                 </ButtonTooltip>
-                {
-                    trialName
-                        ? <>
-                            <ButtonTooltip
-                                color="inherit"
-                                onClick={() => {
-                                    setCurrTrial({});
-                                }}
-                                tooltip={"Stop editing this trial"}
-                            >
-                                <CloseIcon />
-                            </ButtonTooltip>
-                            <Tooltip
-                                title="Experiment and trial currently edited"
-                            >
-                                <Typography variant="body1" paddingRight={1}>
-                                    {experimentName}
-                                    &nbsp;:&nbsp;
-                                    {trialTypeName}
-                                    &nbsp;:&nbsp;
-                                    {trialName}
-                                </Typography>
+                {experimentName
+                    ? <>
+                        <ButtonTooltip
+                            color="inherit"
+                            onClick={() => {
+                                setCurrTrial({});
+                            }}
+                            tooltip={"Stop editing this trial"}
+                        >
+                            <CloseIcon />
+                        </ButtonTooltip>
+                        <Tooltip
+                            title="Experiment and trial currently edited"
+                        >
+                            <Typography variant="body1" paddingRight={1}>
+                                {experimentName}
+                                {trialName
+                                    ? <>
+                                        &nbsp;:&nbsp;
+                                        {trialTypeName}
+                                        &nbsp;:&nbsp;
+                                        {trialName}
+                                    </>
+                                    : null}
+                            </Typography>
+                        </Tooltip>
+                        {shownMapName
+                            ? <Tooltip title={"Shown map"}>
+                                <Stack direction={"row"}>
+                                    <MapIcon />
+                                    <Typography variant="body1" paddingRight={1}>
+                                        {shownMapName}
+                                    </Typography>
+                                </Stack>
                             </Tooltip>
-                            {shownMapName
-                                ? <Tooltip title={"Shown map"}>
-                                    <Stack direction={"row"}>
-                                        <MapIcon />
-                                        <Typography variant="body1" paddingRight={1}>
-                                            {shownMapName}
-                                        </Typography>
-                                    </Stack>
-                                </Tooltip>
-                                : <Tooltip title={"Real map with embedding"}>
-                                    <PublicIcon />
-                                </Tooltip>
+                            : <Tooltip title={"Real map with embedding"}>
+                                <PublicIcon />
+                            </Tooltip>
+                        }
+                        <ButtonTooltip
+                            color='inherit'
+                            onClick={() => setShowImagePlacement(!showImagePlacement)}
+                            tooltip="Edit image placement"
+                        >
+                            {showImagePlacement
+                                ? <EditLocationAltIcon />
+                                : <EditLocationOutlinedIcon />
                             }
-                            <ButtonTooltip
-                                color='inherit'
-                                onClick={() => setShowImagePlacement(!showImagePlacement)}
-                                tooltip="Edit image placement"
-                            >
-                                {showImagePlacement
-                                    ? <EditLocationAltIcon />
-                                    : <EditLocationOutlinedIcon />
-                                }
-                            </ButtonTooltip>
-                        </>
-                        : null
+                        </ButtonTooltip>
+                    </>
+                    : null
                 }
                 {/* <Button color="inherit">Login</Button> */}
             </Toolbar>

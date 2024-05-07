@@ -24,7 +24,7 @@ export const ExperimentList = ({ fullscreen, setFullscreen }) => {
     useEffect(() => {
         if (trialName) {
             setExpanded([
-                experimentName,
+                EXPERIMENT_NODE_ID_PREFIX + experimentName,
                 experimentName + "_trialTypes",
                 trialTypeName,
                 trialTypeName + "_trials",
