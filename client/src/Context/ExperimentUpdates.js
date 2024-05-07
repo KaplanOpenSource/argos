@@ -4,15 +4,27 @@ import { argosJsonVersion } from '../constants/constants';
 import * as jsonpatch from 'fast-json-patch';
 
 export class ExperimentUpdates {
-    static deleteExperiment = (state, setState, name) => {
-        setState(draft => {
+    constructor(state, setState) {
+        this.state = state;
+        this.setState = setState;
+    }
+
+    static initialState = {
+        experiments: [],
+        undoStack: [],
+        redoStack: [],
+        serverUpdates: [],
+    }
+
+    deleteExperiment = (name) => {
+        this.setState(draft => {
             draft.experiments = draft.experiments.filter(t => t.name !== name);
             draft.serverUpdates.push({ name, exp: undefined });
         })
     }
 
-    static addExperiment = (state, setState, newExp = undefined) => {
-        setState(draft => {
+    addExperiment = (newExp = undefined) => {
+        this.setState(draft => {
             const name = createNewName(draft.experiments, newExp ? newExp.name : 'New Experiment');
             const exp = newExp ? newExp : {
                 version: argosJsonVersion,
@@ -26,8 +38,8 @@ export class ExperimentUpdates {
         });
     }
 
-    static setExperiment = (state, setState, name, data) => {
-        const i = state.experiments.findIndex(t => t.name === name)
+    setExperiment = (name, data) => {
+        const i = this.state.experiments.findIndex(t => t.name === name)
         if (i === -1) {
             alert("Unknown experiment name");
             return;
@@ -36,17 +48,17 @@ export class ExperimentUpdates {
             alert("Invalid experiment name, has trailing or leading spaces");
             return;
         }
-        if (state.experiments.find((e, ei) => e.name === data.name && ei !== i)) {
+        if (this.state.experiments.find((e, ei) => e.name === data.name && ei !== i)) {
             alert("Duplicate experiment name");
             return;
         }
-        const exp = state.experiments[i];
+        const exp = this.state.experiments[i];
         const redoPatch = jsonpatch.compare(exp, data);
         const undoPatch = jsonpatch.compare(data, exp);
         if (redoPatch.length === 0) {
             return; // nothing was changed
         }
-        setState(draft => {
+        this.setState(draft => {
             draft.experiments[i] = data;
             draft.undoStack.push({ name, undoPatch, redoPatch });
             draft.redoStack = [];
@@ -55,8 +67,8 @@ export class ExperimentUpdates {
     }
 
 
-    static undoOperation = (state, setState) => {
-        setState(draft => {
+    undoOperation = () => {
+        this.setState(draft => {
             const item = draft.undoStack.pop();
             if (item) {
                 const { name, undoPatch } = item;
@@ -71,8 +83,8 @@ export class ExperimentUpdates {
         });
     }
 
-    static redoOperation = (state, setState) => {
-        setState(draft => {
+    redoOperation = () => {
+        this.setState(draft => {
             const item = draft.redoStack.pop();
             if (item) {
                 const { name, redoPatch } = item;

@@ -11,20 +11,19 @@ export const experimentContext = createContext();
 
 export const ExperimentProvider = ({ children }) => {
     const [state, setState] = useImmer({
-        experiments: [],
-        undoStack: [],
-        redoStack: [],
-        serverUpdates: [],
         currTrial: {},
         selection: [],
         showImagePlacement: false,
+        ...ExperimentUpdates.initialState,
     });
 
-    const deleteExperiment = (...params) => ExperimentUpdates.deleteExperiment(state, setState, ...params);
-    const addExperiment = (...params) => ExperimentUpdates.addExperiment(state, setState, ...params);
-    const setExperiment = (...params) => ExperimentUpdates.setExperiment(state, setState, ...params);
-    const undoOperation = (...params) => ExperimentUpdates.undoOperation(state, setState, ...params);
-    const redoOperation = (...params) => ExperimentUpdates.redoOperation(state, setState, ...params);
+    const experimentUpdates = new ExperimentUpdates(state, setState);
+
+    const deleteExperiment = (...params) => experimentUpdates.deleteExperiment(...params);
+    const addExperiment = (...params) => experimentUpdates.addExperiment(...params);
+    const setExperiment = (...params) => experimentUpdates.setExperiment(...params);
+    const undoOperation = (...params) => experimentUpdates.undoOperation(...params);
+    const redoOperation = (...params) => experimentUpdates.redoOperation(...params);
 
     const currTrial = TrialChoosing.FindTrialByIndices(state.currTrial, state.experiments);
 
