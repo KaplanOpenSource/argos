@@ -11,21 +11,16 @@ export const experimentContext = createContext();
 
 export const ExperimentProvider = ({ children }) => {
     const [state, setState] = useImmer({
-        currTrial: {},
         selection: [],
         showImagePlacement: false,
         ...ExperimentUpdates.initialState,
+        ...TrialChoosing.initialState,
     });
 
     const experimentUpdates = new ExperimentUpdates(state, setState);
+    const trialChoosing = new TrialChoosing(state, setState);
 
-    const deleteExperiment = (...params) => experimentUpdates.deleteExperiment(...params);
-    const addExperiment = (...params) => experimentUpdates.addExperiment(...params);
-    const setExperiment = (...params) => experimentUpdates.setExperiment(...params);
-    const undoOperation = (...params) => experimentUpdates.undoOperation(...params);
-    const redoOperation = (...params) => experimentUpdates.redoOperation(...params);
-
-    const currTrial = TrialChoosing.FindTrialByIndices(state.currTrial, state.experiments);
+    const currTrial = trialChoosing.GetCurrTrial();
 
     const setCurrTrial = ({ experimentName, trialTypeName, trialName }) => {
         const t = TrialChoosing.FindTrialByName({ experimentName, trialTypeName, trialName }, state.experiments);
@@ -60,7 +55,7 @@ export const ExperimentProvider = ({ children }) => {
         }
         const e = jsonpatch.deepClone(currTrial.experiment);
         e.trialTypes[currTrial.trialTypeIndex].trials[currTrial.trialIndex] = data;
-        setExperiment(currTrial.experimentName, e)
+        experimentUpdates.setExperiment(currTrial.experimentName, e)
     }
 
     const setLocationsToDevices = (deviceTypeItems, latlngs) => {
@@ -113,7 +108,7 @@ export const ExperimentProvider = ({ children }) => {
                 }
             }
         }
-        setExperiment(currTrial.experimentName, e)
+        experimentUpdates.setExperiment(currTrial.experimentName, e)
     }
 
     const deleteDeviceType = ({ experimentName, deviceTypeName }) => {
@@ -130,7 +125,7 @@ export const ExperimentProvider = ({ children }) => {
                 }
             }
         }
-        setExperiment(currTrial.experimentName, e)
+        experimentUpdates.setExperiment(currTrial.experimentName, e)
     }
 
     useEffect(() => {
@@ -162,11 +157,11 @@ export const ExperimentProvider = ({ children }) => {
 
     const store = {
         experiments: state.experiments,
-        deleteExperiment,
-        addExperiment,
-        setExperiment,
-        undoOperation,
-        redoOperation,
+        deleteExperiment: experimentUpdates.deleteExperiment,
+        addExperiment: experimentUpdates.addExperiment,
+        setExperiment: experimentUpdates.setExperiment,
+        undoOperation: experimentUpdates.undoOperation,
+        redoOperation: experimentUpdates.redoOperation,
         undoPossible: state.undoStack.length > 0,
         redoPossible: state.redoStack.length > 0,
         setCurrTrial,
