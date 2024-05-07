@@ -8,16 +8,16 @@ import { RealMapName, argosJsonVersion } from "../constants/constants";
 
 export const experimentContext = createContext();
 
-const initialState = {
-    experiments: [],
-    undoStack: [],
-    redoStack: [],
-    serverUpdates: [],
-    currTrial: {},
-}
-
 export const ExperimentProvider = ({ children }) => {
-    const [state, setState] = useImmer(initialState);
+    const [state, setState] = useImmer({
+        experiments: [],
+        undoStack: [],
+        redoStack: [],
+        serverUpdates: [],
+        currTrial: {},
+        selection: [],
+        showImagePlacement: false,
+    });
 
     const deleteExperiment = (name) => {
         setState(draft => {
@@ -68,14 +68,6 @@ export const ExperimentProvider = ({ children }) => {
             draft.serverUpdates.push({ name, exp: data });
         });
     }
-
-
-
-
-    //////////////////////////////////////////////////
-
-    const [selection, setSelection] = useState([]);
-    const [showImagePlacement, setShowImagePlacement] = useState(false);
 
     const currTrialByIndices = () => {
         if (state.currTrial.trialName) {
@@ -186,9 +178,9 @@ export const ExperimentProvider = ({ children }) => {
     }
 
     const setLocationsToStackDevices = (latlngs) => {
-        const count = setLocationsToDevices(selection, latlngs);
+        const count = setLocationsToDevices(state.selection, latlngs);
         if (count > 0) {
-            setSelection(selection.slice(count));
+            setState(draft => { draft.selection = draft.selection.slice(count); });
         }
     }
 
@@ -296,8 +288,8 @@ export const ExperimentProvider = ({ children }) => {
         setTrialData,
         deleteDevice,
         deleteDeviceType,
-        selection,
-        setSelection,
+        selection: state.selection,
+        setSelection: val => setState(draft => { draft.selection = val; }),
         undoOperation,
         redoOperation,
         undoPossible: state.undoStack.length > 0,
@@ -305,8 +297,8 @@ export const ExperimentProvider = ({ children }) => {
         setLocationsToDevices,
         setLocationsToStackDevices,
         setShownMap,
-        showImagePlacement,
-        setShowImagePlacement,
+        showImagePlacement: state.showImagePlacement,
+        setShowImagePlacement: val => setState(draft => { draft.showImagePlacement = val; }),
     };
 
     return (
