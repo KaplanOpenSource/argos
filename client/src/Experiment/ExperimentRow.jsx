@@ -17,11 +17,14 @@ import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { DeviceTypesList } from "./DeviceTypesList";
 
+export const EXPERIMENT_NODE_ID_PREFIX = 'experiment:';
+
 export const ExperimentRow = ({ data, setData, children }) => {
     const { deleteExperiment, setShownMap } = useContext(experimentContext);
     return (
         <TreeRow
             key={data.name}
+            nodeId={EXPERIMENT_NODE_ID_PREFIX + data.name}
             data={data}
             setData={setData}
             components={

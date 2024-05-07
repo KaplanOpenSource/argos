@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { experimentContext } from "../Context/ExperimentProvider";
-import { ExperimentRow } from "./ExperimentRow";
+import { EXPERIMENT_NODE_ID_PREFIX, ExperimentRow } from "./ExperimentRow";
 import { TreeView } from '@mui/x-tree-view/TreeView';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
@@ -15,7 +15,7 @@ import { UploadExperimentIcon } from "./UploadExperimentIcon";
 import { DeviceTypesList } from "./DeviceTypesList";
 
 export const ExperimentList = ({ fullscreen, setFullscreen }) => {
-    const { experiments, setExperiment, addExperiment, currTrial } = useContext(experimentContext);
+    const { experiments, setExperiment, addExperiment, currTrial, setCurrTrial } = useContext(experimentContext);
 
     const [expanded, setExpanded] = useState([]);
     const [showDevicesOnly, setShowDevicesOnly] = useState(false);
@@ -95,7 +95,15 @@ export const ExperimentList = ({ fullscreen, setFullscreen }) => {
                     overflowY: 'auto',
                 }}
                 expanded={expanded}
-                onNodeToggle={(event, nodeIds) => setExpanded(nodeIds)}
+                onNodeToggle={(event, nodeIds) => {
+                    const newlyExpanded = nodeIds.filter(nodeId => !expanded.includes(nodeId));
+                    if (newlyExpanded.length && newlyExpanded[0].startsWith(EXPERIMENT_NODE_ID_PREFIX)) {
+                        setCurrTrial({ experimentName: newlyExpanded[0].split(':')[1] });
+                        setExpanded(nodeIds.filter(x => x === newlyExpanded[0] || !x.startsWith(EXPERIMENT_NODE_ID_PREFIX)));
+                    } else {
+                        setExpanded(nodeIds);
+                    }
+                }}
                 disableSelection
             >
                 {(showDevicesOnly && currTrial.trial)
@@ -113,7 +121,7 @@ export const ExperimentList = ({ fullscreen, setFullscreen }) => {
                                 tooltip="Clone experiment"
                                 onClick={() => {
                                     const name = createNewName(experiments, exp.name + " cloned");
-                                    addExperiment({...deepClone(exp), name});
+                                    addExperiment({ ...deepClone(exp), name });
                                 }}
                             >
                                 <ContentCopyIcon />

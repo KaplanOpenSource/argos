@@ -3,12 +3,12 @@ import { Box, TextField } from "@mui/material";
 import { TreeItem } from "@mui/x-tree-view/TreeItem";
 import { TextFieldDebounce } from "../Utils/TextFieldDebounce";
 
-export const TreeRow = ({ data, setData, components, withDescription = true, children }) => {
+export const TreeRow = ({ data, setData, components, nodeId, withDescription = true, children }) => {
     const { name } = data;
     return (
         <TreeItem
             key={name}
-            nodeId={name}
+            nodeId={nodeId === undefined ? name : nodeId}
             label={
                 <Box
                     sx={{
