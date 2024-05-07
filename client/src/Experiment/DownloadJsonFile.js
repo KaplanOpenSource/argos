@@ -4,7 +4,7 @@ import { baseUrl } from "../Context/FetchExperiment";
 
 export const downloadJsonFile = async (experiment) => {
     const zip = JSZip();
-    zip.file(`${experiment.name}.json`, JSON.stringify(experiment));
+    zip.file(`data.json`, JSON.stringify(experiment));
     for (const img of (experiment.imageStandalone || [])) {
         if (img.filename) {
             const src = `${baseUrl}/uploads/${experiment.name}/${img.filename}`;
