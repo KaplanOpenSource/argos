@@ -86,10 +86,11 @@ export const ExperimentProvider = ({ children }) => {
 
     const currTrial = currTrialByIndices();
 
-    const setCurrTrial = ({ experimentName, trialTypeName, trialName }) => {
-        const experimentIndex = state.experiments.findIndex(t => t.name === experimentName);
+    const setCurrTrial = ({ experimentName, trialTypeName, trialName }, allExperiments) => {
+        allExperiments = allExperiments || state.experiments;
+        const experimentIndex = allExperiments.findIndex(t => t.name === experimentName);
         if (experimentIndex >= 0) {
-            const experiment = state.experiments[experimentIndex];
+            const experiment = allExperiments[experimentIndex];
             const trialTypeIndex = experiment.trialTypes.findIndex(t => t.name === trialTypeName);
             if (trialTypeIndex >= 0) {
                 const trialType = experiment.trialTypes[trialTypeIndex];
@@ -255,12 +256,12 @@ export const ExperimentProvider = ({ children }) => {
 
     useEffect(() => {
         (async () => {
+            const { experimentName, trialTypeName, trialName } = parseUrlParams();
             const allExperiments = await fetchAllExperiments();
             setState(draft => {
                 draft.experiments = allExperiments;
             });
-            const { experimentName, trialTypeName, trialName } = parseUrlParams();
-            setCurrTrial({ experimentName, trialTypeName, trialName });
+            setCurrTrial({ experimentName, trialTypeName, trialName }, allExperiments);
         })()
     }, [])
 
