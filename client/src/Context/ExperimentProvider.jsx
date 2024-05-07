@@ -1,11 +1,10 @@
-import { createContext, useEffect, useReducer, useState } from "react"
-import { useImmer, useImmerReducer } from "use-immer";
-import dayjs from 'dayjs';
-import { createNewName, parseUrlParams, replaceUrlParams, splitLast } from "../Utils/utils";
+import { createContext, useEffect } from "react"
+import { useImmer } from "use-immer";
+import { parseUrlParams, replaceUrlParams } from "../Utils/utils";
 import * as jsonpatch from 'fast-json-patch';
 import { fetchAllExperiments, saveExperimentWithData } from "./FetchExperiment";
-import { RealMapName, argosJsonVersion } from "../constants/constants";
-import { addExperiment, deleteExperiment, redoOperation, setExperiment, undoOperation } from "./ExperimentUpdates";
+import { RealMapName } from "../constants/constants";
+import { ExperimentUpdates } from "./ExperimentUpdates";
 
 export const experimentContext = createContext();
 
@@ -198,13 +197,19 @@ export const ExperimentProvider = ({ children }) => {
         }
     }, [state.serverUpdates]);
 
+    const deleteExperiment = (...params) => ExperimentUpdates.deleteExperiment(state, setState, ...params);
+    const addExperiment = (...params) => ExperimentUpdates.addExperiment(state, setState, ...params);
+    const setExperiment = (...params) => ExperimentUpdates.setExperiment(state, setState, ...params);
+    const undoOperation = (...params) => ExperimentUpdates.undoOperation(state, setState, ...params);
+    const redoOperation = (...params) => ExperimentUpdates.redoOperation(state, setState, ...params);
+
     const store = {
         experiments: state.experiments,
-        deleteExperiment: (...params) => deleteExperiment(state, setState, ...params),
-        addExperiment: (...params) => addExperiment(state, setState, ...params),
-        setExperiment: (...params) => setExperiment(state, setState, ...params),
-        undoOperation: (...params) => undoOperation(state, setState, ...params),
-        redoOperation: (...params) => redoOperation(state, setState, ...params),
+        deleteExperiment,
+        addExperiment,
+        setExperiment,
+        undoOperation,
+        redoOperation,
         undoPossible: state.undoStack.length > 0,
         redoPossible: state.redoStack.length > 0,
         setCurrTrial,
