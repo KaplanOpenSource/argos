@@ -5,6 +5,7 @@ import * as jsonpatch from 'fast-json-patch';
 import { fetchAllExperiments, saveExperimentWithData } from "./FetchExperiment";
 import { RealMapName } from "../constants/constants";
 import { ExperimentUpdates } from "./ExperimentUpdates";
+import { TrialChoosing } from "./TrialChoosing";
 
 export const experimentContext = createContext();
 
@@ -19,57 +20,18 @@ export const ExperimentProvider = ({ children }) => {
         showImagePlacement: false,
     });
 
-    const currTrialByIndices = () => {
-        if (state.currTrial.trialName) {
-            const experiment = state.experiments[state.currTrial.experimentIndex];
-            const trialType = experiment.trialTypes[state.currTrial.trialTypeIndex];
-            const trial = trialType.trials[state.currTrial.trialIndex];
-            return {
-                ...state.currTrial,
-                experiment,
-                trialType,
-                trial,
-            }
-        }
-        return {};
-    }
+    const deleteExperiment = (...params) => ExperimentUpdates.deleteExperiment(state, setState, ...params);
+    const addExperiment = (...params) => ExperimentUpdates.addExperiment(state, setState, ...params);
+    const setExperiment = (...params) => ExperimentUpdates.setExperiment(state, setState, ...params);
+    const undoOperation = (...params) => ExperimentUpdates.undoOperation(state, setState, ...params);
+    const redoOperation = (...params) => ExperimentUpdates.redoOperation(state, setState, ...params);
 
-    const currTrial = currTrialByIndices();
+    const currTrial = TrialChoosing.FindTrialByIndices(state.currTrial, state.experiments);
 
-    const setCurrTrial = ({ experimentName, trialTypeName, trialName }, allExperiments) => {
-        allExperiments = allExperiments || state.experiments;
-        const experimentIndex = allExperiments.findIndex(t => t.name === experimentName);
-        if (experimentIndex >= 0) {
-            const experiment = allExperiments[experimentIndex];
-            const trialTypeIndex = experiment.trialTypes.findIndex(t => t.name === trialTypeName);
-            if (trialTypeIndex >= 0) {
-                const trialType = experiment.trialTypes[trialTypeIndex];
-                const trialIndex = trialType.trials.findIndex(t => t.name === trialName);
-                if (trialIndex >= 0) {
-                    replaceUrlParams({
-                        experimentName,
-                        trialTypeName,
-                        trialName,
-                    });
-                    setState(draft => {
-                        draft.currTrial = {
-                            experimentName, experimentIndex,
-                            trialTypeName, trialTypeIndex,
-                            trialName, trialIndex,
-                        };
-                    });
-                    return;
-                }
-            }
-        }
-        replaceUrlParams({
-            experimentName: undefined,
-            trialTypeName: undefined,
-            trialName: undefined,
-        });
-        setState(draft => {
-            draft.currTrial = {};
-        });
+    const setCurrTrial = ({ experimentName, trialTypeName, trialName }) => {
+        const t = TrialChoosing.FindTrialByName({ experimentName, trialTypeName, trialName }, state.experiments);
+        TrialChoosing.ReplaceUrlByTrial(t);
+        setState(draft => { draft.currTrial = t; });
     }
 
     const setShownMap = (shownMapName) => {
@@ -176,10 +138,12 @@ export const ExperimentProvider = ({ children }) => {
         (async () => {
             const { experimentName, trialTypeName, trialName } = parseUrlParams();
             const allExperiments = await fetchAllExperiments();
+            const t = TrialChoosing.FindTrialByName({ experimentName, trialTypeName, trialName }, allExperiments);
+            TrialChoosing.ReplaceUrlByTrial(t);
             setState(draft => {
                 draft.experiments = allExperiments;
+                draft.currTrial = t;
             });
-            setCurrTrial({ experimentName, trialTypeName, trialName }, allExperiments);
         })()
     }, [])
 
@@ -196,12 +160,6 @@ export const ExperimentProvider = ({ children }) => {
             })();
         }
     }, [state.serverUpdates]);
-
-    const deleteExperiment = (...params) => ExperimentUpdates.deleteExperiment(state, setState, ...params);
-    const addExperiment = (...params) => ExperimentUpdates.addExperiment(state, setState, ...params);
-    const setExperiment = (...params) => ExperimentUpdates.setExperiment(state, setState, ...params);
-    const undoOperation = (...params) => ExperimentUpdates.undoOperation(state, setState, ...params);
-    const redoOperation = (...params) => ExperimentUpdates.redoOperation(state, setState, ...params);
 
     const store = {
         experiments: state.experiments,
