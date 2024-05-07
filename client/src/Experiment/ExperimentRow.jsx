@@ -78,11 +78,6 @@ export const ExperimentRow = ({ data, setData, children }) => {
                                 "type": "Date",
                                 "name": "TrialEnd",
                             },
-                            {
-                                "type": "Boolean",
-                                "name": "StoreDataPerDevice",
-                                "defaultValue": false
-                            },
                         ]
                     }
                 }}
@@ -107,6 +102,17 @@ export const ExperimentRow = ({ data, setData, children }) => {
                 fieldName='deviceTypes'
                 nameTemplate='New Device Type'
                 setData={setData}
+                newDataCreator={() => {
+                    return {
+                        attributeTypes: [
+                            {
+                                "type": "Boolean",
+                                "name": "StoreDataPerDevice",
+                                "defaultValue": false
+                            },
+                        ]
+                    }
+                }}
             >
                 <DeviceTypesList
                     data={data}
