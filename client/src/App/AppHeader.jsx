@@ -74,7 +74,7 @@ export const AppHeader = ({ }) => {
                             <ButtonTooltip
                                 color="inherit"
                                 onClick={() => {
-                                    setCurrTrial();
+                                    setCurrTrial({});
                                 }}
                                 tooltip={"Stop editing this trial"}
                             >

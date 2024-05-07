@@ -1,4 +1,5 @@
 import { createContext, useEffect, useReducer, useState } from "react"
+import { useImmer, useImmerReducer } from "use-immer";
 import dayjs from 'dayjs';
 import { createNewName, parseUrlParams, replaceUrlParams, splitLast } from "../Utils/utils";
 import * as jsonpatch from 'fast-json-patch';
@@ -6,19 +7,6 @@ import { fetchAllExperiments, saveExperimentWithData } from "./FetchExperiment";
 import { RealMapName, argosJsonVersion } from "../constants/constants";
 
 export const experimentContext = createContext();
-
-const actions = {
-    SET_ALL_EXPS: "SET_ALL_EXPS",
-    ADD_EXP: "ADD_EXP",
-    DEL_EXP: "DEL_EXP",
-    SET_EXP: "SET_EXP",
-    CHANGE_EXP: "CHANGE_EXP",
-    UNDO: "UNDO",
-    REDO: "REDO",
-    CLEAR_SERVER_UPDATES: "CLEAR_SERVER_UPDATES",
-    SET_CURR_TRIAL: "SET_CURR_TRIAL",
-    SET_SHOWN_MAP: "SET_SHOWN_MAP",
-};
 
 const initialState = {
     experiments: [],
@@ -28,165 +16,63 @@ const initialState = {
     currTrial: {},
 }
 
-const reducer = (state, action) => {
-    switch (action.type) {
-        case actions.SET_ALL_EXPS: {
-            return { ...state, experiments: action.payload || [] };
-        }
-        case actions.ADD_EXP: {
-            const name = createNewName(state.experiments, action.data ? action.data.name : 'New Experiment');
-            const newExp = action.data ? action.data : {
+export const ExperimentProvider = ({ children }) => {
+    const [state, setState] = useImmer(initialState);
+
+    const deleteExperiment = (name) => {
+        setState(draft => {
+            draft.experiments = draft.experiments.filter(t => t.name !== name);
+            draft.serverUpdates.push({ name, exp: undefined });
+        })
+    }
+
+    const addExperiment = (newExp = undefined) => {
+        setState(draft => {
+            const name = createNewName(draft.experiments, newExp ? newExp.name : 'New Experiment');
+            const exp = newExp ? newExp : {
                 version: argosJsonVersion,
                 name,
                 startDate: dayjs().startOf('day'),
                 endDate: dayjs().startOf('day').add(7, 'day'),
                 description: '',
             };
-            return {
-                ...state,
-                experiments: [...state.experiments, newExp],
-                serverUpdates: [...state.serverUpdates, { name, exp: newExp }],
-            };
-        }
-        case actions.DEL_EXP: {
-            const { name } = action;
-            return {
-                ...state,
-                experiments: state.experiments.filter(t => t.name !== name),
-                serverUpdates: [...state.serverUpdates, { name, exp: undefined }],
-            };
-        }
-        case actions.SET_EXP: {
-            const { name, data } = action;
-            const i = state.experiments.findIndex(t => t.name === name)
-            if (i === -1) {
-                return state;
-            }
-            if (data.name !== data.name.trim()) {
-                alert("Invalid experiment name, has trailing or leading spaces");
-                return state;
-            }
-            if (state.experiments.find((e, ei) => e.name === data.name && ei !== i)) {
-                alert("Duplicate experiment name");
-                return state;
-            }
-            const redoPatch = jsonpatch.compare(state.experiments[i], data);
-            if (redoPatch.length === 0) {
-                return state;
-            }
-            const experiments = state.experiments.slice();
-            const undoPatch = jsonpatch.compare(data, experiments[i]);
-            const undoStack = [...state.undoStack, { name, undoPatch, redoPatch }]
-            const serverUpdates = [...state.serverUpdates, { name, exp: data }];
-            experiments[i] = data;
-            return {
-                ...state,
-                experiments,
-                undoStack,
-                redoStack: [],
-                serverUpdates,
-            };
-        }
-        case actions.UNDO: {
-            const [undoStack, item] = splitLast(state.undoStack);
-            if (item) {
-                const { name, undoPatch } = item;
-                const i = state.experiments.findIndex(t => t.name === name)
-                if (i !== -1) {
-                    const experiments = state.experiments.slice();
-                    const newExp = jsonpatch.applyPatch(experiments[i], undoPatch, false, false).newDocument;
-                    experiments[i] = newExp;
-                    const redoStack = [...state.redoStack, item];
-                    return {
-                        ...state,
-                        experiments,
-                        undoStack,
-                        redoStack,
-                        serverUpdates: [...state.serverUpdates, { name, exp: newExp }],
-                    };
-                }
-            }
-            return state;
-        }
-        case actions.REDO: {
-            const [redoStack, item] = splitLast(state.redoStack);
-            if (item) {
-                const { name, redoPatch } = item;
-                const i = state.experiments.findIndex(t => t.name === name)
-                if (i !== -1) {
-                    const experiments = state.experiments.slice();
-                    const newExp = jsonpatch.applyPatch(experiments[i], redoPatch, false, false).newDocument;
-                    experiments[i] = newExp;
-                    const undoStack = [...state.undoStack, item];
-                    return {
-                        ...state,
-                        experiments,
-                        undoStack,
-                        redoStack,
-                        serverUpdates: [...state.serverUpdates, { name, exp: newExp }],
-                    };
-                }
-            }
-            return state;
-        }
-        case actions.CLEAR_SERVER_UPDATES: {
-            return { ...state, serverUpdates: [] };
-        }
-        case actions.SET_CURR_TRIAL: {
-            const { experimentName, trialTypeName, trialName } = action;
-            const experimentIndex = state.experiments.findIndex(t => t.name === experimentName);
-            if (experimentIndex >= 0) {
-                const experiment = state.experiments[experimentIndex];
-                const trialTypeIndex = experiment.trialTypes.findIndex(t => t.name === trialTypeName);
-                if (trialTypeIndex >= 0) {
-                    const trialType = experiment.trialTypes[trialTypeIndex];
-                    const trialIndex = trialType.trials.findIndex(t => t.name === trialName);
-                    if (trialIndex >= 0) {
-                        replaceUrlParams({
-                            experimentName,
-                            trialTypeName,
-                            trialName,
-                        });
-                        return {
-                            ...state,
-                            currTrial: {
-                                experimentName, experimentIndex,
-                                trialTypeName, trialTypeIndex,
-                                trialName, trialIndex,
-                            }
-                        }
-                    }
-                }
-            }
-            replaceUrlParams({
-                experimentName: undefined,
-                trialTypeName: undefined,
-                trialName: undefined,
-            });
-            return { ...state, currTrial: {} };
-        }
-        case actions.SET_SHOWN_MAP: {
-            if (state.currTrial.experimentName) {
-                const experiment = state.experiments[state.currTrial.experimentIndex];
-                const { shownMapName } = action;
-                const shownMapIndex = experiment.imageStandalone.findIndex(t => t.name === shownMapName);
-                if (shownMapIndex >= 0) {
-                    replaceUrlParams({ shownMapName });
-                    return { ...state, currTrial: { ...state.currTrial, shownMapName, shownMapIndex } };
-                }
-            }
-            replaceUrlParams({ shownMapName: undefined });
-            return { ...state, currTrial: { ...state.currTrial, shownMapName: undefined, shownMapIndex: undefined } };
-        }
-        default: {
-            return state;
-        }
+            draft.experiments.push(exp);
+            draft.serverUpdates.push({ name, exp });
+        });
     }
-};
 
-export const ExperimentProvider = ({ children }) => {
-    const [state, dispatch] = useReducer(reducer, initialState);
-    const experiments = state.experiments;
+    const setExperiment = (name, data) => {
+        const i = state.experiments.findIndex(t => t.name === name)
+        if (i === -1) {
+            alert("Unknown experiment name");
+            return;
+        }
+        if (data.name !== data.name.trim()) {
+            alert("Invalid experiment name, has trailing or leading spaces");
+            return;
+        }
+        if (state.experiments.find((e, ei) => e.name === data.name && ei !== i)) {
+            alert("Duplicate experiment name");
+            return;
+        }
+        const exp = state.experiments[i];
+        const redoPatch = jsonpatch.compare(exp, data);
+        const undoPatch = jsonpatch.compare(data, exp);
+        if (redoPatch.length === 0) {
+            return; // nothing was changed
+        }
+        setState(draft => {
+            draft.experiments[i] = data;
+            draft.undoStack.push({ name, undoPatch, redoPatch });
+            draft.redoStack = [];
+            draft.serverUpdates.push({ name, exp: data });
+        });
+    }
+
+
+
+
+    //////////////////////////////////////////////////
 
     const [selection, setSelection] = useState([]);
     const [showImagePlacement, setShowImagePlacement] = useState(false);
@@ -208,22 +94,60 @@ export const ExperimentProvider = ({ children }) => {
 
     const currTrial = currTrialByIndices();
 
-    const setCurrTrial = (newCurrTrialStruct) => {
-        const { experimentName, trialTypeName, trialName } = newCurrTrialStruct || {};
-        dispatch({ type: actions.SET_CURR_TRIAL, experimentName, trialTypeName, trialName });
+    const setCurrTrial = ({ experimentName, trialTypeName, trialName }) => {
+        const experimentIndex = state.experiments.findIndex(t => t.name === experimentName);
+        if (experimentIndex >= 0) {
+            const experiment = state.experiments[experimentIndex];
+            const trialTypeIndex = experiment.trialTypes.findIndex(t => t.name === trialTypeName);
+            if (trialTypeIndex >= 0) {
+                const trialType = experiment.trialTypes[trialTypeIndex];
+                const trialIndex = trialType.trials.findIndex(t => t.name === trialName);
+                if (trialIndex >= 0) {
+                    replaceUrlParams({
+                        experimentName,
+                        trialTypeName,
+                        trialName,
+                    });
+                    setState(draft => {
+                        draft.currTrial = {
+                            experimentName, experimentIndex,
+                            trialTypeName, trialTypeIndex,
+                            trialName, trialIndex,
+                        };
+                    });
+                    return;
+                }
+            }
+        }
+        replaceUrlParams({
+            experimentName: undefined,
+            trialTypeName: undefined,
+            trialName: undefined,
+        });
+        setState(draft => {
+            draft.currTrial = {};
+        });
     }
 
-    const deleteExperiment = (name) => {
-        dispatch({ type: actions.DEL_EXP, name: name });
+    const setShownMap = (shownMapName) => {
+        if (state.currTrial.experimentName) {
+            const experiment = state.experiments[state.currTrial.experimentIndex];
+            const shownMapIndex = experiment.imageStandalone.findIndex(t => t.name === shownMapName);
+            if (shownMapIndex >= 0) {
+                replaceUrlParams({ shownMapName });
+                setState(draft => {
+                    draft.currTrial.shownMapName = shownMapName;
+                    draft.currTrial.shownMapIndex = shownMapIndex;
+                });
+            }
+        }
+        replaceUrlParams({ shownMapName: undefined });
+        setState(draft => {
+            draft.currTrial.shownMapName = undefined;
+            draft.currTrial.shownMapIndex = undefined;
+        });
     }
 
-    const addExperiment = (newExp = undefined) => {
-        dispatch({ type: actions.ADD_EXP, data: newExp });
-    }
-
-    const setExperiment = (name, data) => {
-        dispatch({ type: actions.SET_EXP, name, data });
-    }
 
     const setTrialData = (data) => {
         if (state.currTrial.trialName === undefined) {
@@ -305,10 +229,44 @@ export const ExperimentProvider = ({ children }) => {
         setExperiment(currTrial.experimentName, e)
     }
 
+    const undoOperation = () => {
+        setState(draft => {
+            const item = draft.undoStack.pop();
+            if (item) {
+                const { name, undoPatch } = item;
+                const i = draft.experiments.findIndex(t => t.name === name)
+                if (i !== -1) {
+                    const exp = jsonpatch.applyPatch(draft.experiments[i], undoPatch, false, false).newDocument;
+                    draft.experiments[i] = exp;
+                    draft.redoStack.push(item);
+                    draft.serverUpdates.push({ name, exp });
+                }
+            }
+        });
+    }
+
+    const redoOperation = () => {
+        setState(draft => {
+            const item = draft.redoStack.pop();
+            if (item) {
+                const { name, redoPatch } = item;
+                const i = draft.experiments.findIndex(t => t.name === name)
+                if (i !== -1) {
+                    const exp = jsonpatch.applyPatch(draft.experiments[i], redoPatch, false, false).newDocument;
+                    draft.experiments[i] = exp;
+                    draft.undoStack.push(item);
+                    draft.serverUpdates.push({ name, exp });
+                }
+            }
+        });
+    }
+
     useEffect(() => {
         (async () => {
-            const exp = await fetchAllExperiments();
-            dispatch({ type: actions.SET_ALL_EXPS, payload: exp || [] });
+            const allExperiments = await fetchAllExperiments();
+            setState(draft => {
+                draft.experiments = allExperiments;
+            });
             const { experimentName, trialTypeName, trialName } = parseUrlParams();
             setCurrTrial({ experimentName, trialTypeName, trialName });
         })()
@@ -318,7 +276,9 @@ export const ExperimentProvider = ({ children }) => {
         if (state.serverUpdates.length > 0) {
             (async () => {
                 const updates = state.serverUpdates;
-                dispatch({ type: actions.CLEAR_SERVER_UPDATES });
+                setState(draft => {
+                    draft.serverUpdates = [];
+                })
                 for (const { name, exp } of updates) {
                     await saveExperimentWithData(name, exp);
                 }
@@ -327,7 +287,7 @@ export const ExperimentProvider = ({ children }) => {
     }, [state.serverUpdates]);
 
     const store = {
-        experiments,
+        experiments: state.experiments,
         deleteExperiment,
         addExperiment,
         setExperiment,
@@ -338,13 +298,13 @@ export const ExperimentProvider = ({ children }) => {
         deleteDeviceType,
         selection,
         setSelection,
-        undoOperation: () => dispatch({ type: actions.UNDO }),
-        redoOperation: () => dispatch({ type: actions.REDO }),
+        undoOperation,
+        redoOperation,
         undoPossible: state.undoStack.length > 0,
         redoPossible: state.redoStack.length > 0,
         setLocationsToDevices,
         setLocationsToStackDevices,
-        setShownMap: (shownMapName) => dispatch({ type: actions.SET_SHOWN_MAP, shownMapName }),
+        setShownMap,
         showImagePlacement,
         setShowImagePlacement,
     };
