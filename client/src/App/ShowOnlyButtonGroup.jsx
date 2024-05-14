@@ -1,7 +1,7 @@
-import { CellTower } from "@mui/icons-material";
-import { ButtonTooltip } from "../Utils/ButtonTooltip";
+import { CellTower, Terrain } from "@mui/icons-material";
 import { useContext } from "react";
 import { experimentContext } from "../Context/ExperimentProvider";
+import { ToggleButton, ToggleButtonGroup, Tooltip } from "@mui/material";
 
 export const ShowOnlyButtonGroup = ({ showDevicesOnly, setShowDevicesOnly }) => {
     const {
@@ -9,19 +9,33 @@ export const ShowOnlyButtonGroup = ({ showDevicesOnly, setShowDevicesOnly }) => 
     } = useContext(experimentContext);
 
     return (
-        <ButtonTooltip
-            onClick={() => {
-                setShowDevicesOnly(!showDevicesOnly);
-            }}
-            tooltip={!currTrial.experiment
-                ? "Choose an experiment to show only its devices"
-                : showDevicesOnly
-                    ? "Now showing only devices, click to show all experiments and trials"
-                    : "Now showing all experiments, click to show only devices of current experiment"}
-            color={showDevicesOnly ? "warning" : "inherit"}
-            disabled={!currTrial.experiment}
+        <Tooltip
+            title={currTrial.experiment
+                ? ""
+                : "Choose an experiment to customize which parts of the experiment are shown"}
         >
-            <CellTower />
-        </ButtonTooltip>
+            <ToggleButtonGroup
+                color="warning"
+                size="small"
+                value={showDevicesOnly}
+                exclusive
+                onChange={(e, val) => {
+                    e.stopPropagation();
+                    setShowDevicesOnly(val);
+                }}
+                disabled={!currTrial.experiment}
+            >
+                <ToggleButton value={false}>
+                    <Tooltip title="Show all experiments and trials">
+                        <Terrain />
+                    </Tooltip>
+                </ToggleButton>
+                <ToggleButton value={true}>
+                    <Tooltip title="Show only devices of current experiment">
+                        <CellTower />
+                    </Tooltip>
+                </ToggleButton>
+            </ToggleButtonGroup>
+        </Tooltip>
     )
 }
