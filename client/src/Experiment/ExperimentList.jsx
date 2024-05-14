@@ -12,11 +12,11 @@ import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { DeviceTypesList } from "./DeviceTypesList";
 import { SHOW_ALL_EXPERIMENTS, SHOW_ONLY_DEVICES, SHOW_ONLY_TRIALS } from "../App/ShowConfigToggles";
 import { Case, SwitchCase } from "../Utils/SwitchCase";
-import { TrialTypesList } from "./TrialTypesList";
+import { TrialTypesList, trialTypeKey } from "./TrialTypesList";
 
 export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
     const { experiments, setExperiment, addExperiment, currTrial, setCurrTrial } = useContext(experimentContext);
-    const { experiment, experimentName, trialTypeName, trialName } = currTrial;
+    const { experiment, experimentName, trialType, trialTypeName, trialName } = currTrial;
     const [expanded, setExpanded] = useState([]);
 
     useEffect(() => {
@@ -27,8 +27,7 @@ export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
             setExpanded([
                 EXPERIMENT_NODE_ID_PREFIX + experimentName,
                 experimentName + "_trialTypes",
-                trialTypeName,
-                trialTypeName + "_trials",
+                trialTypeKey(experiment, trialType),
                 experimentName + "_deviceTypes",
                 trialName
             ]);

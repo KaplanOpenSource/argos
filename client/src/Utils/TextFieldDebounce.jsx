@@ -13,7 +13,9 @@ export const TextFieldDebounce = ({ value, onChange, debounceMs = 500, tooltipTi
     }, [value]);
 
     // Create a debounced onChange function
-    const debouncedOnChange = React.useMemo(() => debounce(onChange, debounceMs), [onChange, debounceMs]);
+    const debouncedOnChange = React.useMemo(() => {
+        return debounce(onChange, debounceMs);
+    }, [onChange, debounceMs]);
 
     const handleChange = (event) => {
         setInnerValue(event.target.value); // Update local state for immediate feedback
