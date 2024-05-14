@@ -1,4 +1,4 @@
-import { CellTower, Terrain } from "@mui/icons-material";
+import { CellTower, GridOn, Terrain } from "@mui/icons-material";
 import { useContext } from "react";
 import { experimentContext } from "../Context/ExperimentProvider";
 import { ThemeProvider, ToggleButton, ToggleButtonGroup, Tooltip, createTheme } from "@mui/material";
@@ -44,6 +44,11 @@ export const ShowConfigToggles = ({ showConfig, setShowConfig }) => {
                     <ToggleButton value={SHOW_ONLY_DEVICES}>
                         <Tooltip title="Show only devices of current experiment">
                             <CellTower />
+                        </Tooltip>
+                    </ToggleButton>
+                    <ToggleButton value={SHOW_ONLY_TRIALS}>
+                        <Tooltip title="Show only trials of current experiment">
+                            <GridOn />
                         </Tooltip>
                     </ToggleButton>
                 </ToggleButtonGroup>

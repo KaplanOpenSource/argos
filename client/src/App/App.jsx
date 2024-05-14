@@ -32,6 +32,7 @@ export function App() {
         <ExperimentList
           fullscreen={fullscreen}
           showConfig={showConfig}
+          setShowConfig={setShowConfig}
         />
         {fullscreen ? null :
           <DeviceTable

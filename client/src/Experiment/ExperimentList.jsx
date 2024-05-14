@@ -10,17 +10,19 @@ import { deepClone } from "fast-json-patch";
 import { createNewName } from "../Utils/utils";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { DeviceTypesList } from "./DeviceTypesList";
-import { SHOW_ALL_EXPERIMENTS, SHOW_ONLY_DEVICES } from "../App/ShowConfigToggles";
+import { SHOW_ALL_EXPERIMENTS, SHOW_ONLY_DEVICES, SHOW_ONLY_TRIALS } from "../App/ShowConfigToggles";
 import { Case, SwitchCase } from "../Utils/SwitchCase";
 
-export const ExperimentList = ({ fullscreen, showConfig }) => {
+export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
     const { experiments, setExperiment, addExperiment, currTrial, setCurrTrial } = useContext(experimentContext);
-
+    const { experiment, experimentName, trialTypeName, trialName } = currTrial;
     const [expanded, setExpanded] = useState([]);
 
-    const { experimentName, trialTypeName, trialName } = currTrial;
     useEffect(() => {
-        if (trialName) {
+        if (!experiment) {
+            setShowConfig(SHOW_ALL_EXPERIMENTS);
+            setExpanded(experiments.map(e => EXPERIMENT_NODE_ID_PREFIX + e));
+        } else if (trialName) {
             setExpanded([
                 EXPERIMENT_NODE_ID_PREFIX + experimentName,
                 experimentName + "_trialTypes",
@@ -30,7 +32,7 @@ export const ExperimentList = ({ fullscreen, showConfig }) => {
                 trialName
             ]);
         }
-    }, [`${experimentName}:${trialTypeName}:${trialName}`]);
+    }, [experimentName, trialTypeName, trialName]);
 
     return (
         <Paper
@@ -70,12 +72,6 @@ export const ExperimentList = ({ fullscreen, showConfig }) => {
                 disableSelection
             >
                 <SwitchCase test={currTrial.experiment ? showConfig : SHOW_ALL_EXPERIMENTS}>
-                    <Case value={SHOW_ONLY_DEVICES}>
-                        <DeviceTypesList
-                            data={currTrial.experiment}
-                            setData={val => setExperiment(currTrial.experiment.name, val)}
-                        />
-                    </Case>
                     <Case value={SHOW_ALL_EXPERIMENTS}>
                         {experiments.map(exp => (
                             <ExperimentRow key={exp.name}
@@ -94,6 +90,18 @@ export const ExperimentList = ({ fullscreen, showConfig }) => {
                                 </ButtonTooltip>
                             </ExperimentRow>
                         ))}
+                    </Case>
+                    <Case value={SHOW_ONLY_DEVICES}>
+                        <DeviceTypesList
+                            data={currTrial.experiment}
+                            setData={val => setExperiment(currTrial.experiment.name, val)}
+                        />
+                    </Case>
+                    <Case value={SHOW_ONLY_TRIALS}>
+                        <DeviceTypesList
+                            data={currTrial.experiment}
+                            setData={val => setExperiment(currTrial.experiment.name, val)}
+                        />
                     </Case>
                 </SwitchCase>
             </TreeView>
