@@ -12,7 +12,8 @@ import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { DeviceTypesList } from "./DeviceTypesList";
 import { SHOW_ALL_EXPERIMENTS, SHOW_ONLY_DEVICES, SHOW_ONLY_TRIALS } from "../App/ShowConfigToggles";
 import { Case, SwitchCase } from "../Utils/SwitchCase";
-import { TrialTypesList, trialTypeKey } from "./TrialTypesList";
+import { TrialTypesList } from "./TrialTypesList";
+import { trialTypeKey } from "./TrialType";
 
 export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
     const { experiments, setExperiment, addExperiment, currTrial, setCurrTrial } = useContext(experimentContext);
