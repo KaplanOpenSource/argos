@@ -9,10 +9,7 @@ import { SelectProperty } from "../Utils/SelectProperty";
 export const SCOPE_TRIAL = "Trial";
 export const SCOPE_EXPERIMENT = "Experiment";
 export const SCOPE_CONSTANT = "Constant";
-export const SCOPES_OF_DEVICE = [SCOPE_TRIAL, SCOPE_EXPERIMENT, SCOPE_CONSTANT];
-export const SCOPES_OF_TRIAL = [SCOPE_TRIAL, SCOPE_CONSTANT];
 export const AttributeType = ({ data, setData, isOfDevice }) => {
-    const scopes = isOfDevice ? SCOPES_OF_DEVICE : SCOPES_OF_TRIAL;
     return (
         <TreeRow
             key={data.name}
@@ -39,7 +36,17 @@ export const AttributeType = ({ data, setData, isOfDevice }) => {
                         label="Scope"
                         data={data.scope || SCOPE_TRIAL}
                         setData={scope => setData({ ...data, scope })}
-                        options={scopes.map(name => { return { name } })}
+                        options={isOfDevice
+                            ? [
+                                { name: SCOPE_TRIAL, tooltip: "Attribute can be changed only when device is placed on a trial"},
+                                { name: SCOPE_EXPERIMENT, tooltip: "Attribute can be changed only on its definition on the experiment"},
+                                { name: SCOPE_CONSTANT, tooltip: "Attribute value is always equal to its default"},
+                            ]
+                            : [
+                                { name: SCOPE_TRIAL, tooltip: "Attribute can change on each trial"},
+                                { name: SCOPE_CONSTANT, tooltip: "Attribute value is always equal to its default"},
+                            ]}
+                        tooltipTitle="Where can this attribute's value be changed"
                     />
                     <IconButton
                         onClick={() => setData(undefined)}

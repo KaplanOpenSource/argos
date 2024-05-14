@@ -3,22 +3,24 @@ import { Box, Chip, FormControl, InputLabel, ListItemText, MenuItem, Select, Too
 function makeArray(val) {
     return ((typeof val === 'string' ? val.split(',') : val) || []);
 }
+
 export const SelectProperty = ({ label, data, setData, options, multiple, tooltipTitle = "", ...restProps }) => {
-    if (!multiple) {
-        return (
-            <Tooltip
-                title={tooltipTitle}
-                placement='top'
-            >
-                <FormControl>
-                    <InputLabel>{label}</InputLabel>
+    return (
+        <Tooltip
+            title={tooltipTitle}
+            placement='top'
+        >
+            <FormControl>
+                <InputLabel>{label}</InputLabel>
+                {!multiple ? (
                     <Select
-                        value={data}
                         label={label}
-                        onChange={(event) => {
-                            setData(event.target.value);
-                        }}
                         size="small"
+                        value={data}
+                        onChange={(e) => {
+                            e.stopPropagation();
+                            setData(e.target.value);
+                        }}
                         {...restProps}
                     >
                         {(options || []).map(o => (
@@ -26,26 +28,24 @@ export const SelectProperty = ({ label, data, setData, options, multiple, toolti
                                 key={o.name}
                                 value={o.name}
                             >
-                                {o.name}
+                                <Tooltip
+                                    title={o.tooltip}
+                                    placement="top"
+                                >
+                                    {o.name}
+                                </Tooltip>
                             </MenuItem>
                         ))}
                     </Select>
-                </FormControl>
-            </Tooltip>
-        )
-    } else {
-        return (
-            <Tooltip
-                title={tooltipTitle}
-                placement='top'
-            >
-                <FormControl>
-                    <InputLabel>{label}</InputLabel>
+                ) : (
                     <Select
-                        value={makeArray(data)}
                         label={label}
-                        onChange={(event) => setData(makeArray(event.target.value))}
                         size="small"
+                        value={makeArray(data)}
+                        onChange={(e) => {
+                            e.stopPropagation();
+                            setData(makeArray(e.target.value));
+                        }}
                         renderValue={(selected) => {
                             const sarr = makeArray(selected);
                             return (
@@ -64,13 +64,18 @@ export const SelectProperty = ({ label, data, setData, options, multiple, toolti
                                 key={o.name}
                                 value={o.name}
                             >
-                                {/* <Checkbox checked={(data || []).indexOf(o.name) > -1} /> */}
-                                <ListItemText primary={o.name} />
+                                <Tooltip
+                                    title={o.tooltip}
+                                    placement="top"
+                                >
+                                    {/* <Checkbox checked={(data || []).indexOf(o.name) > -1} /> */}
+                                    <ListItemText primary={o.name} />
+                                </Tooltip>
                             </MenuItem>
                         ))}
                     </Select>
-                </FormControl>
-            </Tooltip>
-        )
-    }
+                )}
+            </FormControl>
+        </Tooltip>
+    )
 }
