@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Box, IconButton, Paper, Popper, Tooltip } from "@mui/material";
+import { Box, IconButton, Paper, Popover, Popper, Tooltip } from "@mui/material";
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
@@ -18,16 +18,24 @@ export const AttributeTypesDialogButton = ({ data, setData, isOfDevice }) => {
                 <Tooltip title="Edit attribute types" placement="top">
                     <IconButton
                         size="small"
-                        onClick={(e) => { e.stopPropagation(); setAnchorEl(anchorEl ? null : e.currentTarget); }}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setAnchorEl(anchorEl ? null : e.currentTarget);
+                        }}
                         color={Boolean(anchorEl) ? "primary" : ""}
                     >
                         <AccountTreeIcon />
                     </IconButton>
                 </Tooltip>
-                <Popper
+                <Popover
                     open={Boolean(anchorEl)}
                     anchorEl={anchorEl}
-                    placement="right-start"
+                    onClose={e => {
+                        e.stopPropagation();
+                        setAnchorEl();
+                    }}
+                    anchorOrigin={{ vertical: 'top', horizontal: 'right', }}
+                    transformOrigin={{ vertical: 'top', horizontal: 'left', }}
                     sx={{ zIndex: 1000 }}
                 >
                     <Paper sx={{ border: 1, p: 1 }}
@@ -69,7 +77,7 @@ export const AttributeTypesDialogButton = ({ data, setData, isOfDevice }) => {
                             </TreeSublist>
                         </TreeView>
                     </Paper>
-                </Popper>
+                </Popover>
             </Box>
         </>
         // </ClickAwayListener>
