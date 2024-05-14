@@ -7,12 +7,13 @@ import {
 } from '@mui/material';
 import { experimentContext } from '../Context/ExperimentProvider';
 import { useContext } from 'react';
-import { Add, CellTower, CloseFullscreen, OpenInFull, Redo, Undo } from '@mui/icons-material';
+import { Add, CloseFullscreen, OpenInFull, Redo, Undo } from '@mui/icons-material';
 import EditLocationAltIcon from '@mui/icons-material/EditLocationAlt';
 import EditLocationOutlinedIcon from '@mui/icons-material/EditLocationOutlined';
 import { VersionId } from './VersionId';
 import { ButtonTooltip } from '../Utils/ButtonTooltip';
 import { UploadExperimentIcon } from '../Experiment/UploadExperimentIcon';
+import { ShowOnlyButtonGroup } from './ShowOnlyButtonGroup';
 
 export const AppHeader = ({ fullscreen, setFullscreen, showDevicesOnly, setShowDevicesOnly }) => {
     const {
@@ -25,7 +26,6 @@ export const AppHeader = ({ fullscreen, setFullscreen, showDevicesOnly, setShowD
         showImagePlacement,
         setShowImagePlacement,
         addExperiment,
-
     } = useContext(experimentContext);
     const { experimentName, trialTypeName, trialName, shownMapName } = currTrial;
     return (
@@ -72,20 +72,10 @@ export const AppHeader = ({ fullscreen, setFullscreen, showDevicesOnly, setShowD
                         >
                             {fullscreen ? <CloseFullscreen /> : <OpenInFull />}
                         </ButtonTooltip>
-                        <ButtonTooltip
-                            onClick={() => {
-                                setShowDevicesOnly(!showDevicesOnly);
-                            }}
-                            tooltip={!currTrial.experiment
-                                ? "Choose an experiment to show only its devices"
-                                : showDevicesOnly
-                                    ? "Now showing only devices, click to show all experiments and trials"
-                                    : "Now showing all experiments, click to show only devices of current experiment"}
-                            color={showDevicesOnly ? "warning" : "inherit"}
-                            disabled={!currTrial.experiment}
-                        >
-                            <CellTower />
-                        </ButtonTooltip>
+                        <ShowOnlyButtonGroup
+                            showDevicesOnly={showDevicesOnly}
+                            setShowDevicesOnly={setShowDevicesOnly}
+                        />
                     </Stack>
                 </Stack>
                 <ButtonTooltip

@@ -7,11 +7,13 @@ import { MapPlacer } from '../Map/MapPlacer';
 import { DeviceMarkersShown } from '../Map/DeviceMarkersShown';
 import { MapPositionOnUrl } from '../Map/MapPositionOnUrl';
 import { EditToolBox } from '../EditToolBox/EditToolBox';
-import { ShapeProvider } from '../EditToolBox/ShapeContext';
 import { useContext, useState } from 'react';
-import { ActionsOnMapDoer, ActionsOnMapProvider } from '../Map/ActionsOnMapContext';
+import { ActionsOnMapDoer } from '../Map/ActionsOnMapContext';
 import { MapCoordinates } from '../Map/MapCoordinates';
 import { experimentContext } from '../Context/ExperimentProvider';
+
+// export const SHOW_ONLY_DEVICES = 'SHOW_ONLY_DEVICES';
+// export const SHOW_ONLY_TRIALS = 'SHOW_ONLY_TRIALS';
 
 export function App() {
   const [showEditBox, setShowEditBox] = useState(false);
