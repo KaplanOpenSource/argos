@@ -11,15 +11,13 @@ import { useContext, useState } from 'react';
 import { ActionsOnMapDoer } from '../Map/ActionsOnMapContext';
 import { MapCoordinates } from '../Map/MapCoordinates';
 import { experimentContext } from '../Context/ExperimentProvider';
-
-// export const SHOW_ONLY_DEVICES = 'SHOW_ONLY_DEVICES';
-// export const SHOW_ONLY_TRIALS = 'SHOW_ONLY_TRIALS';
+import { SHOW_ALL_EXPERIMENTS } from './ShowConfigToggles';
 
 export function App() {
   const [showEditBox, setShowEditBox] = useState(false);
   const [markedPoints, setMarkedPoints] = useState([]);
   const [fullscreen, setFullscreen] = useState(false);
-  const [showDevicesOnly, setShowDevicesOnly] = useState(false);
+  const [showConfig, setShowConfig] = useState(SHOW_ALL_EXPERIMENTS);
   const { currTrial } = useContext(experimentContext);
 
   return (
@@ -27,13 +25,13 @@ export function App() {
       <AppHeader
         fullscreen={fullscreen}
         setFullscreen={setFullscreen}
-        showDevicesOnly={showDevicesOnly}
-        setShowDevicesOnly={setShowDevicesOnly}
+        showConfig={showConfig}
+        setShowConfig={setShowConfig}
       />
       <Stack direction={'row'} justifyContent="space-between" alignItems="flex-start">
         <ExperimentList
           fullscreen={fullscreen}
-          showDevicesOnly={showDevicesOnly}
+          showConfig={showConfig}
         />
         {fullscreen ? null :
           <DeviceTable

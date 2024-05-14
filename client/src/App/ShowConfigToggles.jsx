@@ -3,13 +3,17 @@ import { useContext } from "react";
 import { experimentContext } from "../Context/ExperimentProvider";
 import { ThemeProvider, ToggleButton, ToggleButtonGroup, Tooltip, createTheme } from "@mui/material";
 
+export const SHOW_ALL_EXPERIMENTS = 'SHOW_ALL_EXPERIMENTS';
+export const SHOW_ONLY_DEVICES = 'SHOW_ONLY_DEVICES';
+export const SHOW_ONLY_TRIALS = 'SHOW_ONLY_TRIALS';
+
 const theme = createTheme({
     palette: {
         primary: { main: '#fefefe' }
     },
 });
 
-export const ShowConfigToggles = ({ showDevicesOnly, setShowDevicesOnly }) => {
+export const ShowConfigToggles = ({ showConfig, setShowConfig }) => {
     const {
         currTrial,
     } = useContext(experimentContext);
@@ -24,20 +28,20 @@ export const ShowConfigToggles = ({ showDevicesOnly, setShowDevicesOnly }) => {
                 <ToggleButtonGroup
                     color="primary"
                     size="small"
-                    value={showDevicesOnly}
+                    value={showConfig}
                     exclusive
                     onChange={(e, val) => {
                         e.stopPropagation();
-                        setShowDevicesOnly(val);
+                        setShowConfig(val);
                     }}
                     disabled={!currTrial.experiment}
                 >
-                    <ToggleButton value={false}>
+                    <ToggleButton value={SHOW_ALL_EXPERIMENTS}>
                         <Tooltip title="Show all experiments and trials">
                             <Terrain />
                         </Tooltip>
                     </ToggleButton>
-                    <ToggleButton value={true}>
+                    <ToggleButton value={SHOW_ONLY_DEVICES}>
                         <Tooltip title="Show only devices of current experiment">
                             <CellTower />
                         </Tooltip>

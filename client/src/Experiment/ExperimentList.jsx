@@ -10,8 +10,10 @@ import { deepClone } from "fast-json-patch";
 import { createNewName } from "../Utils/utils";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { DeviceTypesList } from "./DeviceTypesList";
+import { SHOW_ALL_EXPERIMENTS, SHOW_ONLY_DEVICES } from "../App/ShowConfigToggles";
+import { Case, SwitchCase } from "../Utils/SwitchCase";
 
-export const ExperimentList = ({ fullscreen, showDevicesOnly }) => {
+export const ExperimentList = ({ fullscreen, showConfig }) => {
     const { experiments, setExperiment, addExperiment, currTrial, setCurrTrial } = useContext(experimentContext);
 
     const [expanded, setExpanded] = useState([]);
@@ -67,29 +69,33 @@ export const ExperimentList = ({ fullscreen, showDevicesOnly }) => {
                 }}
                 disableSelection
             >
-                {(showDevicesOnly && currTrial.experiment)
-                    ? <DeviceTypesList
-                        data={currTrial.experiment}
-                        setData={val => setExperiment(currTrial.experiment.name, val)}
-                    />
-                    : experiments.map(exp => (
-                        <ExperimentRow key={exp.name}
-                            data={exp}
-                            setData={val => setExperiment(exp.name, val)}
-                            showDevicesOnly={showDevicesOnly && currTrial.trial}
-                        >
-                            <ButtonTooltip
-                                tooltip="Clone experiment"
-                                onClick={() => {
-                                    const name = createNewName(experiments, exp.name + " cloned");
-                                    addExperiment({ ...deepClone(exp), name });
-                                }}
+                <SwitchCase test={currTrial.experiment ? showConfig : SHOW_ALL_EXPERIMENTS}>
+                    <Case value={SHOW_ONLY_DEVICES}>
+                        <DeviceTypesList
+                            data={currTrial.experiment}
+                            setData={val => setExperiment(currTrial.experiment.name, val)}
+                        />
+                    </Case>
+                    <Case value={SHOW_ALL_EXPERIMENTS}>
+                        {experiments.map(exp => (
+                            <ExperimentRow key={exp.name}
+                                data={exp}
+                                setData={val => setExperiment(exp.name, val)}
+                                showConfig={showConfig && currTrial.trial}
                             >
-                                <ContentCopyIcon />
-                            </ButtonTooltip>
-                        </ExperimentRow>
-                    ))
-                }
+                                <ButtonTooltip
+                                    tooltip="Clone experiment"
+                                    onClick={() => {
+                                        const name = createNewName(experiments, exp.name + " cloned");
+                                        addExperiment({ ...deepClone(exp), name });
+                                    }}
+                                >
+                                    <ContentCopyIcon />
+                                </ButtonTooltip>
+                            </ExperimentRow>
+                        ))}
+                    </Case>
+                </SwitchCase>
             </TreeView>
         </Paper>
     )

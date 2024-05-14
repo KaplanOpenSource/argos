@@ -15,7 +15,7 @@ import { ButtonTooltip } from '../Utils/ButtonTooltip';
 import { UploadExperimentIcon } from '../Experiment/UploadExperimentIcon';
 import { ShowConfigToggles } from './ShowConfigToggles';
 
-export const AppHeader = ({ fullscreen, setFullscreen, showDevicesOnly, setShowDevicesOnly }) => {
+export const AppHeader = ({ fullscreen, setFullscreen, showConfig, setShowConfig }) => {
     const {
         undoOperation,
         redoOperation,
@@ -73,8 +73,8 @@ export const AppHeader = ({ fullscreen, setFullscreen, showDevicesOnly, setShowD
                             {fullscreen ? <CloseFullscreen /> : <OpenInFull />}
                         </ButtonTooltip>
                         <ShowConfigToggles
-                            showDevicesOnly={showDevicesOnly}
-                            setShowDevicesOnly={setShowDevicesOnly}
+                            showConfig={showConfig}
+                            setShowConfig={setShowConfig}
                         />
                     </Stack>
                 </Stack>
