@@ -7,7 +7,8 @@ import { BooleanProperty } from "../Utils/BooleanProperty";
 import { SelectProperty } from "../Utils/SelectProperty";
 
 export const SCOPE_TRIAL = "Trial";
-export const SCOPE_EXPERIMENT = "Experiment";
+export const SCOPE_EXPERIMENT = "Device definition";
+export const SCOPE_EXPERIMENT_ALT = "Experiment" // legacy;
 export const SCOPE_CONSTANT = "Constant";
 export const AttributeType = ({ data, setData, isOfDevice }) => {
     return (
@@ -34,17 +35,17 @@ export const AttributeType = ({ data, setData, isOfDevice }) => {
                     />
                     <SelectProperty
                         label="Scope"
-                        data={data.scope || SCOPE_TRIAL}
+                        data={data.scope === SCOPE_EXPERIMENT_ALT ? SCOPE_EXPERIMENT : (data.scope || SCOPE_TRIAL)}
                         setData={scope => setData({ ...data, scope })}
                         options={isOfDevice
                             ? [
-                                { name: SCOPE_TRIAL, tooltip: "Attribute can be changed only when device is placed on a trial"},
-                                { name: SCOPE_EXPERIMENT, tooltip: "Attribute can be changed only on its definition on the experiment"},
-                                { name: SCOPE_CONSTANT, tooltip: "Attribute value is always equal to its default"},
+                                { name: SCOPE_TRIAL, tooltip: "Attribute can be changed only when device is placed on a trial" },
+                                { name: SCOPE_EXPERIMENT, tooltip: "Attribute can be changed only on its device definition on the experiment" },
+                                { name: SCOPE_CONSTANT, tooltip: "Attribute value is always equal to its default" },
                             ]
                             : [
-                                { name: SCOPE_TRIAL, tooltip: "Attribute can change on each trial"},
-                                { name: SCOPE_CONSTANT, tooltip: "Attribute value is always equal to its default"},
+                                { name: SCOPE_TRIAL, tooltip: "Attribute can change on each trial" },
+                                { name: SCOPE_CONSTANT, tooltip: "Attribute value is always equal to its default" },
                             ]}
                         tooltipTitle="Where can this attribute's value be changed"
                     />
