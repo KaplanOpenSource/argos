@@ -13,7 +13,7 @@ import EditLocationOutlinedIcon from '@mui/icons-material/EditLocationOutlined';
 import { VersionId } from './VersionId';
 import { ButtonTooltip } from '../Utils/ButtonTooltip';
 import { UploadExperimentIcon } from '../Experiment/UploadExperimentIcon';
-import { ShowOnlyButtonGroup } from './ShowOnlyButtonGroup';
+import { ShowConfigToggles } from './ShowConfigToggles';
 
 export const AppHeader = ({ fullscreen, setFullscreen, showDevicesOnly, setShowDevicesOnly }) => {
     const {
@@ -72,7 +72,7 @@ export const AppHeader = ({ fullscreen, setFullscreen, showDevicesOnly, setShowD
                         >
                             {fullscreen ? <CloseFullscreen /> : <OpenInFull />}
                         </ButtonTooltip>
-                        <ShowOnlyButtonGroup
+                        <ShowConfigToggles
                             showDevicesOnly={showDevicesOnly}
                             setShowDevicesOnly={setShowDevicesOnly}
                         />

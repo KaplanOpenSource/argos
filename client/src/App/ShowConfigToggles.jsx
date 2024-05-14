@@ -9,7 +9,7 @@ const theme = createTheme({
     },
 });
 
-export const ShowOnlyButtonGroup = ({ showDevicesOnly, setShowDevicesOnly }) => {
+export const ShowConfigToggles = ({ showDevicesOnly, setShowDevicesOnly }) => {
     const {
         currTrial,
     } = useContext(experimentContext);
