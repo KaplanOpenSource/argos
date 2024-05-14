@@ -12,6 +12,7 @@ import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { DeviceTypesList } from "./DeviceTypesList";
 import { SHOW_ALL_EXPERIMENTS, SHOW_ONLY_DEVICES, SHOW_ONLY_TRIALS } from "../App/ShowConfigToggles";
 import { Case, SwitchCase } from "../Utils/SwitchCase";
+import { TrialTypesList } from "./TrialTypesList";
 
 export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
     const { experiments, setExperiment, addExperiment, currTrial, setCurrTrial } = useContext(experimentContext);
@@ -33,6 +34,12 @@ export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
             ]);
         }
     }, [experimentName, trialTypeName, trialName]);
+
+    useEffect(() => {
+        if (experiment && showConfig === SHOW_ONLY_TRIALS) {
+            setExpanded(experiment.trialTypes.map(t => t.name));
+        }
+    }, [showConfig]);
 
     return (
         <Paper
@@ -98,7 +105,7 @@ export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
                         />
                     </Case>
                     <Case value={SHOW_ONLY_TRIALS}>
-                        <DeviceTypesList
+                        <TrialTypesList
                             data={currTrial.experiment}
                             setData={val => setExperiment(currTrial.experiment.name, val)}
                         />

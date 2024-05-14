@@ -16,6 +16,7 @@ import { downloadJsonFile } from "./DownloadJsonFile";
 import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { DeviceTypesList } from "./DeviceTypesList";
+import { TrialTypesList } from "./TrialTypesList";
 
 export const EXPERIMENT_NODE_ID_PREFIX = 'experiment:';
 
@@ -85,18 +86,10 @@ export const ExperimentRow = ({ data, setData, children }) => {
                     }
                 }}
             >
-                {
-                    (data.trialTypes || []).map(itemData => (
-                        <TrialType
-                            key={itemData.name}
-                            data={itemData}
-                            setData={newData => {
-                                setData({ ...data, trialTypes: changeByName(data.trialTypes, itemData.name, newData) });
-                            }}
-                            experiment={data}
-                        />
-                    ))
-                }
+                <TrialTypesList
+                    data={data}
+                    setData={setData}
+                />
             </TreeSublist>
 
             <TreeSublist
