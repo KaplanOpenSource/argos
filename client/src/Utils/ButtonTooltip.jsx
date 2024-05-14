@@ -35,8 +35,8 @@ export const ButtonTooltip = ({ onClick, tooltip, disabled, closeTooltipOnClick,
         >
             {/* {disabled
                 ?  */}
-                <div style={{display: 'inline-block'}}>{button}</div>
-                {/* : button
+            <div style={{ display: 'inline-block' }}>{button}</div>
+            {/* : button
             } */}
         </Tooltip>
     )

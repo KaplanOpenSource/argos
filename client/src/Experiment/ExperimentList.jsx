@@ -4,21 +4,17 @@ import { EXPERIMENT_NODE_ID_PREFIX, ExperimentRow } from "./ExperimentRow";
 import { TreeView } from '@mui/x-tree-view/TreeView';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import AddIcon from '@mui/icons-material/Add';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import { Button, Paper } from "@mui/material";
+import { Paper } from "@mui/material";
 import { deepClone } from "fast-json-patch";
 import { createNewName } from "../Utils/utils";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
-import { CellTower, CloseFullscreen, OpenInFull } from "@mui/icons-material";
-import { UploadExperimentIcon } from "./UploadExperimentIcon";
 import { DeviceTypesList } from "./DeviceTypesList";
 
-export const ExperimentList = ({ fullscreen, setFullscreen }) => {
+export const ExperimentList = ({ fullscreen, showDevicesOnly }) => {
     const { experiments, setExperiment, addExperiment, currTrial, setCurrTrial } = useContext(experimentContext);
 
     const [expanded, setExpanded] = useState([]);
-    const [showDevicesOnly, setShowDevicesOnly] = useState(false);
 
     const { experimentName, trialTypeName, trialName } = currTrial;
     useEffect(() => {
@@ -50,41 +46,6 @@ export const ExperimentList = ({ fullscreen, setFullscreen }) => {
                 overflowY: 'visible'
             }}
         >
-            <Button
-                // onClick={() => setShowExperiments(!showExperiments)}
-                disableRipple={true}
-                disableFocusRipple={true}
-                disableTouchRipple={true}
-            // style={{ color: "primary" }}
-            >
-                Experiments
-            </Button>
-            <ButtonTooltip
-                onClick={() => addExperiment()}
-                tooltip={"Add experiment"}
-            >
-                <AddIcon />
-            </ButtonTooltip>
-            <UploadExperimentIcon
-            />
-            <ButtonTooltip
-                onClick={() => {
-                    setFullscreen(!fullscreen);
-                }}
-                tooltip={fullscreen ? "Show experiment list on side" : "Expand experiment list on screen"}
-            >
-                {fullscreen ? <CloseFullscreen /> : <OpenInFull />}
-            </ButtonTooltip>
-            <ButtonTooltip
-                onClick={() => {
-                    setShowDevicesOnly(!showDevicesOnly);
-                }}
-                tooltip={showDevicesOnly ? "Show all experiments and trials" : "Show only devices of current trial"}
-                color={showDevicesOnly ? "primary" : ""}
-                disabled={!currTrial.trial}
-            >
-                <CellTower />
-            </ButtonTooltip>
             <TreeView
                 defaultCollapseIcon={<ExpandMoreIcon />}
                 defaultExpandIcon={<ChevronRightIcon />}
@@ -106,7 +67,7 @@ export const ExperimentList = ({ fullscreen, setFullscreen }) => {
                 }}
                 disableSelection
             >
-                {(showDevicesOnly && currTrial.trial)
+                {(showDevicesOnly && currTrial.experiment)
                     ? <DeviceTypesList
                         data={currTrial.experiment}
                         setData={val => setExperiment(currTrial.experiment.name, val)}

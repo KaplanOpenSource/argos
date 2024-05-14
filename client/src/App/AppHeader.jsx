@@ -3,17 +3,18 @@ import CloseIcon from '@mui/icons-material/Close';
 import MapIcon from '@mui/icons-material/Map';
 import PublicIcon from '@mui/icons-material/Public';
 import {
-    AppBar, Box, IconButton, Stack, Toolbar, Tooltip, Typography
+    AppBar, IconButton, Stack, Toolbar, Tooltip, Typography
 } from '@mui/material';
 import { experimentContext } from '../Context/ExperimentProvider';
 import { useContext } from 'react';
-import { Redo, Undo } from '@mui/icons-material';
+import { Add, CellTower, CloseFullscreen, OpenInFull, Redo, Undo } from '@mui/icons-material';
 import EditLocationAltIcon from '@mui/icons-material/EditLocationAlt';
 import EditLocationOutlinedIcon from '@mui/icons-material/EditLocationOutlined';
 import { VersionId } from './VersionId';
 import { ButtonTooltip } from '../Utils/ButtonTooltip';
+import { UploadExperimentIcon } from '../Experiment/UploadExperimentIcon';
 
-export const AppHeader = ({ }) => {
+export const AppHeader = ({ fullscreen, setFullscreen, showDevicesOnly, setShowDevicesOnly }) => {
     const {
         undoOperation,
         redoOperation,
@@ -23,6 +24,8 @@ export const AppHeader = ({ }) => {
         setCurrTrial,
         showImagePlacement,
         setShowImagePlacement,
+        addExperiment,
+
     } = useContext(experimentContext);
     const { experimentName, trialTypeName, trialName, shownMapName } = currTrial;
     return (
@@ -41,7 +44,7 @@ export const AppHeader = ({ }) => {
                 </IconButton>
                 <Stack
                     direction={'row'}
-                    spacing={2}
+                    spacing={1}
                     sx={{ flexGrow: 1 }}
                 >
                     <Typography variant="h6" component="div">
@@ -49,6 +52,41 @@ export const AppHeader = ({ }) => {
                     </Typography>
                     <VersionId
                     />
+                    <Stack
+                        direction={'row'}
+                        spacing={0}
+                    >
+                        <ButtonTooltip
+                            color="inherit"
+                            onClick={() => addExperiment()}
+                            tooltip={"Add experiment"}
+                        >
+                            <Add />
+                        </ButtonTooltip>
+                        <UploadExperimentIcon
+                        />
+                        <ButtonTooltip
+                            onClick={() => setFullscreen(!fullscreen)}
+                            tooltip={fullscreen ? "Show experiment list on side" : "Expand experiment list on screen"}
+                            color="inherit"
+                        >
+                            {fullscreen ? <CloseFullscreen /> : <OpenInFull />}
+                        </ButtonTooltip>
+                        <ButtonTooltip
+                            onClick={() => {
+                                setShowDevicesOnly(!showDevicesOnly);
+                            }}
+                            tooltip={!currTrial.experiment
+                                ? "Choose an experiment to show only its devices"
+                                : showDevicesOnly
+                                    ? "Now showing only devices, click to show all experiments and trials"
+                                    : "Now showing all experiments, click to show only devices of current experiment"}
+                            color={showDevicesOnly ? "warning" : "inherit"}
+                            disabled={!currTrial.experiment}
+                        >
+                            <CellTower />
+                        </ButtonTooltip>
+                    </Stack>
                 </Stack>
                 <ButtonTooltip
                     color="inherit"

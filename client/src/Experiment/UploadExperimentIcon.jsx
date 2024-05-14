@@ -93,6 +93,7 @@ export const UploadExperimentIcon = ({ }) => {
                 onClick={() => inputFile.current.click()}
                 disabled={working}
                 tooltip={"Upload experiment"}
+                color="inherit"
             >
                 {working
                     ? <HourglassBottomIcon />

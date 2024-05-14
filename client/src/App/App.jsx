@@ -17,51 +17,52 @@ export function App() {
   const [showEditBox, setShowEditBox] = useState(false);
   const [markedPoints, setMarkedPoints] = useState([]);
   const [fullscreen, setFullscreen] = useState(false);
+  const [showDevicesOnly, setShowDevicesOnly] = useState(false);
   const { currTrial } = useContext(experimentContext);
 
   return (
     <>
-      <ActionsOnMapProvider>
-        <AppHeader
+      <AppHeader
+        fullscreen={fullscreen}
+        setFullscreen={setFullscreen}
+        showDevicesOnly={showDevicesOnly}
+        setShowDevicesOnly={setShowDevicesOnly}
+      />
+      <Stack direction={'row'} justifyContent="space-between" alignItems="flex-start">
+        <ExperimentList
+          fullscreen={fullscreen}
+          showDevicesOnly={showDevicesOnly}
         />
-        <Stack direction={'row'} justifyContent="space-between" alignItems="flex-start">
-          <ExperimentList
-            fullscreen={fullscreen}
-            setFullscreen={setFullscreen}
+        {fullscreen ? null :
+          <DeviceTable
           />
-          {fullscreen ? null :
-            <DeviceTable
-            />
-          }
-        </Stack>
+        }
+      </Stack>
 
-        <ShapeProvider>
-          <MapShower
-          >
-            <MapPositionOnUrl
-            />
-            <MapPlacer
-              markedPoints={markedPoints}
-              setMarkedPoints={setMarkedPoints}
-            />
-            <DeviceMarkersShown
-            />
-            <ActionsOnMapDoer
-            />
+      <MapShower
+      >
+        <MapPositionOnUrl
+        />
+        <MapPlacer
+          markedPoints={markedPoints}
+          setMarkedPoints={setMarkedPoints}
+        />
+        <DeviceMarkersShown
+        />
+        <ActionsOnMapDoer
+        />
 
-            <EditToolBox
-              // handleSetOne={handleMapClick}
-              // handleSetMany={handlePutEntities}
-              markedPoints={markedPoints}
-              setMarkedPoints={setMarkedPoints}
-              showEditBox={showEditBox}
-              setShowEditBox={setShowEditBox}
-            >
-              <MapCoordinates showAsLatLong={!currTrial.shownMapName} />
-            </EditToolBox>
-          </MapShower>
-        </ShapeProvider>
-      </ActionsOnMapProvider>
+        <EditToolBox
+          // handleSetOne={handleMapClick}
+          // handleSetMany={handlePutEntities}
+          markedPoints={markedPoints}
+          setMarkedPoints={setMarkedPoints}
+          showEditBox={showEditBox}
+          setShowEditBox={setShowEditBox}
+        >
+          <MapCoordinates showAsLatLong={!currTrial.shownMapName} />
+        </EditToolBox>
+      </MapShower>
     </>
   )
 }
