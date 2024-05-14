@@ -10,7 +10,7 @@ export const SelectProperty = ({ label, data, setData, options, multiple, toolti
             title={tooltipTitle}
             placement='top'
         >
-            <FormControl>
+            <FormControl sx={{ minWidth: 120 }}>
                 <InputLabel>{label}</InputLabel>
                 {!multiple ? (
                     <Select

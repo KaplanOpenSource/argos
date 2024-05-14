@@ -8,7 +8,7 @@ export const DateProperty = ({ label, data, setData, tooltipTitle = "", ...restP
             title={tooltipTitle}
             placement='top'
         >
-            <div>
+            <div style={{ display: 'inline' }}>
                 <DatePicker
                     label={label}
                     slotProps={{

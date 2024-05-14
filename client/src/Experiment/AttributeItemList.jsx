@@ -1,7 +1,7 @@
 import { Tooltip } from "@mui/material";
 import { changeByName } from "../Utils/utils";
 import { AttributeValue, valueTypeDefault } from "./AttributeValue";
-import { SCOPE_EXPERIMENT, SCOPE_TRIAL } from "./AttributeType";
+import { SCOPE_EXPERIMENT, SCOPE_EXPERIMENT_ALT, SCOPE_TRIAL } from "./AttributeType";
 
 export const AttributeItemList = ({ attributeTypes, data, setData, scope, deviceItem }) => {
     const attributes = (data || {}).attributes || [];
@@ -10,7 +10,7 @@ export const AttributeItemList = ({ attributeTypes, data, setData, scope, device
         <>
             {
                 (attributeTypes || []).map(attrType => {
-                    const attrTypeScope = attrType.scope || SCOPE_TRIAL;
+                    const attrTypeScope = attrType.scope === SCOPE_EXPERIMENT_ALT ? SCOPE_EXPERIMENT : (attrType.scope || SCOPE_TRIAL);
                     const attr = attributes.find(t => t.name === attrType.name);
                     let value = attrType.defaultValue;
                     if (attr) {
@@ -27,7 +27,9 @@ export const AttributeItemList = ({ attributeTypes, data, setData, scope, device
                         setData({ ...data, attributes: changeByName(attributes, attrType.name, attrValue) });
                     };
                     const disabled = scope !== attrTypeScope;
-                    const tooltipTitle = !disabled ? "" : `${attrType.name} can be updated only on ${attrTypeScope} level (this is the ${scope} level)`;
+                    const tooltipTitle = !disabled
+                        ? `Attribute "${attrType.name}" can be updated here on ${attrTypeScope} level`
+                        : `Attribute "${attrType.name}" can be updated only on ${attrTypeScope} level (this is the ${scope} level)`;
                     return (
                         <AttributeValue
                             key={attrType.name}
