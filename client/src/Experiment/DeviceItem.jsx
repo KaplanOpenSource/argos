@@ -55,7 +55,7 @@ export const DeviceItem = ({ data, setData, deviceType, showAttributes, devicesE
                 </>
             }
         >
-            {currTrial.trial && showAttributes &&
+            {currTrial.experiment && showAttributes &&
                 <AttributeItemList
                     attributeTypes={deviceType.attributeTypes}
                     data={scope === SCOPE_TRIAL ? deviceTrial : data}
