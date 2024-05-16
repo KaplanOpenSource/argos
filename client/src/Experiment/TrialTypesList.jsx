@@ -1,10 +1,10 @@
 import { changeByName } from "../Utils/utils";
-import { TrialType, trialTypeKey } from "./TrialType";
+import { TrialType } from "./TrialType";
 
 export const TrialTypesList = ({ data, setData }) => {
     return (data.trialTypes || []).map(itemData => (
         <TrialType
-            key={trialTypeKey(data, itemData)}
+            key={itemData.trackUuid}
             data={itemData}
             setData={newData => {
                 setData({ ...data, trialTypes: changeByName(data.trialTypes, itemData.name, newData) });
@@ -12,5 +12,4 @@ export const TrialTypesList = ({ data, setData }) => {
             experiment={data}
         />
     ))
-
 }

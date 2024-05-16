@@ -20,7 +20,6 @@ export const ImageEmbedded = ({ data, setData, experiment }) => {
 
     return (
         <TreeRow
-            key={data.name}
             data={data}
             setData={setData}
             components={

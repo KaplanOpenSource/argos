@@ -128,10 +128,27 @@ export const ExperimentProvider = ({ children }) => {
         experimentUpdates.setExperiment(currTrial.experimentName, e)
     }
 
+    const assignUuids = (data) => { //, prevPath = "") => {
+        if (data && typeof data === 'object') {
+            if (data.forEach) {
+                data.forEach(item => assignUuids(item));//, prevPath));
+            } else {
+                if (data.name) {
+                    data.trackUuid = crypto.randomUUID();
+                    // data.trackPath = (prevPath && (prevPath + '/')) + data.name;
+                    for (const [key, value] of Object.entries(data)) {
+                        assignUuids(value);//, data.path);
+                    }
+                }
+            }
+        }
+    }
+
     useEffect(() => {
         (async () => {
             const { experimentName, trialTypeName, trialName } = parseUrlParams();
             const allExperiments = await fetchAllExperiments();
+            assignUuids(allExperiments);
             const t = TrialChoosing.FindTrialByName({ experimentName, trialTypeName, trialName }, allExperiments);
             TrialChoosing.ReplaceUrlByTrial(t);
             setState(draft => {

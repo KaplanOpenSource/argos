@@ -19,7 +19,6 @@ export const DeviceType = ({ data, setData, experiment }) => {
 
     return (
         <TreeRow
-            key={data.name}
             data={data}
             setData={setData}
             components={
@@ -68,7 +67,6 @@ export const DeviceType = ({ data, setData, experiment }) => {
                         }}
                         deviceType={data}
                         showAttributes={true}
-                        withDescription={true}
                         scope={SCOPE_EXPERIMENT}
                         devicesEnclosingList={devicesEnclosingList}
                         experiment={experiment}

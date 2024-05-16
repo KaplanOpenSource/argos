@@ -2,7 +2,7 @@ export const consoleErrorUniqueKeyFix = () => {
     console.oldError = console.error;
 
     console.error = function (...args) {
-        if (!args[0].startsWith("Warning: Each child in a list should have a unique")) {
+        if (!(args[0] || '').startsWith("Warning: Each child in a list should have a unique")) {
             console.oldError(...args);
         } else {
             const lines = args[1].split('\n')

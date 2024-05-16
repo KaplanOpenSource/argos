@@ -61,7 +61,6 @@ export const Trial = ({ data, setData, experiment, trialType, children }) => {
     }
     return (
         <TreeRow
-            key={data.name}
             data={data}
             setData={setData}
             components={

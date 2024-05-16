@@ -1,14 +1,26 @@
-import { Box, TextField } from "@mui/material";
+import { Box } from "@mui/material";
 
 import { TreeItem } from "@mui/x-tree-view/TreeItem";
 import { TextFieldDebounce } from "../Utils/TextFieldDebounce";
+import { useEffect } from "react";
 
-export const TreeRow = ({ data, setData, components, nodeId, withDescription = true, children }) => {
+export const TreeRow = ({ data, setData, components, children }) => {
     const { name } = data;
+
+    useEffect(() => {
+        if (!data.trackUuid) {
+            setData({ ...data, trackUuid: crypto.randomUUID() })
+        }
+    }, [(data || {}).trackUuid]);
+
+    if (!(data || {}).trackUuid) {
+        return null;
+    }
+
     return (
         <TreeItem
-            key={name}
-            nodeId={nodeId === undefined ? name : nodeId}
+            key={data.trackUuid}
+            nodeId={data.trackUuid}
             label={
                 <Box
                     sx={{

@@ -26,7 +26,6 @@ export const DeviceItem = ({ data, setData, deviceType, showAttributes, devicesE
 
     return (
         <TreeRow
-            key={data.name}
             data={data}
             setData={setData}
             components={

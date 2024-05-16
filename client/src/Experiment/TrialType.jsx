@@ -11,14 +11,11 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { AttributeTypesDialogButton } from "./AttributeTypesDialogButton";
 import { deepClone } from "fast-json-patch";
 
-export const trialTypeKey = (experiment, trialType) => `exp_${experiment.name}_trty_${trialType.name}`;
-
 export const TrialType = ({ data, setData, experiment }) => {
     const { currTrial } = useContext(experimentContext);
     return (
         <TreeRow
             data={data}
-            nodeId={trialTypeKey(experiment, data)}
             setData={setData}
             components={
                 <>

@@ -13,7 +13,6 @@ export const SCOPE_CONSTANT = "Constant";
 export const AttributeType = ({ data, setData, isOfDevice }) => {
     return (
         <TreeRow
-            key={data.name}
             data={data}
             setData={setData}
             components={
