@@ -19,6 +19,24 @@ export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
     const { experiment, experimentName, trialType, trialTypeName, trialName } = currTrial;
     const [expanded, setExpanded] = useState([]);
 
+    const findExperimentByUuid = (uuid) => {
+        if (uuid) {
+            return experiments.find(e => e.trackUuid === uuid);
+        }
+        return undefined;
+    }
+    const handleNodeToggle = (e, nodeIds) => {
+        const newlyExpanded = nodeIds.filter(nodeId => !expanded.includes(nodeId));
+        const foundExperiment = findExperimentByUuid(newlyExpanded[0]);
+        if (foundExperiment) {
+            setCurrTrial({ experimentName: foundExperiment.name });
+            const nonExpNodeIds = nodeIds.filter(u => !findExperimentByUuid(u));
+            setExpanded([newlyExpanded[0], ...nonExpNodeIds]);
+        } else {
+            setExpanded(nodeIds);
+        }
+    };
+
     // useEffect(() => {
     //     if (!experiment) {
     //         setShowConfig(SHOW_ALL_EXPERIMENTS);
@@ -47,9 +65,6 @@ export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
                 position: 'relative',
                 maxWidth: fullscreen ? undefined : 'fit-content',
                 width: fullscreen ? '100%' : undefined,
-                // maxHeight: '500px',
-                // maxWidth: showExperiments ? undefined : 'fit-content',
-                // right: showExperiments ? '0px' : undefined,
                 left: 0,
                 top: '-5px',
                 margin: '10px',
@@ -61,20 +76,10 @@ export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
                 defaultExpandIcon={<ChevronRightIcon />}
                 sx={{
                     height: '80vh',
-                    // flexGrow: 1,
-                    // maxWidth: 400,
                     overflowY: 'auto',
                 }}
                 expanded={expanded}
-                onNodeToggle={(event, nodeIds) => {
-                    // const newlyExpanded = nodeIds.filter(nodeId => !expanded.includes(nodeId));
-                    // if (newlyExpanded.length && newlyExpanded[0].startsWith(EXPERIMENT_NODE_ID_PREFIX)) {
-                    //     setCurrTrial({ experimentName: newlyExpanded[0].split(':')[1] });
-                    //     setExpanded(nodeIds.filter(x => x === newlyExpanded[0] || !x.startsWith(EXPERIMENT_NODE_ID_PREFIX)));
-                    // } else {
-                    setExpanded(nodeIds);
-                    // }
-                }}
+                onNodeToggle={handleNodeToggle}
                 disableSelection
             >
                 <SwitchCase test={currTrial.experiment ? showConfig : SHOW_ALL_EXPERIMENTS}>
