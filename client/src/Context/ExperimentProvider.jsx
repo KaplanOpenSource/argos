@@ -102,7 +102,7 @@ export const ExperimentProvider = ({ children }) => {
         if (dt && dt.devices) {
             dt.devices = dt.devices.filter(d => d.name !== deviceItemName);
         }
-        for (const tt of e.trialTypes) {
+        for (const tt of (e.trialTypes || [])) {
             for (const tr of (tt.trials || [])) {
                 if (tr && tr.devicesOnTrial) {
                     tr.devicesOnTrial = tr.devicesOnTrial.filter(d => !(d.deviceTypeName === deviceTypeName && d.deviceItemName === deviceItemName));
@@ -119,7 +119,7 @@ export const ExperimentProvider = ({ children }) => {
             return;
         }
         e.deviceTypes = (e.deviceTypes || []).filter(t => t.name !== deviceTypeName);
-        for (const tt of e.trialTypes) {
+        for (const tt of (e.trialTypes || [])) {
             for (const tr of (tt.trials || [])) {
                 if (tr && tr.devicesOnTrial) {
                     tr.devicesOnTrial = tr.devicesOnTrial.filter(d => d.deviceTypeName !== deviceTypeName);

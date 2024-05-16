@@ -12,6 +12,7 @@ export const assignUuids = (data) => { //, prevPath = "") => {
             }
         }
     }
+    return data;
 }
 
 export const cleanUuids = (data) => {

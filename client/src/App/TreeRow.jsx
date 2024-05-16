@@ -9,6 +9,7 @@ export const TreeRow = ({ data, setData, components, children }) => {
 
     useEffect(() => {
         if (!data.trackUuid) {
+            console.log("if you get here, then this item was created without a uuid", data);
             setData({ ...data, trackUuid: crypto.randomUUID() })
         }
     }, [(data || {}).trackUuid]);

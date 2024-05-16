@@ -2,6 +2,7 @@ import dayjs from 'dayjs';
 import { createNewName } from "../Utils/utils";
 import { argosJsonVersion } from '../constants/constants';
 import * as jsonpatch from 'fast-json-patch';
+import { assignUuids } from './TrackUuidUtils';
 
 export class ExperimentUpdates {
     constructor(state, setState) {
@@ -26,13 +27,13 @@ export class ExperimentUpdates {
     addExperiment = (newExp = undefined) => {
         this.setState(draft => {
             const name = createNewName(draft.experiments, newExp ? newExp.name : 'New Experiment');
-            const exp = newExp ? newExp : {
+            const exp = assignUuids(newExp ? newExp : {
                 version: argosJsonVersion,
                 name,
                 startDate: dayjs().startOf('day'),
                 endDate: dayjs().startOf('day').add(7, 'day'),
                 description: '',
-            };
+            });
             draft.experiments.push(exp);
             draft.serverUpdates.push({ name, exp });
         });

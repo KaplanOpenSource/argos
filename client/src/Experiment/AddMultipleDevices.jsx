@@ -3,6 +3,7 @@ import { Box, IconButton, Paper, Popover, Stack, Tooltip } from "@mui/material"
 import { useState } from "react"
 import { TextFieldDebounce } from "../Utils/TextFieldDebounce";
 import { AttributeItemList } from "./AttributeItemList";
+import { assignUuids } from "../Context/TrackUuidUtils";
 
 export const AddMultipleDevices = ({ deviceType, addDevices }) => {
     const [anchorEl, setAnchorEl] = useState(null);
@@ -20,7 +21,7 @@ export const AddMultipleDevices = ({ deviceType, addDevices }) => {
             const name = prefix + ('' + i).padStart(digits, '0') + suffix;
             newDevices.push({ name, ...attrValues });
         }
-        addDevices(newDevices);
+        addDevices(assignUuids(newDevices));
         setAnchorEl(null);
     }
 

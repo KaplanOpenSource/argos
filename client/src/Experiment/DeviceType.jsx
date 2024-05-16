@@ -9,6 +9,7 @@ import { AttributeTypesDialogButton } from "./AttributeTypesDialogButton";
 import { SCOPE_EXPERIMENT } from "./AttributeType";
 import { useContext } from "react";
 import { experimentContext } from "../Context/ExperimentProvider";
+import { assignUuids } from "../Context/TrackUuidUtils";
 
 export const DeviceType = ({ data, setData, experiment }) => {
     const { deleteDeviceType } = useContext(experimentContext);
@@ -37,7 +38,7 @@ export const DeviceType = ({ data, setData, experiment }) => {
                             onClick={e => {
                                 e.stopPropagation();
                                 const name = createNewName(data.devices, 'New Device');
-                                setData({ ...data, devices: [...(data.devices || []), { name }] });
+                                setData({ ...data, devices: [...(data.devices || []), assignUuids({ name })] });
                             }}
                         >
                             <AddIcon />
