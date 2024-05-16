@@ -40,8 +40,9 @@ export const TreeSublist = ({ nameTemplate, fieldName, data, setData, newDataCre
                             onClick={e => {
                                 e.stopPropagation();
                                 const name = createNewName(items, nameTemplate);
+                                const trackUuid = crypto.randomUUID();
                                 const noNameData = newDataCreator ? newDataCreator() : {};
-                                const theData = { name, ...noNameData };
+                                const theData = { name, trackUuid, ...noNameData };
                                 setData({ ...data, [fieldName]: [...items, theData] });
                             }}
                         >

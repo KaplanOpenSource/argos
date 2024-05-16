@@ -18,10 +18,10 @@ export class TrialChoosing {
         const experimentIndex = allExperiments.findIndex(t => t.name === experimentName);
         if (experimentIndex >= 0) {
             const experiment = allExperiments[experimentIndex];
-            const trialTypeIndex = experiment.trialTypes.findIndex(t => t.name === trialTypeName);
+            const trialTypeIndex = ((experiment || {}).trialTypes || []).findIndex(t => t.name === trialTypeName);
             if (trialTypeIndex >= 0) {
                 const trialType = experiment.trialTypes[trialTypeIndex];
-                const trialIndex = trialType.trials.findIndex(t => t.name === trialName);
+                const trialIndex = ((trialType || {}).trials || []).findIndex(t => t.name === trialName);
                 if (trialIndex >= 0) {
                     return {
                         experimentName, experimentIndex,
