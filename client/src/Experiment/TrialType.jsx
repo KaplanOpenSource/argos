@@ -12,7 +12,6 @@ import { AttributeTypesDialogButton } from "./AttributeTypesDialogButton";
 import { deepClone } from "fast-json-patch";
 
 export const TrialType = ({ data, setData, experiment }) => {
-    const { currTrial } = useContext(experimentContext);
     return (
         <TreeRow
             data={data}

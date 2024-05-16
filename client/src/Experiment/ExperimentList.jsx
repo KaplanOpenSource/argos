@@ -86,7 +86,7 @@ export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
                     <Case value={SHOW_ALL_EXPERIMENTS}>
                         {experiments.map(exp => (
                             <ExperimentRow
-                                key={exp.trackUuid}
+                                key={exp.trackUuid || Math.random() + ""}
                                 data={exp}
                                 setData={val => setExperiment(exp.name, val)}
                                 showConfig={showConfig && currTrial.trial}
