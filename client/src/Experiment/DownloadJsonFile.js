@@ -1,10 +1,12 @@
 import JSZip from "jszip";
 import { saveAs } from 'file-saver';
 import { baseUrl } from "../Context/FetchExperiment";
+import { cleanUuids } from "../Context/TrackUuidUtils";
 
 export const downloadJsonFile = async (experiment) => {
     const zip = JSZip();
-    zip.file(`data.json`, JSON.stringify(experiment));
+    const cleaned = cleanUuids(experiment);
+    zip.file(`data.json`, JSON.stringify(cleaned));
     for (const img of (experiment.imageStandalone || [])) {
         if (img.filename) {
             const src = `${baseUrl}/uploads/${experiment.name}/${img.filename}`;
