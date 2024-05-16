@@ -10,6 +10,9 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { ExperimentProvider } from './Context/ExperimentProvider';
 import { ActionsOnMapProvider } from './Map/ActionsOnMapContext';
 import { ShapeProvider } from './EditToolBox/ShapeContext';
+import { consoleErrorUniqueKeyFix } from './Utils/consoleErrorUniqueKeyFix';
+
+consoleErrorUniqueKeyFix();
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <LocalizationProvider dateAdapter={AdapterDayjs}>
