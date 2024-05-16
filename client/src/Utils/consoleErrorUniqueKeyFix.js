@@ -5,24 +5,31 @@ export const consoleErrorUniqueKeyFix = () => {
         if (!(args[0] || '').startsWith("Warning: Each child in a list should have a unique")) {
             console.oldError(...args);
         } else {
-            const lines = args[1].split('\n')
-                .filter(x => !x.startsWith("node_modules/"))
-                .map(x => {
+            const raw = args.slice(1).join('\n').split('\n').map(x => x.trim());
+            const lines = [args[0].replaceAll("%s", "")];
+            for (const x of raw) {
+                if (!x || x.startsWith("node_modules/")) {
+                    continue;
+                }
+                if (x.startsWith('Check the render method of')) {
+                    lines.push(x);
+                } else {
                     const tokens = x.split('@');
                     if (tokens.length <= 1) {
-                        return '....html: ' + tokens.join('');
+                        lines.push('....html: ' + tokens.join(''));
+                    } else if (tokens[1].includes('node_modules')) {
+                        lines.push('....node: ' + tokens[0])
+                    } else {
+                        let rest = tokens.slice(1).join('@');
+                        const tpos = rest.indexOf('?t=');
+                        rest = tpos === -1 ? rest : rest.substring(0, tpos);
+                        const hpos = rest.indexOf(location.origin);
+                        rest = hpos === -1 ? rest : rest.substring(location.origin.length + 1);
+                        lines.push(tokens[0] + ' @ ' + rest);
                     }
-                    if (tokens[1].includes('node_modules')) {
-                        return '....node: ' + tokens[0];
-                    }
-                    let rest = tokens.slice(1).join('@');
-                    const tpos = rest.indexOf('?t=');
-                    rest = tpos === -1 ? rest : rest.substring(0, tpos);
-                    const hpos = rest.indexOf(location.origin);
-                    rest = hpos === -1 ? rest : rest.substring(location.origin.length + 1);
-                    return tokens[0] + ' @ ' + rest;
-                });
-            console.oldError(args[0], lines.join('\n'), ...args.slice(2))
+                }
+            }
+            console.oldError(lines.join('\n'))
         }
     }
 }
