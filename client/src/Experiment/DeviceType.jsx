@@ -60,7 +60,7 @@ export const DeviceType = ({ data, setData, experiment }) => {
             {
                 (data.devices || []).map(itemData => (
                     <DeviceItem
-                        key={itemData.name}
+                        key={itemData.trackUuid}
                         data={itemData}
                         setData={newData => {
                             setData({ ...data, devices: changeByName(data.devices, itemData.name, newData) });

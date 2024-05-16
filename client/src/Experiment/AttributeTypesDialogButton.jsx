@@ -45,10 +45,10 @@ export const AttributeTypesDialogButton = ({ data, setData, isOfDevice }) => {
                             defaultCollapseIcon={<ExpandMoreIcon />}
                             defaultExpandIcon={<ChevronRightIcon />}
                             disableSelection
-                            defaultExpanded={[data.name + '_' + 'attributeTypes']}
+                            defaultExpanded={[data.trackUuid + '_' + 'attributeTypes']}
                         >
                             <TreeSublist
-                                parentKey={data.name}
+                                parentKey={data.trackUuid}
                                 data={data}
                                 fieldName='attributeTypes'
                                 nameTemplate='New Attribute Type'
@@ -62,7 +62,7 @@ export const AttributeTypesDialogButton = ({ data, setData, isOfDevice }) => {
                                 {
                                     (data.attributeTypes || []).map(itemData => (
                                         <AttributeType
-                                            key={itemData.name}
+                                            key={itemData.trackUuid || Math.random() + ""}
                                             data={itemData}
                                             setData={newData => {
                                                 setData({

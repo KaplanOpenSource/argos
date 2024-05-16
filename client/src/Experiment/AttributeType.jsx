@@ -58,7 +58,7 @@ export const AttributeType = ({ data, setData, isOfDevice }) => {
         >
             {data.type === VALUE_TYPE_SELECT &&
                 <TreeSublist
-                    parentKey={data.name}
+                    parentKey={data.trackUuid}
                     data={data}
                     fieldName='options'
                     nameTemplate='New Option'
@@ -76,7 +76,7 @@ export const AttributeType = ({ data, setData, isOfDevice }) => {
                     {
                         (data.options || []).map(itemData => (
                             <TreeRow
-                                key={itemData.name}
+                                key={itemData.trackUuid}
                                 data={itemData}
                                 setData={newData => {
                                     setData({ ...data, options: changeByName(data.options, itemData.name, newData) });

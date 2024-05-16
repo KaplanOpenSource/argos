@@ -62,7 +62,7 @@ export const ExperimentRow = ({ data, setData, children }) => {
                 />
             </Stack>
             <TreeSublist
-                parentKey={data.name}
+                parentKey={data.trackUuid}
                 data={data}
                 fieldName='trialTypes'
                 nameTemplate='New Trial Type'
@@ -89,7 +89,7 @@ export const ExperimentRow = ({ data, setData, children }) => {
             </TreeSublist>
 
             <TreeSublist
-                parentKey={data.name}
+                parentKey={data.trackUuid}
                 data={data}
                 fieldName='deviceTypes'
                 nameTemplate='New Device Type'
@@ -113,7 +113,7 @@ export const ExperimentRow = ({ data, setData, children }) => {
             </TreeSublist>
 
             <TreeSublist
-                parentKey={data.name}
+                parentKey={data.trackUuid}
                 data={data}
                 fieldName='imageEmbedded'
                 nameTemplate='New Embedded Image'
@@ -141,7 +141,7 @@ export const ExperimentRow = ({ data, setData, children }) => {
             </TreeSublist>
 
             <TreeSublist
-                parentKey={data.name}
+                parentKey={data.trackUuid}
                 data={data}
                 fieldName='imageStandalone'
                 nameTemplate='New Standalone Image'
