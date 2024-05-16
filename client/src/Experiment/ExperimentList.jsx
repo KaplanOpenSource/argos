@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { experimentContext } from "../Context/ExperimentProvider";
-import { EXPERIMENT_NODE_ID_PREFIX, ExperimentRow } from "./ExperimentRow";
+import { ExperimentRow } from "./ExperimentRow";
 import { TreeView } from '@mui/x-tree-view/TreeView';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
@@ -13,33 +13,32 @@ import { DeviceTypesList } from "./DeviceTypesList";
 import { SHOW_ALL_EXPERIMENTS, SHOW_ONLY_DEVICES, SHOW_ONLY_TRIALS } from "../App/ShowConfigToggles";
 import { Case, SwitchCase } from "../Utils/SwitchCase";
 import { TrialTypesList } from "./TrialTypesList";
-import { trialTypeKey } from "./TrialType";
 
 export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
     const { experiments, setExperiment, addExperiment, currTrial, setCurrTrial } = useContext(experimentContext);
     const { experiment, experimentName, trialType, trialTypeName, trialName } = currTrial;
     const [expanded, setExpanded] = useState([]);
 
-    useEffect(() => {
-        if (!experiment) {
-            setShowConfig(SHOW_ALL_EXPERIMENTS);
-            setExpanded(experiments.map(e => EXPERIMENT_NODE_ID_PREFIX + e));
-        } else if (trialName) {
-            setExpanded([
-                EXPERIMENT_NODE_ID_PREFIX + experimentName,
-                experimentName + "_trialTypes",
-                trialTypeKey(experiment, trialType),
-                experimentName + "_deviceTypes",
-                trialName
-            ]);
-        }
-    }, [experimentName, trialTypeName, trialName]);
+    // useEffect(() => {
+    //     if (!experiment) {
+    //         setShowConfig(SHOW_ALL_EXPERIMENTS);
+    //         // setExpanded(experiments.map(e => EXPERIMENT_NODE_ID_PREFIX + e));
+    //     } else if (trialName) {
+    //         setExpanded([
+    //             // EXPERIMENT_NODE_ID_PREFIX + experimentName,
+    //             experimentName + "_trialTypes",
+    //             // trialTypeKey(experiment, trialType),
+    //             experimentName + "_deviceTypes",
+    //             trialName
+    //         ]);
+    //     }
+    // }, [experimentName, trialTypeName, trialName]);
 
-    useEffect(() => {
-        if (experiment && showConfig === SHOW_ONLY_TRIALS) {
-            setExpanded(experiment.trialTypes.map(t => t.name));
-        }
-    }, [showConfig]);
+    // useEffect(() => {
+    //     if (experiment && showConfig === SHOW_ONLY_TRIALS) {
+    //         setExpanded(experiment.trialTypes.map(t => t.name));
+    //     }
+    // }, [showConfig]);
 
     return (
         <Paper
@@ -68,20 +67,21 @@ export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
                 }}
                 expanded={expanded}
                 onNodeToggle={(event, nodeIds) => {
-                    const newlyExpanded = nodeIds.filter(nodeId => !expanded.includes(nodeId));
-                    if (newlyExpanded.length && newlyExpanded[0].startsWith(EXPERIMENT_NODE_ID_PREFIX)) {
-                        setCurrTrial({ experimentName: newlyExpanded[0].split(':')[1] });
-                        setExpanded(nodeIds.filter(x => x === newlyExpanded[0] || !x.startsWith(EXPERIMENT_NODE_ID_PREFIX)));
-                    } else {
-                        setExpanded(nodeIds);
-                    }
+                    // const newlyExpanded = nodeIds.filter(nodeId => !expanded.includes(nodeId));
+                    // if (newlyExpanded.length && newlyExpanded[0].startsWith(EXPERIMENT_NODE_ID_PREFIX)) {
+                    //     setCurrTrial({ experimentName: newlyExpanded[0].split(':')[1] });
+                    //     setExpanded(nodeIds.filter(x => x === newlyExpanded[0] || !x.startsWith(EXPERIMENT_NODE_ID_PREFIX)));
+                    // } else {
+                    setExpanded(nodeIds);
+                    // }
                 }}
                 disableSelection
             >
                 <SwitchCase test={currTrial.experiment ? showConfig : SHOW_ALL_EXPERIMENTS}>
                     <Case value={SHOW_ALL_EXPERIMENTS}>
                         {experiments.map(exp => (
-                            <ExperimentRow key={exp.name}
+                            <ExperimentRow
+                                key={exp.trackUuid}
                                 data={exp}
                                 setData={val => setExperiment(exp.name, val)}
                                 showConfig={showConfig && currTrial.trial}
