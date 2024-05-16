@@ -1,10 +1,12 @@
+import { v4 as uuidv4 } from 'uuid';
+
 export const assignUuids = (data) => { //, prevPath = "") => {
     if (data && typeof data === 'object') {
         if (data.forEach) {
             data.forEach(item => assignUuids(item));//, prevPath));
         } else {
             if (data.name) {
-                data.trackUuid = crypto.randomUUID();
+                data.trackUuid = uuidv4();
                 // data.trackPath = (prevPath && (prevPath + '/')) + data.name;
                 for (const [key, value] of Object.entries(data)) {
                     assignUuids(value);//, data.path);
