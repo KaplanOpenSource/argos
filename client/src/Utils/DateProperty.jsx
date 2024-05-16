@@ -27,7 +27,7 @@ export const DateProperty = ({ label, data, setData, tooltipTitle = "", ...restP
                     }}
                     format='DD/MM/YYYY'
                     value={data ? dayjs(data) : null}
-                    onChange={(val) => { setData(val); console.log(val) }}
+                    onChange={(val) => setData(val)}
                     {...restProps}
                 />
             </div>
