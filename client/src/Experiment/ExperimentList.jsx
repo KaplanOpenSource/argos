@@ -16,7 +16,7 @@ import { TrialTypesList } from "./TrialTypesList";
 
 export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
     const { experiments, setExperiment, addExperiment, currTrial, setCurrTrial } = useContext(experimentContext);
-    const { experiment, experimentName, trialType, trialTypeName, trialName } = currTrial;
+    const { experiment, experimentName, trialType, trialTypeName, trial, trialName } = currTrial;
     const [expanded, setExpanded] = useState([]);
 
     const findExperimentByUuid = (uuid) => {
@@ -37,26 +37,26 @@ export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
         }
     };
 
-    // useEffect(() => {
-    //     if (!experiment) {
-    //         setShowConfig(SHOW_ALL_EXPERIMENTS);
-    //         // setExpanded(experiments.map(e => EXPERIMENT_NODE_ID_PREFIX + e));
-    //     } else if (trialName) {
-    //         setExpanded([
-    //             // EXPERIMENT_NODE_ID_PREFIX + experimentName,
-    //             experimentName + "_trialTypes",
-    //             // trialTypeKey(experiment, trialType),
-    //             experimentName + "_deviceTypes",
-    //             trialName
-    //         ]);
-    //     }
-    // }, [experimentName, trialTypeName, trialName]);
+    useEffect(() => {
+        if (!experiment) {
+            setShowConfig(SHOW_ALL_EXPERIMENTS);
+            // setExpanded(experiments.map(e => EXPERIMENT_NODE_ID_PREFIX + e));
+        } else if (trialName) {
+            setExpanded([
+                experiment.trackUuid,
+                experimentName + "_trialTypes",
+                trialType.trackUuid,
+                experimentName + "_deviceTypes",
+                trial.trackUuid,
+            ]);
+        }
+    }, [experimentName, trialTypeName, trialName]);
 
-    // useEffect(() => {
-    //     if (experiment && showConfig === SHOW_ONLY_TRIALS) {
-    //         setExpanded(experiment.trialTypes.map(t => t.name));
-    //     }
-    // }, [showConfig]);
+    useEffect(() => {
+        if (experiment && showConfig === SHOW_ONLY_TRIALS) {
+            setExpanded(experiment.trialTypes.map(t => t.trackUuid));
+        }
+    }, [showConfig]);
 
     return (
         <Paper
