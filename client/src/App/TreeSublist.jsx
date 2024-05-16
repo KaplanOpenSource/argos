@@ -1,8 +1,8 @@
 import { Box, IconButton, Tooltip, Typography } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
-
 import { camelCaseToWords, createNewName } from "../Utils/utils";
 import { TreeItem } from "@mui/x-tree-view/TreeItem";
+import { assignUuids } from "../Context/TrackUuidUtils";
 
 export const TreeSublist = ({ nameTemplate, fieldName, data, setData, newDataCreator, parentKey, components, children }) => {
     const items = data[fieldName] || [];
@@ -40,9 +40,8 @@ export const TreeSublist = ({ nameTemplate, fieldName, data, setData, newDataCre
                             onClick={e => {
                                 e.stopPropagation();
                                 const name = createNewName(items, nameTemplate);
-                                const trackUuid = crypto.randomUUID();
                                 const noNameData = newDataCreator ? newDataCreator() : {};
-                                const theData = { name, trackUuid, ...noNameData };
+                                const theData = assignUuids({ name, ...noNameData });
                                 setData({ ...data, [fieldName]: [...items, theData] });
                             }}
                         >

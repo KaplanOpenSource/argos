@@ -1,8 +1,6 @@
-import { useContext } from "react";
 import { TreeRow } from "../App/TreeRow";
 import { Trial } from "./Trial";
 import dayjs from "dayjs";
-import { experimentContext } from "../Context/ExperimentProvider";
 import { changeByName, createNewName } from "../Utils/utils";
 import { IconButton, Tooltip } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -10,6 +8,7 @@ import AddIcon from '@mui/icons-material/Add';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { AttributeTypesDialogButton } from "./AttributeTypesDialogButton";
 import { deepClone } from "fast-json-patch";
+import { assignUuids } from "../Context/TrackUuidUtils";
 
 export const TrialType = ({ data, setData, experiment }) => {
     return (
@@ -33,7 +32,8 @@ export const TrialType = ({ data, setData, experiment }) => {
                                 e.stopPropagation();
                                 const name = createNewName(data.trials, 'New Trial');
                                 const createdDate = dayjs().startOf('day');
-                                setData({ ...data, trials: [...(data.trials || []), { name, createdDate }] });
+                                const newTrial = assignUuids({ name, createdDate });
+                                setData({ ...data, trials: [...(data.trials || []), newTrial] });
                             }}
                         >
                             <AddIcon />

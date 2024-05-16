@@ -1,8 +1,8 @@
 import { Box } from "@mui/material";
-
 import { TreeItem } from "@mui/x-tree-view/TreeItem";
 import { TextFieldDebounce } from "../Utils/TextFieldDebounce";
 import { useEffect } from "react";
+import { assignUuids } from "../Context/TrackUuidUtils";
 
 export const TreeRow = ({ data, setData, components, children }) => {
     const { name } = data;
@@ -10,7 +10,7 @@ export const TreeRow = ({ data, setData, components, children }) => {
     useEffect(() => {
         if (!data.trackUuid) {
             console.log("if you get here, then this item was created without a uuid", data);
-            setData({ ...data, trackUuid: crypto.randomUUID() })
+            setData(assignUuids({ ...data }))
         }
     }, [(data || {}).trackUuid]);
 
