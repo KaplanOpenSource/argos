@@ -32,7 +32,7 @@ export const SelectProperty = ({ label, data, setData, options, multiple, toolti
                                     title={o.tooltip}
                                     placement="top"
                                 >
-                                    {o.name}
+                                    <span>{o.name}</span>
                                 </Tooltip>
                             </MenuItem>
                         ))}
