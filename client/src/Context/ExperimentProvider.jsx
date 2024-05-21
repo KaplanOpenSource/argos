@@ -71,8 +71,11 @@ export const ExperimentProvider = ({ children }) => {
                     devicesOnTrial = devicesOnTrial.filter(t => {
                         return t.deviceItemName !== deviceItemName || t.deviceTypeName !== deviceTypeName;
                     });
-                    const coordinates = latlngs[i];
+                    let coordinates = latlngs[i];
                     if (coordinates) {
+                        if (coordinates.lat) {
+                            coordinates = [coordinates.lat, coordinates.lng];
+                        }
                         const location = { name: mapName, coordinates };
                         devicesOnTrial.push({ deviceTypeName, deviceItemName, location });
                     }
