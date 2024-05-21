@@ -9,9 +9,8 @@ import { DeviceItem } from "../Experiment/DeviceItem";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { SCOPE_TRIAL } from "../Experiment/AttributeType";
 
-export const DeviceTable = ({ }) => {
+export const DeviceTable = ({ showAttributes, setShowAttributes }) => {
     const { selection, currTrial } = useContext(experimentContext);
-    const [showAttributes, setShowAttributes] = useState(false);
 
     const shownDevices = [];
     for (const { deviceTypeName, deviceItemName } of selection || []) {
@@ -35,20 +34,6 @@ export const DeviceTable = ({ }) => {
                 overflowY: 'visible'
             }}
         >
-            <Button
-                disableRipple={true}
-                disableFocusRipple={true}
-                disableTouchRipple={true}
-            >
-                Selected Devices
-            </Button>
-            <ButtonTooltip
-                tooltip={showAttributes ? "Hide attributes" : "Show attributes"}
-                onClick={() => setShowAttributes(!showAttributes)}
-                color={showAttributes ? "primary" : ""}
-            >
-                <AccountTreeIcon />
-            </ButtonTooltip>
             <TreeView
                 defaultCollapseIcon={<ExpandMoreIcon />}
                 defaultExpandIcon={<ChevronRightIcon />}

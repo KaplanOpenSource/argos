@@ -7,7 +7,7 @@ import {
 } from '@mui/material';
 import { experimentContext } from '../Context/ExperimentProvider';
 import { useContext } from 'react';
-import { Add, CloseFullscreen, OpenInFull, Redo, Undo } from '@mui/icons-material';
+import { AccountTree, AccountTreeOutlined, Add, CloseFullscreen, OpenInFull, Redo, Undo } from '@mui/icons-material';
 import EditLocationAltIcon from '@mui/icons-material/EditLocationAlt';
 import EditLocationOutlinedIcon from '@mui/icons-material/EditLocationOutlined';
 import { VersionId } from './VersionId';
@@ -15,7 +15,7 @@ import { ButtonTooltip } from '../Utils/ButtonTooltip';
 import { UploadExperimentIcon } from '../Experiment/UploadExperimentIcon';
 import { ShowConfigToggles } from './ShowConfigToggles';
 
-export const AppHeader = ({ fullscreen, setFullscreen, showConfig, setShowConfig }) => {
+export const AppHeader = ({ fullscreen, setFullscreen, showConfig, setShowConfig, showAttributes, setShowAttributes }) => {
     const {
         undoOperation,
         redoOperation,
@@ -76,6 +76,13 @@ export const AppHeader = ({ fullscreen, setFullscreen, showConfig, setShowConfig
                             showConfig={showConfig}
                             setShowConfig={setShowConfig}
                         />
+                        <ButtonTooltip
+                            tooltip={showAttributes ? "Hide attributes" : "Show attributes"}
+                            onClick={() => setShowAttributes(!showAttributes)}
+                            color="inherit"
+                        >
+                            {showAttributes ? <AccountTreeOutlined /> : <AccountTree />}
+                        </ButtonTooltip>
                     </Stack>
                 </Stack>
                 <ButtonTooltip

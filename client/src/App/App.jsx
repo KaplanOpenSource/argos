@@ -18,6 +18,7 @@ export function App() {
   const [markedPoints, setMarkedPoints] = useState([]);
   const [fullscreen, setFullscreen] = useState(false);
   const [showConfig, setShowConfig] = useState(SHOW_ALL_EXPERIMENTS);
+  const [showAttributes, setShowAttributes] = useState(false);
   const { currTrial } = useContext(experimentContext);
 
   return (
@@ -27,7 +28,9 @@ export function App() {
         setFullscreen={setFullscreen}
         showConfig={showConfig}
         setShowConfig={setShowConfig}
-      />
+        showAttributes={showAttributes}
+        setShowAttributes={setShowAttributes}
+  />
       <Stack direction={'row'} justifyContent="space-between" alignItems="flex-start">
         <ExperimentList
           fullscreen={fullscreen}
@@ -36,6 +39,8 @@ export function App() {
         />
         {fullscreen ? null :
           <DeviceTable
+            showAttributes={showAttributes}
+            setShowAttributes={setShowAttributes}
           />
         }
       </Stack>
