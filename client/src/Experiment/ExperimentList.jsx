@@ -68,16 +68,13 @@ export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
                 left: 0,
                 top: '-5px',
                 margin: '10px',
-                overflowY: 'visible'
+                maxHeight: '80vh',
+                overflowY: 'auto',
             }}
         >
             <TreeView
                 defaultCollapseIcon={<ExpandMoreIcon />}
                 defaultExpandIcon={<ChevronRightIcon />}
-                sx={{
-                    height: '80vh',
-                    overflowY: 'auto',
-                }}
                 expanded={expanded}
                 onNodeToggle={handleNodeToggle}
                 disableSelection
