@@ -62,6 +62,7 @@ export const DeviceTable = ({ showAttributes, setShowAttributes }) => {
                 >
                     {shownDevices.map(({ deviceType, deviceItem }) => (
                         <Paper
+                            key={deviceItem.trackUuid}
                             sx={{
                                 paddingLeft: '5px',
                                 maxWidth: 'fit-content'
