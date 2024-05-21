@@ -1,4 +1,4 @@
-import { Paper, Stack, Typography } from "@mui/material"
+import { Box, Paper, Stack, Typography } from "@mui/material"
 import { TreeView } from "@mui/x-tree-view/TreeView"
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
@@ -22,24 +22,25 @@ export const DeviceTable = ({ showAttributes, setShowAttributes }) => {
     };
 
     return (
-        <>
+        <Box sx={{
+            zIndex: 1000,
+            height: '80vh',
+            maxWidth: '50%',
+            width: 'fit-content',
+            overflowY: 'auto',
+        }}>
             {showAttributes
                 ? <TreeView
                     defaultCollapseIcon={<ExpandMoreIcon />}
                     defaultExpandIcon={<ChevronRightIcon />}
-                    sx={{
-                        height: '80vh',
-                        overflowY: 'auto',
-                    }}
                     disableSelection
+                    defaultExpanded={shownDevices.map(({ deviceItem }) => deviceItem.trackUuid)}
                 >
                     {shownDevices.map(({ deviceType, deviceItem }) => (
                         <Paper
-                            key={deviceType.name + ":" + deviceItem.name}
+                            key={deviceItem.trackUuid}
                             sx={{
-                                zIndex: 1000,
                                 position: 'relative',
-                                maxWidth: 'fit-content',
                                 maxHeight: 'fit-content',
                                 right: '10px',
                                 top: '5px',
@@ -58,11 +59,6 @@ export const DeviceTable = ({ showAttributes, setShowAttributes }) => {
                 : <Stack
                     direction='column'
                     alignItems="flex-end"
-                    sx={{
-                        zIndex: 1000,
-                        height: '80vh',
-                        overflowY: 'auto',
-                    }}
                 >
                     {shownDevices.map(({ deviceType, deviceItem }) => (
                         <Paper
@@ -93,6 +89,6 @@ export const DeviceTable = ({ showAttributes, setShowAttributes }) => {
                     ))}
                 </Stack>
             }
-        </>
+        </Box>
     )
 }
