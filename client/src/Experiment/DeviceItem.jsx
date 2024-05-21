@@ -3,15 +3,14 @@ import { TreeRow } from "../App/TreeRow";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { AttributeItemList } from "./AttributeItemList";
 import { SelectDeviceButton } from "./SelectDeviceButton";
-import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { RealMapName } from "../constants/constants";
-import { LocationOff, LocationOffOutlined } from "@mui/icons-material";
 import { useContext } from "react";
 import { experimentContext } from "../Context/ExperimentProvider";
 import { SCOPE_TRIAL } from "./AttributeType";
+import { DeviceItemLocationButton } from "./DeviceItemLocationButton";
 
 export const DeviceItem = ({ data, setData, deviceType, showAttributes, devicesEnclosingList, scope, experiment }) => {
-    const { currTrial, setLocationsToDevices, setTrialData, deleteDevice } = useContext(experimentContext);
+    const { currTrial, setTrialData, deleteDevice } = useContext(experimentContext);
     const devicesOnTrial = (currTrial.trial || {}).devicesOnTrial || [];
     const mapName = currTrial.shownMapName || RealMapName;
     const index = devicesOnTrial.findIndex(d => d.location.name === mapName && d.deviceTypeName === deviceType.name && d.deviceItemName === data.name);
@@ -43,15 +42,11 @@ export const DeviceItem = ({ data, setData, deviceType, showAttributes, devicesE
                             <DeleteIcon />
                         </IconButton>
                     }
-                    {currTrial.trial &&
-                        <ButtonTooltip
-                            tooltip={hasLocation ? "Remove location" : "Has no location"}
-                            onClick={() => setLocationsToDevices([{ deviceTypeName: deviceType.name, deviceItemName: data.name }], [undefined])}
-                            disabled={!hasLocation}
-                        >
-                            {hasLocation ? <LocationOff /> : <LocationOffOutlined />}
-                        </ButtonTooltip>
-                    }
+                    <DeviceItemLocationButton
+                        deviceType={deviceType}
+                        deviceItem={data}
+                        hasLocation={hasLocation}
+                    />
                 </>
             }
         >
