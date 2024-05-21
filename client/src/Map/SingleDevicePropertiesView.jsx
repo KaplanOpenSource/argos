@@ -1,17 +1,11 @@
-import React, { Fragment, useContext, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
-    Grid, Typography
+    Stack, Typography
 } from '@mui/material';
 import {
-    Check,
-    Close,
     Edit,
     LocationOff,
-    MergeType,
 } from "@mui/icons-material";
-// import { TextFieldEntityProperty, entitySaveForTextFields } from './TextFieldEntityProperty';
-// import { useSelection } from './SelectionContext';
-// import { ContainedEntity } from './ContainedEntity';
 import { ButtonTooltip } from '../Utils/ButtonTooltip';
 import { experimentContext } from '../Context/ExperimentProvider';
 import { SelectDeviceButton } from '../Experiment/SelectDeviceButton';
@@ -42,40 +36,6 @@ export const SingleDevicePropertiesView = ({ deviceOnTrial, setDeviceOnTrial, ch
                 && dev.containedIn.deviceTypeName === deviceTypeName;
         });
 
-    // // TODO: switch to use the EntitiesContext function
-    // const findEntityParent = (containedKey) => {
-    //     for (const et of entities) {
-    //         for (const ei of et.items) {
-    //             if (ei.containsEntities && ei.containsEntities.includes(containedKey)) {
-    //                 return ei;
-    //             }
-    //         }
-    //     }
-    //     return undefined;
-    // }
-
-    // // TODO: switch to use the EntitiesContext function
-    // const findEntityParentHierarchy = (containedKey) => {
-    //     const parents = [];
-    //     let curr = findEntityParent(containedKey);
-    //     while (curr) {
-    //         parents.push(curr);
-    //         curr = findEntityParent(curr.key);
-    //     }
-    //     return parents;
-    // }
-
-    // const disconnectEntityParent = (parentEntityObj, newContainedEntityKey) => {
-    //     const containsEntities = [parentEntityObj.containsEntities || []].flatMap(x => x);
-    //     const newContainsEntities = containsEntities.filter(ce => ce !== newContainedEntityKey);
-    //     setEntityProperties(parentEntityObj.key, [], newContainsEntities);
-    // }
-
-    // const parentHierarchy = findEntityParentHierarchy(deviceItem.key);
-    // const parentEntity = parentHierarchy[0];
-
-    // console.log(deviceType, deviceItem, deviceOnTrial)
-
     return (
         <>
             <Typography variant='h6'>
@@ -88,14 +48,17 @@ export const SingleDevicePropertiesView = ({ deviceOnTrial, setDeviceOnTrial, ch
             {
                 isEditLocation
                     ? null
-                    : <>
+                    : <Stack direction='row'>
                         <Typography variant='overline'>
-                            {'at (' + devLocation.map(x => Math.round(x * 1e7) / 1e7) + ')'}
+                            {devLocation.map(x => Math.round(x * 1e7) / 1e7).join(',')}
                         </Typography>
-                        <ButtonTooltip tooltip={'Edit location'} onClick={() => setIsEditLocation(true)}>
+                        {/* <ButtonTooltip
+                        // tooltip={'Edit location'}
+                        // onClick={() => setIsEditLocation(true)}
+                        >
                             <Edit />
-                        </ButtonTooltip>
-                    </>
+                        </ButtonTooltip> */}
+                    </Stack>
             }
             <br />
             {deviceItem
@@ -110,25 +73,27 @@ export const SingleDevicePropertiesView = ({ deviceOnTrial, setDeviceOnTrial, ch
                     This device exists on trial but not on experiment, please remove.
                 </Typography>
             }
-            {deviceItem &&
-                <SelectDeviceButton
-                    deviceItem={deviceItem}
-                    deviceType={deviceType}
-                />
-            }
-            <ButtonTooltip
-                tooltip="Remove location"
-                onClick={() => setLocationsToDevices([{ deviceTypeName, deviceItemName }], [undefined])}
-            >
-                <LocationOff />
-            </ButtonTooltip>
-            {deviceItem &&
-                <AddContainedButton
-                    deviceItem={deviceItem}
-                    deviceType={deviceType}
-                    deviceOnTrial={deviceOnTrial}
-                />
-            }
+            <Stack direction='row'>
+                {deviceItem &&
+                    <SelectDeviceButton
+                        deviceItem={deviceItem}
+                        deviceType={deviceType}
+                    />
+                }
+                <ButtonTooltip
+                    tooltip="Remove location"
+                    onClick={() => setLocationsToDevices([{ deviceTypeName, deviceItemName }], [undefined])}
+                >
+                    <LocationOff />
+                </ButtonTooltip>
+                {deviceItem &&
+                    <AddContainedButton
+                        deviceItem={deviceItem}
+                        deviceType={deviceType}
+                        deviceOnTrial={deviceOnTrial}
+                    />
+                }
+            </Stack>
             {children}
             {deviceOnTrial.containedIn && (
                 <>
