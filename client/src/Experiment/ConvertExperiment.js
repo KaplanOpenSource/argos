@@ -7,7 +7,7 @@ export const ConvertExperiment = (oldExp) => {
         alert(`unknown version ${version}`);
         return undefined;
     }
-    console.log('version 2:', oldExp)
+    // console.log('version 2:', oldExp)
     const top = oldExp.experiment;
     const trialTypes = (oldExp.trialSets || []).map(t => convertTrialType(t, oldExp));
     const deviceTypes = (oldExp.entityTypes || []).map(t => convertDeviceType(t, oldExp));
@@ -37,10 +37,14 @@ const convertTrialType = (oldTrialType, oldExp) => {
 
 const convertTrial = (oldTrial, oldTrialType, oldExp) => {
     const devicesOnTrial = (oldTrial.entities || []).map(e => convertDeviceOnTrial(e, oldTrial, oldTrialType, oldExp));
+    const attributes = ((oldTrial || {}).properties || [])
+        .map(x => convertAttrValue(x, oldTrialType))
+        .filter(x => x);
     return {
         name: oldTrial.name,
         createdDate: oldTrial.created,
         devicesOnTrial,
+        attributes,
     }
 }
 
@@ -50,10 +54,14 @@ const convertDeviceOnTrial = (oldDeviceOnTrial, oldTrial, oldTrialType, oldExp) 
     const locationType = (oldDeviceType.properties || []).find(p => p.type === 'location');
     const locationItem = (oldDeviceOnTrial.properties || []).find(p => p.key === locationType.key);
     const location = JSON.parse(locationItem.val);
+    const attributes = ((oldDeviceOnTrial || {}).properties || [])
+        .map(x => convertAttrValue(x, oldDeviceType))
+        .filter(x => x);
     return {
         deviceTypeName: oldDeviceType.name,
         deviceItemName: oldDeviceItem.name,
         location,
+        attributes,
     }
 }
 
@@ -72,8 +80,12 @@ const convertDeviceType = (oldDeviceType, oldExp) => {
 }
 
 const convertDevice = (oldDevice, oldDeviceType, oldExp) => {
+    const attributes = ((oldDevice || {}).properties || [])
+        .map(x => convertAttrValue(x, oldDeviceType))
+        .filter(x => x);
     return {
         name: oldDevice.name,
+        attributes,
     }
 }
 
@@ -99,11 +111,23 @@ const convertTypeOnAttrType = (oldType) => {
     }
 }
 
-const convertAttrType = (oldAttr, oldDeviceType, oldExp) => {
+const convertAttrType = (oldAttrType, oldDeviceType, oldExp) => {
     return {
-        name: oldAttr.label,
-        required: oldAttr.required,
-        defaultValue: oldAttr.defaultValue,
-        type: convertTypeOnAttrType(oldAttr.type),
+        name: oldAttrType.label,
+        required: oldAttrType.required,
+        defaultValue: oldAttrType.defaultValue,
+        type: convertTypeOnAttrType(oldAttrType.type),
+    }
+}
+
+const convertAttrValue = (oldAttrValue, parentTypeHolder) => {
+    const { key, val } = oldAttrValue;
+    if (val !== null && val !== undefined) {
+        return undefined;
+    }
+    const oldAttrType = ((parentTypeHolder || {}).properties || []).find(x => x.key === key);
+    return {
+        name: oldAttrType.label,
+        value: val,
     }
 }
