@@ -77,7 +77,7 @@ export const AppHeader = ({ fullscreen, setFullscreen, showConfig, setShowConfig
                             setShowConfig={setShowConfig}
                         />
                         <ButtonTooltip
-                            tooltip={showAttributes ? "Hide attributes" : "Show attributes"}
+                            tooltip={showAttributes ? "Hide attributes on selected devices" : "Show attributes on selected devices"}
                             onClick={() => setShowAttributes(!showAttributes)}
                             color="inherit"
                         >

@@ -1,4 +1,4 @@
-import { Button, Paper } from "@mui/material"
+import { Box, Button, Paper } from "@mui/material"
 import { TreeView } from "@mui/x-tree-view/TreeView"
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
@@ -22,28 +22,24 @@ export const DeviceTable = ({ showAttributes, setShowAttributes }) => {
     };
 
     return (
-        <Paper
-            style={{
-                zIndex: 1000,
-                position: 'relative',
-                maxWidth: 'fit-content',
-                maxHeight: 'fit-content',
-                right: 0,
-                top: '-5px',
-                margin: '10px',
-                overflowY: 'visible'
+        <TreeView
+            defaultCollapseIcon={<ExpandMoreIcon />}
+            defaultExpandIcon={<ChevronRightIcon />}
+            sx={{
+                height: '80vh',
+                overflowY: 'auto',
             }}
+            disableSelection
         >
-            <TreeView
-                defaultCollapseIcon={<ExpandMoreIcon />}
-                defaultExpandIcon={<ChevronRightIcon />}
-                sx={{
-                    height: '80vh',
-                    overflowY: 'auto',
-                }}
-                disableSelection
-            >
-                {shownDevices.map(({ deviceType, deviceItem, deviceTypeName, deviceItemName }) => (
+            {shownDevices.map(({ deviceType, deviceItem, deviceTypeName, deviceItemName }) => (
+                <Paper sx={{
+                    zIndex: 1000,
+                    position: 'relative',
+                    maxWidth: 'fit-content',
+                    maxHeight: 'fit-content',
+                    right: '10px',
+                    top: '5px',
+                }}>
                     <DeviceItem
                         key={deviceItemName}
                         data={deviceItem}
@@ -53,8 +49,8 @@ export const DeviceTable = ({ showAttributes, setShowAttributes }) => {
                         devicesEnclosingList={shownDevices}
                         scope={SCOPE_TRIAL}
                     />
-                ))}
-            </TreeView>
-        </Paper>
+                </Paper>
+            ))}
+        </TreeView>
     )
 }

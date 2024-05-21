@@ -67,7 +67,8 @@ export const MapShower = ({ children }) => {
             // style={{ height: "1000%" }}
             style={{
                 // height: "100%", width: '100%',
-                position: 'absolute', top: '5em', bottom: 0, right: 0, left: 0
+                position: 'absolute', top: '5em', bottom: 0, right: 0, left: 0,
+                zIndex: 0,
             }}
             crs={shownMap ? CRS.Simple : CRS.EPSG3857}
             // bounds={posbounds}
