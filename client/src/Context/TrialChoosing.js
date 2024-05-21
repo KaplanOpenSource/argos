@@ -49,8 +49,8 @@ export class TrialChoosing {
                 experiment
             }
         }
-        const trialType = experiment.trialTypes[currTrial.trialTypeIndex];
-        const trial = trialType.trials[currTrial.trialIndex];
+        const trialType = ((experiment || {}).trialTypes || [])[currTrial.trialTypeIndex];
+        const trial = ((trialType || {}).trials || [])[currTrial.trialIndex];
         return {
             ...currTrial,
             experiment,
