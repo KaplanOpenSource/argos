@@ -14,7 +14,7 @@ export const DeviceTable = ({ showAttributes, setShowAttributes }) => {
 
     const shownDevices = [];
     for (const { deviceTypeName, deviceItemName } of selection || []) {
-        const deviceType = (currTrial.experiment || {}).deviceTypes.find(x => x.name === deviceTypeName);
+        const deviceType = ((currTrial.experiment || {}).deviceTypes || []).find(x => x.name === deviceTypeName);
         const deviceItem = ((deviceType || {}).devices || []).find(x => x.name === deviceItemName);
         if (deviceType && deviceItem) {
             shownDevices.push({ deviceType, deviceItem });

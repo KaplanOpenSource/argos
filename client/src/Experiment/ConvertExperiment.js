@@ -1,4 +1,5 @@
 import { argosJsonVersion } from "../constants/constants";
+import { VALUE_TYPE_BOOLEAN, VALUE_TYPE_NUMBER, VALUE_TYPE_SELECT, VALUE_TYPE_STRING } from "./AttributeValue";
 
 export const ConvertExperiment = (oldExp) => {
     const version = (oldExp || {}).version;
@@ -25,9 +26,12 @@ const convertTrialType = (oldTrialType, oldExp) => {
     const trials = (oldExp.trials || [])
         .filter(r => r.trialSetKey === oldTrialType.key)
         .map(r => convertTrial(r, oldTrialType, oldExp));
+    const attributeTypes = (oldTrialType.properties || [])
+        .map(r => convertAttrType(r, oldDeviceType, oldExp));
     return {
         name: oldTrialType.name,
         trials,
+        attributeTypes,
     }
 }
 
@@ -57,9 +61,13 @@ const convertDeviceType = (oldDeviceType, oldExp) => {
     const devices = (oldExp.entities || [])
         .filter(r => r.entitiesTypeKey === oldDeviceType.key)
         .map(r => convertDevice(r, oldDeviceType, oldExp));
+    const attributeTypes = (oldDeviceType.properties || [])
+        .filter(r => r.type !== 'location')
+        .map(r => convertAttrType(r, oldDeviceType, oldExp));
     return {
         name: oldDeviceType.name,
         devices,
+        attributeTypes,
     }
 }
 
@@ -69,3 +77,33 @@ const convertDevice = (oldDevice, oldDeviceType, oldExp) => {
     }
 }
 
+const convertTypeOnAttrType = (oldType) => {
+    switch (oldType) {
+        case 'text':
+        case 'textArea':
+            return VALUE_TYPE_STRING;
+        case 'number':
+            return VALUE_TYPE_NUMBER;
+        case 'boolean':
+        case 'bool':
+            return VALUE_TYPE_BOOLEAN;
+        case 'date':
+        case 'time':
+        case 'datetime':
+        case 'datetime-local':
+            return VALUE_TYPE_BOOLEAN;
+        case 'selectList':
+            return VALUE_TYPE_SELECT;
+        default:
+            return VALUE_TYPE_STRING;
+    }
+}
+
+const convertAttrType = (oldAttr, oldDeviceType, oldExp) => {
+    return {
+        name: oldAttr.label,
+        required: oldAttr.required,
+        defaultValue: oldAttr.defaultValue,
+        type: convertTypeOnAttrType(oldAttr.type),
+    }
+}
