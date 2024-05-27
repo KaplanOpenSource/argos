@@ -41,14 +41,14 @@ export const ShowConfigToggles = ({ showConfig, setShowConfig }) => {
                             <Terrain />
                         </Tooltip>
                     </ToggleButton>
-                    <ToggleButton value={SHOW_ONLY_DEVICES}>
-                        <Tooltip title="Show only devices of current experiment">
-                            <CellTower />
-                        </Tooltip>
-                    </ToggleButton>
                     <ToggleButton value={SHOW_ONLY_TRIALS}>
                         <Tooltip title="Show only trials of current experiment">
                             <GridOn />
+                        </Tooltip>
+                    </ToggleButton>
+                    <ToggleButton value={SHOW_ONLY_DEVICES}>
+                        <Tooltip title="Show only devices of current experiment">
+                            <CellTower />
                         </Tooltip>
                     </ToggleButton>
                 </ToggleButtonGroup>
