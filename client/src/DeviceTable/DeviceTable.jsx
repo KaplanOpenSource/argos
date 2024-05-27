@@ -22,7 +22,6 @@ export const DeviceTable = ({ showAttributes }) => {
         }
     };
 
-    console.log(selectionOnEnclosingList)
     return (
         <Box sx={{
             zIndex: 1000,

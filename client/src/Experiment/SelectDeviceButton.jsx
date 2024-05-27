@@ -6,20 +6,18 @@ import { ContextMenu } from "../Utils/ContextMenu";
 import React from "react";
 import {
     differenceWith,
+    uniq,
 } from 'lodash';
 
 export const SelectDeviceButton = ({ deviceType, deviceItem, devicesEnclosingList, selectionOnEnclosingList }) => {
     const { selection, setSelection, currTrial } = useContext(experimentContext);
-    const selectedIndex: number = selection.findIndex(({ deviceTypeName, deviceItemName }) => {
+    const selectedIndex = selection.findIndex(({ deviceTypeName, deviceItemName }) => {
         return deviceTypeName === deviceType.name && deviceItemName === deviceItem.name;
     });
-    const isSelected: boolean = selectedIndex !== -1;
-    const hasTrial: boolean = currTrial.trial;
+    const isSelected = selectedIndex !== -1;
+    const hasTrial = currTrial.trial;
 
-    const isSameDevice = (
-        one: { deviceItemName: string; deviceTypeName: string; },
-        two: { deviceItemName: any; deviceTypeName: any; }
-    ) => {
+    const isSameDevice = (one, two) => {
         return one.deviceItemName === two.deviceItemName && one.deviceTypeName === two.deviceTypeName
     }
 
@@ -33,12 +31,7 @@ export const SelectDeviceButton = ({ deviceType, deviceItem, devicesEnclosingLis
         setSelection(added);
     }
 
-    const doMultipleSelection = devicesEnclosingList && selectionOnEnclosingList && selectionOnEnclosingList.length > 1;
-
-    const menuItems: {
-        label: string;
-        callback: () => void;
-    }[] = [];
+    const menuItems = [];
     if (devicesEnclosingList) {
         menuItems.push(
             { label: 'Select all', callback: selectAll },
@@ -48,8 +41,17 @@ export const SelectDeviceButton = ({ deviceType, deviceItem, devicesEnclosingLis
     }
 
     const handleClick = () => {
-        if (doMultipleSelection) {
-
+        if (devicesEnclosingList && selectionOnEnclosingList) {
+            const xrefUuidToDev = Object.fromEntries(devicesEnclosingList.map(d => [d.deviceItem.trackUuid, d]));
+            const selOnEnclosingUuids = uniq([...selectionOnEnclosingList, deviceItem.trackUuid]);
+            const selOnEnclosingDevs = selOnEnclosingUuids.map(u => xrefUuidToDev[u]).filter(x => x);
+            
+            if (isSelected) {
+                setSelection(differenceWith(selection, selOnEnclosingDevs, isSameDevice));
+            } else {
+                const added = differenceWith(selOnEnclosingDevs, selection, isSameDevice);
+                setSelection([...selection, ...added]);
+            }
         } else {
             if (isSelected) {
                 setSelection(selection.filter((_, i) => i !== selectedIndex));
