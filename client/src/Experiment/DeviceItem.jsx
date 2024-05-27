@@ -9,7 +9,7 @@ import { experimentContext } from "../Context/ExperimentProvider";
 import { SCOPE_TRIAL } from "./AttributeType";
 import { DeviceItemLocationButton } from "./DeviceItemLocationButton";
 
-export const DeviceItem = ({ data, setData, deviceType, showAttributes, devicesEnclosingList, scope, experiment }) => {
+export const DeviceItem = ({ data, setData, deviceType, showAttributes, devicesEnclosingList, selectionOnEnclosingList, scope, experiment }) => {
     const { currTrial, setTrialData, deleteDevice } = useContext(experimentContext);
     const devicesOnTrial = (currTrial.trial || {}).devicesOnTrial || [];
     const mapName = currTrial.shownMapName || RealMapName;
@@ -33,6 +33,7 @@ export const DeviceItem = ({ data, setData, deviceType, showAttributes, devicesE
                         deviceItem={data}
                         deviceType={deviceType}
                         devicesEnclosingList={devicesEnclosingList}
+                        selectionOnEnclosingList={selectionOnEnclosingList}
                     />
                     {setData && experiment &&
                         <IconButton

@@ -5,7 +5,7 @@ import {
 } from '@mui/material';
 import { DomEvent } from 'leaflet';
 
-export const ButtonTooltip = ({ onClick, tooltip, disabled, closeTooltipOnClick, children, ...restProps }) => {
+export const ButtonTooltip = ({ onClick, tooltip, disabled, closeTooltipOnClick = undefined, children, ...restProps }) => {
     const [open, setOpen] = React.useState(false);
 
     const button = (

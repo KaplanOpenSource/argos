@@ -2,7 +2,7 @@ import { Box, Paper, Stack, Typography } from "@mui/material"
 import { TreeView } from "@mui/x-tree-view/TreeView"
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { experimentContext } from "../Context/ExperimentProvider";
 import { DeviceItem } from "../Experiment/DeviceItem";
 import { SCOPE_TRIAL } from "../Experiment/AttributeType";
@@ -11,6 +11,7 @@ import { DeviceItemLocationButton } from "../Experiment/DeviceItemLocationButton
 
 export const DeviceTable = ({ showAttributes }) => {
     const { selection, currTrial } = useContext(experimentContext);
+    const [selectionOnEnclosingList, setSelectionOnEnclosingList] = useState([]);
 
     const shownDevices = [];
     for (const { deviceTypeName, deviceItemName } of selection || []) {
@@ -21,6 +22,7 @@ export const DeviceTable = ({ showAttributes }) => {
         }
     };
 
+    console.log(selectionOnEnclosingList)
     return (
         <Box sx={{
             zIndex: 1000,
@@ -33,8 +35,10 @@ export const DeviceTable = ({ showAttributes }) => {
                 ? <TreeView
                     defaultCollapseIcon={<ExpandMoreIcon />}
                     defaultExpandIcon={<ChevronRightIcon />}
-                    disableSelection
+                    multiSelect
                     defaultExpanded={shownDevices.map(({ deviceItem }) => deviceItem.trackUuid)}
+                    selected={selectionOnEnclosingList}
+                    onNodeSelect={(e, ids) => setSelectionOnEnclosingList(ids)}
                 >
                     {shownDevices.map(({ deviceType, deviceItem }) => (
                         <Paper
@@ -50,6 +54,7 @@ export const DeviceTable = ({ showAttributes }) => {
                                 data={deviceItem}
                                 deviceType={deviceType}
                                 devicesEnclosingList={shownDevices}
+                                selectionOnEnclosingList={selectionOnEnclosingList}
                                 scope={SCOPE_TRIAL}
                                 showAttributes={true}
                             />
