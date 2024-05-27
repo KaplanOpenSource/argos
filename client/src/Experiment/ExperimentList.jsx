@@ -77,7 +77,9 @@ export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
                 defaultExpandIcon={<ChevronRightIcon />}
                 expanded={expanded}
                 onNodeToggle={handleNodeToggle}
-                disableSelection
+                multiSelect
+                // selected={selectionOnEnclosingList}
+                // onNodeSelect={(e, ids) => setSelectionOnEnclosingList(ids)}
             >
                 <SwitchCase test={currTrial.experiment ? showConfig : SHOW_ALL_EXPERIMENTS}>
                     <Case value={SHOW_ALL_EXPERIMENTS}>

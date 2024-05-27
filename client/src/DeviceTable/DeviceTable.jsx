@@ -8,10 +8,10 @@ import { DeviceItem } from "../Experiment/DeviceItem";
 import { SCOPE_TRIAL } from "../Experiment/AttributeType";
 import { SelectDeviceButton } from "../Experiment/SelectDeviceButton";
 import { DeviceItemLocationButton } from "../Experiment/DeviceItemLocationButton";
+import { EnclosingListSelectionContext, EnclosingListSelectionProvider } from "../Experiment/EnclosedSelectionProvider";
 
 export const DeviceTable = ({ showAttributes }) => {
     const { selection, currTrial } = useContext(experimentContext);
-    const [selectionOnEnclosingList, setSelectionOnEnclosingList] = useState([]);
 
     const shownDevices = [];
     for (const { deviceTypeName, deviceItemName } of selection || []) {
@@ -23,77 +23,101 @@ export const DeviceTable = ({ showAttributes }) => {
     };
 
     return (
-        <Box sx={{
-            zIndex: 1000,
-            height: '80vh',
-            maxWidth: '50%',
-            width: 'fit-content',
-            overflowY: 'auto',
-        }}>
-            {showAttributes
-                ? <TreeView
-                    defaultCollapseIcon={<ExpandMoreIcon />}
-                    defaultExpandIcon={<ChevronRightIcon />}
-                    multiSelect
-                    defaultExpanded={shownDevices.map(({ deviceItem }) => deviceItem.trackUuid)}
-                    selected={selectionOnEnclosingList}
-                    onNodeSelect={(e, ids) => setSelectionOnEnclosingList(ids)}
+        <EnclosingListSelectionProvider>
+            <Box sx={{
+                zIndex: 1000,
+                height: '80vh',
+                maxWidth: '50%',
+                width: 'fit-content',
+                overflowY: 'auto',
+            }}>
+                {showAttributes
+                    ? <DeviceTableRich
+                        shownDevices={shownDevices}
+                    />
+                    : <DeviceTableSmall
+                        shownDevices={shownDevices}
+                    />
+                }
+            </Box>
+        </EnclosingListSelectionProvider>
+    )
+}
+
+
+const DeviceTableRich = ({ shownDevices }) => {
+    const {
+        selectionOnEnclosingUuids,
+        setSelectionOnEnclosingUuids,
+    } = useContext(EnclosingListSelectionContext);
+
+    return (
+        <TreeView
+            defaultCollapseIcon={<ExpandMoreIcon />}
+            defaultExpandIcon={<ChevronRightIcon />}
+            defaultExpanded={shownDevices.map(({ deviceItem }) => deviceItem.trackUuid)}
+            multiSelect
+            selected={selectionOnEnclosingUuids}
+            onNodeSelect={(e, ids) => setSelectionOnEnclosingUuids(ids)}
+        >
+            {shownDevices.map(({ deviceType, deviceItem }) => (
+                <Paper
+                    key={deviceItem.trackUuid}
+                    sx={{
+                        position: 'relative',
+                        maxHeight: 'fit-content',
+                        right: '10px',
+                        top: '5px',
+                    }}
                 >
-                    {shownDevices.map(({ deviceType, deviceItem }) => (
-                        <Paper
-                            key={deviceItem.trackUuid}
-                            sx={{
-                                position: 'relative',
-                                maxHeight: 'fit-content',
-                                right: '10px',
-                                top: '5px',
-                            }}
-                        >
-                            <DeviceItem
-                                data={deviceItem}
-                                deviceType={deviceType}
-                                devicesEnclosingList={shownDevices}
-                                selectionOnEnclosingList={selectionOnEnclosingList}
-                                scope={SCOPE_TRIAL}
-                                showAttributes={true}
-                            />
-                        </Paper>
-                    ))}
-                </TreeView>
-                : <Stack
-                    direction='column'
-                    alignItems="flex-end"
+                    <DeviceItem
+                        data={deviceItem}
+                        deviceType={deviceType}
+                        devicesEnclosingList={shownDevices}
+                        selectionOnEnclosingList={selectionOnEnclosingUuids}
+                        scope={SCOPE_TRIAL}
+                        showAttributes={true}
+                    />
+                </Paper>
+            ))}
+        </TreeView>
+    )
+}
+
+const DeviceTableSmall = ({ shownDevices }) => {
+    return (
+        <Stack
+            direction='column'
+            alignItems="flex-end"
+        >
+            {shownDevices.map(({ deviceType, deviceItem }) => (
+                <Paper
+                    key={deviceItem.trackUuid}
+                    sx={{
+                        paddingLeft: '5px',
+                        maxWidth: 'fit-content'
+                    }}
                 >
-                    {shownDevices.map(({ deviceType, deviceItem }) => (
-                        <Paper
-                            key={deviceItem.trackUuid}
-                            sx={{
-                                paddingLeft: '5px',
-                                maxWidth: 'fit-content'
-                            }}
-                        >
-                            <Stack
-                                direction='row'
-                                alignItems='center'
-                                justifyContent="end"
-                            >
-                                <Typography>
-                                    {deviceItem.name}
-                                </Typography>
-                                <SelectDeviceButton
-                                    deviceItem={deviceItem}
-                                    deviceType={deviceType}
-                                    devicesEnclosingList={shownDevices}
-                                />
-                                <DeviceItemLocationButton
-                                    deviceType={deviceType}
-                                    deviceItem={deviceItem}
-                                />
-                            </Stack>
-                        </Paper>
-                    ))}
-                </Stack>
-            }
-        </Box>
+                    <Stack
+                        direction='row'
+                        alignItems='center'
+                        justifyContent="end"
+                    >
+                        <Typography>
+                            {deviceItem.name}
+                        </Typography>
+                        <SelectDeviceButton
+                            deviceItem={deviceItem}
+                            deviceType={deviceType}
+                            devicesEnclosingList={shownDevices}
+                        />
+                        <DeviceItemLocationButton
+                            deviceType={deviceType}
+                            deviceItem={deviceItem}
+                        />
+                    </Stack>
+                </Paper>
+            ))}
+        </Stack>
     )
 }
