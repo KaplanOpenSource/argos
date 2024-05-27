@@ -15,7 +15,7 @@ export const DeviceType = ({ data, setData, experiment }) => {
     const { deleteDeviceType } = useContext(experimentContext);
 
     const devicesEnclosingList = (data.devices || []).map(item => {
-        return { deviceTypeName: data.name, deviceItemName: item.name };
+        return { deviceTypeName: data.name, deviceItemName: item.name, deviceType: data, deviceItem: item };
     });
 
     return (

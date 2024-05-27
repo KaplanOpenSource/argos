@@ -8,9 +8,11 @@ import {
     differenceWith,
     uniq,
 } from 'lodash';
+import { EnclosingListSelectionContext } from "./EnclosedSelectionProvider";
 
-export const SelectDeviceButton = ({ deviceType, deviceItem, devicesEnclosingList, selectionOnEnclosingList }) => {
+export const SelectDeviceButton = ({ deviceType, deviceItem, devicesEnclosingList }) => {
     const { selection, setSelection, currTrial } = useContext(experimentContext);
+    const { selectionOnEnclosingUuids } = useContext(EnclosingListSelectionContext);
     const selectedIndex = selection.findIndex(({ deviceTypeName, deviceItemName }) => {
         return deviceTypeName === deviceType.name && deviceItemName === deviceItem.name;
     });
@@ -41,11 +43,11 @@ export const SelectDeviceButton = ({ deviceType, deviceItem, devicesEnclosingLis
     }
 
     const handleClick = () => {
-        if (devicesEnclosingList && selectionOnEnclosingList) {
+        if (devicesEnclosingList && selectionOnEnclosingUuids) {
             const xrefUuidToDev = Object.fromEntries(devicesEnclosingList.map(d => [d.deviceItem.trackUuid, d]));
-            const selOnEnclosingUuids = uniq([...selectionOnEnclosingList, deviceItem.trackUuid]);
+            const selOnEnclosingUuids = uniq([...selectionOnEnclosingUuids, deviceItem.trackUuid]);
             const selOnEnclosingDevs = selOnEnclosingUuids.map(u => xrefUuidToDev[u]).filter(x => x);
-            
+
             if (isSelected) {
                 setSelection(differenceWith(selection, selOnEnclosingDevs, isSameDevice));
             } else {

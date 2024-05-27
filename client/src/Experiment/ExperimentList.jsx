@@ -13,11 +13,17 @@ import { DeviceTypesList } from "./DeviceTypesList";
 import { SHOW_ALL_EXPERIMENTS, SHOW_ONLY_DEVICES, SHOW_ONLY_TRIALS } from "../App/ShowConfigToggles";
 import { Case, SwitchCase } from "../Utils/SwitchCase";
 import { TrialTypesList } from "./TrialTypesList";
+import { EnclosingListSelectionContext } from "./EnclosedSelectionProvider";
 
 export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
     const { experiments, setExperiment, addExperiment, currTrial, setCurrTrial } = useContext(experimentContext);
     const { experiment, experimentName, trialType, trialTypeName, trial, trialName } = currTrial;
     const [expanded, setExpanded] = useState([]);
+
+    const {
+        selectionOnEnclosingUuids,
+        setSelectionOnEnclosingUuids,
+    } = useContext(EnclosingListSelectionContext);
 
     const findExperimentByUuid = (uuid) => {
         if (uuid) {
@@ -78,8 +84,8 @@ export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
                 expanded={expanded}
                 onNodeToggle={handleNodeToggle}
                 multiSelect
-                // selected={selectionOnEnclosingList}
-                // onNodeSelect={(e, ids) => setSelectionOnEnclosingList(ids)}
+                selected={selectionOnEnclosingUuids}
+                onNodeSelect={(e, ids) => setSelectionOnEnclosingUuids(ids)}
             >
                 <SwitchCase test={currTrial.experiment ? showConfig : SHOW_ALL_EXPERIMENTS}>
                     <Case value={SHOW_ALL_EXPERIMENTS}>

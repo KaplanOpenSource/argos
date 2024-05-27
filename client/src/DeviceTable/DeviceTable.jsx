@@ -2,13 +2,13 @@ import { Box, Paper, Stack, Typography } from "@mui/material"
 import { TreeView } from "@mui/x-tree-view/TreeView"
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { experimentContext } from "../Context/ExperimentProvider";
 import { DeviceItem } from "../Experiment/DeviceItem";
 import { SCOPE_TRIAL } from "../Experiment/AttributeType";
 import { SelectDeviceButton } from "../Experiment/SelectDeviceButton";
 import { DeviceItemLocationButton } from "../Experiment/DeviceItemLocationButton";
-import { EnclosingListSelectionContext, EnclosingListSelectionProvider } from "../Experiment/EnclosedSelectionProvider";
+import { EnclosingListSelectionContext } from "../Experiment/EnclosedSelectionProvider";
 
 export const DeviceTable = ({ showAttributes }) => {
     const { selection, currTrial } = useContext(experimentContext);
@@ -23,24 +23,22 @@ export const DeviceTable = ({ showAttributes }) => {
     };
 
     return (
-        <EnclosingListSelectionProvider>
-            <Box sx={{
-                zIndex: 1000,
-                height: '80vh',
-                maxWidth: '50%',
-                width: 'fit-content',
-                overflowY: 'auto',
-            }}>
-                {showAttributes
-                    ? <DeviceTableRich
-                        shownDevices={shownDevices}
-                    />
-                    : <DeviceTableSmall
-                        shownDevices={shownDevices}
-                    />
-                }
-            </Box>
-        </EnclosingListSelectionProvider>
+        <Box sx={{
+            zIndex: 1000,
+            height: '80vh',
+            maxWidth: '50%',
+            width: 'fit-content',
+            overflowY: 'auto',
+        }}>
+            {showAttributes
+                ? <DeviceTableRich
+                    shownDevices={shownDevices}
+                />
+                : <DeviceTableSmall
+                    shownDevices={shownDevices}
+                />
+            }
+        </Box>
     )
 }
 
@@ -74,7 +72,6 @@ const DeviceTableRich = ({ shownDevices }) => {
                         data={deviceItem}
                         deviceType={deviceType}
                         devicesEnclosingList={shownDevices}
-                        selectionOnEnclosingList={selectionOnEnclosingUuids}
                         scope={SCOPE_TRIAL}
                         showAttributes={true}
                     />
