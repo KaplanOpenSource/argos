@@ -3,6 +3,9 @@ import { useContext } from "react";
 import { experimentContext } from "../Context/ExperimentProvider";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { ContextMenu } from "../Utils/ContextMenu";
+import {
+    differenceWith,
+} from 'lodash';
 
 export const SelectDeviceButton = ({ deviceType, deviceItem, devicesEnclosingList }) => {
     const { selection, setSelection, currTrial } = useContext(experimentContext);
@@ -11,31 +14,30 @@ export const SelectDeviceButton = ({ deviceType, deviceItem, devicesEnclosingLis
     });
     const isSelected = selectedIndex !== -1;
     const hasTrial = currTrial.trial;
+
+    const isSameDevice = (one, two) => {
+        return one.deviceItemName === two.deviceItemName && one.deviceTypeName === two.deviceTypeName
+    }
+
+    const selectAll = () => {
+        const added = differenceWith(devicesEnclosingList, selection, isSameDevice);
+        setSelection([...selection, ...added]);
+    }
+
+    const deselectAll = () => {
+        const added = differenceWith(selection, devicesEnclosingList, isSameDevice);
+        setSelection(added);
+    }
+
     return (
         <ContextMenu menuItems={[
             {
                 label: 'Select all',
-                callback: () => {
-                    const newSelection = selection.slice();
-                    for (const t of devicesEnclosingList) {
-                        if (!selection.find(s => s.deviceItemName === t.deviceItemName && s.deviceTypeName === t.deviceTypeName)) {
-                            newSelection.push(t);
-                        }
-                    }
-                    setSelection(newSelection);
-                }
+                callback: selectAll
             },
             {
                 label: 'Deselect all',
-                callback: () => {
-                    const newSelection = [];
-                    for (const s of selection) {
-                        if (!devicesEnclosingList.find(t => t.deviceItemName === s.deviceItemName && t.deviceTypeName === s.deviceTypeName)) {
-                            newSelection.push(s);
-                        }
-                    }
-                    setSelection(newSelection);
-                }
+                callback: deselectAll
             }
         ]}>
             <ButtonTooltip

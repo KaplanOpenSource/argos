@@ -9,7 +9,7 @@ import { SCOPE_TRIAL } from "../Experiment/AttributeType";
 import { SelectDeviceButton } from "../Experiment/SelectDeviceButton";
 import { DeviceItemLocationButton } from "../Experiment/DeviceItemLocationButton";
 
-export const DeviceTable = ({ showAttributes, setShowAttributes }) => {
+export const DeviceTable = ({ showAttributes }) => {
     const { selection, currTrial } = useContext(experimentContext);
 
     const shownDevices = [];
@@ -17,7 +17,7 @@ export const DeviceTable = ({ showAttributes, setShowAttributes }) => {
         const deviceType = ((currTrial.experiment || {}).deviceTypes || []).find(x => x.name === deviceTypeName);
         const deviceItem = ((deviceType || {}).devices || []).find(x => x.name === deviceItemName);
         if (deviceType && deviceItem) {
-            shownDevices.push({ deviceType, deviceItem });
+            shownDevices.push({ deviceType, deviceItem, deviceTypeName, deviceItemName });
         }
     };
 

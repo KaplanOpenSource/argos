@@ -3,8 +3,8 @@ import { ButtonTooltip } from "../../Utils/ButtonTooltip"
 import { useContext } from "react";
 import { experimentContext } from "../../Context/ExperimentProvider";
 
-export const AddContainedButton = ({ deviceItem, deviceType, deviceOnTrial }) => {
-    const { selection, setSelection, currTrial, setTrialData } = useContext(experimentContext);
+export const AddContainedButton = ({ deviceItem, deviceType }) => {
+    const { selection, currTrial, setTrialData } = useContext(experimentContext);
     const devicesOnTrial = ((currTrial.trial || {}).devicesOnTrial) || [];
 
     const { deviceItemName, deviceTypeName } = selection[0] || {};
