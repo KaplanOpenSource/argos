@@ -58,8 +58,10 @@ export function DevicePlanner() {
                     markedPoints={markedPoints}
                     setMarkedPoints={setMarkedPoints}
                 />
-                <DeviceMarkersShown
-                />
+                <EnclosingListSelectionProvider>
+                    <DeviceMarkersShown
+                    />
+                </EnclosingListSelectionProvider>
                 <ActionsOnMapDoer
                 />
 
