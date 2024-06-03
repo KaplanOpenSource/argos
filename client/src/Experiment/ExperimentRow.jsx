@@ -17,6 +17,7 @@ import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { DeviceTypesList } from "./DeviceTypesList";
 import { TrialTypesList } from "./TrialTypesList";
+import { SCOPE_CONSTANT } from "./AttributeType";
 
 export const ExperimentRow = ({ data, setData, children }) => {
     const { deleteExperiment, setShownMap } = useContext(experimentContext);
