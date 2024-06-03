@@ -20,17 +20,16 @@ export function DevicePlanner() {
     const [fullscreen, setFullscreen] = useState(false);
     const [showConfig, setShowConfig] = useState(SHOW_ALL_EXPERIMENTS);
     const [showAttributes, setShowAttributes] = useState(false);
+    const [showDeviceNames, setShowDeviceNames] = useState(true);
     const { currTrial } = useContext(experimentContext);
 
     return (
         <>
             <AppHeader
-                fullscreen={fullscreen}
-                setFullscreen={setFullscreen}
-                showConfig={showConfig}
-                setShowConfig={setShowConfig}
-                showAttributes={showAttributes}
-                setShowAttributes={setShowAttributes}
+                fullscreen={fullscreen} setFullscreen={setFullscreen}
+                showConfig={showConfig} setShowConfig={setShowConfig}
+                showAttributes={showAttributes} setShowAttributes={setShowAttributes}
+                showDeviceNames={showDeviceNames} setShowDeviceNames={setShowDeviceNames}
             />
             <Stack direction={'row'} justifyContent="space-between" alignItems="flex-start">
                 <EnclosingListSelectionProvider>
@@ -60,6 +59,7 @@ export function DevicePlanner() {
                 />
                 <EnclosingListSelectionProvider>
                     <DeviceMarkersShown
+                        showDeviceNames={showDeviceNames}
                     />
                 </EnclosingListSelectionProvider>
                 <ActionsOnMapDoer

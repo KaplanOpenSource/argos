@@ -8,7 +8,7 @@ import { divIcon } from "leaflet";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMapMarkerAlt } from "@fortawesome/free-solid-svg-icons";
 
-export const DeviceMarker = ({ deviceOnTrial, setDeviceOnTrial }) => {
+export const DeviceMarker = ({ deviceOnTrial, setDeviceOnTrial, showDeviceNames }) => {
     const { setLocationsToDevices } = useContext(experimentContext);
     const ref = useRef(null);
     const { isPopupSwitchedTo } = usePopupSwitch();
@@ -45,11 +45,11 @@ export const DeviceMarker = ({ deviceOnTrial, setDeviceOnTrial }) => {
                 {/* <i className=" fa fa-map-marker-alt fa-2x"
             // style={{ color: (isTypeSelected ? (isSelected ? '#297A31' : '#1B2C6F') : '#888888') }}
             /> */}
-                {/* {!shouldShowName ? null : */}
-                <span style={{ backgroundColor: "#fafa44", marginTop: 5, padding: 3, borderColor: "black", color: '#ff4466' }}>
-                    {deviceItemName.replace(/ /g, '\u00a0')}
-                </span>
-                {/* } */}
+                {!showDeviceNames ? null :
+                    <span style={{ backgroundColor: "#fafa44", marginTop: 5, padding: 3, borderColor: "black", color: '#ff4466' }}>
+                        {deviceItemName.replace(/ /g, '\u00a0')}
+                    </span>
+                }
             </div>
         )
     });

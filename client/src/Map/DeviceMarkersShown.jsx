@@ -4,7 +4,7 @@ import { RealMapName } from "../constants/constants";
 import { DeviceMarker } from "./DeviceMarker";
 import { PopupSwitchProvider } from "./PopupSwitchContext";
 
-export const DeviceMarkersShown = ({ }) => {
+export const DeviceMarkersShown = ({ showDeviceNames }) => {
     const { currTrial, setTrialData } = useContext(experimentContext);
     const devicesOnTrial = (currTrial.trial || {}).devicesOnTrial || [];
     const mapName = currTrial.shownMapName || RealMapName;
@@ -24,6 +24,7 @@ export const DeviceMarkersShown = ({ }) => {
                         data.devicesOnTrial[index] = newDeviceData;
                         setTrialData(data);
                     }}
+                    showDeviceNames={showDeviceNames}
                 />
             ))}
         </PopupSwitchProvider>
