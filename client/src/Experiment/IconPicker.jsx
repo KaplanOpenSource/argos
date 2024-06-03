@@ -1,9 +1,10 @@
 import * as fa_all from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Box, IconButton, ImageList, ImageListItem, Paper, Popover, Stack, Tooltip } from "@mui/material";
+import { Box, IconButton, ImageList, ImageListItem, Paper, Popover, Stack, TextField, Tooltip } from "@mui/material";
 import { useState } from "react";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { SkipNext, SkipPrevious } from "@mui/icons-material";
+import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
 
 const PAGE_ROWS = 12;
 const PAGE_COLS = 12;
@@ -11,10 +12,12 @@ const PAGE_LEN = PAGE_COLS * PAGE_ROWS;
 export const IconPicker = ({ data, setData }) => {
     const [anchorEl, setAnchorEl] = useState(null);
     const [page, setPage] = useState(0);
+    const [filterText, setFilterText] = useState('');
 
     const names = Object.keys(fa_all).filter(x => x.startsWith('fa') && x.length > 3).map(x => x.substring(2));
+    const filtered = filterText.length === 0 ? names : names.filter(x => x.toLowerCase().includes(filterText));
 
-    const shownNames = names.slice(page, page + PAGE_LEN);
+    const shownNames = filtered.slice(page, page + PAGE_LEN);
 
     return (
         <Box sx={{ position: 'relative' }}>
@@ -47,20 +50,28 @@ export const IconPicker = ({ data, setData }) => {
                     sx={{ border: 1, padding: 0.5 }}
                     onClick={e => e.stopPropagation()}
                 >
-                    <ButtonTooltip
-                        tooltip='Prev icons'
-                        onClick={() => setPage(page - PAGE_LEN)}
-                        disabled={page <= 0}
-                    >
-                        <SkipPrevious />
-                    </ButtonTooltip>
-                    <ButtonTooltip
-                        tooltip='Next icons'
-                        onClick={() => setPage(page + PAGE_LEN)}
-                        disabled={page + PAGE_LEN >= names.length}
-                    >
-                        <SkipNext />
-                    </ButtonTooltip>
+                    <Stack direction='row' alignItems='center' justifyContent='center'>
+                        <TextFieldDebounceOutlined
+                            value={filterText}
+                            onChange={val => setFilterText(val)}
+                            debounceMs={100}
+                            tooltipTitle='Filter icons'
+                        />
+                        <ButtonTooltip
+                            tooltip='Prev icons'
+                            onClick={() => setPage(page - PAGE_LEN)}
+                            disabled={page <= 0}
+                        >
+                            <SkipPrevious />
+                        </ButtonTooltip>
+                        <ButtonTooltip
+                            tooltip='Next icons'
+                            onClick={() => setPage(page + PAGE_LEN)}
+                            disabled={page + PAGE_LEN >= names.length}
+                        >
+                            <SkipNext />
+                        </ButtonTooltip>
+                    </Stack>
                     <ImageList
                         sx={{
                             // width: 500,
