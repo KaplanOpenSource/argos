@@ -4,6 +4,7 @@ import { MapEventer } from "./MapEventer";
 import { MarkedShape } from "./MarkedShape";
 import { useShape } from "../EditToolBox/ShapeContext";
 import { CHOOSE_SHAPE, FREEPOSITIONING_SHAPE, POINT_SHAPE } from "../EditToolBox/utils/constants";
+import { MapContextMenu } from "./MapContextMenu";
 
 export const MapPlacer = ({
     markedPoints,
@@ -51,6 +52,18 @@ export const MapPlacer = ({
                 setMarkedPoints={setMarkedPoints}
                 entityNum={selection.length}
             // distanceInMeters={showDistanceInMeters}
+            />
+            <MapContextMenu
+                menuItems={[
+                    {
+                        label: 'Place top point here',
+                        callback: (e, latlng) => {
+                            if (selection.length > 0) {
+                                setLocationsToStackDevices([latlng]);
+                            }
+                        }
+                    }
+                ]}
             />
         </>
     )

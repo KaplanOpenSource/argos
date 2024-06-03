@@ -9,6 +9,8 @@ import { ImageMap } from './ImageMap';
 import { ImagePlacementEditor } from './ImagePlacementEditor';
 import { MapEventer } from './MapEventer';
 import { ImagePlacementStretcher } from './ImagePlacementStretcher';
+import 'leaflet-contextmenu';
+import 'leaflet-contextmenu/dist/leaflet.contextmenu.css';
 
 L.Icon.Default.imagePath = 'leaflet-images/';
 
