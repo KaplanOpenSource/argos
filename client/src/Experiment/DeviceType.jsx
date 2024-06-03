@@ -10,6 +10,7 @@ import { SCOPE_EXPERIMENT } from "./AttributeType";
 import { useContext } from "react";
 import { experimentContext } from "../Context/ExperimentProvider";
 import { assignUuids } from "../Context/TrackUuidUtils";
+import { IconPicker } from "./IconPicker";
 
 export const DeviceType = ({ data, setData, experiment }) => {
     const { deleteDeviceType } = useContext(experimentContext);
@@ -24,6 +25,12 @@ export const DeviceType = ({ data, setData, experiment }) => {
             setData={setData}
             components={
                 <>
+                    <Tooltip title="Pick device icon" placement="top">
+                        <IconPicker
+                            data={data.icon || ""}
+                            setData={val => setData({ ...data, icon: val })}
+                        />
+                    </Tooltip>
                     <Tooltip title="Delete device type" placement="top">
                         <IconButton
                             size="small"
