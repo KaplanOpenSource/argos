@@ -86,14 +86,14 @@ export const AppHeader = ({
                             onClick={() => setShowAttributes(!showAttributes)}
                             color="inherit"
                         >
-                            {showAttributes ? <AccountTreeOutlined /> : <AccountTree />}
+                            {showAttributes ? <AccountTree /> : <AccountTreeOutlined />}
                         </ButtonTooltip>
                         <ButtonTooltip
                             tooltip={showDeviceNames ? "Hide Names of devices" : "Show Names of devices"}
                             onClick={() => setShowDeviceNames(!showDeviceNames)}
                             color="inherit"
                         >
-                            {showDeviceNames ? <ClosedCaptionOff /> : <ClosedCaption />}
+                            {showDeviceNames ? <ClosedCaption /> : <ClosedCaptionOff />}
                         </ButtonTooltip>
                     </Stack>
                 </Stack>

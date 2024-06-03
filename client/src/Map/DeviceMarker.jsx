@@ -72,8 +72,12 @@ export const DeviceMarker = ({ deviceOnTrial, setDeviceOnTrial, showDeviceNames 
             }}
         >
             <Tooltip>
-                {deviceItemName}
-                <br />
+                {showDeviceNames ? null : (
+                    <>
+                        {deviceItemName}
+                        < br />
+                    </>
+                )}
                 <span id="tooltip-marker">
                     {locationToString(coordinates)}
                 </span>
