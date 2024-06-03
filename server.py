@@ -8,8 +8,9 @@ from flask import Flask, send_from_directory, request, redirect, url_for
 from flask_cors import CORS, cross_origin
 from werkzeug.utils import secure_filename
 
-EXPERIMENTS_PATH = "data/experiments"
-UPLOAD_FOLDER = "data/uploads"
+DATA_FOLDER = "data"
+EXPERIMENTS_PATH = os.path.join(DATA_FOLDER, "experiments")
+UPLOAD_FOLDER = os.path.join(DATA_FOLDER, "uploads")
 ALLOWED_EXTENSIONS = {".txt", ".png", ".jpg", ".jpeg", ".gif"}
 
 parser = argparse.ArgumentParser()

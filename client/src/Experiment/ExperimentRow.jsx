@@ -100,7 +100,8 @@ export const ExperimentRow = ({ data, setData, children }) => {
                             {
                                 "type": "Boolean",
                                 "name": "StoreDataPerDevice",
-                                "defaultValue": false
+                                "defaultValue": false,
+                                "scope": SCOPE_CONSTANT
                             },
                         ]
                     }
