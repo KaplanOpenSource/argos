@@ -7,9 +7,10 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { divIcon } from "leaflet";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMapMarkerAlt } from "@fortawesome/free-solid-svg-icons";
+import { IconDeviceByName } from "../Experiment/IconPicker";
 
 export const DeviceMarker = ({ deviceOnTrial, setDeviceOnTrial, showDeviceNames }) => {
-    const { selection, setLocationsToDevices } = useContext(experimentContext);
+    const { selection, setLocationsToDevices, currTrial } = useContext(experimentContext);
     const ref = useRef(null);
     const { isPopupSwitchedTo } = usePopupSwitch();
     useEffect(() => {
@@ -32,14 +33,17 @@ export const DeviceMarker = ({ deviceOnTrial, setDeviceOnTrial, showDeviceNames 
 
     const isSelected = selection.find(s => s.deviceItemName === deviceItemName && s.deviceTypeName === deviceTypeName);
 
+    const deviceType = currTrial.experiment.deviceTypes.find(dt => dt.name === deviceTypeName);
+    const iconName = deviceType.icon;
+
     const icon = divIcon({
         className: 'argos-leaflet-div-icon',
         iconSize: [20, 20],
         iconAnchor: [10, 22],
         html: renderToStaticMarkup(
             <div>
-                <FontAwesomeIcon
-                    icon={faMapMarkerAlt}
+                <IconDeviceByName
+                    iconName={iconName}
                     size="xl"
                     color={isSelected ? '#297A31' : '#1B2C6F'}
                 />

@@ -9,6 +9,15 @@ import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
 const PAGE_ROWS = 12;
 const PAGE_COLS = 12;
 const PAGE_LEN = PAGE_COLS * PAGE_ROWS;
+const MARKER_DEFAULT_ICON = fa_all.faMapMarkerAlt;
+
+export const IconDeviceByName = ({ iconName, ...props }) => {
+    return <FontAwesomeIcon
+        icon={iconName ? fa_all['fa' + iconName] : MARKER_DEFAULT_ICON}
+        {...props}
+    />;
+}
+
 export const IconPicker = ({ data, setData }) => {
     const [anchorEl, setAnchorEl] = useState(null);
     const [page, setPage] = useState(0);
@@ -30,8 +39,8 @@ export const IconPicker = ({ data, setData }) => {
                     }}
                 // color={Boolean(anchorEl) ? "primary" : ""}
                 >
-                    <FontAwesomeIcon
-                        icon={data ? fa_all['fa' + data] : fa_all.faMapMarkerAlt}
+                    <IconDeviceByName
+                        iconName={data}
                     />
                 </Paper>
             </Tooltip>
