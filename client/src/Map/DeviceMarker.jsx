@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMapMarkerAlt } from "@fortawesome/free-solid-svg-icons";
 
 export const DeviceMarker = ({ deviceOnTrial, setDeviceOnTrial, showDeviceNames }) => {
-    const { setLocationsToDevices } = useContext(experimentContext);
+    const { selection, setLocationsToDevices } = useContext(experimentContext);
     const ref = useRef(null);
     const { isPopupSwitchedTo } = usePopupSwitch();
     useEffect(() => {
@@ -30,6 +30,8 @@ export const DeviceMarker = ({ deviceOnTrial, setDeviceOnTrial, showDeviceNames 
         return coords.map(x => Math.round(x * 1e8) / 1e8).join(',')
     }
 
+    const isSelected = selection.find(s => s.deviceItemName === deviceItemName && s.deviceTypeName === deviceTypeName);
+
     const icon = divIcon({
         className: 'argos-leaflet-div-icon',
         iconSize: [20, 20],
@@ -39,12 +41,8 @@ export const DeviceMarker = ({ deviceOnTrial, setDeviceOnTrial, showDeviceNames 
                 <FontAwesomeIcon
                     icon={faMapMarkerAlt}
                     size="xl"
-                    color="#297A31"
+                    color={isSelected ? '#297A31' : '#1B2C6F'}
                 />
-                {/* style={{ color: '#297A31' }} */}
-                {/* <i className=" fa fa-map-marker-alt fa-2x"
-            // style={{ color: (isTypeSelected ? (isSelected ? '#297A31' : '#1B2C6F') : '#888888') }}
-            /> */}
                 {!showDeviceNames ? null :
                     <span style={{ backgroundColor: "#fafa44", marginTop: 5, padding: 3, borderColor: "black", color: '#ff4466' }}>
                         {deviceItemName.replace(/ /g, '\u00a0')}
