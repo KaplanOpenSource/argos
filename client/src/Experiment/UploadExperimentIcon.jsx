@@ -7,7 +7,7 @@ import { createNewName } from "../Utils/utils";
 import { experimentContext } from "../Context/ExperimentProvider";
 import JSZip from "jszip";
 import { UploadImage } from "./UploadImage";
-import { ConvertExperiment } from "./ConvertExperiment";
+import { ConvertExperiment, isExperimentVersion2 } from "./ConvertExperiment";
 
 export const UploadExperimentIcon = ({ }) => {
     const inputFile = useRef(null);
@@ -38,11 +38,14 @@ export const UploadExperimentIcon = ({ }) => {
                 const version = (experiment || {}).version;
                 if (version === argosJsonVersion) {
                     addExperimentRename(experiment);
-                } else if (version.startsWith('2.0.0')) {
+                } else if (isExperimentVersion2(experiment)) {
                     const newExp = ConvertExperiment(experiment);
                     if (newExp) {
                         addExperimentRename(newExp);
                     }
+                } else {
+                    console.log('error', experiment);
+                    throw "unknown experiment version";
                 }
             } else if (file.name.endsWith('.zip')) {
                 const zip = await JSZip().loadAsync(file);
@@ -69,7 +72,7 @@ export const UploadExperimentIcon = ({ }) => {
                         }
                         setExperiment(experiment.name, experiment);
                     }
-                } else if (version.startsWith('2.0.0')) {
+                } else if (isExperimentVersion2(experiment)) {
                     console.log('version 2 with zip:', experiment)
                 }
             }

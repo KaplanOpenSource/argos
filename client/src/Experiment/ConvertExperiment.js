@@ -1,10 +1,20 @@
 import { argosJsonVersion } from "../constants/constants";
 import { VALUE_TYPE_BOOLEAN, VALUE_TYPE_NUMBER, VALUE_TYPE_SELECT, VALUE_TYPE_STRING } from "./AttributeValue";
 
+export const isExperimentVersion2 = (experiment) => {
+    const exp = experiment || {};
+    if ((exp.version || "").startsWith('2.0.0')) {
+        return true;
+    }
+    if (exp.experimentsWithData || exp.trialSets) {
+        return true;
+    }
+    return false;
+}
+
 export const ConvertExperiment = (oldExp) => {
-    const version = (oldExp || {}).version;
-    if (!version.startsWith('2.0.0')) {
-        alert(`unknown version ${version}`);
+    if (!isExperimentVersion2(oldExp)) {
+        alert(`unknown version ${(oldExp || {}).version || ""}`);
         return undefined;
     }
     // console.log('version 2:', oldExp)
@@ -27,7 +37,7 @@ const convertTrialType = (oldTrialType, oldExp) => {
         .filter(r => r.trialSetKey === oldTrialType.key)
         .map(r => convertTrial(r, oldTrialType, oldExp));
     const attributeTypes = (oldTrialType.properties || [])
-        .map(r => convertAttrType(r, oldDeviceType, oldExp));
+        .map(r => convertAttrType(r));
     return {
         name: oldTrialType.name,
         trials,
@@ -71,7 +81,7 @@ const convertDeviceType = (oldDeviceType, oldExp) => {
         .map(r => convertDevice(r, oldDeviceType, oldExp));
     const attributeTypes = (oldDeviceType.properties || [])
         .filter(r => r.type !== 'location')
-        .map(r => convertAttrType(r, oldDeviceType, oldExp));
+        .map(r => convertAttrType(r));
     return {
         name: oldDeviceType.name,
         devices,
@@ -111,7 +121,7 @@ const convertTypeOnAttrType = (oldType) => {
     }
 }
 
-const convertAttrType = (oldAttrType, oldDeviceType, oldExp) => {
+const convertAttrType = (oldAttrType) => {
     return {
         name: oldAttrType.label,
         required: oldAttrType.required,
