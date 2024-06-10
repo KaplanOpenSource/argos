@@ -1,7 +1,5 @@
 import { useContext } from "react";
-import { TrialType } from "./TrialType";
 import { TreeRow } from "../App/TreeRow";
-import { DeviceType } from "./DeviceType";
 import { TreeSublist } from "../App/TreeSublist";
 import { DateProperty } from "../Utils/DateProperty";
 import { IconButton, Stack } from "@mui/material";
@@ -12,7 +10,7 @@ import { changeByName } from "../Utils/utils";
 import { experimentContext } from "../Context/ExperimentProvider";
 import { ImageStandalone } from "./ImageStandalone";
 import { ImageEmbedded } from "./ImageEmbedded";
-import { downloadJsonFile } from "./DownloadJsonFile";
+import { downloadJsonFile } from "../IO/DownloadJsonFile";
 import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { DeviceTypesList } from "./DeviceTypesList";

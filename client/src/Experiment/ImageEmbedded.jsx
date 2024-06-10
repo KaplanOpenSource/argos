@@ -1,7 +1,7 @@
 import { TreeRow } from "../App/TreeRow"
 import DeleteIcon from '@mui/icons-material/Delete';
-import { UploadImageIcon } from "./UploadImageIcon";
-import { ImageOnServer } from "./ImageOnServer";
+import { UploadImageIcon } from "../IO/UploadImageIcon";
+import { ImageOnServer } from "../IO/ImageOnServer";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { EditLocationAlt, EditLocationOutlined, OpenInFull } from "@mui/icons-material";
 import { experimentContext } from "../Context/ExperimentProvider";

@@ -2,8 +2,8 @@ import { useContext } from "react";
 import { Stack } from "@mui/material"
 import { TreeRow } from "../App/TreeRow"
 import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
-import { ImageOnServer } from "./ImageOnServer";
-import { UploadImageIcon } from "./UploadImageIcon";
+import { ImageOnServer } from "../IO/ImageOnServer";
+import { UploadImageIcon } from "../IO/UploadImageIcon";
 import DeleteIcon from '@mui/icons-material/Delete';
 import MapIcon from '@mui/icons-material/Map';
 import { experimentContext } from "../Context/ExperimentProvider";

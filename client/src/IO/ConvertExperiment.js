@@ -1,5 +1,5 @@
 import { argosJsonVersion } from "../constants/constants";
-import { VALUE_TYPE_BOOLEAN, VALUE_TYPE_NUMBER, VALUE_TYPE_SELECT, VALUE_TYPE_STRING } from "./AttributeValue";
+import { VALUE_TYPE_BOOLEAN, VALUE_TYPE_NUMBER, VALUE_TYPE_SELECT, VALUE_TYPE_STRING } from "../Experiment/AttributeValue";
 
 export const isExperimentVersion2 = (experiment) => {
     const exp = experiment || {};

@@ -30,7 +30,7 @@ export const IconPicker = ({ data, setData }) => {
 
     return (
         <Box sx={{ position: 'relative' }}>
-            <Tooltip title="Edit attribute types" placement="top">
+            <Tooltip title="Pick Icon" placement="top">
                 <Paper
                     sx={{ border: 1, width: 30, height: 30, alignContent: 'center', textAlign: 'center' }}
                     onClick={(e) => {

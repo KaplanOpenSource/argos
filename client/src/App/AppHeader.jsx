@@ -12,7 +12,7 @@ import EditLocationAltIcon from '@mui/icons-material/EditLocationAlt';
 import EditLocationOutlinedIcon from '@mui/icons-material/EditLocationOutlined';
 import { VersionId } from './VersionId';
 import { ButtonTooltip } from '../Utils/ButtonTooltip';
-import { UploadExperimentIcon } from '../Experiment/UploadExperimentIcon';
+import { UploadExperimentIcon } from '../IO/UploadExperimentIcon';
 import { ShowConfigToggles } from './ShowConfigToggles';
 
 export const AppHeader = ({

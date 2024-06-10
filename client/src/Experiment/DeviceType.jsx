@@ -25,12 +25,10 @@ export const DeviceType = ({ data, setData, experiment }) => {
             setData={setData}
             components={
                 <>
-                    <Tooltip title="Pick device icon" placement="top">
-                        <IconPicker
-                            data={data.icon || ""}
-                            setData={val => setData({ ...data, icon: val })}
-                        />
-                    </Tooltip>
+                    <IconPicker
+                        data={data.icon || ""}
+                        setData={val => setData({ ...data, icon: val })}
+                    />
                     <Tooltip title="Delete device type" placement="top">
                         <IconButton
                             size="small"
