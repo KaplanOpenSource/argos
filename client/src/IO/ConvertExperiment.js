@@ -18,9 +18,12 @@ export const ConvertExperiment = (oldExp) => {
         return undefined;
     }
     // console.log('version 2:', oldExp)
-    const top = oldExp.experiment;
+    const top = (oldExp.experiment || oldExp.experimentsWithData) || {};
     const trialTypes = (oldExp.trialSets || []).map(t => convertTrialType(t, oldExp));
     const deviceTypes = (oldExp.entityTypes || []).map(t => convertDeviceType(t, oldExp));
+    const images = top.maps || [];
+    const imageStandalone = images.filter(im => (im || {}).embedded === false).map(im => convertImage(im));
+    const imageEmbedded = images.filter(im => (im || {}).embedded === true).map(im => convertImage(im));
     return {
         version: argosJsonVersion,
         name: top.name,
@@ -29,6 +32,8 @@ export const ConvertExperiment = (oldExp) => {
         endDate: top.end,
         trialTypes,
         deviceTypes,
+        imageEmbedded,
+        imageStandalone,
     };
 }
 
@@ -139,5 +144,22 @@ const convertAttrValue = (oldAttrValue, parentTypeHolder) => {
     return {
         name: oldAttrType.label,
         value: val,
+    }
+}
+
+const convertImage = (oldImage) => {
+    const {
+        imageName,
+        lower,
+        upper,
+        left,
+        right,
+    } = oldImage;
+    return {
+        name: imageName,
+        xleft: left,
+        ybottom: lower,
+        xright: right,
+        ytop: upper,
     }
 }

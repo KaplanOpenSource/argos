@@ -1,6 +1,6 @@
 import JSZip from "jszip";
 import { UploadImage } from "./UploadImage";
-import { isExperimentVersion2 } from "./ConvertExperiment";
+import { ConvertExperiment, isExperimentVersion2 } from "./ConvertExperiment";
 import { argosJsonVersion } from "../constants/constants";
 import { createNewName } from "../Utils/utils";
 
@@ -24,6 +24,7 @@ export class UploadExperiment {
         if (this.zip) {
             const imageFiles = Object.values(this.zip.files).filter(x => x.name.startsWith('images/') && !x.dir);
             if (imageFiles.length > 0) {
+                const images = (experiment.imageStandalone || []).concat((experiment.imageEmbedded || []));
                 for (const im of imageFiles) {
                     const imageBlob = await im.async('blob');
                     const imageFileName = im.name.split('/').at(-1);
@@ -32,10 +33,7 @@ export class UploadExperiment {
                     const ret = await UploadImage(imageBlob, imageName, experiment.name, imageFileName);
                     if (ret) {
                         const { filename, height, width } = ret;
-                        let imageData = experiment.imageStandalone.find(x => x.name === imageName);
-                        if (!imageData) {
-                            imageData = experiment.imageEmbedded.find(x => x.name === imageName);
-                        }
+                        const imageData = images.find(x => x.name === imageName);
                         if (imageData) {
                             imageData.filename = filename;
                             imageData.height = height;
