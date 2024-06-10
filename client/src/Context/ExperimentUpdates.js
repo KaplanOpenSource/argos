@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import { createNewName } from "../Utils/utils";
 import { argosJsonVersion } from '../constants/constants';
 import * as jsonpatch from 'fast-json-patch';
-import { assignUuids } from './TrackUuidUtils';
+import { assignUuids, cleanUuids } from './TrackUuidUtils';
 
 export class ExperimentUpdates {
     constructor(state, setState) {
@@ -25,15 +25,21 @@ export class ExperimentUpdates {
     }
 
     addExperiment = (newExp = undefined) => {
-        this.setState(draft => {
-            const name = createNewName(draft.experiments, newExp ? newExp.name : 'New Experiment');
-            const exp = assignUuids(newExp ? newExp : {
+        const name = createNewName(this.state.experiments, newExp ? newExp.name : 'New Experiment');
+        let exp;
+        if (newExp) {
+            exp = assignUuids(cleanUuids(newExp));
+            exp.name = name;
+        } else {
+            exp = assignUuids({
                 version: argosJsonVersion,
                 name,
                 startDate: dayjs().startOf('day'),
                 endDate: dayjs().startOf('day').add(7, 'day'),
                 description: '',
             });
+        }
+        this.setState(draft => {
             draft.experiments.push(exp);
             draft.serverUpdates.push({ name, exp });
         });
@@ -42,15 +48,15 @@ export class ExperimentUpdates {
     setExperiment = (name, data) => {
         const i = this.state.experiments.findIndex(t => t.name === name)
         if (i === -1) {
-            alert("Unknown experiment name");
+            alert("Unknown experiment name " + name);// + "\n" + this.state.experiments.map(e => e.name).join(', '));
             return;
         }
         if (data.name !== data.name.trim()) {
-            alert("Invalid experiment name, has trailing or leading spaces");
+            alert("Invalid experiment name, has trailing or leading spaces " + data.name);
             return;
         }
         if (this.state.experiments.find((e, ei) => e.name === data.name && ei !== i)) {
-            alert("Duplicate experiment name");
+            alert("Duplicate experiment name " + data.name);// + "\n" + this.state.experiments.map(e => e.name).join(', '));
             return;
         }
         const exp = this.state.experiments[i];

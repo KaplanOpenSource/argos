@@ -13,7 +13,8 @@ export const UploadExperimentIcon = ({ }) => {
     const handleChangeFile = async (event) => {
         try {
             setWorking(true);
-            new UploadExperiment(addExperiment, setExperiment).go(event.target.files[0]);
+            const file = event.target.files[0];
+            new UploadExperiment(addExperiment, setExperiment).go(file, experiments);
         } catch (error) {
             console.log(error)
             alert(`problem uploading:\n${error}`)
