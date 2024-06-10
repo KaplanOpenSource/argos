@@ -58,7 +58,9 @@ const convertTrialType = (oldTrialType, oldExp) => {
 }
 
 const convertTrial = (oldTrial, oldTrialType, oldExp) => {
-    const devicesOnTrial = (oldTrial.entities || []).map(e => convertDeviceOnTrial(e, oldTrial, oldTrialType, oldExp));
+    const devicesOnTrial = (oldTrial.entities || [])
+        .map(e => convertDeviceOnTrial(e, oldTrial, oldTrialType, oldExp))
+        .filter(x => x);
     const attributes = ((oldTrial || {}).properties || [])
         .map(x => convertAttrValue(x, oldTrialType))
         .filter(x => x);
@@ -76,7 +78,11 @@ const convertDeviceOnTrial = (oldDeviceOnTrial, oldTrial, oldTrialType, oldExp) 
     const locationType = (oldDeviceType.properties || []).find(p => p.type === 'location');
     const locationItem = (oldDeviceOnTrial.properties || []).find(p => p.key === locationType.key);
     const location = JSON.parse(locationItem.val);
+    if (!location || !location.name || !location.coordinates || location.coordinates.length !== 2) {
+        return undefined;
+    }
     const attributes = ((oldDeviceOnTrial || {}).properties || [])
+        .filter(x => x.key !== locationType.key)
         .map(x => convertAttrValue(x, oldDeviceType))
         .filter(x => x);
     return {
