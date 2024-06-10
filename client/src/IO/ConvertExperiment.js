@@ -37,10 +37,17 @@ export const ConvertExperiment = (oldExp) => {
     };
 }
 
+const getOldTrials = (oldExp, oldTrialType) => {
+    if (oldExp.trials) {
+        return oldExp.trials.filter(r => r.trialSetKey === oldTrialType.key);
+    } else {
+        return oldTrialType.trials || [];
+    }
+}
+
 const convertTrialType = (oldTrialType, oldExp) => {
-    const trials = (oldExp.trials || [])
-        .filter(r => r.trialSetKey === oldTrialType.key)
-        .map(r => convertTrial(r, oldTrialType, oldExp));
+    const oldTrials = getOldTrials(oldExp, oldTrialType);
+    const trials = oldTrials.map(r => convertTrial(r, oldTrialType, oldExp));
     const attributeTypes = (oldTrialType.properties || [])
         .map(r => convertAttrType(r));
     return {
@@ -65,7 +72,7 @@ const convertTrial = (oldTrial, oldTrialType, oldExp) => {
 
 const convertDeviceOnTrial = (oldDeviceOnTrial, oldTrial, oldTrialType, oldExp) => {
     const oldDeviceType = (oldExp.entityTypes || []).find(et => et.key === oldDeviceOnTrial.entitiesTypeKey);
-    const oldDeviceItem = (oldExp.entities || []).find(ei => ei.key === oldDeviceOnTrial.key);
+    const oldDeviceItem = getOldDevices(oldExp, oldDeviceType).find(ei => ei.key === oldDeviceOnTrial.key);
     const locationType = (oldDeviceType.properties || []).find(p => p.type === 'location');
     const locationItem = (oldDeviceOnTrial.properties || []).find(p => p.key === locationType.key);
     const location = JSON.parse(locationItem.val);
@@ -80,9 +87,16 @@ const convertDeviceOnTrial = (oldDeviceOnTrial, oldTrial, oldTrialType, oldExp) 
     }
 }
 
+const getOldDevices = (oldExp, oldDeviceType) => {
+    if (oldExp.entities) {
+        return oldExp.entities.filter(r => r.entitiesTypeKey === oldDeviceType.key);
+    } else {
+        return oldDeviceType.entities || [];
+    }
+}
+
 const convertDeviceType = (oldDeviceType, oldExp) => {
-    const devices = (oldExp.entities || [])
-        .filter(r => r.entitiesTypeKey === oldDeviceType.key)
+    const devices = getOldDevices(oldExp, oldDeviceType)
         .map(r => convertDevice(r, oldDeviceType, oldExp));
     const attributeTypes = (oldDeviceType.properties || [])
         .filter(r => r.type !== 'location')
