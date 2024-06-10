@@ -2,12 +2,7 @@ import React, { useContext, useRef, useState } from "react";
 import HourglassBottomIcon from '@mui/icons-material/HourglassBottom';
 import { Upload } from "@mui/icons-material";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
-import { argosJsonVersion } from "../constants/constants";
-import { createNewName } from "../Utils/utils";
 import { experimentContext } from "../Context/ExperimentProvider";
-import JSZip from "jszip";
-import { UploadImage } from "./UploadImage";
-import { ConvertExperiment, isExperimentVersion2 } from "./ConvertExperiment";
 import { UploadExperiment } from "./UploadExperiment";
 
 export const UploadExperimentIcon = ({ }) => {

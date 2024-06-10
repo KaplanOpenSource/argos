@@ -14,7 +14,11 @@ export const UploadImageIcon = ({ onChangeFile, imageName, experimentName }) => 
         event.stopPropagation();
         event.preventDefault();
         setWorking(true);
-        UploadImage(event.target.files[0], imageName, experimentName, onChangeFile);
+        const ret = await UploadImage(event.target.files[0], imageName, experimentName);
+        if (ret) {
+            const { filename, height, width } = ret;
+            onChangeFile(filename, height, width);
+        }
         setWorking(false);
     };
 
