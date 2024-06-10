@@ -151,10 +151,13 @@ const convertAttrType = (oldAttrType) => {
 
 const convertAttrValue = (oldAttrValue, parentTypeHolder) => {
     const { key, val } = oldAttrValue;
-    if (val !== null && val !== undefined) {
+    if (val === null || val === undefined) {
         return undefined;
     }
     const oldAttrType = ((parentTypeHolder || {}).properties || []).find(x => x.key === key);
+    if (!oldAttrType) {
+        return undefined;
+    }
     return {
         name: oldAttrType.label,
         value: val,
