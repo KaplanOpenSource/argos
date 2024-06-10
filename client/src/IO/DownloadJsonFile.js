@@ -7,7 +7,8 @@ export const downloadJsonFile = async (experiment) => {
     const zip = JSZip();
     const cleaned = cleanUuids(experiment);
     zip.file(`data.json`, JSON.stringify(cleaned));
-    for (const img of (experiment.imageStandalone || [])) {
+    const images = (experiment.imageStandalone || []).concat((experiment.imageEmbedded || []));
+    for (const img of images) {
         if (img.filename) {
             const src = `${baseUrl}/uploads/${experiment.name}/${img.filename}`;
             const resp = await fetch(src);
@@ -17,19 +18,6 @@ export const downloadJsonFile = async (experiment) => {
             zip.file(filename, image, { binary: true });
         }
     }
-    // expToDownload.maps.forEach(img => {
-    //     zip.file(`images/${img.imageName}`, img.imageUrl, {
-    //         binary: true
-    //     });
-    // });
-
-    // logImages.forEach(array => {
-    //     array.forEach(img => {
-    //         zip.file(`images/${img.imageName}`, img.imageUrl, {
-    //             binary: true
-    //         });
-    //     });
-    // })
 
     const zipblob = await zip.generateAsync({ type: "blob" });
     saveAs(zipblob, `experiment_${experiment.name}.zip`);

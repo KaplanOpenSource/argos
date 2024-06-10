@@ -20,7 +20,7 @@ export class UploadExperiment {
 
         const name = createNewName(experiments, experiment.name); // this is done here to upload images with the correct experiment name
         experiment.name = name;
-        
+
         if (this.zip) {
             const imageFiles = Object.values(this.zip.files).filter(x => x.name.startsWith('images/') && !x.dir);
             if (imageFiles.length > 0) {
@@ -32,7 +32,10 @@ export class UploadExperiment {
                     const ret = await UploadImage(imageBlob, imageName, experiment.name, imageFileName);
                     if (ret) {
                         const { filename, height, width } = ret;
-                        const imageData = experiment.imageStandalone.find(x => x.name === imageName);
+                        let imageData = experiment.imageStandalone.find(x => x.name === imageName);
+                        if (!imageData) {
+                            imageData = experiment.imageEmbedded.find(x => x.name === imageName);
+                        }
                         if (imageData) {
                             imageData.filename = filename;
                             imageData.height = height;
@@ -42,10 +45,10 @@ export class UploadExperiment {
                 }
             }
         }
-        
+
         this.addExperiment(experiment);
     }
-    
+
     async readExperiment(file) {
         if (file.name.endsWith('.json')) {
             const text = await new Promise(resolve => {
