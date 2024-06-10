@@ -39,6 +39,7 @@ export const ExperimentProvider = ({ children }) => {
                     draft.currTrial.shownMapName = shownMapName;
                     draft.currTrial.shownMapIndex = shownMapIndex;
                 });
+                return;
             }
         }
         replaceUrlParams({ shownMapName: undefined });
