@@ -141,22 +141,32 @@ const convertTypeOnAttrType = (oldType) => {
 }
 
 const convertAttrType = (oldAttrType) => {
-    return {
+    const ret = {
         name: oldAttrType.label,
         required: oldAttrType.required,
         defaultValue: oldAttrType.defaultValue,
         type: convertTypeOnAttrType(oldAttrType.type),
+    };
+    if (ret.type === VALUE_TYPE_SELECT) {
+        ret.options = (oldAttrType.value || '').split(',').map(name => {
+            return { name };
+        });
     }
+    return ret;
 }
 
 const convertAttrValue = (oldAttrValue, parentTypeHolder) => {
-    const { key, val } = oldAttrValue;
+    let { key, val } = oldAttrValue;
     if (val === null || val === undefined) {
         return undefined;
     }
     const oldAttrType = ((parentTypeHolder || {}).properties || []).find(x => x.key === key);
     if (!oldAttrType) {
         return undefined;
+    }
+    const newType = convertTypeOnAttrType(oldAttrType.type);
+    if (newType === VALUE_TYPE_BOOLEAN) {
+        val = (!val || val === 'false' || val === '0') ? false : true;
     }
     return {
         name: oldAttrType.label,
