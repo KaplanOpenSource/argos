@@ -1,8 +1,8 @@
-import MenuIcon from '@mui/icons-material/Menu';
 import {
-    AppBar, IconButton, Stack, Toolbar, Typography
+    AppBar, Stack, Toolbar, Typography
 } from '@mui/material';
 import { VersionId } from './VersionId';
+import { UserDetailsButton } from './UserDetailsButton';
 
 export const AppHeader = ({ children }) => {
     return (
@@ -10,15 +10,8 @@ export const AppHeader = ({ children }) => {
         // style={{ maxHeight: '5em' }}
         >
             <Toolbar>
-                <IconButton
-                    // size="large"
-                    edge="start"
-                    color="inherit"
-                    aria-label="menu"
-                    sx={{ mr: 2 }}
-                >
-                    <MenuIcon />
-                </IconButton>
+                <UserDetailsButton
+                />
                 <Stack
                     direction={'row'}
                     spacing={1}

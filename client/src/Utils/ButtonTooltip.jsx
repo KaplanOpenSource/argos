@@ -16,7 +16,9 @@ export const ButtonTooltip = ({ onClick, tooltip, disabled, closeTooltipOnClick 
                 if (closeTooltipOnClick) {
                     setOpen(false);
                 }
-                onClick(e);
+                if (onClick) {
+                    onClick(e);
+                }
             }}
             disabled={disabled}
             {...restProps}
