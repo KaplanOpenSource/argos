@@ -1,4 +1,4 @@
-import { createContext, useEffect } from "react"
+import { createContext, useContext, useEffect } from "react"
 import { useImmer } from "use-immer";
 import { parseUrlParams, replaceUrlParams } from "../Utils/utils";
 import * as jsonpatch from 'fast-json-patch';
@@ -7,6 +7,7 @@ import { RealMapName } from "../constants/constants";
 import { ExperimentUpdates } from "./ExperimentUpdates";
 import { TrialChoosing } from "./TrialChoosing";
 import { assignUuids } from "./TrackUuidUtils";
+import { TokenContext } from "../App/TokenContext";
 
 export const experimentContext = createContext();
 
@@ -17,6 +18,8 @@ export const ExperimentProvider = ({ children }) => {
         ...ExperimentUpdates.initialState,
         ...TrialChoosing.initialState,
     });
+
+    const { token } = useContext(TokenContext);
 
     const experimentUpdates = new ExperimentUpdates(state, setState);
     const trialChoosing = new TrialChoosing(state, setState);
@@ -135,31 +138,35 @@ export const ExperimentProvider = ({ children }) => {
 
     useEffect(() => {
         (async () => {
-            const { experimentName, trialTypeName, trialName } = parseUrlParams();
-            const allExperiments = await fetchAllExperiments();
-            assignUuids(allExperiments);
-            const t = TrialChoosing.FindTrialByName({ experimentName, trialTypeName, trialName }, allExperiments);
-            TrialChoosing.ReplaceUrlByTrial(t);
-            setState(draft => {
-                draft.experiments = allExperiments;
-                draft.currTrial = t;
-            });
+            if (token) {
+                const { experimentName, trialTypeName, trialName } = parseUrlParams();
+                const allExperiments = await fetchAllExperiments();
+                assignUuids(allExperiments);
+                const t = TrialChoosing.FindTrialByName({ experimentName, trialTypeName, trialName }, allExperiments);
+                TrialChoosing.ReplaceUrlByTrial(t);
+                setState(draft => {
+                    draft.experiments = allExperiments;
+                    draft.currTrial = t;
+                });
+            }
         })()
-    }, [])
+    }, [token])
 
     useEffect(() => {
-        if (state.serverUpdates.length > 0) {
-            (async () => {
-                const updates = state.serverUpdates;
-                setState(draft => {
-                    draft.serverUpdates = [];
-                })
-                for (const { name, exp } of updates) {
-                    await saveExperimentWithData(name, exp);
-                }
-            })();
+        if (token) {
+            if (state.serverUpdates.length > 0) {
+                (async () => {
+                    const updates = state.serverUpdates;
+                    setState(draft => {
+                        draft.serverUpdates = [];
+                    })
+                    for (const { name, exp } of updates) {
+                        await saveExperimentWithData(name, exp);
+                    }
+                })();
+            }
         }
-    }, [state.serverUpdates]);
+    }, [token, state.serverUpdates]);
 
     const store = {
         experiments: state.experiments,

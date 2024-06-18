@@ -13,6 +13,7 @@ import { MapCoordinates } from '../Map/MapCoordinates';
 import { experimentContext } from '../Context/ExperimentProvider';
 import { SHOW_ALL_EXPERIMENTS } from './ShowConfigToggles';
 import { EnclosingListSelectionProvider } from '../Experiment/EnclosedSelectionProvider';
+import { AppHeaderButtons } from './AppHeaderButtons';
 
 export function DevicePlanner() {
     const [showEditBox, setShowEditBox] = useState(false);
@@ -25,32 +26,34 @@ export function DevicePlanner() {
 
     return (
         <>
-            <AppHeader
-                fullscreen={fullscreen} setFullscreen={setFullscreen}
-                showConfig={showConfig} setShowConfig={setShowConfig}
-                showAttributes={showAttributes} setShowAttributes={setShowAttributes}
-                showDeviceNames={showDeviceNames} setShowDeviceNames={setShowDeviceNames}
-            />
-            <Stack direction={'row'} justifyContent="space-between" alignItems="flex-start">
-                <EnclosingListSelectionProvider>
-                    <ExperimentList
-                        fullscreen={fullscreen}
-                        showConfig={showConfig}
-                        setShowConfig={setShowConfig}
-                    />
-                </EnclosingListSelectionProvider>
-                {fullscreen ? null :
-                    <EnclosingListSelectionProvider>
-                        <DeviceTable
-                            showAttributes={showAttributes}
-                            setShowAttributes={setShowAttributes}
-                        />
-                    </EnclosingListSelectionProvider>
-                }
-            </Stack>
-
+            <AppHeader>
+                <AppHeaderButtons
+                    fullscreen={fullscreen} setFullscreen={setFullscreen}
+                    showConfig={showConfig} setShowConfig={setShowConfig}
+                    showAttributes={showAttributes} setShowAttributes={setShowAttributes}
+                    showDeviceNames={showDeviceNames} setShowDeviceNames={setShowDeviceNames}
+                />
+            </AppHeader>
             <MapShower
             >
+                <Stack direction={'row'} justifyContent="space-between" alignItems="flex-start">
+                    <EnclosingListSelectionProvider>
+                        <ExperimentList
+                            fullscreen={fullscreen}
+                            showConfig={showConfig}
+                            setShowConfig={setShowConfig}
+                        />
+                    </EnclosingListSelectionProvider>
+                    {fullscreen ? null :
+                        <EnclosingListSelectionProvider>
+                            <DeviceTable
+                                showAttributes={showAttributes}
+                                setShowAttributes={setShowAttributes}
+                            />
+                        </EnclosingListSelectionProvider>
+                    }
+                </Stack>
+
                 <MapPositionOnUrl
                 />
                 <MapPlacer

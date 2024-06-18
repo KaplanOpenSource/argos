@@ -11,19 +11,22 @@ import { ExperimentProvider } from './Context/ExperimentProvider';
 import { ActionsOnMapProvider } from './Map/ActionsOnMapContext';
 import { ShapeProvider } from './EditToolBox/ShapeContext';
 import { consoleErrorUniqueKeyFix } from './Utils/consoleErrorUniqueKeyFix';
+import { TokenProvider } from './App/TokenContext';
 
 consoleErrorUniqueKeyFix();
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <LocalizationProvider dateAdapter={AdapterDayjs}>
-    <React.StrictMode>
-      <ExperimentProvider>
-        <ActionsOnMapProvider>
-          <ShapeProvider>
-            <App />
-          </ShapeProvider>
-        </ActionsOnMapProvider>
-      </ExperimentProvider>
-    </React.StrictMode>
-  </LocalizationProvider>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <React.StrictMode>
+            <TokenProvider>
+                <ExperimentProvider>
+                    <ActionsOnMapProvider>
+                        <ShapeProvider>
+                            <App />
+                        </ShapeProvider>
+                    </ActionsOnMapProvider>
+                </ExperimentProvider>
+            </TokenProvider>
+        </React.StrictMode>
+    </LocalizationProvider>
 )
