@@ -1,20 +1,18 @@
-import { Button, Dialog, DialogTitle, Menu, MenuItem, Stack, TextField } from "@mui/material";
+import { Button, Dialog, DialogTitle, Slide, Stack, TextField } from "@mui/material";
 import { ButtonTooltip } from "../Utils/ButtonTooltip"
 import MenuIcon from '@mui/icons-material/Menu';
-import { useContext, useState } from "react";
+import { forwardRef, useContext, useState } from "react";
 import { TokenContext } from "./TokenContext";
-import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
+
+const Transition = forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+});
 
 export const UserDetailsButton = ({ }) => {
     const { token } = useContext(TokenContext);
     const [open, setOpen] = useState(false);
-    // const [menuAnchorElement, setMenuAnchorElement] = useState(null);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-
-    // const handleClose = () => {
-    //     setMenuAnchorElement(null);
-    // };
 
     const doLogin = () => {
         setOpen(false);
@@ -29,18 +27,19 @@ export const UserDetailsButton = ({ }) => {
             <ButtonTooltip
                 color="inherit"
                 tooltip={'User details'}
-                onClick={(e) => setOpen(true)} //setMenuAnchorElement(e.currentTarget)}
+                onClick={(e) => setOpen(true)}
             >
                 <MenuIcon />
             </ButtonTooltip>
-            <Dialog onClose={() => setOpen(false)} open={open}>
+            <Dialog
+                onClose={() => setOpen(false)}
+                open={open}
+                TransitionComponent={Transition}
+            >
                 <DialogTitle>User Login</DialogTitle>
                 <Stack direction='row' spacing={1} sx={{ margin: 1 }}>
                     <TextField
                         label='User Name'
-                        onClick={
-                            e => e.stopPropagation()
-                        }
                         size="small"
                         InputLabelProps={{ shrink: true }}
                         sx={{ marginTop: 1 }}
@@ -48,9 +47,6 @@ export const UserDetailsButton = ({ }) => {
                     <TextField
                         type="password"
                         label='Password'
-                        onClick={
-                            e => e.stopPropagation()
-                        }
                         size="small"
                         InputLabelProps={{ shrink: true }}
                         sx={{ marginTop: 1 }}
