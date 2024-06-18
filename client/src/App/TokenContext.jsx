@@ -20,11 +20,14 @@ export const TokenProvider = ({ children }) => {
         setToken(null);
     }
 
+    const hasToken = token !== null && token !== undefined && token != '';
+
     return (
         <TokenContext.Provider value={{
             setToken: saveToken,
             token,
-            removeToken
+            removeToken,
+            hasToken
         }}>
             {children}
         </TokenContext.Provider>

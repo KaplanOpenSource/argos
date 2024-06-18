@@ -54,7 +54,7 @@ def create_token():
         return {"msg": "Wrong username or password"}, 401
 
     access_token = create_access_token(identity=username)
-    response = {"access_token": access_token}
+    response = jsonify({"access_token": access_token})
     return response
 
 
