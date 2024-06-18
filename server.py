@@ -46,14 +46,14 @@ def index_func():
 
 @app.route("/login", methods=["POST"])
 def create_token():
-    email = request.json.get("email", None)
+    username = request.json.get("username", None)
     password = request.json.get("password", None)
 
     # TODO: fetch from data/users.json
-    if email != "test" or password != "test":
-        return {"msg": "Wrong email or password"}, 401
+    if username != "test" or password != "test":
+        return {"msg": "Wrong username or password"}, 401
 
-    access_token = create_access_token(identity=email)
+    access_token = create_access_token(identity=username)
     response = {"access_token": access_token}
     return response
 
