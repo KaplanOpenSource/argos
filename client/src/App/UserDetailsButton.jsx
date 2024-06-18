@@ -43,6 +43,8 @@ export const UserDetailsButton = ({ }) => {
                         size="small"
                         InputLabelProps={{ shrink: true }}
                         sx={{ marginTop: 1 }}
+                        value={username}
+                        onChange={e => setUsername(e.target.value)}
                     />
                     <TextField
                         type="password"
@@ -50,6 +52,8 @@ export const UserDetailsButton = ({ }) => {
                         size="small"
                         InputLabelProps={{ shrink: true }}
                         sx={{ marginTop: 1 }}
+                        value={password}
+                        onChange={e => setPassword(e.target.value)}
                     />
                 </Stack>
                 <Stack direction='row' spacing={1} sx={{ margin: 1 }} justifyContent={'center'}>
