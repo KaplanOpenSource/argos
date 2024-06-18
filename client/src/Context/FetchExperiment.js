@@ -2,6 +2,19 @@ export const baseUrl = window.location.port === '8080' ? '' : 'http://127.0.0.1:
 
 export const saveExperimentWithData = async (name, data) => {
     try {
+
+
+        $$$$ TODO: Add to every fetch this header:
+        headers: {
+            Authorization: 'Bearer ' + props.token
+          }
+
+          https://dev.to/nagatodev/how-to-add-login-authentication-to-a-flask-and-react-application-23i7
+          look at  Profile.js  on that page ^^
+
+
+
+
         const resp = await fetch(baseUrl + "/experiment_set/" + name, {
             method: 'POST',
             headers: {
