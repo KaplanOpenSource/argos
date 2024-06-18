@@ -17,6 +17,14 @@ class Experiments:
         names = [os.path.splitext(n)[0] for n in names]
         return names
 
+    def get_exp(self, name: str):
+        if not validate_name(name):
+            return {"error": "unknown experiment name"}
+        filepath = os.path.join(EXPERIMENTS_PATH, name + ".json")
+        if not os.path.exists(filepath):
+            return {"error": "unknown experiment name"}
+        return {"filepath": filepath}
+
     def set_exp(self, name: str, json_str: str):
         if not validate_name(name):
             return {"error": "invalid experiment name"}

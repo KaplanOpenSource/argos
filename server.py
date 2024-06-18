@@ -8,6 +8,7 @@ from flask import Flask, send_from_directory, request, redirect, url_for
 from flask_cors import CORS, cross_origin
 from werkzeug.utils import secure_filename
 
+from py.Images import Images
 from py.constants import ALLOWED_EXTENSIONS, EXPERIMENTS_PATH, UPLOAD_FOLDER
 from py.Experiments import Experiments
 from py.utils import namekey, validate_name
@@ -28,6 +29,7 @@ if args.prod:
 cors = CORS(app, origins=cors_origins)
 
 exps = Experiments()
+images = Images()
 
 
 @app.route("/")
@@ -47,10 +49,11 @@ def experimentListReq():
 
 @app.route("/experiment/<name>")
 def experimentGetReq(name):
-    if validate_name(name):
-        if os.path.exists(os.path.join(EXPERIMENTS_PATH, name + ".json")):
-            return send_from_directory(EXPERIMENTS_PATH, name + ".json")
-    return {"error": "unknown experiment name"}
+    ret = exps.get_exp(name)
+    filepath = ret.get("filepath", None)
+    if filepath is None:
+        return ret
+    return send_from_directory(os.path.dirname(filepath), os.path.basename(filepath))
 
 
 @app.route("/experiment_set/<name>", methods=["POST"])
@@ -61,39 +64,21 @@ def experimentSetReq(name):
 
 @app.route("/upload", methods=["POST"])
 def upload():
-    imageName = request.form.get("imageName")
-    experimentName = request.form.get("experimentName")
-    if not validate_name(experimentName) or not validate_name(imageName):
-        return {"error": "invalid image name or experiment name"}
-
     if "file" not in request.files:  # check if the post request has the file part
         return {"error": "No file part"}
-    file = request.files["file"]
-    ext = os.path.splitext(file.filename)[1] if file is not None else ""
-    if ext not in ALLOWED_EXTENSIONS:
-        return {"error": "File not allowed, ext=" + ext}
-
-    ts = datetime.now().isoformat().replace("-", "").replace(".", "_")
-    filename = secure_filename(imageName + "_" + ts + ext)
-    exp_folder = os.path.join(UPLOAD_FOLDER, experimentName)
-    filepath = os.path.join(exp_folder, filename)
-    print("saving: " + filename + " on " + exp_folder)
-    os.makedirs(exp_folder, exist_ok=True)
-    file.save(filepath)
-    # url = url_for("download_file", experimentName=experimentName, filename=filename)
-    return {"filename": filename}
+    return images.upload(
+        request.form.get("imageName"),
+        request.form.get("experimentName"),
+        request.files["file"],
+    )
 
 
 @app.route("/uploads/<experimentName>/<filename>")
 def download_file(experimentName, filename):
-    if not validate_name(experimentName):
-        return {"error": "invalid experiment name"}
-    if filename != secure_filename(filename):
-        return {"error": "unable to find image"}
-    filepath = os.path.join(UPLOAD_FOLDER, experimentName, filename)
-    if not os.path.exists(filepath):
-        return {"error": "invalid image name"}
-
+    ret = images.download(experimentName, filename)
+    filepath = ret.get("filepath", None)
+    if filepath is None:
+        return ret
     return send_from_directory(os.path.dirname(filepath), os.path.basename(filepath))
 
 
