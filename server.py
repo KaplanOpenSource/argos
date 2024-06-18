@@ -8,10 +8,10 @@ from flask import Flask, send_from_directory, request, redirect, url_for
 from flask_cors import CORS, cross_origin
 from werkzeug.utils import secure_filename
 
-DATA_FOLDER = "data"
-EXPERIMENTS_PATH = os.path.join(DATA_FOLDER, "experiments")
-UPLOAD_FOLDER = os.path.join(DATA_FOLDER, "uploads")
-ALLOWED_EXTENSIONS = {".txt", ".png", ".jpg", ".jpeg", ".gif"}
+from py.constants import ALLOWED_EXTENSIONS, EXPERIMENTS_PATH, UPLOAD_FOLDER
+from py.Experiments import Experiments
+from py.utils import namekey, validate_name
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--port", default=8080, help="needs to be synced with client port, look at client/src/constants.js")
@@ -27,6 +27,8 @@ if args.prod:
     cors_origins = []
 cors = CORS(app, origins=cors_origins)
 
+exps = Experiments()
+
 
 @app.route("/")
 def index_func():
@@ -40,29 +42,7 @@ def static_file(path):
 
 @app.route("/experiment_list")
 def experimentListReq():
-    if not os.path.exists(EXPERIMENTS_PATH):
-        return []
-
-    def namekey(n):
-        sn = os.path.splitext(n)[0]
-        pos = re.search(r"[ 0-9]+$", sn)
-        num = 0
-        if pos is not None:
-            spos = pos.group().strip()
-            if len(spos) > 0:
-                num = int(pos.group())
-                sn = sn[0 : pos.start()]
-        return (sn, num)
-
-    names = sorted(os.listdir(EXPERIMENTS_PATH), key=namekey)
-    for n in names:
-        print(n)
-    names = [os.path.splitext(n)[0] for n in names]
-    return names
-
-
-def validate_name(name: str) -> bool:
-    return name is not None and len(name) > 0 and re.match("^[0-9a-zA-Z_\- ]+$", name)
+    return exps.get_list()
 
 
 @app.route("/experiment/<name>")
@@ -75,45 +55,8 @@ def experimentGetReq(name):
 
 @app.route("/experiment_set/<name>", methods=["POST"])
 def experimentSetReq(name):
-    if not validate_name(name):
-        return {"error": "invalid experiment name"}
-
     json_str = request.get_data()
-    oldpath = os.path.join(EXPERIMENTS_PATH, name + ".json")
-    if json_str == b"":  # undefined was received
-        if os.path.exists(oldpath):
-            os.remove(oldpath)
-        if os.path.exists(os.path.join(UPLOAD_FOLDER, name)):
-            shutil.rmtree(os.path.join(UPLOAD_FOLDER, name))
-        return {"ok": True}
-
-    json_data = json.loads(json_str)
-    str = json.dumps(json_data, indent=2)
-    new_name = json_data["name"]
-    if new_name is None:
-        new_name = name
-
-    if not validate_name(new_name):
-        return {"error": "invalid new experiment name"}
-
-    os.makedirs(EXPERIMENTS_PATH, exist_ok=True)
-    if new_name != name:
-        if os.path.exists(oldpath):
-            os.remove(oldpath)
-        if os.path.exists(os.path.join(UPLOAD_FOLDER, name)):
-            os.rename(os.path.join(UPLOAD_FOLDER, name), os.path.join(UPLOAD_FOLDER, new_name))
-    with open(os.path.join(EXPERIMENTS_PATH, new_name + ".json"), "w") as file:
-        file.write(str)
-
-    images_data = json_data.get("imageStandalone", []) + json_data.get("imageEmbedded", [])
-    images = [os.path.basename(im["filename"]) for im in images_data if "filename" in im]
-    exp_img_folder = os.path.join(UPLOAD_FOLDER, new_name)
-    if os.path.exists(exp_img_folder):
-        for f in os.listdir(exp_img_folder):
-            if f not in images:
-                os.remove(os.path.join(exp_img_folder, f))
-
-    return {"ok": True}
+    return exps.set_exp(name, json_str)
 
 
 @app.route("/upload", methods=["POST"])
