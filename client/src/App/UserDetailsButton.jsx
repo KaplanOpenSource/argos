@@ -10,6 +10,13 @@ const Transition = forwardRef(function Transition(props, ref) {
 
 export const UserDetailsButton = ({ }) => {
     const [open, setOpen] = useState(false);
+    const { hasToken } = useContext(TokenContext);
+
+    useEffect(() => {
+        if (!hasToken && !open) {
+            setOpen(true);
+        }
+    }, [hasToken, open]);
 
     return (
         <>
@@ -26,13 +33,15 @@ export const UserDetailsButton = ({ }) => {
             // TransitionComponent={Transition}
             >
                 <DialogTitle>User Login</DialogTitle>
-                <UserDetailsDialog />
+                <UserDetailsDialog
+                    setOpen={setOpen}
+                />
             </Dialog>
         </>
     )
 }
 
-const UserDetailsDialog = ({ }) => {
+const UserDetailsDialog = ({ setOpen }) => {
     const { hasToken, doLogin, doLogout } = useContext(TokenContext);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
