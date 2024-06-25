@@ -23,7 +23,7 @@ export const UserDetailsButton = ({ }) => {
             <Dialog
                 onClose={() => setOpen(false)}
                 open={open}
-                // TransitionComponent={Transition}
+            // TransitionComponent={Transition}
             >
                 <DialogTitle>User Login</DialogTitle>
                 <UserDetailsDialog />
@@ -55,6 +55,7 @@ const UserDetailsDialog = ({ }) => {
                     inputRef={input => {
                         setInputElement(input)
                     }}
+                    disabled={hasToken}
                 />
                 <TextField
                     type="password"
@@ -64,6 +65,7 @@ const UserDetailsDialog = ({ }) => {
                     sx={{ marginTop: 1 }}
                     value={password}
                     onChange={e => setPassword(e.target.value)}
+                    disabled={hasToken}
                 />
             </Stack>
             <Stack direction='row' spacing={1} sx={{ margin: 1 }} justifyContent={'center'}>

@@ -15,6 +15,7 @@ from flask_jwt_extended import (
 
 from py.Images import Images
 from py.Experiments import Experiments
+from py.constants import DATA_FOLDER
 
 
 parser = argparse.ArgumentParser()
@@ -49,9 +50,14 @@ def create_token():
     username = request.json.get("username", None)
     password = request.json.get("password", None)
 
-    # TODO: fetch from data/users.json
-    if username != "test" or password != "test":
-        return {"msg": "Wrong username or password"}, 401
+    try:
+        with open(os.path.join(DATA_FOLDER, "users.json")) as file:
+            all_users = json.load(file)["users"]
+            curr_user = [a for a in all_users if a['username'] == username]
+            if len(curr_user) != 1 or curr_user[0]['password'] != password:
+                return {"msg": "Wrong username or password"}, 401
+    except:
+        return {"msg": "Problem with login"}, 401
 
     access_token = create_access_token(identity=username)
     response = jsonify({"access_token": access_token})
