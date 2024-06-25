@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect } from "react"
 import { useImmer } from "use-immer";
 import { parseUrlParams, replaceUrlParams } from "../Utils/utils";
 import * as jsonpatch from 'fast-json-patch';
-import { fetchAllExperiments, saveExperimentWithData } from "./FetchExperiment";
+import { useFetchExperiments } from "./FetchExperiment";
 import { RealMapName } from "../constants/constants";
 import { ExperimentUpdates } from "./ExperimentUpdates";
 import { TrialChoosing } from "./TrialChoosing";
@@ -19,7 +19,8 @@ export const ExperimentProvider = ({ children }) => {
         ...TrialChoosing.initialState,
     });
 
-    const { hasToken, axiosToken } = useContext(TokenContext);
+    const { hasToken } = useContext(TokenContext);
+    const { fetchAllExperiments, saveExperimentWithData } = useFetchExperiments();
 
     const experimentUpdates = new ExperimentUpdates(state, setState);
     const trialChoosing = new TrialChoosing(state, setState);
@@ -140,7 +141,7 @@ export const ExperimentProvider = ({ children }) => {
         (async () => {
             if (hasToken) {
                 const { experimentName, trialTypeName, trialName } = parseUrlParams();
-                const allExperiments = await fetchAllExperiments(axiosToken());
+                const allExperiments = await fetchAllExperiments();
                 assignUuids(allExperiments);
                 const t = TrialChoosing.FindTrialByName({ experimentName, trialTypeName, trialName }, allExperiments);
                 TrialChoosing.ReplaceUrlByTrial(t);
@@ -161,7 +162,7 @@ export const ExperimentProvider = ({ children }) => {
                         draft.serverUpdates = [];
                     })
                     for (const { name, exp } of updates) {
-                        await saveExperimentWithData(axiosToken(), name, exp);
+                        await saveExperimentWithData(name, exp);
                     }
                 })();
             }

@@ -68,7 +68,7 @@ const UserDetailsDialog = ({ }) => {
             </Stack>
             <Stack direction='row' spacing={1} sx={{ margin: 1 }} justifyContent={'center'}>
                 <Button variant="contained"
-                    disabled={username === '' || password === ''}
+                    disabled={username === '' || password === '' || hasToken}
                     onClick={async () => {
                         await doLogin(username, password);
                         if (hasToken) {
