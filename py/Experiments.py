@@ -61,6 +61,8 @@ class Experiments:
         if os.path.exists(exp_img_folder):
             for f in os.listdir(exp_img_folder):
                 if f not in images:
-                    os.remove(os.path.join(exp_img_folder, f))
+                    image_file_name = os.path.join(exp_img_folder, f)
+                    print('removing: ', image_file_name)
+                    os.remove(image_file_name)
 
         return {"ok": True}

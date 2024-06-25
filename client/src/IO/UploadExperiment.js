@@ -1,5 +1,5 @@
 import JSZip from "jszip";
-import { UploadImage } from "./UploadImage";
+import { useUploadImage } from "./UploadImage";
 import { ConvertExperiment, isExperimentVersion2 } from "./ConvertExperiment";
 import { argosJsonVersion } from "../constants/constants";
 import { createNewName } from "../Utils/utils";
@@ -8,6 +8,7 @@ import { experimentContext } from "../Context/ExperimentProvider";
 
 export const useUploadExperiment = () => {
     const { experiments, addExperiment } = useContext(experimentContext);
+    const { uploadImage } = useUploadImage();
 
     const uploadExperiment = useCallback(async (file) => {
         if (!file) {
@@ -29,7 +30,7 @@ export const useUploadExperiment = () => {
                     const imageFileName = im.name.split('/').at(-1);
                     const imageName = imageFileName.replace(/\.[^/.]+$/, "");
                     console.log(imageBlob, imageName)
-                    const ret = await UploadImage(imageBlob, imageName, experiment.name, imageFileName);
+                    const ret = await uploadImage(imageBlob, imageName, experiment.name, imageFileName);
                     if (ret) {
                         const { filename, height, width } = ret;
                         const imageData = images.find(x => x.name === imageName);

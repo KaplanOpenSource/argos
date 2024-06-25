@@ -4,17 +4,18 @@ import {
 } from "@mui/material";
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import HourglassBottomIcon from '@mui/icons-material/HourglassBottom';
-import { UploadImage } from "./UploadImage";
+import { useUploadImage } from "./UploadImage";
 
 export const UploadImageIcon = ({ onChangeFile, imageName, experimentName }) => {
     const inputFile = useRef(null);
     const [working, setWorking] = useState(false);
+    const { uploadImage } = useUploadImage();
 
     const handleChangeFile = async (event) => {
         event.stopPropagation();
         event.preventDefault();
         setWorking(true);
-        const ret = await UploadImage(event.target.files[0], imageName, experimentName);
+        const ret = await uploadImage(event.target.files[0], imageName, experimentName);
         if (ret) {
             const { filename, height, width } = ret;
             onChangeFile(filename, height, width);

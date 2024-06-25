@@ -1,39 +1,46 @@
-import { baseUrl } from "../App/TokenContext";
+import { useCallback, useContext } from "react";
+import { TokenContext } from "../App/TokenContext";
 
-const getImageSize = async (imageFile) => {
-    return new Promise(resolve => {
-        const img = new Image();
-        img.onload = () => {
-            resolve([img.naturalHeight, img.naturalWidth])
-        };
-        img.src = window.URL.createObjectURL(imageFile);
-    })
-}
+export const useUploadImage = () => {
+    const { axiosToken } = useContext(TokenContext);
 
-export const UploadImage = async (fileBlob, imageName, experimentName, blobFilenameOptional) => {
-    if (!fileBlob) {
-        return;
+    const uploadImage = useCallback(async (fileBlob, imageName, experimentName, blobFilenameOptional) => {
+        if (!fileBlob) {
+            return;
+        }
+        const [height, width] = await getImageSize(fileBlob);
+        if (!height || !width) {
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('file', fileBlob, blobFilenameOptional);
+        formData.append('imageName', imageName);
+        formData.append('experimentName', experimentName);
+        const ret = await axiosToken().post("upload", formData, {
+            headers: { "Content-Type": "multipart/form-data" },
+        });
+        console.log('uploaded:', ret);
+        const error = (ret.data || { error: 'invalid server reply' }).error;
+        if (error) {
+            alert(error);
+            return;
+        }
+
+        return { filename: ret.data.filename, height, width };
+    }, [axiosToken]);
+
+    const getImageSize = async (imageFile) => {
+        return new Promise(resolve => {
+            const img = new Image();
+            img.onload = () => {
+                resolve([img.naturalHeight, img.naturalWidth])
+            };
+            img.src = window.URL.createObjectURL(imageFile);
+        })
     }
-    const [height, width] = await getImageSize(fileBlob);
-    if (!height || !width) {
-        return;
-    }
 
-    const formData = new FormData();
-    formData.append('file', fileBlob, blobFilenameOptional);
-    formData.append('imageName', imageName);
-    formData.append('experimentName', experimentName);
-    const resp = await fetch(baseUrl + "/upload", {
-        method: 'POST',
-        body: formData,
-    });
-    const ret = await resp.json();
-    console.log('uploaded:', ret);
-    const error = (ret || { error: 'invalid server reply' }).error;
-    if (error) {
-        alert(error);
-        return;
+    return {
+        uploadImage,
     }
-
-    return { filename: ret.filename, height, width };
 }
