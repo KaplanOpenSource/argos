@@ -1,4 +1,4 @@
-import { baseUrl } from "../Context/FetchExperiment";
+import { baseUrl } from "../App/TokenContext";
 
 const getImageSize = async (imageFile) => {
     return new Promise(resolve => {

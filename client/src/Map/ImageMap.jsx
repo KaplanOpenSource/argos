@@ -1,5 +1,5 @@
 import { ImageOverlay } from "react-leaflet"
-import { baseUrl } from "../Context/FetchExperiment"
+import { baseUrl } from "../App/TokenContext";
 
 export const ImageMap = ({ experiment, image }) => {
     let bounds;

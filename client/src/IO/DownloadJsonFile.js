@@ -1,7 +1,7 @@
 import JSZip from "jszip";
 import { saveAs } from 'file-saver';
-import { baseUrl } from "../Context/FetchExperiment";
 import { cleanUuids } from "../Context/TrackUuidUtils";
+import { baseUrl } from "../App/TokenContext";
 
 export const downloadJsonFile = async (experiment) => {
     const zip = JSZip();

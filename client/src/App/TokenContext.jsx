@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { createContext, useState } from 'react';
-import { baseUrl } from '../Context/FetchExperiment';
+
+export const baseUrl = window.location.port === '8080' ? '' : 'http://127.0.0.1:8080';
 
 export const TokenContext = createContext();
 

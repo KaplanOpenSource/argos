@@ -1,5 +1,5 @@
 import { Typography } from "@mui/material";
-import { baseUrl } from "../Context/FetchExperiment";
+import { baseUrl } from "../App/TokenContext";
 
 export const ImageOnServer = ({ data, experiment }) => {
     if (!data.filename) {
