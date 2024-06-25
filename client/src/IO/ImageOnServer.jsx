@@ -1,11 +1,26 @@
 import { Typography } from "@mui/material";
-import { baseUrl } from "../App/TokenContext";
+import { TokenContext } from "../App/TokenContext";
+import { useContext, useEffect, useState } from "react";
 
 export const ImageOnServer = ({ data, experiment }) => {
+    const { axiosToken } = useContext(TokenContext);
+    const [src, setSrc] = useState();
+
     if (!data.filename) {
         return null;
     }
-    const src = baseUrl + "/uploads/" + experiment.name + "/" + data.filename;
+
+    useEffect(() => {
+        (async () => {
+            const url = "uploads/" + experiment.name + "/" + data.filename;
+            const resp = await axiosToken().get(url, { responseType: "arraybuffer" });
+            const bytes = new Uint8Array(resp.data);
+            const str = bytes.map(b => String.fromCharCode(b)).join('');
+            const b64 = `data:image/png;base64, ` + btoa(str);
+            setSrc(b64);
+        })()
+    }, [data, experiment]);
+
     let { width, height } = data;
     if (Math.max(width, height) > 500 && Math.min(width, height) > 0) {
         if (width > height) {

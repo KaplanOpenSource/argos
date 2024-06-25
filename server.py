@@ -125,7 +125,7 @@ def upload():
 
 
 @app.route("/uploads/<experimentName>/<filename>")
-# @jwt_required()
+@jwt_required()
 def download_file(experimentName, filename):
     ret = images.download(experimentName, filename)
     filepath = ret.get("filepath", None)
