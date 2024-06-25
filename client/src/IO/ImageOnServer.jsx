@@ -10,7 +10,9 @@ export const ImageOnServer = ({ data, experiment }) => {
     useEffect(() => {
         (async () => {
             if (data && data.filename && experiment && experiment.name) {
-                setSrc(await downloadImageAsUrl(experiment.name, data.filename));
+                const byte64 = await downloadImageAsUrl(experiment.name, data.filename);
+                console.log('image read ', data.filename);
+                setSrc(byte64);
             }
         })()
     }, [data, experiment]);

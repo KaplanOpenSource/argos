@@ -8,7 +8,9 @@ export const ImageMap = ({ experiment, image }) => {
     useEffect(() => {
         (async () => {
             if (image && image.filename && experiment && experiment.name) {
-                setSrc(await downloadImageAsUrl(experiment.name, image.filename));
+                const byte64 = await downloadImageAsUrl(experiment.name, image.filename);
+                console.log('image read ', image.filename);
+                setSrc(byte64);
             }
         })()
     }, [image, experiment]);
