@@ -40,7 +40,16 @@ export const useUploadImage = () => {
         })
     }
 
+    const downloadImageAsUrl = useCallback(async (experimentName, dataFilename) => {
+        const url = "uploads/" + experimentName + "/" + dataFilename;
+        const resp = await axiosToken().get(url, { responseType: "arraybuffer" });
+        const base64 = `data:image/png;base64, ` + btoa(new Uint8Array(resp.data)
+            .reduce((data, byte) => data + String.fromCharCode(byte), ''));
+        return base64;
+    }, [axiosToken]);
+
     return {
         uploadImage,
+        downloadImageAsUrl,
     }
 }

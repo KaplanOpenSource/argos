@@ -1,19 +1,28 @@
 import { ImageOverlay } from "react-leaflet"
-import { baseUrl } from "../App/TokenContext";
+import { useEffect, useState } from "react";
+import { useUploadImage } from "../IO/UploadImage";
 
 export const ImageMap = ({ experiment, image }) => {
+    const { downloadImageAsUrl } = useUploadImage();
+    const [src, setSrc] = useState();
+    useEffect(() => {
+        (async () => {
+            setSrc(await downloadImageAsUrl(experiment.name, image.filename));
+        })()
+    }, [image, experiment]);
+
     let bounds;
     if (image.ytop || image.ybottom) {
         bounds = [[image.ytop, image.xleft], [image.ybottom, image.xright]];
     } else if (image.latnorth || image.latsouth) {
         bounds = [[image.latnorth, image.lngwest], [image.latsouth, image.lngeast]];
     }
-    if (!bounds) {
+    if (!bounds || !src) {
         return null;
     }
     return (
         <ImageOverlay
-            url={baseUrl + "/uploads/" + experiment.name + "/" + image.filename}
+            url={src}
             bounds={bounds}
         />
     )

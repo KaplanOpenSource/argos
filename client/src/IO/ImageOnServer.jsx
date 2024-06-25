@@ -1,9 +1,9 @@
 import { Typography } from "@mui/material";
-import { TokenContext } from "../App/TokenContext";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { useUploadImage } from "./UploadImage";
 
 export const ImageOnServer = ({ data, experiment }) => {
-    const { axiosToken } = useContext(TokenContext);
+    const { downloadImageAsUrl } = useUploadImage();
     const [src, setSrc] = useState();
 
     if (!data.filename) {
@@ -12,12 +12,7 @@ export const ImageOnServer = ({ data, experiment }) => {
 
     useEffect(() => {
         (async () => {
-            const url = "uploads/" + experiment.name + "/" + data.filename;
-            const resp = await axiosToken().get(url, { responseType: "arraybuffer" });
-            const bytes = new Uint8Array(resp.data);
-            const str = bytes.map(b => String.fromCharCode(b)).join('');
-            const b64 = `data:image/png;base64, ` + btoa(str);
-            setSrc(b64);
+            setSrc(await downloadImageAsUrl(experiment.name, data.filename));
         })()
     }, [data, experiment]);
 
