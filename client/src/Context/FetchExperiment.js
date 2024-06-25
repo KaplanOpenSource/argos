@@ -22,9 +22,8 @@ export const saveExperimentWithData = async (name, data) => {
     return true;
 }
 
-export const fetchAllExperiments = async () => {
-    const resp = await fetch(baseUrl + "/experiment_list");
-    const json = await resp.json();
+export const fetchAllExperiments = async (axiosWithToken) => {
+    const json = await axiosWithToken.get("experiment_list");
     if ((json || {}).error) {
         alert('fetch list: ' + json.error);
         return;
@@ -34,19 +33,19 @@ export const fetchAllExperiments = async () => {
     // this can be optimized by fetching limited data from the server
     const exp = [];
     const errors = [];
-    for (const name of (json || [])) {
-        const url = baseUrl + "/experiment/" + name.replaceAll(' ', '%20');
-        const resp = await fetch(url);
-        const json = await resp.json();
+    for (const name of (json.data || [])) {
+        const url = "experiment/" + name.replaceAll(' ', '%20');
+        const json = await axiosWithToken.get(url);
         if ((json || {}).error) {
             errors.push('fetch ' + name + ': ' + json.error);
             continue;
         }
-        if ((json || {}).name !== name) {
+        const curr = json.data;
+        if ((curr || {}).name !== name) {
             errors.push(`corrupted experiment ${name}`);
             continue;
         }
-        exp.push(json);
+        exp.push(curr);
     }
     if (errors.length) {
         alert(errors.join('\n'));

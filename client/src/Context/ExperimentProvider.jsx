@@ -19,7 +19,7 @@ export const ExperimentProvider = ({ children }) => {
         ...TrialChoosing.initialState,
     });
 
-    const { token } = useContext(TokenContext);
+    const { hasToken, axiosToken } = useContext(TokenContext);
 
     const experimentUpdates = new ExperimentUpdates(state, setState);
     const trialChoosing = new TrialChoosing(state, setState);
@@ -138,9 +138,9 @@ export const ExperimentProvider = ({ children }) => {
 
     useEffect(() => {
         (async () => {
-            if (token) {
+            if (hasToken) {
                 const { experimentName, trialTypeName, trialName } = parseUrlParams();
-                const allExperiments = await fetchAllExperiments();
+                const allExperiments = await fetchAllExperiments(axiosToken());
                 assignUuids(allExperiments);
                 const t = TrialChoosing.FindTrialByName({ experimentName, trialTypeName, trialName }, allExperiments);
                 TrialChoosing.ReplaceUrlByTrial(t);
@@ -150,10 +150,10 @@ export const ExperimentProvider = ({ children }) => {
                 });
             }
         })()
-    }, [token])
+    }, [hasToken])
 
     useEffect(() => {
-        if (token) {
+        if (hasToken) {
             if (state.serverUpdates.length > 0) {
                 (async () => {
                     const updates = state.serverUpdates;
@@ -161,12 +161,12 @@ export const ExperimentProvider = ({ children }) => {
                         draft.serverUpdates = [];
                     })
                     for (const { name, exp } of updates) {
-                        await saveExperimentWithData(name, exp);
+                        await saveExperimentWithData(axiosToken(), name, exp);
                     }
                 })();
             }
         }
-    }, [token, state.serverUpdates]);
+    }, [hasToken, state.serverUpdates]);
 
     const store = {
         experiments: state.experiments,
