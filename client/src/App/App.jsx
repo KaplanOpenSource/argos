@@ -4,9 +4,10 @@ import { TokenContext } from './TokenContext';
 import { LoginForm } from './LoginForm';
 
 export function App() {
-    const { token } = useContext(TokenContext);
+    const { token, hasToken } = useContext(TokenContext);
 
-    return token
+    // console.log(token)
+    return hasToken
         ? (
             <DevicePlanner
             />

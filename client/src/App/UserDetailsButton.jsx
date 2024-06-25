@@ -3,8 +3,6 @@ import { ButtonTooltip } from "../Utils/ButtonTooltip"
 import MenuIcon from '@mui/icons-material/Menu';
 import { forwardRef, useContext, useEffect, useState } from "react";
 import { TokenContext } from "./TokenContext";
-import { baseUrl } from "../Context/FetchExperiment";
-import axios from 'axios';
 
 const Transition = forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;

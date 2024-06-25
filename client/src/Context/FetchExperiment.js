@@ -1,16 +1,8 @@
 export const baseUrl = window.location.port === '8080' ? '' : 'http://127.0.0.1:8080';
 
-export const saveExperimentWithData = async (name, data) => {
+export const saveExperimentWithData = async (axiosWithToken, name, data) => {
     try {
-        const resp = await fetch(baseUrl + "/experiment_set/" + name, {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        });
-        const json = await resp.json();
+        const json = await axiosWithToken.post("experiment_set/" + name, data);
         if ((json || {}).error) {
             alert('save error: ' + json.error);
             return false;
