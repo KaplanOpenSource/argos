@@ -2,6 +2,7 @@ import axios from 'axios';
 import { createContext, useState } from 'react';
 
 export const baseUrl = window.location.port === '8080' ? '' : 'http://127.0.0.1:8080';
+// export const baseUrl = window.location.port === '8080' ? '' : 'http://3.249.107.168:8080';
 
 export const TokenContext = createContext();
 

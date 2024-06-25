@@ -6,15 +6,18 @@ export const ImageOnServer = ({ data, experiment }) => {
     const { downloadImageAsUrl } = useUploadImage();
     const [src, setSrc] = useState();
 
-    if (!data.filename) {
-        return null;
-    }
 
     useEffect(() => {
         (async () => {
-            setSrc(await downloadImageAsUrl(experiment.name, data.filename));
+            if (data && data.filename && experiment && experiment.name) {
+                setSrc(await downloadImageAsUrl(experiment.name, data.filename));
+            }
         })()
     }, [data, experiment]);
+
+    if (!data.filename) {
+        return null;
+    }
 
     let { width, height } = data;
     if (Math.max(width, height) > 500 && Math.min(width, height) > 0) {

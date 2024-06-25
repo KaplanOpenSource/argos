@@ -7,7 +7,9 @@ export const ImageMap = ({ experiment, image }) => {
     const [src, setSrc] = useState();
     useEffect(() => {
         (async () => {
-            setSrc(await downloadImageAsUrl(experiment.name, image.filename));
+            if (image && image.filename && experiment && experiment.name) {
+                setSrc(await downloadImageAsUrl(experiment.name, image.filename));
+            }
         })()
     }, [image, experiment]);
 
