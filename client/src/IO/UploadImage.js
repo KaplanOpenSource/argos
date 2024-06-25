@@ -2,9 +2,13 @@ import { useCallback, useContext } from "react";
 import { TokenContext } from "../App/TokenContext";
 
 export const useUploadImage = () => {
-    const { axiosToken } = useContext(TokenContext);
+    const { hasToken, axiosToken } = useContext(TokenContext);
 
     const uploadImage = useCallback(async (fileBlob, imageName, experimentName, blobFilenameOptional) => {
+        if (!hasToken) {
+            alert('not logged in');
+            return;
+        }
         if (!fileBlob) {
             return;
         }
@@ -41,6 +45,9 @@ export const useUploadImage = () => {
     }
 
     const downloadImageAsUrl = useCallback(async (experimentName, dataFilename) => {
+        if (!hasToken) {
+            return undefined;
+        }
         const url = "uploads/" + experimentName + "/" + dataFilename;
         const resp = await axiosToken().get(url, { responseType: "arraybuffer" });
         const converted = new Uint8Array(resp.data).reduce((data, byte) => data + String.fromCharCode(byte), '');
@@ -49,6 +56,9 @@ export const useUploadImage = () => {
     }, [axiosToken]);
 
     const downloadImageAsBlob = useCallback(async (experimentName, dataFilename) => {
+        if (!hasToken) {
+            return undefined;
+        }
         const url = "uploads/" + experimentName + "/" + dataFilename;
         const resp = await axiosToken().get(url, { responseType: "blob" });
         return resp.data;
