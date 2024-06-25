@@ -23,7 +23,7 @@ export const UserDetailsButton = ({ }) => {
             <Dialog
                 onClose={() => setOpen(false)}
                 open={open}
-                TransitionComponent={Transition}
+                // TransitionComponent={Transition}
             >
                 <DialogTitle>User Login</DialogTitle>
                 <UserDetailsDialog />
