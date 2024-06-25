@@ -38,7 +38,7 @@ export const TokenProvider = ({ children }) => {
             const data = await axiosToken().post("login",
                 { username, password },
             );
-            setToken(data.data.access_token);
+            saveToken(data.data.access_token);
         } catch (e) {
             console.log(e);
             alert(e?.response?.data?.msg || e)
