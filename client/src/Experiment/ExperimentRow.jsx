@@ -10,15 +10,16 @@ import { changeByName } from "../Utils/utils";
 import { experimentContext } from "../Context/ExperimentProvider";
 import { ImageStandalone } from "./ImageStandalone";
 import { ImageEmbedded } from "./ImageEmbedded";
-import { downloadJsonFile } from "../IO/DownloadJsonFile";
 import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { DeviceTypesList } from "./DeviceTypesList";
 import { TrialTypesList } from "./TrialTypesList";
 import { SCOPE_CONSTANT } from "./AttributeType";
+import { useUploadExperiment } from "../IO/UploadExperiment";
 
 export const ExperimentRow = ({ data, setData, children }) => {
     const { deleteExperiment, setShownMap } = useContext(experimentContext);
+    const { downloadExperimentAsZip } = useUploadExperiment();
     return (
         <TreeRow
             data={data}
@@ -37,7 +38,7 @@ export const ExperimentRow = ({ data, setData, children }) => {
                     />
                     <ButtonTooltip
                         tooltip={"Download experiment"}
-                        onClick={() => downloadJsonFile(data)}
+                        onClick={() => downloadExperimentAsZip(data)}
                     >
                         <DownloadIcon />
                     </ButtonTooltip>
