@@ -24,14 +24,18 @@ export const TokenProvider = ({ children }) => {
 
     const hasToken = token !== null && token !== undefined && token != '';
 
-    const doLogin = async (username, password) => {
-        const ax = axios.create({
+    const axiosToken = () => {
+        return axios.create({
             baseURL: baseUrl,
-            headers: { "Content-Type": "application/json" },
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: token ? 'Bearer ' + token : undefined,
+            },
         });
-
+    }
+    const doLogin = async (username, password) => {
         try {
-            const data = await ax.post("login",
+            const data = await axiosToken().post("login",
                 { username, password },
             );
             setToken(data.data.access_token);
@@ -42,13 +46,8 @@ export const TokenProvider = ({ children }) => {
     }
 
     const doLogout = async () => {
-        const ax = axios.create({
-            baseURL: baseUrl,
-            headers: { "Content-Type": "application/json" },
-        });
-
         try {
-            const data = await ax.post("logout");
+            const data = await axiosToken().post("logout");
             removeToken();
         } catch (e) {
             console.log(e);
@@ -64,6 +63,7 @@ export const TokenProvider = ({ children }) => {
             hasToken,
             doLogin,
             doLogout,
+            axiosToken,
         }}>
             {children}
         </TokenContext.Provider>
