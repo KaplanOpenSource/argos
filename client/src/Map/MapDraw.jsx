@@ -11,16 +11,17 @@ export const MapDraw = ({ }) => {
 
         // Initialize the Leaflet Draw control and pass the FeatureGroup
         const drawControl = new L.Control.Draw({
-            position: 'topright',
+            position: 'bottomright',
             edit: {
                 featureGroup: featureGroupRef.current,
             },
             draw: {
                 polygon: true,
                 polyline: true,
-                rectangle: true,
+                rectangle: false,
                 circle: true,
-                marker: true,
+                marker: false,
+                circlemarker: false,
             },
         });
 
