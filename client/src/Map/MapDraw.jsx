@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { FeatureGroup, Polyline, useMap, useMapEvents } from "react-leaflet";
 import 'leaflet-draw/dist/leaflet.draw.css';
 
-export const MapDraw = ({ }) => {
+export const MapDraw = ({ data, setData }) => {
     const featureGroupRef = useRef(null);
     const map = useMap();
 

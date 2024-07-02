@@ -14,6 +14,7 @@ import { experimentContext } from '../Context/ExperimentProvider';
 import { SHOW_ALL_EXPERIMENTS } from './ShowConfigToggles';
 import { EnclosingListSelectionProvider } from '../Experiment/EnclosedSelectionProvider';
 import { AppHeaderButtons } from './AppHeaderButtons';
+import { MapDrawExperiment } from '../Map/MapDrawExperiment';
 
 export function DevicePlanner() {
     const [showEditBox, setShowEditBox] = useState(false);
@@ -38,13 +39,13 @@ export function DevicePlanner() {
                 direction={'row'} justifyContent="space-between" alignItems="flex-start"
                 style={{ pointerEvents: 'none' }}
             >
-                    <EnclosingListSelectionProvider>
-                        <ExperimentList
-                            fullscreen={fullscreen}
-                            showConfig={showConfig}
-                            setShowConfig={setShowConfig}
-                        />
-                    </EnclosingListSelectionProvider>
+                <EnclosingListSelectionProvider>
+                    <ExperimentList
+                        fullscreen={fullscreen}
+                        showConfig={showConfig}
+                        setShowConfig={setShowConfig}
+                    />
+                </EnclosingListSelectionProvider>
                 {fullscreen ? null :
                     <EnclosingListSelectionProvider>
                         <DeviceTable
@@ -57,6 +58,8 @@ export function DevicePlanner() {
 
             <MapShower
             >
+                <MapDrawExperiment
+                />
                 <MapPositionOnUrl
                 />
                 <MapPlacer
