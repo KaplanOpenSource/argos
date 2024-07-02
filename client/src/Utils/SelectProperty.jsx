@@ -1,10 +1,11 @@
 import { Box, Chip, FormControl, InputLabel, ListItemText, MenuItem, Select, Tooltip } from "@mui/material";
 
-function makeArray(val) {
-    return ((typeof val === 'string' ? val.split(',') : val) || []);
-}
 
 export const SelectProperty = ({ label, data, setData, options, multiple, tooltipTitle = "", ...restProps }) => {
+    function makeArray(val) {
+        return ((typeof val === 'string' ? val.split(',') : val) || []);
+    }
+
     const handleChange = (e) => {
         e.stopPropagation();
         if (multiple) {
@@ -16,18 +17,16 @@ export const SelectProperty = ({ label, data, setData, options, multiple, toolti
 
     const value = multiple ? makeArray(data) : data;
 
-    const renderValue = !multiple
-        ? undefined
-        : (selected) => {
-            const sarr = makeArray(selected);
-            return (
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                    {sarr.map((value) => (
-                        <Chip key={value} label={value} size="small" />
-                    ))}
-                </Box>
-            )
-        }
+    const renderValueMultiple = (selected) => {
+        const sarr = makeArray(selected);
+        return (
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                {sarr.map((value) => (
+                    <Chip key={value} label={value} size="small" />
+                ))}
+            </Box>
+        )
+    }
 
     return (
         <Tooltip
@@ -42,7 +41,7 @@ export const SelectProperty = ({ label, data, setData, options, multiple, toolti
                     value={value}
                     onChange={handleChange}
                     onClose={e => e.stopPropagation()}
-                    renderValue={renderValue}
+                    renderValue={!multiple ? undefined : renderValueMultiple}
                     multiple={multiple}
                     {...restProps}
                 >
