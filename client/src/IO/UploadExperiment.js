@@ -6,6 +6,7 @@ import { createNewName } from "../Utils/utils";
 import { useCallback, useContext } from "react";
 import { experimentContext } from "../Context/ExperimentProvider";
 import { cleanUuids } from "../Context/TrackUuidUtils";
+import { shapesToGeoJSON } from "./ShapesToGeoJson";
 
 export const useUploadExperiment = () => {
     const { experiments, addExperiment } = useContext(experimentContext);
@@ -94,10 +95,15 @@ export const useUploadExperiment = () => {
                 zip.file(filename, image, { binary: true });
             }
         }
-    
+
+        if (experiment.shapes) {
+            const shapesGeoJson = shapesToGeoJSON(experiment.shapes);
+            zip.file(`shapes.json`, JSON.stringify(shapesGeoJson));
+        }
+
         const zipblob = await zip.generateAsync({ type: "blob" });
         saveAs(zipblob, `experiment_${experiment.name}.zip`);
-    }    
+    }
 
     return {
         uploadExperiment,

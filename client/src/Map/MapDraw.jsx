@@ -112,7 +112,9 @@ export const MapDraw = ({ data, setData }) => {
     }, [map]);
 
     return (
-        <FeatureGroup ref={ref}>
+        <FeatureGroup
+            ref={ref}
+        >
             {/* Add your layers here if needed */}
         </FeatureGroup>
     );
