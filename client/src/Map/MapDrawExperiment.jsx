@@ -14,8 +14,8 @@ export const MapDrawExperiment = ({ }) => {
         <>
             {!experiment ? null :
                 <MapDraw
-                    data={experiment?.drawings || {}}
-                    setData={drawings => setExperiment(experiment.name, { ...experiment, drawings })}
+                    data={experiment?.shapes || []}
+                    setData={shapes => setExperiment(experiment.name, { ...experiment, shapes })}
                 />
             }
         </>
