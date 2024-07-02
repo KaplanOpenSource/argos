@@ -34,9 +34,10 @@ export function DevicePlanner() {
                     showDeviceNames={showDeviceNames} setShowDeviceNames={setShowDeviceNames}
                 />
             </AppHeader>
-            <MapShower
+            <Stack
+                direction={'row'} justifyContent="space-between" alignItems="flex-start"
+                style={{ pointerEvents: 'none' }}
             >
-                <Stack direction={'row'} justifyContent="space-between" alignItems="flex-start">
                     <EnclosingListSelectionProvider>
                         <ExperimentList
                             fullscreen={fullscreen}
@@ -44,16 +45,18 @@ export function DevicePlanner() {
                             setShowConfig={setShowConfig}
                         />
                     </EnclosingListSelectionProvider>
-                    {fullscreen ? null :
-                        <EnclosingListSelectionProvider>
-                            <DeviceTable
-                                showAttributes={showAttributes}
-                                setShowAttributes={setShowAttributes}
-                            />
-                        </EnclosingListSelectionProvider>
-                    }
-                </Stack>
+                {fullscreen ? null :
+                    <EnclosingListSelectionProvider>
+                        <DeviceTable
+                            showAttributes={showAttributes}
+                            setShowAttributes={setShowAttributes}
+                        />
+                    </EnclosingListSelectionProvider>
+                }
+            </Stack>
 
+            <MapShower
+            >
                 <MapPositionOnUrl
                 />
                 <MapPlacer

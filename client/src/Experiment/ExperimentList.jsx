@@ -76,6 +76,7 @@ export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
                 margin: '10px',
                 maxHeight: '80vh',
                 overflowY: 'auto',
+                pointerEvents: 'all',
             }}
         >
             <TreeView

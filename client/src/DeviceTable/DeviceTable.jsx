@@ -29,6 +29,7 @@ export const DeviceTable = ({ showAttributes }) => {
             maxWidth: '50%',
             width: 'fit-content',
             overflowY: 'auto',
+            pointerEvents: 'all',
         }}>
             {showAttributes
                 ? <DeviceTableRich
