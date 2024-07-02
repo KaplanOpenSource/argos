@@ -51,6 +51,9 @@ export const MapDraw = ({ }) => {
 
         return () => {
             map.removeControl(drawControl);
+            map.off(L.Draw.Event.CREATED);
+            map.off(L.Draw.Event.EDITED);
+            map.off(L.Draw.Event.DELETED);
         };
     }, [map]);
 
