@@ -15,7 +15,7 @@ export const SelectProperty = ({ label, data, setData, options, multiple, toolti
         }
     };
 
-    const value = multiple ? makeArray(data) : data;
+    const value = multiple ? makeArray(data) : (data || '');
 
     const renderValueMultiple = (selected) => {
         const sarr = makeArray(selected);
@@ -36,6 +36,7 @@ export const SelectProperty = ({ label, data, setData, options, multiple, toolti
             <FormControl sx={{ minWidth: 120 }}>
                 <InputLabel>{label}</InputLabel>
                 <Select
+                    key={multiple}
                     label={label}
                     size="small"
                     value={value}

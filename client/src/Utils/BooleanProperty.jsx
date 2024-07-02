@@ -16,6 +16,7 @@ export const BooleanProperty = ({ data, setData, label, tooltipTitle = "", ...re
                                 e.stopPropagation();
                                 setData(!!e.target.checked);
                             }}
+                            onClick={e => e.stopPropagation()}
                         />
                     }
                     label={label}
