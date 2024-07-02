@@ -98,7 +98,7 @@ export const useUploadExperiment = () => {
 
         if (experiment.shapes) {
             const shapesGeoJson = shapesToGeoJSON(experiment.shapes);
-            zip.file(`shapes.json`, JSON.stringify(shapesGeoJson));
+            zip.file(`shapes.geojson`, JSON.stringify(shapesGeoJson));
         }
 
         const zipblob = await zip.generateAsync({ type: "blob" });
