@@ -27,14 +27,25 @@ export const TokenProvider = ({ children }) => {
     const hasToken = token !== null && token !== undefined && token != '';
 
     const axiosToken = () => {
-        return axios.create({
+        const ax = axios.create({
             baseURL: baseUrl,
             headers: {
                 "Content-Type": "application/json",
                 Authorization: token ? 'Bearer ' + token : undefined,
             },
         });
+
+        ax.interceptors.response.use(response => response, error => {
+            if (error.response.status === 401) {
+                removeToken();
+                return undefined;
+            }
+            return Promise.reject(error);
+        });
+
+        return ax;
     }
+
     const doLogin = async (username, password) => {
         try {
             const data = await axiosToken().post("login",
