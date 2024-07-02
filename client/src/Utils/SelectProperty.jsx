@@ -5,6 +5,30 @@ function makeArray(val) {
 }
 
 export const SelectProperty = ({ label, data, setData, options, multiple, tooltipTitle = "", ...restProps }) => {
+    const handleChange = (e) => {
+        e.stopPropagation();
+        if (multiple) {
+            setData(makeArray(e.target.value));
+        } else {
+            setData(e.target.value);
+        }
+    };
+
+    const value = multiple ? makeArray(data) : data;
+
+    const renderValue = !multiple
+        ? undefined
+        : (selected) => {
+            const sarr = makeArray(selected);
+            return (
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                    {sarr.map((value) => (
+                        <Chip key={value} label={value} size="small" />
+                    ))}
+                </Box>
+            )
+        }
+
     return (
         <Tooltip
             title={tooltipTitle}
@@ -12,69 +36,37 @@ export const SelectProperty = ({ label, data, setData, options, multiple, toolti
         >
             <FormControl sx={{ minWidth: 120 }}>
                 <InputLabel>{label}</InputLabel>
-                {!multiple ? (
-                    <Select
-                        label={label}
-                        size="small"
-                        value={data}
-                        onChange={(e) => {
-                            e.stopPropagation();
-                            setData(e.target.value);
-                        }}
-                        {...restProps}
-                    >
-                        {(options || []).map(o => (
-                            <MenuItem
-                                key={o.name}
-                                value={o.name}
+                <Select
+                    label={label}
+                    size="small"
+                    value={value}
+                    onChange={handleChange}
+                    onClose={e => e.stopPropagation()}
+                    renderValue={renderValue}
+                    multiple={multiple}
+                    {...restProps}
+                >
+                    {(options || []).map(o => (
+                        <MenuItem
+                            key={o.name}
+                            value={o.name}
+                        >
+                            <Tooltip
+                                title={o.tooltip}
+                                placement="top"
                             >
-                                <Tooltip
-                                    title={o.tooltip}
-                                    placement="top"
-                                >
-                                    <span>{o.name}</span>
-                                </Tooltip>
-                            </MenuItem>
-                        ))}
-                    </Select>
-                ) : (
-                    <Select
-                        label={label}
-                        size="small"
-                        value={makeArray(data)}
-                        onChange={(e) => {
-                            e.stopPropagation();
-                            setData(makeArray(e.target.value));
-                        }}
-                        renderValue={(selected) => {
-                            const sarr = makeArray(selected);
-                            return (
-                                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                                    {sarr.map((value) => (
-                                        <Chip key={value} label={value} size="small" />
-                                    ))}
-                                </Box>
-                            )
-                        }}
-                        multiple
-                        {...restProps}
-                    >
-                        {(options || []).map(o => (
-                            <MenuItem
-                                key={o.name}
-                                value={o.name}
-                            >
-                                <Tooltip
-                                    title={o.tooltip}
-                                    placement="top"
-                                >
-                                    {/* <Checkbox checked={(data || []).indexOf(o.name) > -1} /> */}
-                                    <ListItemText primary={o.name} />
-                                </Tooltip>
-                            </MenuItem>
-                        ))}
-                    </Select>
-                )}
+                                {!multiple
+                                    ? (
+                                        <span>{o.name}</span>
+                                    )
+                                    : (
+                                        // {/* <Checkbox checked={(data || []).indexOf(o.name) > -1} /> */ }
+                                        <ListItemText primary={o.name} />
+                                    )}
+                            </Tooltip>
+                        </MenuItem>
+                    ))}
+                </Select>
             </FormControl>
         </Tooltip>
     )
