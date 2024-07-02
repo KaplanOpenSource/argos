@@ -11,6 +11,7 @@ import { MapEventer } from './MapEventer';
 import { ImagePlacementStretcher } from './ImagePlacementStretcher';
 import 'leaflet-contextmenu';
 import 'leaflet-contextmenu/dist/leaflet.contextmenu.css';
+import { MapDraw } from './MapDraw';
 
 L.Icon.Default.imagePath = 'leaflet-images/';
 
@@ -80,6 +81,7 @@ export const MapShower = ({ children }) => {
             maxZoom={30}
             contextmenu={true}
         >
+            <MapDraw />
             <MapEventer directlyOnMap={false}
                 mapEvents={{
                     layeradd: (_, mapObject) => mapObject.options.crs = shownMap ? CRS.Simple : CRS.EPSG3857

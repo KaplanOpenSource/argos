@@ -36,7 +36,7 @@ export const SelectProperty = ({ label, data, setData, options, multiple, toolti
             <FormControl sx={{ minWidth: 120 }}>
                 <InputLabel>{label}</InputLabel>
                 <Select
-                    key={multiple}
+                    key={multiple} // this is needed because the changing multiple causes crush
                     label={label}
                     size="small"
                     value={value}
