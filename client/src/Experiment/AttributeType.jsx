@@ -1,6 +1,6 @@
 import { FormControlLabel, IconButton, Switch } from "@mui/material";
 import { TreeRow } from "../App/TreeRow";
-import { AttributeValue, VALUE_TYPE_SELECT, valueTypeDefault, valueTypes } from "./AttributeValue";
+import { AttributeValue, VALUE_TYPE_SELECT, VALUE_TYPE_DEFAULT, valueTypes } from "./AttributeValue";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { TreeSublist } from "../App/TreeSublist";
 import { BooleanProperty } from "../Utils/BooleanProperty";
@@ -28,7 +28,7 @@ export const AttributeType = ({ data, setData, isOfDevice }) => {
                     />
                     <SelectProperty
                         label="Type"
-                        data={data.type || valueTypeDefault}
+                        data={data.type || VALUE_TYPE_DEFAULT}
                         setData={type => setData({ ...data, type })}
                         options={valueTypes.map(name => { return { name } })}
                     />
@@ -98,7 +98,7 @@ export const AttributeType = ({ data, setData, isOfDevice }) => {
             }
             <AttributeValue
                 label='Default'
-                type={data.type || valueTypeDefault}
+                type={data.type || VALUE_TYPE_DEFAULT}
                 data={data.defaultValue}
                 setData={val => setData({ ...data, defaultValue: val })}
                 attrType={data}

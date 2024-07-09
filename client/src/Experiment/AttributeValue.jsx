@@ -16,7 +16,7 @@ export const valueTypes = [
     VALUE_TYPE_DATE,
     VALUE_TYPE_SELECT,
 ];
-export const valueTypeDefault = VALUE_TYPE_STRING;
+export const VALUE_TYPE_DEFAULT = VALUE_TYPE_STRING;
 
 export const AttributeValue = ({ type, label, data, setData, attrType, ...restProps }) => {
     switch (type) {

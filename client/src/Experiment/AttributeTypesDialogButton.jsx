@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Box, IconButton, Paper, Popover, Popper, Tooltip } from "@mui/material";
+import { Box, IconButton, Paper, Popover, Tooltip } from "@mui/material";
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
@@ -7,7 +7,7 @@ import { TreeSublist } from "../App/TreeSublist";
 import { AttributeType } from "./AttributeType";
 import { changeByName } from "../Utils/utils";
 import { TreeView } from "@mui/x-tree-view/TreeView";
-import { valueTypeDefault } from "./AttributeValue";
+import { VALUE_TYPE_DEFAULT } from "./AttributeValue";
 
 export const AttributeTypesDialogButton = ({ data, setData, isOfDevice }) => {
     const [anchorEl, setAnchorEl] = useState(null);
@@ -55,7 +55,7 @@ export const AttributeTypesDialogButton = ({ data, setData, isOfDevice }) => {
                                 setData={setData}
                                 newDataCreator={() => {
                                     return {
-                                        type: valueTypeDefault,
+                                        type: VALUE_TYPE_DEFAULT,
                                     }
                                 }}
                             >
