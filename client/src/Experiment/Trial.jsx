@@ -10,9 +10,11 @@ import { SCOPE_TRIAL } from "./AttributeType";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { RealMapName } from "../constants/constants";
 import { saveAs } from "file-saver";
+import { useTrialGeoJson } from "../IO/TrialGeoJson";
 
 export const Trial = ({ data, setData, experiment, trialType, children }) => {
     const { currTrial, setCurrTrial, selection } = useContext(experimentContext);
+    const { downloadGeojson } = useTrialGeoJson();
 
     const cloneDevices = () => {
         const devicesOnTrial = [...(data.devicesOnTrial || [])];
@@ -28,37 +30,6 @@ export const Trial = ({ data, setData, experiment, trialType, children }) => {
         setData({ ...data, devicesOnTrial });
     }
 
-    const downloadGeojson = () => {
-        const devicesOnTrial = [...(data.devicesOnTrial || [])].filter(d => {
-            return d.location && d.location.coordinates && d.location.coordinates.length === 2;
-        });
-
-        const json = {
-            type: 'FeatureCollection',
-            features: devicesOnTrial.map(d => {
-                const coordinates = d.location.coordinates.slice().reverse();
-                const properties = {
-                    name: d.deviceItemName,
-                    type: d.deviceTypeName,
-                    MapName: d.location.name || RealMapName,
-                };
-                for (const { name, value } of d.attributes || []) {
-                    properties[name] = value;
-                }
-                return {
-                    type: 'Feature',
-                    geometry: {
-                        type: 'Point',
-                        coordinates,
-                    },
-                    properties
-                }
-            })
-        };
-        const filename = `trial_${experiment.name}_${trialType.name}_${data.name}.geojson`;
-        const blob = new Blob([JSON.stringify(json, null, 2)], { type: 'application/json' })
-        saveAs(blob, filename);
-    }
     return (
         <TreeRow
             data={data}
@@ -97,7 +68,7 @@ export const Trial = ({ data, setData, experiment, trialType, children }) => {
                     </ButtonTooltip>
                     <ButtonTooltip
                         tooltip={'Download geojson'}
-                        onClick={downloadGeojson}
+                        onClick={() => downloadGeojson(data, experiment, trialType)}
                     >
                         <Download />
                     </ButtonTooltip>
