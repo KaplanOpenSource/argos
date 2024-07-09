@@ -10,7 +10,8 @@
             "request": "launch",
             "program": "server.py",
             "console": "integratedTerminal",
-            "justMyCode": true
+            "justMyCode": true,
+            // "args": ["--prod"]
         }
     ]
 }

@@ -45,19 +45,30 @@ def index_func():
     return app.send_static_file("index.html")
 
 
-@app.route("/login", methods=["POST"])
-def create_token():
-    username = request.json.get("username", None)
-    password = request.json.get("password", None)
-
+def check_user(username, password):
+    if not args.prod and username == '1' and password == '1':
+        return True
+    
     try:
         with open(os.path.join(DATA_FOLDER, "users.json")) as file:
             all_users = json.load(file)["users"]
             curr_user = [a for a in all_users if a['username'] == username]
             if len(curr_user) != 1 or curr_user[0]['password'] != password:
-                return {"msg": "Wrong username or password"}, 401
+                return "Wrong username or password"
     except:
-        return {"msg": "Problem with login"}, 401
+        return "Problem with login"
+    
+    return True
+
+
+@app.route("/login", methods=["POST"])
+def create_token():
+    username = request.json.get("username", None)
+    password = request.json.get("password", None)
+    
+    res = check_user(username, password)
+    if res != True:
+        return {"msg": res}, 401
 
     access_token = create_access_token(identity=username)
     response = jsonify({"access_token": access_token})
