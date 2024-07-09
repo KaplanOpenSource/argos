@@ -12,7 +12,7 @@ export const AttributeItemList = ({ attributeTypes, data, setData, scope, device
                         attrTypeScope,
                         attrValueType,
                         editable,
-                    } = AttributeValueGet({ attrType, data, setData, deviceItem, scope })
+                    } = AttributeValueGet({ attrType, data, setData, deviceItem, scope });
                     const tooltipTitle = editable
                         ? `Attribute "${attrType.name}" can be updated here on ${attrTypeScope} level`
                         : `Attribute "${attrType.name}" can be updated only on ${attrTypeScope} level (this is the ${scope} level)`;
