@@ -16,7 +16,7 @@ echo $'\nadd client to deploy archive\n====='
 zip -ur argos.zip client/dist/
 
 echo $'\ncopy deploy archive to server\n====='
-scp argos.zip eran@3.249.107.168:~/
+scp argos.zip eran@argos.kaplanopensource.co.il:~/
 
 echo $'\ndeploy and restart server\n====='
-ssh eran@3.249.107.168 'mkdir -p argos && cd argos && unzip -o ../argos.zip && bash scripts/run.sh'
+ssh eran@argos.kaplanopensource.co.il 'mkdir -p argos && cd argos && unzip -o ../argos.zip && bash scripts/run.sh'
