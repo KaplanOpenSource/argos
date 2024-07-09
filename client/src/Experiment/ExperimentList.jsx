@@ -14,10 +14,13 @@ import { SHOW_ALL_EXPERIMENTS, SHOW_ONLY_DEVICES, SHOW_ONLY_TRIALS } from "../Ap
 import { Case, SwitchCase } from "../Utils/SwitchCase";
 import { TrialTypesList } from "./TrialTypesList";
 import { EnclosingListSelectionContext } from "./EnclosedSelectionProvider";
+import { useCloneExperiment } from "../IO/CloneExperiment";
 
 export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
     const { experiments, setExperiment, addExperiment, currTrial, setCurrTrial } = useContext(experimentContext);
     const { experiment, experimentName, trialType, trialTypeName, trial, trialName } = currTrial;
+    const { cloneExperiment } = useCloneExperiment();
+
     const [expanded, setExpanded] = useState([]);
 
     const {
@@ -99,10 +102,7 @@ export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
                             >
                                 <ButtonTooltip
                                     tooltip="Clone experiment"
-                                    onClick={() => {
-                                        const name = createNewName(experiments, exp.name + " cloned");
-                                        addExperiment({ ...deepClone(exp), name });
-                                    }}
+                                    onClick={() => cloneExperiment(exp)}
                                 >
                                     <ContentCopyIcon />
                                 </ButtonTooltip>
