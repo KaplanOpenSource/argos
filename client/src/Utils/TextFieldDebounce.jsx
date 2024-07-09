@@ -18,6 +18,7 @@ export const TextFieldDebounce = ({ value, onChange = () => { }, debounceMs = 50
     }, [onChange, debounceMs]);
 
     const handleChange = (event) => {
+        event.stopPropagation();
         setInnerValue(event.target.value); // Update local state for immediate feedback
         debouncedOnChange(event.target.value); // Pass the value to the debounced onChange
     };
@@ -38,6 +39,7 @@ export const TextFieldDebounce = ({ value, onChange = () => { }, debounceMs = 50
                 {...props} // Pass any additional props to the TextField
                 value={innerValue === undefined ? "" : innerValue}
                 onChange={handleChange}
+                onClick={e => e.stopPropagation()}
             />
         </Tooltip>
     );

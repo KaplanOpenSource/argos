@@ -23,31 +23,35 @@ export const TreeRow = ({ data, setData, components, children }) => {
             key={data.trackUuid}
             nodeId={data.trackUuid}
             label={
-                <Box
-                    sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        // p: 0.5,
-                        // pr: 0,
-                    }}
-                >
-                    {/* <Typography variant="body2"
+                <div style={{ pointerEvents: 'none' }}>
+                    <div style={{ pointerEvents: 'all', display: 'inline-block' }}>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                // p: 0.5,
+                                // pr: 0,
+                            }}
+                        >
+                            {/* <Typography variant="body2"
                         sx={{ fontWeight: 'inherit', flexGrow: 1 }}
                     >
                         {name}
                     </Typography> */}
-                    <TextFieldDebounce
-                        sx={{ padding: '5px' }}
-                        variant="outlined"
-                        size="small"
-                        label="Name"
-                        InputLabelProps={{ shrink: true }}
-                        value={name}
-                        onChange={val => setData({ ...data, name: val })}
-                        disabled={!setData}
-                    />
-                    {components}
-                </Box>
+                            <TextFieldDebounce
+                                sx={{ padding: '5px' }}
+                                variant="outlined"
+                                size="small"
+                                label="Name"
+                                InputLabelProps={{ shrink: true }}
+                                value={name}
+                                onChange={val => setData({ ...data, name: val })}
+                                disabled={!setData}
+                            />
+                            {components}
+                        </Box>
+                    </div>
+                </div>
             }
         // sx={{ padding: '5px' }}
         >
