@@ -55,6 +55,9 @@ export const TokenProvider = ({ children }) => {
             const data = await axiosToken().post("login",
                 { username, password },
             );
+            if (!data) {
+                throw "Wrong username or password";
+            }
             saveToken(data.data.access_token);
         } catch (e) {
             console.log(e);
