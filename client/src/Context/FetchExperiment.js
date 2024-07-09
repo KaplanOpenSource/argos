@@ -19,36 +19,41 @@ export const useFetchExperiments = () => {
     }, [axiosToken]);
 
     const fetchAllExperiments = useCallback(async () => {
-        const json = await axiosToken().get("experiment_list");
-        if ((json || {}).error) {
-            alert('fetch list: ' + json.error);
-            return;
-        }
-
-        // TODO: reading all the experiments data just to get the dates and so
-        // this can be optimized by fetching limited data from the server
-        const exp = [];
-        const errors = [];
-        for (const name of (json.data || [])) {
-            const url = "experiment/" + name.replaceAll(' ', '%20');
-            const json = await axiosToken().get(url);
+        try {
+            const json = await axiosToken().get("experiment_list");
             if ((json || {}).error) {
-                errors.push('fetch ' + name + ': ' + json.error);
-                continue;
+                alert('fetch list: ' + json.error);
+                return;
             }
-            const curr = json.data;
-            if ((curr || {}).name !== name) {
-                errors.push(`corrupted experiment ${name}`);
-                continue;
-            }
-            exp.push(curr);
-        }
-        if (errors.length) {
-            alert(errors.join('\n'));
-            return;
-        }
 
-        return exp;
+            // TODO: reading all the experiments data just to get the dates and so
+            // this can be optimized by fetching limited data from the server
+            const exp = [];
+            const errors = [];
+            for (const name of (json.data || [])) {
+                const url = "experiment/" + name.replaceAll(' ', '%20');
+                const json = await axiosToken().get(url);
+                if ((json || {}).error) {
+                    errors.push('fetch ' + name + ': ' + json.error);
+                    continue;
+                }
+                const curr = json.data;
+                if ((curr || {}).name !== name) {
+                    errors.push(`corrupted experiment ${name}`);
+                    continue;
+                }
+                exp.push(curr);
+            }
+            if (errors.length) {
+                alert(errors.join('\n'));
+                return;
+            }
+
+            return exp;
+        } catch (e) {
+            alert('fetch crush: ' + e);
+        }
+        return;
     }, [axiosToken]);
 
     return {

@@ -93,7 +93,7 @@ export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
             >
                 <SwitchCase test={currTrial.experiment ? showConfig : SHOW_ALL_EXPERIMENTS}>
                     <Case value={SHOW_ALL_EXPERIMENTS}>
-                        {experiments.map(exp => (
+                        {experiments?.map(exp => (
                             <ExperimentRow
                                 key={exp.trackUuid || Math.random() + ""}
                                 data={exp}

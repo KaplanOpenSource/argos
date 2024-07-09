@@ -15,24 +15,26 @@ export class TrialChoosing {
     }
 
     static FindTrialByName({ experimentName, trialTypeName, trialName }, allExperiments) {
-        const experimentIndex = allExperiments.findIndex(t => t.name === experimentName);
-        if (experimentIndex >= 0) {
-            const experiment = allExperiments[experimentIndex];
-            const trialTypeIndex = ((experiment || {}).trialTypes || []).findIndex(t => t.name === trialTypeName);
-            if (trialTypeIndex >= 0) {
-                const trialType = experiment.trialTypes[trialTypeIndex];
-                const trialIndex = ((trialType || {}).trials || []).findIndex(t => t.name === trialName);
-                if (trialIndex >= 0) {
+        if (allExperiments) {
+            const experimentIndex = allExperiments.findIndex(t => t.name === experimentName);
+            if (experimentIndex >= 0) {
+                const experiment = allExperiments[experimentIndex];
+                const trialTypeIndex = ((experiment || {}).trialTypes || []).findIndex(t => t.name === trialTypeName);
+                if (trialTypeIndex >= 0) {
+                    const trialType = experiment.trialTypes[trialTypeIndex];
+                    const trialIndex = ((trialType || {}).trials || []).findIndex(t => t.name === trialName);
+                    if (trialIndex >= 0) {
+                        return {
+                            experimentName, experimentIndex,
+                            trialTypeName, trialTypeIndex,
+                            trialName, trialIndex,
+                        };
+                    }
+                } else {
                     return {
                         experimentName, experimentIndex,
-                        trialTypeName, trialTypeIndex,
-                        trialName, trialIndex,
                     };
                 }
-            } else {
-                return {
-                    experimentName, experimentIndex,
-                };
             }
         }
         return {};
