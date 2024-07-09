@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { createContext, useState } from 'react';
 
-export const baseUrl = window.location.port === '8080' ? '' : 'http://127.0.0.1:8080';
-// export const baseUrl = window.location.port === '8080' ? '' : 'http://3.249.107.168:8080';
+export const baseUrl = (window.location.port === '8080' || window.location.port === '') ? '' : 'http://127.0.0.1:8080';
+// export const baseUrl = 'https://argos.kaplanopensource.co.il';
 
 export const TokenContext = createContext();
 
@@ -27,12 +27,16 @@ export const TokenProvider = ({ children }) => {
     const hasToken = token !== null && token !== undefined && token != '';
 
     const axiosToken = () => {
+
+        const headers = {
+            "Content-Type": "application/json",
+        };
+        if (token) {
+            headers.Authorization = 'Bearer ' + token;
+        }
         const ax = axios.create({
             baseURL: baseUrl,
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: token ? 'Bearer ' + token : undefined,
-            },
+            headers,
         });
 
         ax.interceptors.response.use(response => response, error => {
@@ -61,11 +65,11 @@ export const TokenProvider = ({ children }) => {
     const doLogout = async () => {
         try {
             const data = await axiosToken().post("logout");
-            removeToken();
         } catch (e) {
             console.log(e);
             alert(e?.response?.data?.msg || e)
         }
+        removeToken();
     }
 
     return (
