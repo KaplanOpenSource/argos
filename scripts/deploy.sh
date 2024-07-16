@@ -1,5 +1,5 @@
 cd "$(dirname "$0")" && cd ..
-echo "Script executed from: ${PWD}"
+echo "Deploy script. executed from: ${PWD}"
 
 echo $'\ncreate deploy archive from git\n====='
 rm argos.zip

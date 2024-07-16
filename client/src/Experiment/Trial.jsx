@@ -69,16 +69,6 @@ export const Trial = ({ data, setData, experiment, trialType, children }) => {
                 </>
             }
         >
-            {/* <Stack direction='column' alignItems="stretch">
-                <TextFieldDebounceOutlined
-                    sx={{ paddingLeft: 0 }}
-                    label="Description"
-                    value={data.description}
-                    onChange={val => setData({ ...data, description: val })}
-                    multiline={true}
-                    rows={2}
-                />
-            </Stack> */}
             <AttributeItemList
                 attributeTypes={trialType.attributeTypes}
                 data={data}
