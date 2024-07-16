@@ -1,15 +1,12 @@
-import { IconButton, Tooltip } from "@mui/material";
 import { DateProperty } from "../Utils/DateProperty";
 import { TreeRow } from "../App/TreeRow";
 import { experimentContext } from "../Context/ExperimentProvider";
 import { useContext } from "react";
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Download, Grid3x3, GridOn, ReadMore } from "@mui/icons-material";
+import { Download, GridOn, ReadMore } from "@mui/icons-material";
 import { AttributeItemList } from "./AttributeItemList";
 import { SCOPE_TRIAL } from "./AttributeType";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
-import { RealMapName } from "../constants/constants";
-import { saveAs } from "file-saver";
 import { useTrialGeoJson } from "../IO/TrialGeoJson";
 
 export const Trial = ({ data, setData, experiment, trialType, children }) => {
@@ -41,24 +38,20 @@ export const Trial = ({ data, setData, experiment, trialType, children }) => {
                         setData={val => setData({ ...data, createdDate: val })}
                         label="Created Date"
                     />
-                    <Tooltip title="Select trial for editing" placement="top">
-                        <IconButton
-                            size="small"
-                            onClick={() => {
-                                setCurrTrial({ experimentName: experiment.name, trialTypeName: trialType.name, trialName: data.name });
-                            }}
-                        >
-                            <GridOn color={data === currTrial.trial ? "primary" : ""} />
-                        </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Delete trial" placement="top">
-                        <IconButton
-                            size="small"
-                            onClick={() => setData(undefined)}
-                        >
-                            <DeleteIcon />
-                        </IconButton>
-                    </Tooltip>
+                    <ButtonTooltip
+                        tooltip="Select trial for editing"
+                        onClick={() => {
+                            setCurrTrial({ experimentName: experiment.name, trialTypeName: trialType.name, trialName: data.name });
+                        }}
+                    >
+                        <GridOn color={data === currTrial.trial ? "primary" : ""} />
+                    </ButtonTooltip>
+                    <ButtonTooltip
+                        tooltip="Delete trial"
+                        onClick={() => setData(undefined)}
+                    >
+                        <DeleteIcon />
+                    </ButtonTooltip>
                     <ButtonTooltip
                         tooltip={'Place selected devices into this trial as are on current trial'}
                         disabled={data === currTrial.trial || selection.length === 0}

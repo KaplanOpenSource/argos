@@ -9,6 +9,7 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { AttributeTypesDialogButton } from "./AttributeTypesDialogButton";
 import { deepClone } from "fast-json-patch";
 import { assignUuids } from "../Context/TrackUuidUtils";
+import { ButtonTooltip } from "../Utils/ButtonTooltip";
 
 export const TrialType = ({ data, setData, experiment }) => {
     return (
@@ -58,20 +59,17 @@ export const TrialType = ({ data, setData, experiment }) => {
                         experiment={experiment}
                         trialType={data}
                     >
-                        <Tooltip title="Clone trial" placement="top">
-                            <IconButton
-                                size="small"
-                                onClick={e => {
-                                    e.stopPropagation();
-                                    const cloned = deepClone(itemData);
-                                    cloned.name = createNewName(data.trials, itemData.name + " cloned");
-                                    cloned.createdDate = dayjs().startOf('day');
-                                    setData({ ...data, trials: [...(data.trials || []), cloned] });
-                                }}
-                            >
-                                <ContentCopyIcon />
-                            </IconButton>
-                        </Tooltip>
+                        <ButtonTooltip
+                            tooltip="Clone trial"
+                            onClick={e => {
+                                const cloned = deepClone(itemData);
+                                cloned.name = createNewName(data.trials, itemData.name + " cloned");
+                                cloned.createdDate = dayjs().startOf('day');
+                                setData({ ...data, trials: [...(data.trials || []), cloned] });
+                            }}
+                        >
+                            <ContentCopyIcon />
+                        </ButtonTooltip>
                     </Trial>
                 ))
             }

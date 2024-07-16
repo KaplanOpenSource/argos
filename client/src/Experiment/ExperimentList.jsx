@@ -6,8 +6,6 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { Paper } from "@mui/material";
-import { deepClone } from "fast-json-patch";
-import { createNewName } from "../Utils/utils";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { DeviceTypesList } from "./DeviceTypesList";
 import { SHOW_ALL_EXPERIMENTS, SHOW_ONLY_DEVICES, SHOW_ONLY_TRIALS } from "../App/ShowConfigToggles";
@@ -50,14 +48,14 @@ export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
         if (!experiment) {
             setShowConfig(SHOW_ALL_EXPERIMENTS);
             // setExpanded(experiments.map(e => EXPERIMENT_NODE_ID_PREFIX + e));
-        } else if (trialName) {
-            setExpanded([
-                experiment.trackUuid,
-                experimentName + "_trialTypes",
-                trialType.trackUuid,
-                experimentName + "_deviceTypes",
-                trial.trackUuid,
-            ]);
+        // } else if (trialName) {
+        //     setExpanded([
+        //         experiment.trackUuid,
+        //         experimentName + "_trialTypes",
+        //         trialType.trackUuid,
+        //         experimentName + "_deviceTypes",
+        //         trial.trackUuid,
+        //     ]);
         }
     }, [experimentName, trialTypeName, trialName]);
 
