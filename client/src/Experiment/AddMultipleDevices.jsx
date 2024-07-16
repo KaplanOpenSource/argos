@@ -1,9 +1,10 @@
 import { DynamicFeed, PlayArrow } from "@mui/icons-material"
-import { Box, IconButton, Paper, Popover, Stack, Tooltip } from "@mui/material"
+import { Box, Popover, Stack } from "@mui/material"
 import { useState } from "react"
 import { TextFieldDebounce } from "../Utils/TextFieldDebounce";
 import { AttributeItemList } from "./AttributeItemList";
 import { assignUuids } from "../Context/TrackUuidUtils";
+import { ButtonTooltip } from "../Utils/ButtonTooltip";
 
 export const AddMultipleDevices = ({ deviceType, addDevices }) => {
     const [anchorEl, setAnchorEl] = useState(null);
@@ -27,18 +28,16 @@ export const AddMultipleDevices = ({ deviceType, addDevices }) => {
 
     return (
         <>
-            <Tooltip title={"Add multiple devices"} placement="top">
-                <IconButton
-                    size="small"
-                    color={open ? "primary" : ""}
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        setAnchorEl(e.currentTarget);
-                    }}
-                >
-                    <DynamicFeed />
-                </IconButton>
-            </Tooltip>
+            <ButtonTooltip
+                tooltip={"Add multiple devices"}
+                color={open ? "primary" : ""}
+                onClick={(e) => {
+                    e.stopPropagation();
+                    setAnchorEl(e.currentTarget);
+                }}
+            >
+                <DynamicFeed />
+            </ButtonTooltip>
             <Popover
                 // id={id}
                 open={open}
@@ -109,16 +108,17 @@ export const AddMultipleDevices = ({ deviceType, addDevices }) => {
                         />
                     </Box>
                     <Box>
-                        <Tooltip title={"Create"} placement="right">
-                            <IconButton
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    createNewDevices();
-                                }}
-                            >
-                                <PlayArrow />
-                            </IconButton>
-                        </Tooltip>
+                        <ButtonTooltip
+                            tooltip="Create"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                createNewDevices();
+                            }}
+                            color="primary"
+                        >
+                            Create
+                            <PlayArrow />
+                        </ButtonTooltip>
                     </Box>
                 </Stack>
             </Popover>

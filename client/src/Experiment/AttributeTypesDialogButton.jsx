@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Box, IconButton, Paper, Popover, Tooltip } from "@mui/material";
+import { Box, Paper, Popover } from "@mui/material";
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
@@ -8,6 +8,7 @@ import { AttributeType } from "./AttributeType";
 import { changeByName } from "../Utils/utils";
 import { TreeView } from "@mui/x-tree-view/TreeView";
 import { VALUE_TYPE_DEFAULT } from "./AttributeValue";
+import { ButtonTooltip } from "../Utils/ButtonTooltip";
 
 export const AttributeTypesDialogButton = ({ data, setData, isOfDevice }) => {
     const [anchorEl, setAnchorEl] = useState(null);
@@ -15,18 +16,16 @@ export const AttributeTypesDialogButton = ({ data, setData, isOfDevice }) => {
         // ClickAwayListener onClickAway={() => setAnchorEl(null)}>
         <>
             <Box sx={{ position: 'relative' }}>
-                <Tooltip title="Edit attribute types" placement="top">
-                    <IconButton
-                        size="small"
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            setAnchorEl(anchorEl ? null : e.currentTarget);
-                        }}
-                        color={Boolean(anchorEl) ? "primary" : ""}
-                    >
-                        <AccountTreeIcon />
-                    </IconButton>
-                </Tooltip>
+                <ButtonTooltip
+                    tooltip="Edit attribute types"
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        setAnchorEl(anchorEl ? null : e.currentTarget);
+                    }}
+                    color={Boolean(anchorEl) ? "primary" : ""}
+                >
+                    <AccountTreeIcon />
+                </ButtonTooltip>
                 <Popover
                     open={Boolean(anchorEl)}
                     anchorEl={anchorEl}

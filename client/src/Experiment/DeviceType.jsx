@@ -1,6 +1,5 @@
 import { TreeRow } from "../App/TreeRow";
 import { DeviceItem } from "./DeviceItem";
-import { IconButton, Tooltip } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import { changeByName, createNewName } from "../Utils/utils";
@@ -11,6 +10,7 @@ import { useContext } from "react";
 import { experimentContext } from "../Context/ExperimentProvider";
 import { assignUuids } from "../Context/TrackUuidUtils";
 import { IconPicker } from "./IconPicker";
+import { ButtonTooltip } from "../Utils/ButtonTooltip";
 
 export const DeviceType = ({ data, setData, experiment }) => {
     const { deleteDeviceType } = useContext(experimentContext);
@@ -29,26 +29,22 @@ export const DeviceType = ({ data, setData, experiment }) => {
                         data={data.icon || ""}
                         setData={val => setData({ ...data, icon: val })}
                     />
-                    <Tooltip title="Delete device type" placement="top">
-                        <IconButton
-                            size="small"
-                            onClick={() => deleteDeviceType({ experimentName: experiment.name, deviceTypeName: data.name })}
-                        >
-                            <DeleteIcon />
-                        </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Add new device" placement="top">
-                        <IconButton
-                            size="small"
-                            onClick={e => {
-                                e.stopPropagation();
-                                const name = createNewName(data.devices, 'New Device');
-                                setData({ ...data, devices: [...(data.devices || []), assignUuids({ name })] });
-                            }}
-                        >
-                            <AddIcon />
-                        </IconButton>
-                    </Tooltip>
+                    <ButtonTooltip
+                        tooltip="Delete device type"
+                        onClick={() => deleteDeviceType({ experimentName: experiment.name, deviceTypeName: data.name })}
+                    >
+                        <DeleteIcon />
+                    </ButtonTooltip>
+                    <ButtonTooltip
+                        tooltip="Add new device"
+                        onClick={e => {
+                            e.stopPropagation();
+                            const name = createNewName(data.devices, 'New Device');
+                            setData({ ...data, devices: [...(data.devices || []), assignUuids({ name })] });
+                        }}
+                    >
+                        <AddIcon />
+                    </ButtonTooltip>
                     <AddMultipleDevices
                         deviceType={data}
                         addDevices={newDevices => {
