@@ -12,7 +12,7 @@ import { ButtonMenu } from "../Utils/ButtonMenu";
 
 export const Trial = ({ data, setData, experiment, trialType, children }) => {
     const { currTrial, setCurrTrial, selection } = useContext(experimentContext);
-    const { downloadGeojson } = useTrialGeoJson();
+    const { downloadGeojson, downloadZipCsv } = useTrialGeoJson();
 
     const cloneDevices = () => {
         const devicesOnTrial = [...(data.devicesOnTrial || [])];
@@ -63,7 +63,8 @@ export const Trial = ({ data, setData, experiment, trialType, children }) => {
                     <ButtonMenu
                         tooltip={'Download devices'}
                         menuItems={[
-                            { name: 'Download as GeoJson', action: () => downloadGeojson(experiment, trialType, data) }
+                            { name: 'Download as GeoJson', action: () => downloadGeojson(experiment, trialType, data) },
+                            { name: 'Download as Zip of CSVs', action: () => downloadZipCsv(experiment, trialType, data) },
                         ]}
                     >
                         <Download />

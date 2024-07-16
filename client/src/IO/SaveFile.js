@@ -1,3 +1,5 @@
+import { saveAs } from 'file-saver';
+
 export const SaveFile = (contents, filename, type = 'text/plain') => {
     const blob = new Blob([contents], { type })
     saveAs(blob, filename);
