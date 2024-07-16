@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { AttributeValueGet } from "../Experiment/AttributeValueGet";
 import { SCOPE_TRIAL } from "../Experiment/AttributeType";
-import { SaveJson } from "./SaveFile";
+import { SaveJson } from "./FileIo";
 import JSZip from "jszip";
 import { saveAs } from 'file-saver';
 import { stringify } from 'csv-stringify/browser/esm/sync';

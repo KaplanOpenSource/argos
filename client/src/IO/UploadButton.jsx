@@ -10,6 +10,9 @@ export const UploadButton = ({ accept, tooltip, uploadFunc, children }) => {
         try {
             setWorking(true);
             const file = event.target.files[0];
+            if (!file) {
+                throw "empty file";
+            }
             uploadFunc(file);
         } catch (error) {
             console.log(error)

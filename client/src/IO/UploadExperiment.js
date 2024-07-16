@@ -8,16 +8,13 @@ import { experimentContext } from "../Context/ExperimentProvider";
 import { cleanUuids } from "../Context/TrackUuidUtils";
 import { shapesToGeoJSON } from "./ShapesToGeoJson";
 import { saveAs } from 'file-saver';
+import { ReadFileAsText } from "./FileIo";
 
 export const useUploadExperiment = () => {
     const { experiments, addExperiment } = useContext(experimentContext);
     const { uploadImage, downloadImageAsBlob } = useUploadImage();
 
     const uploadExperiment = useCallback(async (file) => {
-        if (!file) {
-            throw "empty file";
-        }
-
         const { rawExp, zip } = await readExperiment(file);
         const experiment = checkConvert(rawExp);
 
@@ -52,11 +49,7 @@ export const useUploadExperiment = () => {
 
     const readExperiment = async (file) => {
         if (file.name.endsWith('.json')) {
-            const text = await new Promise(resolve => {
-                const reader = new FileReader();
-                reader.onload = (e) => resolve(e.target.result);
-                reader.readAsText(file);
-            });
+            const text = await ReadFileAsText(file);
             const experiment = JSON.parse(text);
             return { rawExp: experiment || {}, zip: undefined };
         }
