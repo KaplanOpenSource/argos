@@ -4,7 +4,7 @@ import { SCOPE_TRIAL } from "../Experiment/AttributeType";
 import { SaveJson } from "./SaveFile";
 import JSZip from "jszip";
 import { saveAs } from 'file-saver';
-import { stringify } from 'csv-stringify/sync';
+import { stringify } from 'csv-stringify/browser/esm/sync';
 
 export const useTrialGeoJson = () => {
     const obtainDevices = useCallback((experiment, trial) => {
