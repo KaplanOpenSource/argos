@@ -120,15 +120,34 @@ export const useTrialGeoJson = () => {
     const uploadTrialFromText = useCallback(async (text, fileExt, trial, experiment, setTrialData) => {
         if (fileExt.endsWith('json')) {
             const json = JSON.parse(text);
-            console.log(lines);
+            const newTrial = deepClone(trial);
+            for (const dev of json.features) {
+                setDeviceOnTrial(
+                    newTrial,
+                    experiment,
+                    dev.properties.type,
+                    dev.properties.name,
+                    dev.properties.MapName,
+                    dev.geometry.coordinates[1],
+                    dev.geometry.coordinates[0],
+                    dev.properties);
+            }
+            setTrialData(newTrial);
         } else if (fileExt === 'csv') {
             const lines = parse(text);
-            const objs = lines.slice(1).map(line => {
+            const deviceLines = lines.slice(1).map(line => {
                 return Object.fromEntries(lines[0].map((o, i) => [o, line[i]]));
             });
             const newTrial = deepClone(trial);
-            for (const d of objs) {
-                setDeviceOnTrial(newTrial, experiment, d.type, d.name, d.MapName, d.Latitude, d.Longitude, d);
+            for (const dev of deviceLines) {
+                setDeviceOnTrial(newTrial,
+                    experiment,
+                    dev.type,
+                    dev.name,
+                    dev.MapName,
+                    dev.Latitude,
+                    dev.Longitude,
+                    dev);
             }
             setTrialData(newTrial);
         } else {
