@@ -89,6 +89,34 @@ export const useTrialGeoJson = () => {
         saveAs(zipblob, `trial_${experiment.name}_${trialType.name}_${trial.name}.zip`);
     }, []);
 
+    const setDeviceOnTrial = (trial, experiment, deviceTypeName, deviceItemName, MapName, Latitude, Longitude, otherProps) => {
+        const deviceType = experiment?.deviceTypes?.find(x => x.name === deviceTypeName);
+        const deviceOnTrial = trial?.devicesOnTrial?.find(x => x.deviceTypeName === deviceTypeName && x.deviceItemName === deviceItemName);
+        if (deviceType && deviceOnTrial) {
+            deviceOnTrial.location = {
+                "name": MapName,
+                "coordinates": [
+                    parseFloat(Latitude),
+                    parseFloat(Longitude),
+                ]
+            }
+            for (const attrType of deviceType.attributeTypes || []) {
+                if (attrType.scope === SCOPE_TRIAL) {
+                    const value = otherProps[attrType.name];
+                    if (value || value === 0 || value === '') {
+                        deviceOnTrial.attributes ||= [];
+                        const attr = deviceOnTrial.attributes.find(x => x.name === attrType.name);
+                        if (attr) {
+                            attr.value = value;
+                        } else {
+                            deviceOnTrial.attributes.push({ name: attrType.name, value });
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     const uploadTrialFromText = useCallback(async (text, fileExt, trial, experiment, setTrialData) => {
         if (fileExt.endsWith('json')) {
             const json = JSON.parse(text);
@@ -100,31 +128,7 @@ export const useTrialGeoJson = () => {
             });
             const newTrial = deepClone(trial);
             for (const d of objs) {
-                const deviceType = experiment?.deviceTypes?.find(x => x.name === d.type);
-                const deviceOnTrial = newTrial?.devicesOnTrial?.find(x => x.deviceTypeName === d.type && x.deviceItemName === d.name);
-                if (deviceType && deviceOnTrial) {
-                    deviceOnTrial.location = {
-                        "name": d.MapName,
-                        "coordinates": [
-                            parseFloat(d.Latitude),
-                            parseFloat(d.Longitude),
-                        ]
-                    }
-                    for (const attrType of deviceType.attributeTypes || []) {
-                        if (attrType.scope === SCOPE_TRIAL) {
-                            const value = d[attrType.name];
-                            if (value || value === 0 || value === '') {
-                                deviceOnTrial.attributes ||= [];
-                                const attr = deviceOnTrial.attributes.find(x => x.name === attrType.name);
-                                if (attr) {
-                                    attr.value = value;
-                                } else {
-                                    deviceOnTrial.attributes.push({ name: attrType.name, value });
-                                }
-                            }
-                        }
-                    }
-                }
+                setDeviceOnTrial(newTrial, experiment, d.type, d.name, d.MapName, d.Latitude, d.Longitude, d);
             }
             setTrialData(newTrial);
         } else {
