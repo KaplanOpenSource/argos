@@ -1,15 +1,12 @@
 import { useCallback } from "react";
 import { AttributeValueGet } from "../Experiment/AttributeValueGet";
 import { SCOPE_TRIAL } from "../Experiment/AttributeType";
+import { SaveJson } from "./SaveFile";
 
 export const useTrialGeoJson = () => {
-    const downloadGeojson = useCallback((data, experiment, trialType) => {
-        const json = {
-            type: 'FeatureCollection',
-            features: [],
-        };
-
-        for (const d of (data.devicesOnTrial || [])) {
+    const obtainDevices = useCallback((experiment, trial) => {
+        const ret = [];
+        for (const d of (trial.devicesOnTrial || [])) {
             if (d.location && d.location.coordinates && d.location.coordinates.length === 2) {
                 const coordinates = d.location.coordinates.slice().reverse();
                 const properties = {
@@ -30,21 +27,30 @@ export const useTrialGeoJson = () => {
                         properties[attrType.name] = value;
                     });
 
-                    json.features.push({
-                        type: 'Feature',
-                        geometry: {
-                            type: 'Point',
-                            coordinates,
-                        },
-                        properties
-                    });
+                    ret.push({ coordinates, properties });
                 }
             }
         }
+        return ret;
+    }, []);
 
-        const filename = `trial_${experiment.name}_${trialType.name}_${data.name}.geojson`;
-        const blob = new Blob([JSON.stringify(json, null, 2)], { type: 'application/json' })
-        saveAs(blob, filename);
+    const downloadGeojson = useCallback((experiment, trialType, trial) => {
+        const devices = obtainDevices(experiment, trial);
+        const json = {
+            type: 'FeatureCollection',
+            features: devices.map(({ properties, coordinates }) => {
+                return {
+                    type: 'Feature',
+                    geometry: {
+                        type: 'Point',
+                        coordinates,
+                    },
+                    properties,
+                };
+            }),
+        }
+
+        SaveJson(json, `trial_${experiment.name}_${trialType.name}_${trial.name}.geojson`);
     }, []);
 
     return {

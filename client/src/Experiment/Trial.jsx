@@ -61,7 +61,7 @@ export const Trial = ({ data, setData, experiment, trialType, children }) => {
                     </ButtonTooltip>
                     <ButtonTooltip
                         tooltip={'Download geojson'}
-                        onClick={() => downloadGeojson(data, experiment, trialType)}
+                        onClick={() => downloadGeojson(experiment, trialType, data)}
                     >
                         <Download />
                     </ButtonTooltip>
