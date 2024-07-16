@@ -34,7 +34,6 @@ export const UploadButton = ({ accept, tooltip, uploadFunc, children }) => {
                 onClick={() => inputFile.current.click()}
                 disabled={working}
                 tooltip={tooltip}
-                color="inherit"
             >
                 {working
                     ? <HourglassBottom />

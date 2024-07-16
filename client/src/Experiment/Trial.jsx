@@ -3,16 +3,17 @@ import { TreeRow } from "../App/TreeRow";
 import { experimentContext } from "../Context/ExperimentProvider";
 import { useContext } from "react";
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Download, GridOn, ReadMore } from "@mui/icons-material";
+import { Download, GridOn, ReadMore, Upload } from "@mui/icons-material";
 import { AttributeItemList } from "./AttributeItemList";
 import { SCOPE_TRIAL } from "./AttributeType";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { useTrialGeoJson } from "../IO/TrialGeoJson";
 import { ButtonMenu } from "../Utils/ButtonMenu";
+import { UploadButton } from "../IO/UploadButton";
 
 export const Trial = ({ data, setData, experiment, trialType, children }) => {
     const { currTrial, setCurrTrial, selection } = useContext(experimentContext);
-    const { downloadGeojson, downloadZipCsv } = useTrialGeoJson();
+    const { downloadGeojson, downloadZipCsv, uploadTrial } = useTrialGeoJson();
 
     const cloneDevices = () => {
         const devicesOnTrial = [...(data.devicesOnTrial || [])];
@@ -69,6 +70,12 @@ export const Trial = ({ data, setData, experiment, trialType, children }) => {
                     >
                         <Download />
                     </ButtonMenu>
+                    <UploadButton
+                        tooltip={'Upload devices as geojson, csv, zip of csvs'}
+                        uploadFunc={file => uploadTrial(file, data, experiment, (newData) => setData(newData))}
+                    >
+                        <Upload />
+                    </UploadButton>
                     {children}
                 </>
             }
