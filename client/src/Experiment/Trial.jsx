@@ -8,6 +8,7 @@ import { AttributeItemList } from "./AttributeItemList";
 import { SCOPE_TRIAL } from "./AttributeType";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { useTrialGeoJson } from "../IO/TrialGeoJson";
+import { ButtonMenu } from "../Utils/ButtonMenu";
 
 export const Trial = ({ data, setData, experiment, trialType, children }) => {
     const { currTrial, setCurrTrial, selection } = useContext(experimentContext);
@@ -59,12 +60,14 @@ export const Trial = ({ data, setData, experiment, trialType, children }) => {
                     >
                         <ReadMore sx={{ rotate: '180deg' }} />
                     </ButtonTooltip>
-                    <ButtonTooltip
-                        tooltip={'Download geojson'}
-                        onClick={() => downloadGeojson(experiment, trialType, data)}
+                    <ButtonMenu
+                        tooltip={'Download devices'}
+                        menuItems={[
+                            { name: 'Download as GeoJson', action: () => downloadGeojson(experiment, trialType, data) }
+                        ]}
                     >
                         <Download />
-                    </ButtonTooltip>
+                    </ButtonMenu>
                     {children}
                 </>
             }
