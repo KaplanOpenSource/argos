@@ -68,27 +68,31 @@ export const ExperimentProvider = ({ children }) => {
         const { trial } = currTrial;
         const mapName = currTrial.shownMapName || RealMapName;
         let count = 0;
-        if (trial && deviceTypeItems.length > 0 && latlngs.length > 0) {
-            let devicesOnTrial = [...(trial.devicesOnTrial || [])];
-            for (let i = 0; i < deviceTypeItems.length; ++i) {
-                if (i < latlngs.length) {
-                    const { deviceTypeName, deviceItemName } = deviceTypeItems[i];
-                    devicesOnTrial = devicesOnTrial.filter(t => {
-                        return t.deviceItemName !== deviceItemName || t.deviceTypeName !== deviceTypeName;
+        if (trial) {
+            const devicesOnTrial = [...(trial.devicesOnTrial || [])];
+            for (let i = 0, il = Math.min(deviceTypeItems.length, latlngs.length); i < il; ++i) {
+                const { deviceTypeName, deviceItemName } = deviceTypeItems[i];
+                let coordinates = latlngs[i];
+                if (coordinates) {
+                    if (coordinates.lat) {
+                        coordinates = [coordinates.lat, coordinates.lng];
+                    }
+                    const location = { name: mapName, coordinates };
+                    const i = devicesOnTrial.findIndex(t => {
+                        return t.deviceItemName === deviceItemName && t.deviceTypeName === deviceTypeName;
                     });
-                    let coordinates = latlngs[i];
-                    if (coordinates) {
-                        if (coordinates.lat) {
-                            coordinates = [coordinates.lat, coordinates.lng];
-                        }
-                        const location = { name: mapName, coordinates };
+                    if (i !== -1) {
+                        devicesOnTrial[i] = { ...devicesOnTrial[i], location }; // Done like this because location is frozen
+                    } else {
                         devicesOnTrial.push({ deviceTypeName, deviceItemName, location });
                     }
                     count++;
                 }
             }
-            const data = { ...trial, devicesOnTrial };
-            setTrialData(data);
+            if (count > 0) {
+                const data = { ...trial, devicesOnTrial };
+                setTrialData(data);
+            }
         }
         return count;
     }
