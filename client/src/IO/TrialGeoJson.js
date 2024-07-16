@@ -13,7 +13,7 @@ export const useTrialGeoJson = () => {
         const ret = [];
         for (const d of (trial.devicesOnTrial || [])) {
             if (d.location && d.location.coordinates && d.location.coordinates.length === 2) {
-                const coordinates = d.location.coordinates.slice().reverse();
+                const coordinates = d.location.coordinates;
                 const properties = {
                     name: d.deviceItemName,
                     type: d.deviceTypeName,
@@ -48,7 +48,7 @@ export const useTrialGeoJson = () => {
                     type: 'Feature',
                     geometry: {
                         type: 'Point',
-                        coordinates,
+                        coordinates: coordinates.slice().reverse(), // GeoJson coords are reversed
                     },
                     properties,
                 };
@@ -106,9 +106,8 @@ export const useTrialGeoJson = () => {
                     deviceOnTrial.location = {
                         "name": d.MapName,
                         "coordinates": [
-                            // TODO: check why lat and long are flipped
-                            parseFloat(d.Longitude),
                             parseFloat(d.Latitude),
+                            parseFloat(d.Longitude),
                         ]
                     }
                     for (const attrType of deviceType.attributeTypes || []) {
