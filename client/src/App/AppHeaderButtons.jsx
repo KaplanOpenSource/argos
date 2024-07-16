@@ -2,16 +2,30 @@ import CloseIcon from '@mui/icons-material/Close';
 import MapIcon from '@mui/icons-material/Map';
 import PublicIcon from '@mui/icons-material/Public';
 import {
-    Stack, Tooltip, Typography
+    Stack,
+    Tooltip,
+    Typography
 } from '@mui/material';
 import { experimentContext } from '../Context/ExperimentProvider';
 import { useContext } from 'react';
-import { AccountTree, AccountTreeOutlined, Add, CloseFullscreen, ClosedCaption, ClosedCaptionOff, OpenInFull, Redo, Undo } from '@mui/icons-material';
+import {
+    AccountTree,
+    AccountTreeOutlined,
+    Add,
+    CloseFullscreen,
+    ClosedCaption,
+    ClosedCaptionOff,
+    OpenInFull,
+    Redo,
+    Undo,
+    Upload
+} from '@mui/icons-material';
 import EditLocationAltIcon from '@mui/icons-material/EditLocationAlt';
 import EditLocationOutlinedIcon from '@mui/icons-material/EditLocationOutlined';
 import { ButtonTooltip } from '../Utils/ButtonTooltip';
-import { UploadExperimentIcon } from '../IO/UploadExperimentIcon';
 import { ShowConfigToggles } from './ShowConfigToggles';
+import { UploadButton } from '../IO/UploadButton';
+import { useUploadExperiment } from '../IO/UploadExperiment';
 
 export const AppHeaderButtons = ({
     fullscreen, setFullscreen,
@@ -30,6 +44,7 @@ export const AppHeaderButtons = ({
         setShowImagePlacement,
         addExperiment,
     } = useContext(experimentContext);
+    const { uploadExperiment } = useUploadExperiment();
     const { experimentName, trialTypeName, trialName, shownMapName } = currTrial;
     return (
         <Stack
@@ -49,8 +64,13 @@ export const AppHeaderButtons = ({
                 >
                     <Add />
                 </ButtonTooltip>
-                <UploadExperimentIcon
-                />
+                <UploadButton
+                    accept=".json,.zip"
+                    tooltip={"Upload experiment"}
+                    uploadFunc={(file) => uploadExperiment(file)}
+                >
+                    <Upload />
+                </UploadButton>
                 <ButtonTooltip
                     onClick={() => setFullscreen(!fullscreen)}
                     tooltip={fullscreen ? "Show experiment list on side" : "Expand experiment list on screen"}

@@ -1,19 +1,16 @@
 import React, { useRef, useState } from "react";
-import HourglassBottomIcon from '@mui/icons-material/HourglassBottom';
-import { Upload } from "@mui/icons-material";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
-import { useUploadExperiment } from "./UploadExperiment";
+import { HourglassBottom } from "@mui/icons-material";
 
-export const UploadExperimentIcon = ({ }) => {
+export const UploadButton = ({ accept, tooltip, uploadFunc, children }) => {
     const inputFile = useRef(null);
-    const { uploadExperiment } = useUploadExperiment();
     const [working, setWorking] = useState(false);
 
     const handleChangeFile = async (event) => {
         try {
             setWorking(true);
             const file = event.target.files[0];
-            uploadExperiment(file);
+            uploadFunc(file);
         } catch (error) {
             console.log(error)
             alert(`problem uploading:\n${error}`)
@@ -28,17 +25,19 @@ export const UploadExperimentIcon = ({ }) => {
                 ref={inputFile}
                 style={{ display: "none" }}
                 onChange={handleChangeFile}
-                accept=".json,.zip"
+                accept={accept}
             />
             <ButtonTooltip
                 onClick={() => inputFile.current.click()}
                 disabled={working}
-                tooltip={"Upload experiment"}
+                tooltip={tooltip}
                 color="inherit"
             >
                 {working
-                    ? <HourglassBottomIcon />
-                    : <Upload />
+                    ? <HourglassBottom />
+                    : <>
+                        {children}
+                    </>
                 }
             </ButtonTooltip>
         </>
