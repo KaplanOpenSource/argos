@@ -22,6 +22,19 @@ export const ImageStandalone = ({ data, setData, experiment }) => {
 
     const isBeingEdit = showImagePlacement && currTrial.shownMapName === data.name && currTrial.experimentName === experiment.name;
 
+    const fitBoundsToImage = () => {
+        addActionOnMap((mapObject) => {
+            mapObject.fitBounds([[data.ytop, data.xleft], [data.ybottom, data.xright]]);
+        });
+    }
+
+    const switchToMap = () => {
+        setShownMap(data.name);
+        setTimeout(() => {
+            fitBoundsToImage();
+        }, 100);
+    }
+
     return (
         <TreeRow
             data={data}
@@ -50,16 +63,14 @@ export const ImageStandalone = ({ data, setData, experiment }) => {
                     />
                     <ButtonTooltip
                         tooltip={currTrial.experiment ? "Switch to this image" : "First choose a trial before switching to this image"}
-                        onClick={() => setShownMap(data.name)}
+                        onClick={() => switchToMap()}
                         disabled={!currTrial.experiment}
                     >
                         <MapIcon />
                     </ButtonTooltip>
                     <ButtonTooltip
                         tooltip="Fit image to screen"
-                        onClick={() => addActionOnMap((mapObject) => {
-                            mapObject.fitBounds([[data.ytop, data.xleft], [data.ybottom, data.xright]]);
-                        })}
+                        onClick={() => fitBoundsToImage()}
                         disabled={(data || {}).ytop === undefined}
                     >
                         <OpenInFull />
