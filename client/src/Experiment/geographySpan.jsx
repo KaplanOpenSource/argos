@@ -6,28 +6,33 @@ export const geographySpan = (experiment) => {
     const coords = [];
     for (const x of experiment?.imageEmbedded || []) {
         coords.push(
-            latLng(x.latsouth, x.lngwest),
-            latLng(x.latnorth, x.lngeast),
+            latLng(x?.latsouth, x?.lngwest),
+            latLng(x?.latnorth, x?.lngeast),
         );
     }
     for (const trialType of experiment?.trialTypes || []) {
         for (const trial of trialType?.trials || []) {
             for (const dev of trial?.devicesOnTrial || []) {
-                if (dev.location.name === RealMapName) {
-                    coords.push(latLng(dev.location.coordinates[0], dev.location.coordinates[1]));
+                if (dev?.location?.name === RealMapName) {
+                    const [lat, lng] = dev?.location?.coordinates || [];
+                    coords.push(latLng(lat, lng));
                 }
             }
         }
     }
     for (const shape of experiment?.shapes || []) {
         for (const c of shape?.coordinates || []) {
-            coords.push(latLng(c[0], c[1]));
+            if (c) {
+                coords.push(latLng(c[0], c[1]));
+            }
         }
         if (shape?.center && shape?.radius) {
             // GeoJson circle coords are in reverse
             const circle = circleToPolygon(shape?.center.slice().reverse(), shape?.radius, 20);
             for (const c of circle || []) {
-                coords.push(latLng(c[0], c[1]));
+                if (c) {
+                    coords.push(latLng(c[0], c[1]));
+                }
             }
         }
     }
