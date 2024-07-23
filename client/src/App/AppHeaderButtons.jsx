@@ -26,6 +26,7 @@ import { ButtonTooltip } from '../Utils/ButtonTooltip';
 import { ShowConfigToggles } from './ShowConfigToggles';
 import { UploadButton } from '../IO/UploadButton';
 import { useUploadExperiment } from '../IO/UploadExperiment';
+import { DocumentationButton } from '../Doc/DocumentationButton';
 
 export const AppHeaderButtons = ({
     fullscreen, setFullscreen,
@@ -57,6 +58,7 @@ export const AppHeaderButtons = ({
                 justifyContent="flex-start"
                 alignItems="center"
             >
+                <DocumentationButton />
                 <ButtonTooltip
                     color="inherit"
                     onClick={() => addExperiment()}

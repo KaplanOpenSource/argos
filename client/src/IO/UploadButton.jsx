@@ -31,6 +31,7 @@ export const UploadButton = ({ accept, tooltip, uploadFunc, children }) => {
                 accept={accept}
             />
             <ButtonTooltip
+                color="inherit"
                 onClick={() => inputFile.current.click()}
                 disabled={working}
                 tooltip={tooltip}
