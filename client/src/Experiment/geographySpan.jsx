@@ -11,7 +11,7 @@ export const geographySpan = (experiment) => {
         );
     }
     for (const trialType of experiment?.trialTypes || []) {
-        for (const trial of trialType?.trial || []) {
+        for (const trial of trialType?.trials || []) {
             for (const dev of trial?.devicesOnTrial || []) {
                 if (dev.location.name === RealMapName) {
                     coords.push(latLng(dev.location.coordinates[0], dev.location.coordinates[1]));
@@ -31,6 +31,7 @@ export const geographySpan = (experiment) => {
             }
         }
     }
+    console.log('geographySpan', coords);
     const good = coords.filter(x => x && isFinite(x.lat) && isFinite(x.lng));
     if (good.length) {
         return latLngBounds(good);
