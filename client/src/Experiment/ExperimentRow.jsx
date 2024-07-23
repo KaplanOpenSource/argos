@@ -16,10 +16,13 @@ import { DeviceTypesList } from "./DeviceTypesList";
 import { TrialTypesList } from "./TrialTypesList";
 import { SCOPE_CONSTANT } from "./AttributeType";
 import { useUploadExperiment } from "../IO/UploadExperiment";
+import { geographySpan } from "./geographySpan";
+import { ActionsOnMapContext } from "../Map/ActionsOnMapContext";
 
 export const ExperimentRow = ({ data, setData, children }) => {
     const { deleteExperiment, setShownMap } = useContext(experimentContext);
     const { downloadExperimentAsZip } = useUploadExperiment();
+    const { addActionOnMap } = useContext(ActionsOnMapContext);
     return (
         <TreeRow
             data={data}
@@ -120,11 +123,19 @@ export const ExperimentRow = ({ data, setData, children }) => {
                 nameTemplate='New Embedded Image'
                 setData={setData}
                 components={
-                    <IconButton
-                        onClick={() => setShownMap(undefined)}
+                    <ButtonTooltip
+                        tooltip={'Switch to show real geographic map'}
+                        onClick={() => {
+                            setShownMap(undefined);
+                            setTimeout(() => {
+                                addActionOnMap((mapObject) => {
+                                    mapObject.fitBounds(geographySpan(data));
+                                });
+                            }, 100);
+                        }}
                     >
                         <PublicIcon />
-                    </IconButton>
+                    </ButtonTooltip>
                 }
             >
                 {
