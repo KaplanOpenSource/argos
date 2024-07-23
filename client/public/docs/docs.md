@@ -1,6 +1,6 @@
 # Argos
 
-Welcome to the documentation.
+A system for placing devices on a map in preparation for future spatial experiments.
 
 ## Motivation
 
@@ -8,15 +8,33 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 
 ## Definitions
 
-Here are some 
+Here are some of the actors and entities that participate in the Argos placement system
 
 #### Experiment
 
+The experiment, testing a some phenomenon, will include various tests spread over time and space.  
+The experiment is well defined entity and does not depend on other experiments.
+
 #### Trial
+
+Trial is a one time instance for testing something, it usually represents a field excursion on a specific date.
 
 #### Device
 
+Device is a physical or abstract instrument that is part of the experiment.  
+When participates in a trial, it has a geographic location.
+
 #### Attribute
+
+Each trial and device can have multiple values describing them, each called attribute.  
+The attributes for each device or trial are defined in the device-type or trial-type respectively.  
+An attribute can have various forms:
+- string
+- number
+- date
+- boolean
+- select
+- etc...
 
 ## Create experiment
 

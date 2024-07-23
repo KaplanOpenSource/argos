@@ -4,7 +4,6 @@ import { MuiMarkdown } from 'mui-markdown';
 import { Box, Stack } from '@mui/material';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import { TreeView } from '@mui/x-tree-view/TreeView';
-import { ChevronRight, ExpandMore } from '@mui/icons-material';
 
 export const Documentation = () => {
     const [content, setContent] = useState('');
@@ -47,10 +46,7 @@ export const Documentation = () => {
                 <Box
                     sx={{ width: '200px' }}
                 >
-                    <TreeView
-                        defaultCollapseIcon={<ExpandMore />}
-                        defaultExpandIcon={<ChevronRight />}
-                    >
+                    <TreeView>
                         {toc.map((item, index) => (
                             <TreeItem
                                 key={index}
