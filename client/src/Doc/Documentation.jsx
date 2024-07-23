@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { MuiMarkdown } from 'mui-markdown';
-import { Box } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import { TreeView } from '@mui/x-tree-view/TreeView';
+import { ChevronRight, ExpandMore } from '@mui/icons-material';
 
 export const Documentation = () => {
     const [content, setContent] = useState('');
@@ -36,24 +37,39 @@ export const Documentation = () => {
     }, [content]);
 
     return (
-        <Box display='flex'>
-            <TreeView>
-                {toc.map((item, index) => (
-                    <TreeItem
-                        key={index}
-                        nodeId={String(index)}
-                        label={<a href={`#${item.id}`}>{item.text}</a>}
-                        style={{ marginLeft: (item.level - 1) * 10 }}
-                    />
-                ))}
-            </TreeView>
-            <Box sx={{ height: '100vh', overflow: 'auto', p: 2 }}>
-                <MuiMarkdown
-                    codeWrapperStyles={{ overflowY: 'auto' }}
+        <Box >
+            <Stack
+                direction='row'
+                justifyContent="flex-start"
+            // sx={{ minWidth: '200px' }}
+            // useFlexGap flexWrap="wrap"
+            >
+                <Box
+                    sx={{ width: '200px' }}
                 >
-                    {content}
-                </MuiMarkdown>
-            </Box>
+                    <TreeView
+                        defaultCollapseIcon={<ExpandMore />}
+                        defaultExpandIcon={<ChevronRight />}
+                    >
+                        {toc.map((item, index) => (
+                            <TreeItem
+                                key={index}
+                                nodeId={String(index)}
+                                label={<a href={`#${item.id}`}>{item.text}</a>}
+                                style={{
+                                    marginLeft: (item.level - 1) * 10,
+                                    marginBottom: 10,
+                                }}
+                            />
+                        ))}
+                    </TreeView>
+                </Box>
+                <Box sx={{ height: '100vh', overflow: 'auto', maxWidth: '80%' }}>
+                    <MuiMarkdown>
+                        {content}
+                    </MuiMarkdown>
+                </Box>
+            </Stack>
         </Box >
     );
 };
