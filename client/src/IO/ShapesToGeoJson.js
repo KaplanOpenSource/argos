@@ -1,5 +1,5 @@
 // Convert circle to polygon with specified vertices
-const circleToPolygon = (center, radius, numVertices) => {
+export const circleToPolygon = (center, radius, numVertices) => {
     const angleStep = (2 * Math.PI) / numVertices;
     const coordinates = [];
 
