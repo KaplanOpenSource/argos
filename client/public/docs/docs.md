@@ -45,3 +45,17 @@ An attribute can have various forms:
 #### Device groups and containment
 
 ## Import export
+
+#### Experiment
+- Export as Zip with:
+  - data.json
+  - shapes.geojson
+  - images subfolder with PNGs
+- Import Zip
+
+#### Trial
+- Export GeoJson 
+- Import GeoJson 
+- Export Zip of CSVs one for each device type
+- Import Zip of CSVs
+- Import one CSVs of a device type
