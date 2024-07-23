@@ -36,7 +36,7 @@ export const Documentation = () => {
     }, [content]);
 
     return (
-        <Box >
+        <Box display='flex'>
             <TreeView>
                 {toc.map((item, index) => (
                     <TreeItem
