@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { TreeRow } from "../App/TreeRow";
 import { TreeSublist } from "../App/TreeSublist";
 import { DateProperty } from "../Utils/DateProperty";
-import { IconButton, Stack } from "@mui/material";
+import { Stack } from "@mui/material";
 import DownloadIcon from '@mui/icons-material/Download';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PublicIcon from '@mui/icons-material/Public';
@@ -18,6 +18,7 @@ import { SCOPE_CONSTANT } from "./AttributeType";
 import { useUploadExperiment } from "../IO/UploadExperiment";
 import { geographySpan } from "./geographySpan";
 import { ActionsOnMapContext } from "../Map/ActionsOnMapContext";
+import { ShapeList } from "./ShapeList";
 
 export const ExperimentRow = ({ data, setData, children }) => {
     const { deleteExperiment, setShownMap } = useContext(experimentContext);
@@ -172,6 +173,12 @@ export const ExperimentRow = ({ data, setData, children }) => {
                     ))
                 }
             </TreeSublist>
+
+            <ShapeList
+                data={data}
+                setData={setData}
+            />
+
         </TreeRow>
     )
 }

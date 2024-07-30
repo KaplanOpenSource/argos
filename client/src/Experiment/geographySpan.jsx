@@ -36,7 +36,6 @@ export const geographySpan = (experiment) => {
             }
         }
     }
-    console.log('geographySpan', coords);
     const good = coords.filter(x => x && isFinite(x.lat) && isFinite(x.lng));
     if (good.length) {
         return latLngBounds(good);
