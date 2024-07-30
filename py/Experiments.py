@@ -3,7 +3,7 @@ import os
 import shutil
 
 from py.constants import EXPERIMENTS_PATH, UPLOAD_FOLDER
-from py.utils import namekey, validate_name
+from py.utils import sort_experiments, validate_name
 
 
 class Experiments:
@@ -11,7 +11,7 @@ class Experiments:
         if not os.path.exists(EXPERIMENTS_PATH):
             return []
 
-        names = sorted(os.listdir(EXPERIMENTS_PATH), key=namekey)
+        names = sort_experiments(os.listdir(EXPERIMENTS_PATH))
         for n in names:
             print(n)
         names = [os.path.splitext(n)[0] for n in names]
