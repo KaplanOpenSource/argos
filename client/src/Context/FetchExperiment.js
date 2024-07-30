@@ -21,8 +21,8 @@ export const useFetchExperiments = () => {
     const fetchAllExperiments = useCallback(async () => {
         try {
             const json = await axiosToken().get("experiment_list");
-            if ((json || {}).error) {
-                alert('fetch list: ' + json.error);
+            if (!json || (json || {}).error) {
+                alert(!json ? 'You are logged out' : 'Fetch experiments error ' + (json?.error || ''));
                 return;
             }
 

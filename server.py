@@ -27,7 +27,7 @@ print(args)
 app = Flask(__name__, static_url_path="/", static_folder="client/dist")
 # template_folder='web/templates')
 app.config["JWT_SECRET_KEY"] = "fa65674f-3afd-45cd-8873-d2180cf3836c"  # TODO: move to file?
-app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=1)
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=10)
 jwt = JWTManager(app)
 
 
