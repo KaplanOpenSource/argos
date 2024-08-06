@@ -27,32 +27,39 @@ export const UserDetailsButton = ({ }) => {
             >
                 <MenuIcon />
             </ButtonTooltip>
-            <Dialog
-                onClose={() => setOpen(false)}
+            <UserDetailsDialog
                 open={open}
-            // TransitionComponent={Transition}
-            >
-                <DialogTitle>User Login</DialogTitle>
-                <UserDetailsDialog
-                    setOpen={setOpen}
-                />
-            </Dialog>
+                setOpen={setOpen}
+            />
         </>
     )
 }
 
-const UserDetailsDialog = ({ setOpen }) => {
-    const { hasToken, doLogin, doLogout } = useContext(TokenContext);
+const UserDetailsDialog = ({ open, setOpen }) => {
+    const { hasToken, doLogin, doLogout, baseUrl, setBaseUrl } = useContext(TokenContext);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [inputElement, setInputElement] = useState();
+    const [showBackend, setShowBackend] = useState(false);
 
     useEffect(() => {
         inputElement && inputElement.focus()
     }, [inputElement])
 
+    const onKeyDown = e => {
+        if (e.altKey && e.ctrlKey && e.key === 'a') {
+            setShowBackend(!showBackend);
+        }
+    }
+
     return (
-        <>
+        <Dialog
+            onClose={() => setOpen(false)}
+            open={open}
+            // TransitionComponent={Transition}
+            onKeyDown={onKeyDown}
+        >
+            <DialogTitle>User Login</DialogTitle>
             <Stack direction='row' spacing={1} sx={{ margin: 1 }}>
                 <TextField
                     label='User Name'
@@ -65,6 +72,7 @@ const UserDetailsDialog = ({ setOpen }) => {
                         setInputElement(input)
                     }}
                     disabled={hasToken}
+                    onKeyDown={onKeyDown}
                 />
                 <TextField
                     type="password"
@@ -112,6 +120,14 @@ const UserDetailsDialog = ({ setOpen }) => {
                     Cancel
                 </Button>
             </Stack>
-        </>
+            {!showBackend ? null :
+                <TextField
+                    label='Backend URL'
+                    size="small"
+                    value={baseUrl}
+                    onChange={e => setBaseUrl(e.target.value)}
+                />
+            }
+        </Dialog>
     )
 }
