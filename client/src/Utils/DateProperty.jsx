@@ -3,6 +3,17 @@ import { DatePicker } from "@mui/x-date-pickers"
 import dayjs from 'dayjs';
 
 export const DateProperty = ({ label, data, setData, tooltipTitle = "", ...restProps }) => {
+    let value = null;
+    try {
+        value = data ? dayjs(data) : null;
+    } catch (e) {
+        console.trace('problem on date', label, data, e);
+    }
+
+    const setValue = (val) => {
+        setData(val);
+    }
+
     return (
         <Tooltip
             title={tooltipTitle}
@@ -31,8 +42,8 @@ export const DateProperty = ({ label, data, setData, tooltipTitle = "", ...restP
                         },
                     }}
                     format='DD/MM/YYYY'
-                    value={data ? dayjs(data) : null}
-                    onChange={(val) => setData(val)}
+                    value={value}
+                    onChange={setValue}
                     {...restProps}
                 />
             </div>

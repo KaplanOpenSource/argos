@@ -34,8 +34,8 @@ export class ExperimentUpdates {
             exp = assignUuids({
                 version: argosJsonVersion,
                 name,
-                startDate: dayjs().startOf('day'),
-                endDate: dayjs().startOf('day').add(7, 'day'),
+                startDate: dayjs().startOf('day').toISOString(),
+                endDate: dayjs().startOf('day').add(7, 'day').toISOString(),
                 description: '',
             });
         }
