@@ -12,13 +12,23 @@ export const useUploadImage = () => {
         if (!fileBlob) {
             return;
         }
-        const [height, width] = await getImageSize(fileBlob);
+
+        const [height, width, dataURL] = await getImageSize(fileBlob);
         if (!height || !width) {
             return;
         }
 
+        let filename = imageName + '.png';
+        if (fileBlob.name) {
+            filename = fileBlob.name;
+        }
+        if (blobFilenameOptional) {
+            filename = blobFilenameOptional;
+        }
+
         const formData = new FormData();
-        formData.append('file', fileBlob, blobFilenameOptional);
+        formData.append('fileName', filename);
+        formData.append('fileData', dataURL);
         formData.append('imageName', imageName);
         formData.append('experimentName', experimentName);
         const ret = await axiosToken().post("upload", formData, {
@@ -38,9 +48,16 @@ export const useUploadImage = () => {
         return new Promise(resolve => {
             const img = new Image();
             img.onload = () => {
-                resolve([img.naturalHeight, img.naturalWidth])
+                const canvas = document.createElement('CANVAS');
+                const ctx = canvas.getContext('2d');
+                canvas.height = img.naturalHeight;
+                canvas.width = img.naturalWidth;
+                ctx.drawImage(img, 0, 0);
+                const dataURL = canvas.toDataURL('image/png');
+                resolve([img.naturalHeight, img.naturalWidth, dataURL])
             };
-            img.src = window.URL.createObjectURL(imageFile);
+            const src = window.URL.createObjectURL(imageFile);
+            img.src = src;
         })
     }
 

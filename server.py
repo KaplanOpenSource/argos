@@ -132,12 +132,14 @@ def experimentSetReq(name):
 @app.route("/upload", methods=["POST"])
 @jwt_required()
 def upload():
-    if "file" not in request.files:  # check if the post request has the file part
-        return {"error": "No file part"}
+    # if "file" not in request.files:  # check if the post request has the file part
+    #     return {"error": "No file part"}
     return images.upload(
         request.form.get("imageName"),
         request.form.get("experimentName"),
-        request.files["file"],
+        request.form.get("fileName"),
+        request.form.get("fileData"),
+        # request.files["file"],
     )
 
 
