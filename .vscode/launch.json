@@ -6,12 +6,22 @@
     "configurations": [
         {
             "name": "Server",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "program": "server.py",
             "console": "integratedTerminal",
             "justMyCode": true,
-            // "args": ["--prod"]
-        }
+        },
+        {
+            "name": "Server prod",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "server.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": [
+                "--prod"
+            ]
+        },
     ]
 }
