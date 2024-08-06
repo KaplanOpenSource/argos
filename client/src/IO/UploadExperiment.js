@@ -55,7 +55,16 @@ export const useUploadExperiment = () => {
         }
         if (file.name.endsWith('.zip')) {
             const zip = await JSZip().loadAsync(file);
-            const jsonFile = Object.values(zip.files).filter(x => x.name.endsWith('.json'))[0];
+            const jsonFiles = Object.values(zip.files).filter(x => x.name.endsWith('.json'));
+            let index = 0;
+            if (jsonFiles.length === 0) {
+                throw "No json files in " + file.name;
+            } else if (jsonFiles.length > 1) {
+                const numberedFiles = jsonFiles.map((x, i) => i + ': ' + x.name).join("\n");
+                const indexStr = prompt("found the following jsons:\n" + numberedFiles + '\npick one?');
+                index = parseInt(indexStr);
+            }
+            const jsonFile = jsonFiles[index];
             const text = await jsonFile.async('text');
             const experiment = JSON.parse(text);
             return { rawExp: experiment || {}, zip };
