@@ -15,36 +15,42 @@ export const useUploadExperiment = () => {
     const { uploadImage, downloadImageAsBlob } = useUploadImage();
 
     const uploadExperiment = useCallback(async (file) => {
-        const { rawExp, zip } = await readExperiment(file);
-        const experiment = checkConvert(rawExp);
+        try {
+            const { rawExp, zip } = await readExperiment(file);
+            const experiment = checkConvert(rawExp);
 
-        const name = createNewName(experiments, experiment.name); // this is done here to upload images with the correct experiment name
-        experiment.name = name;
+            const name = createNewName(experiments, experiment.name); // this is done here to upload images with the correct experiment name
+            experiment.name = name;
 
-        if (zip) {
-            const imageFiles = Object.values(zip.files).filter(x => x.name.startsWith('images/') && !x.dir);
-            if (imageFiles.length > 0) {
-                const images = (experiment.imageStandalone || []).concat((experiment.imageEmbedded || []));
-                for (const im of imageFiles) {
-                    const imageBlob = await im.async('blob');
-                    const imageFileName = im.name.split('/').at(-1);
-                    const imageName = imageFileName.replace(/\.[^/.]+$/, "");
-                    console.log(imageBlob, imageName)
-                    const ret = await uploadImage(imageBlob, imageName, experiment.name, imageFileName);
-                    if (ret) {
-                        const { filename, height, width } = ret;
-                        const imageData = images.find(x => x.name === imageName);
-                        if (imageData) {
-                            imageData.filename = filename;
-                            imageData.height = height;
-                            imageData.width = width;
+            if (zip) {
+                const imageFiles = Object.values(zip.files).filter(x => x.name.startsWith('images/') && !x.dir);
+                if (imageFiles.length > 0) {
+                    const images = (experiment.imageStandalone || []).concat((experiment.imageEmbedded || []));
+                    for (const im of imageFiles) {
+                        const imageBlob = await im.async('blob');
+                        const imageFileName = im.name.split('/').at(-1);
+                        const imageName = imageFileName.replace(/\.[^/.]+$/, "");
+                        console.log(imageBlob, imageName)
+                        const ret = await uploadImage(imageBlob, imageName, experiment.name, imageFileName);
+                        if (ret) {
+                            const { filename, height, width } = ret;
+                            const imageData = images.find(x => x.name === imageName);
+                            if (imageData) {
+                                imageData.filename = filename;
+                                imageData.height = height;
+                                imageData.width = width;
+                            }
+                        } else {
+                            throw 'Problem with uploading image ' + imageName;
                         }
                     }
                 }
             }
-        }
 
-        addExperiment(experiment);
+            addExperiment(experiment);
+        } catch (e) {
+            alert('Upload error: ' + e)
+        }
     }, [experiments, addExperiment]);
 
     const readExperiment = async (file) => {
