@@ -3,6 +3,7 @@ import { createNewName } from "../Utils/utils";
 import { argosJsonVersion } from '../constants/constants';
 import * as jsonpatch from 'fast-json-patch';
 import { assignUuids, cleanUuids } from './TrackUuidUtils';
+import { change } from './ExperimentProvider';
 
 export class ExperimentUpdates {
     constructor(state, setState) {
@@ -18,10 +19,10 @@ export class ExperimentUpdates {
     }
 
     deleteExperiment = (name) => {
-        this.setState(draft => {
+        this.setState(change(this.state, draft => { 
             draft.experiments = draft.experiments.filter(t => t.name !== name);
             draft.serverUpdates.push({ name, exp: undefined });
-        })
+        }));
     }
 
     addExperiment = (newExp = undefined) => {
@@ -39,10 +40,10 @@ export class ExperimentUpdates {
                 description: '',
             });
         }
-        this.setState(draft => {
+        this.setState(change(this.state, draft => { 
             draft.experiments.push(exp);
             draft.serverUpdates.push({ name, exp });
-        });
+        }));
     }
 
     setExperiment = (name, data) => {
@@ -65,17 +66,17 @@ export class ExperimentUpdates {
         if (redoPatch.length === 0) {
             return; // nothing was changed
         }
-        this.setState(draft => {
+        this.setState(change(this.state, draft => { 
             draft.experiments[i] = data;
             draft.undoStack.push({ name, undoPatch, redoPatch });
             draft.redoStack = [];
             draft.serverUpdates.push({ name, exp: data });
-        });
+        }));
     }
 
 
     undoOperation = () => {
-        this.setState(draft => {
+        this.setState(change(this.state, draft => { 
             const item = draft.undoStack.pop();
             if (item) {
                 const { name, undoPatch } = item;
@@ -87,11 +88,11 @@ export class ExperimentUpdates {
                     draft.serverUpdates.push({ name, exp });
                 }
             }
-        });
+        }));
     }
 
     redoOperation = () => {
-        this.setState(draft => {
+        this.setState(change(this.state, draft => { 
             const item = draft.redoStack.pop();
             if (item) {
                 const { name, redoPatch } = item;
@@ -103,6 +104,6 @@ export class ExperimentUpdates {
                     draft.serverUpdates.push({ name, exp });
                 }
             }
-        });
+        }));
     }
 }

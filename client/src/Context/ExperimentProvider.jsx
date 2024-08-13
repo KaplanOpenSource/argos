@@ -1,5 +1,4 @@
-import { createContext, useContext, useEffect } from "react"
-import { useImmer } from "use-immer";
+import { createContext, useContext, useEffect, useState } from "react"
 import { parseUrlParams, replaceUrlParams } from "../Utils/utils";
 import * as jsonpatch from 'fast-json-patch';
 import { useFetchExperiments } from "./FetchExperiment";
@@ -11,8 +10,14 @@ import { TokenContext } from "../App/TokenContext";
 
 export const experimentContext = createContext();
 
+export function change(thing, func) {
+    const draft = structuredClone(thing);
+    func(draft);
+    return draft;
+}
+
 export const ExperimentProvider = ({ children }) => {
-    const [state, setState] = useImmer({
+    const [state, setState] = useState({
         selection: [],
         showImagePlacement: false,
         ...ExperimentUpdates.initialState,
@@ -30,7 +35,7 @@ export const ExperimentProvider = ({ children }) => {
     const setCurrTrial = ({ experimentName, trialTypeName, trialName }) => {
         const t = TrialChoosing.FindTrialByName({ experimentName, trialTypeName, trialName }, state.experiments);
         TrialChoosing.ReplaceUrlByTrial(t);
-        setState(draft => { draft.currTrial = t; });
+        setState(change(state, draft => { draft.currTrial = t; }));
     }
 
     const setShownMap = (shownMapName) => {
@@ -39,18 +44,18 @@ export const ExperimentProvider = ({ children }) => {
             const shownMapIndex = experiment.imageStandalone.findIndex(t => t.name === shownMapName);
             if (shownMapIndex >= 0) {
                 replaceUrlParams({ shownMapName });
-                setState(draft => {
+                setState(change(state, draft => { 
                     draft.currTrial.shownMapName = shownMapName;
                     draft.currTrial.shownMapIndex = shownMapIndex;
-                });
+                }));
                 return;
             }
         }
         replaceUrlParams({ shownMapName: undefined });
-        setState(draft => {
+        setState(change(state, draft => { 
             draft.currTrial.shownMapName = undefined;
             draft.currTrial.shownMapIndex = undefined;
-        });
+        }));
     }
 
 
@@ -100,7 +105,7 @@ export const ExperimentProvider = ({ children }) => {
     const setLocationsToStackDevices = (latlngs) => {
         const count = setLocationsToDevices(state.selection, latlngs);
         if (count > 0) {
-            setState(draft => { draft.selection = draft.selection.slice(count); });
+            setState(change(state, draft => {  draft.selection = draft.selection.slice(count); }));
         }
     }
 
@@ -149,10 +154,10 @@ export const ExperimentProvider = ({ children }) => {
                 assignUuids(allExperiments);
                 const t = TrialChoosing.FindTrialByName({ experimentName, trialTypeName, trialName }, allExperiments);
                 TrialChoosing.ReplaceUrlByTrial(t);
-                setState(draft => {
+                setState(change(state, draft => { 
                     draft.experiments = allExperiments;
                     draft.currTrial = t;
-                });
+                }));
             }
         })()
     }, [hasToken])
@@ -162,9 +167,9 @@ export const ExperimentProvider = ({ children }) => {
             if (state.serverUpdates.length > 0) {
                 (async () => {
                     const updates = state.serverUpdates;
-                    setState(draft => {
+                    setState(change(state, draft => { 
                         draft.serverUpdates = [];
-                    })
+                    }));
                     for (const { name, exp } of updates) {
                         await saveExperimentWithData(name, exp);
                     }
@@ -188,12 +193,12 @@ export const ExperimentProvider = ({ children }) => {
         deleteDevice,
         deleteDeviceType,
         selection: state.selection,
-        setSelection: val => setState(draft => { draft.selection = val; }),
+        setSelection: val => setState(change(state, draft => {  draft.selection = val; })),
         setLocationsToDevices,
         setLocationsToStackDevices,
         setShownMap,
         showImagePlacement: state.showImagePlacement,
-        setShowImagePlacement: val => setState(draft => { draft.showImagePlacement = val; }),
+        setShowImagePlacement: val => setState(change(state, draft => {  draft.showImagePlacement = val; })),
     };
 
     return (
