@@ -74,17 +74,37 @@ const convertTrial = (oldTrial, oldTrialType, oldExp) => {
 
 const convertDeviceOnTrial = (oldDeviceOnTrial, oldTrial, oldTrialType, oldExp) => {
     const oldDeviceType = (oldExp.entityTypes || []).find(et => et.key === oldDeviceOnTrial.entitiesTypeKey);
+    if (!oldDeviceType) {
+        return undefined;
+    }
     const oldDeviceItem = getOldDevices(oldExp, oldDeviceType).find(ei => ei.key === oldDeviceOnTrial.key);
+    if (!oldDeviceItem) {
+        return undefined;
+    }
     const locationType = (oldDeviceType.properties || []).find(p => p.type === 'location');
+    if (!locationType) {
+        return undefined;
+    }
     const locationItem = (oldDeviceOnTrial.properties || []).find(p => p.key === locationType.key);
-    const location = JSON.parse(locationItem.val);
+    if (!locationItem) {
+        return undefined;
+    }
+
+    let location;
+    try {
+        location = JSON.parse(locationItem.val);
+    } catch (_) {
+        return undefined;
+    }
     if (!location || !location.name || !location.coordinates || location.coordinates.length !== 2) {
         return undefined;
     }
+
     const attributes = ((oldDeviceOnTrial || {}).properties || [])
         .filter(x => x.key !== locationType.key)
         .map(x => convertAttrValue(x, oldDeviceType))
         .filter(x => x);
+
     return {
         deviceTypeName: oldDeviceType.name,
         deviceItemName: oldDeviceItem.name,
