@@ -16,7 +16,6 @@ import { DeviceTypesList } from "./DeviceTypesList";
 import { TrialTypesList } from "./TrialTypesList";
 import { SCOPE_CONSTANT } from "./AttributeType";
 import { useUploadExperiment } from "../IO/UploadExperiment";
-import { geographySpan } from "./geographySpan";
 import { ActionsOnMapContext } from "../Map/ActionsOnMapContext";
 import { ShapeList } from "./ShapeList";
 
@@ -130,7 +129,7 @@ export const ExperimentRow = ({ data, setData, children }) => {
                             setShownMap(undefined);
                             setTimeout(() => {
                                 addActionOnMap((mapObject) => {
-                                    mapObject.fitBounds(geographySpan(data));
+                                    mapObject.fitBounds(new CoordsSpan().fromExperiment(data).getBounds());
                                 });
                             }, 100);
                         }}

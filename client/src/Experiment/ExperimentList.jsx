@@ -14,7 +14,7 @@ import { TrialTypesList } from "./TrialTypesList";
 import { EnclosingListSelectionContext } from "./EnclosedSelectionProvider";
 import { useCloneExperiment } from "../IO/CloneExperiment";
 import { ActionsOnMapContext } from "../Map/ActionsOnMapContext";
-import { geographySpan } from "./geographySpan";
+import { CoordsSpan } from "./CoordsSpan";
 
 export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
     const { experiments, setExperiment, addExperiment, currTrial, setCurrTrial } = useContext(experimentContext);
@@ -65,7 +65,7 @@ export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
     useEffect(() => {
         if (experiment) {
             addActionOnMap((mapObject) => {
-                mapObject.fitBounds(geographySpan(experiment));
+                mapObject.fitBounds(new CoordsSpan().fromExperiment(experiment).getBounds());
             });
         }
     }, [experimentName]);
