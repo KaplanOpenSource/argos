@@ -19,6 +19,7 @@ export interface ITrial {
 }
 
 export interface IShape {
+    name?: string;
     coordinates?: Array<ICoordinates>;
     center?: ICoordinates;
     radius?: number;

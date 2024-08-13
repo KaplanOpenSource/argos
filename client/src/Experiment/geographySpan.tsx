@@ -1,7 +1,7 @@
 import { LatLng, LatLngBounds, latLng, latLngBounds } from "leaflet"
 import { RealMapName } from "../constants/constants";
-import { circleToPolygon } from "../IO/ShapesToGeoJson";
 import { ICoordinates, IExperiment } from "../types/types";
+import { circleToPolygon } from "../IO/ShapesToGeoJson";
 
 export const geographySpan = (experiment: IExperiment): LatLngBounds => {
     const coords: LatLng[] = [];
@@ -33,9 +33,10 @@ export const geographySpan = (experiment: IExperiment): LatLngBounds => {
                 coords.push(latLng(c[0], c[1]));
             }
         }
-        if (shape?.center && shape?.radius) {
+        if (shape?.center && shape?.center.length === 2 && shape?.radius) {
             // GeoJson circle coords are in reverse
-            const circle = circleToPolygon(shape?.center.slice().reverse(), shape?.radius, 20);
+            const center = shape?.center.slice(0, 2).reverse() as ICoordinates;
+            const circle = circleToPolygon(center, shape?.radius, 20);
             for (const c of circle || []) {
                 if (c) {
                     coords.push(latLng(c[0], c[1]));

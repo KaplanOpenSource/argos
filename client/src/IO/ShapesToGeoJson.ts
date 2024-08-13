@@ -1,7 +1,9 @@
+import { ICoordinates } from "../types/types";
+
 // Convert circle to polygon with specified vertices
-export const circleToPolygon = (center, radius, numVertices) => {
+export const circleToPolygon = (center: ICoordinates, radius: number, numVertices: number): Array<ICoordinates> => {
     const angleStep = (2 * Math.PI) / numVertices;
-    const coordinates = [];
+    const coordinates: Array<ICoordinates> = [];
 
     const cy = center[0];
     const cx = center[1];
