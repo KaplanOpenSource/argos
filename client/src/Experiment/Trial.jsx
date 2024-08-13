@@ -10,10 +10,13 @@ import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { useTrialGeoJson } from "../IO/TrialGeoJson";
 import { ButtonMenu } from "../Utils/ButtonMenu";
 import { UploadButton } from "../IO/UploadButton";
+import { CoordsSpan } from "./CoordsSpan";
+import { ActionsOnMapContext } from "../Map/ActionsOnMapContext";
 
 export const Trial = ({ data, setData, experiment, trialType, children }) => {
-    const { currTrial, setCurrTrial, selection } = useContext(experimentContext);
+    const { currTrial, setCurrTrial, selection, setShownMap } = useContext(experimentContext);
     const { downloadGeojson, downloadZipCsv, uploadTrial } = useTrialGeoJson();
+    const { addActionOnMap } = useContext(ActionsOnMapContext);
 
     const cloneDevices = () => {
         const devicesOnTrial = [...(data.devicesOnTrial || [])];
@@ -44,6 +47,30 @@ export const Trial = ({ data, setData, experiment, trialType, children }) => {
                         tooltip="Select trial for editing"
                         onClick={() => {
                             setCurrTrial({ experimentName: experiment.name, trialTypeName: trialType.name, trialName: data.name });
+
+                            setTimeout(() => {
+                                if (currTrial.trial) {
+                                    addActionOnMap((mapObject) => {
+                                        const span = new CoordsSpan().fromTrial(currTrial.trial);
+                                        const standalone = span.getFirstStandalone()
+                                        if (!standalone) {
+                                            setShownMap(undefined);
+                                            setTimeout(() => {
+                                                addActionOnMap((mapObject) => {
+                                                    mapObject.fitBounds(span.getBounds());
+                                                });
+                                            }, 100);
+                                        } else {
+                                            setShownMap(standalone);
+                                            setTimeout(() => {
+                                                addActionOnMap((mapObject) => {
+                                                    mapObject.fitBounds(span.getBounds(standalone));
+                                                });
+                                            }, 100);
+                                        }
+                                    });
+                                }
+                            }, 100);
                         }}
                     >
                         <GridOn color={data === currTrial.trial ? "primary" : ""} />

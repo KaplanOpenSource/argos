@@ -55,6 +55,11 @@ export class CoordsSpan {
         return [...this.coords.keys()];
     }
 
+    getFirstStandalone() {
+        const names = this.getMaps().filter(x => x !== RealMapName);
+        return names.length > 0 ? names[0] : undefined;
+    }
+
     getBounds(mapName: string = RealMapName) {
         const coordMap = this.coords.get(mapName) || [];
         const good: LatLng[] = coordMap.filter(x => x && isFinite(x.lat) && isFinite(x.lng));
