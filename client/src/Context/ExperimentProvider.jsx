@@ -1,6 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react"
 import { parseUrlParams, replaceUrlParams } from "../Utils/utils";
-import * as jsonpatch from 'fast-json-patch';
 import { useFetchExperiments } from "./FetchExperiment";
 import { RealMapName } from "../constants/constants";
 import { ExperimentUpdates } from "./ExperimentUpdates";
@@ -64,7 +63,7 @@ export const ExperimentProvider = ({ children }) => {
             console.log(`trying to set trial data without current trial\n`, data);
             return;
         }
-        const e = jsonpatch.deepClone(currTrial.experiment);
+        const e = structuredClone(currTrial.experiment);
         e.trialTypes[currTrial.trialTypeIndex].trials[currTrial.trialIndex] = data;
         experimentUpdates.setExperiment(currTrial.experimentName, e)
     }
@@ -110,7 +109,7 @@ export const ExperimentProvider = ({ children }) => {
     }
 
     const deleteDevice = ({ experimentName, deviceItemName, deviceTypeName }) => {
-        const e = jsonpatch.deepClone(state.experiments.find(e => e.name === experimentName));
+        const e = structuredClone(state.experiments.find(e => e.name === experimentName));
         if (!e) {
             console.log(`unknown experiment ${experimentName}`);
             return;
@@ -130,7 +129,7 @@ export const ExperimentProvider = ({ children }) => {
     }
 
     const deleteDeviceType = ({ experimentName, deviceTypeName }) => {
-        const e = jsonpatch.deepClone(state.experiments.find(e => e.name === experimentName));
+        const e = structuredClone(state.experiments.find(e => e.name === experimentName));
         if (!e) {
             console.log(`unknown experiment ${experimentName}`);
             return;

@@ -1,13 +1,15 @@
 import { useEffect } from "react";
 import { TreeSublist } from "../App/TreeSublist";
 import { ShapeItem } from "./ShapeItem";
-import { changeByName, createNewName } from "../Utils/utils";
-import { deepClone } from "fast-json-patch";
+import { changeByName } from "../Utils/utils";
 
 export const ShapeList = ({ data, setData }) => {
     useEffect(() => {
         if (data?.shapes?.length && data.shapes.some(x => !x.name)) {
-            const newData = { ...data, shapes: deepClone(data.shapes || []) };
+            const newData = {
+                ...data,
+                shapes: structuredClone(data.shapes || [])
+            };
             for (const shape of data.shapes || []) {
                 if (!shape.name) {
                     for (let i = 1; i <= data.shapes.length + 1; ++i) {

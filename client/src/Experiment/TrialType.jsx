@@ -7,7 +7,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { AttributeTypesDialogButton } from "./AttributeTypesDialogButton";
-import { deepClone } from "fast-json-patch";
 import { assignUuids } from "../Context/TrackUuidUtils";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 
@@ -62,7 +61,7 @@ export const TrialType = ({ data, setData, experiment }) => {
                         <ButtonTooltip
                             tooltip="Clone trial"
                             onClick={e => {
-                                const cloned = deepClone(itemData);
+                                const cloned = structuredClone(itemData);
                                 cloned.name = createNewName(data.trials, itemData.name + " cloned");
                                 cloned.createdDate = dayjs().startOf('day');
                                 setData({ ...data, trials: [...(data.trials || []), cloned] });

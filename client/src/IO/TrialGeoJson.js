@@ -6,7 +6,6 @@ import JSZip from "jszip";
 import { saveAs } from 'file-saver';
 import { stringify } from 'csv-stringify/browser/esm/sync';
 import { parse } from 'csv-parse/browser/esm/sync';
-import { deepClone } from "fast-json-patch";
 
 export const useTrialGeoJson = () => {
     const obtainDevices = useCallback((experiment, trial) => {
@@ -120,7 +119,7 @@ export const useTrialGeoJson = () => {
     const uploadTrialFromText = useCallback(async (text, fileExt, trial, experiment, setTrialData) => {
         if (fileExt.endsWith('json')) {
             const json = JSON.parse(text);
-            const newTrial = deepClone(trial);
+            const newTrial = structuredClone(trial);
             for (const dev of json.features) {
                 setDeviceOnTrial(
                     newTrial,
@@ -138,7 +137,7 @@ export const useTrialGeoJson = () => {
             const deviceLines = lines.slice(1).map(line => {
                 return Object.fromEntries(lines[0].map((o, i) => [o, line[i]]));
             });
-            const newTrial = deepClone(trial);
+            const newTrial = structuredClone(trial);
             for (const dev of deviceLines) {
                 setDeviceOnTrial(newTrial,
                     experiment,

@@ -2,7 +2,6 @@ import { useCallback, useContext } from "react";
 import { experimentContext } from "../Context/ExperimentProvider";
 import { useUploadImage } from "./UploadImage";
 import { createNewName } from "../Utils/utils";
-import { deepClone } from "fast-json-patch";
 
 export const useCloneExperiment = () => {
     const { experiments, addExperiment } = useContext(experimentContext);
@@ -10,7 +9,8 @@ export const useCloneExperiment = () => {
 
     const cloneExperiment = useCallback(async (experiment) => {
         const name = createNewName(experiments, experiment.name + " cloned");
-        const exp = { ...deepClone(experiment), name };
+        const exp = structuredClone(experiment);
+        exp.name = name;
 
         const images = (exp.imageStandalone || []).concat((exp.imageEmbedded || []));
         for (const img of images) {
