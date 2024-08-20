@@ -1,7 +1,7 @@
 import { DateProperty } from "../Utils/DateProperty";
 import { TreeRow } from "../App/TreeRow";
 import { experimentContext } from "../Context/ExperimentProvider";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Download, GridOn, ReadMore, Upload } from "@mui/icons-material";
 import { AttributeItemList } from "./AttributeItemList";
@@ -12,6 +12,7 @@ import { ButtonMenu } from "../Utils/ButtonMenu";
 import { UploadButton } from "../IO/UploadButton";
 import { CoordsSpan } from "./CoordsSpan";
 import { ActionsOnMapContext } from "../Map/ActionsOnMapContext";
+import { RealMapName } from "../constants/constants";
 
 export const Trial = ({ data, setData, experiment, trialType, children }) => {
     const { currTrial, setCurrTrial, selection, setShownMap } = useContext(experimentContext);
@@ -32,6 +33,19 @@ export const Trial = ({ data, setData, experiment, trialType, children }) => {
         setData({ ...data, devicesOnTrial });
     }
 
+    useEffect(() => {
+        if (currTrial.trial) {
+            const span = new CoordsSpan().fromTrial(currTrial.trial);
+            const standalone = span.getFirstStandalone()
+            if (currTrial.shownMapName !== standalone) {
+                setShownMap(standalone);
+            }
+            addActionOnMap((mapObject) => {
+                span.fitBounds(mapObject, standalone ? standalone : RealMapName);
+            });
+        }
+    }, [currTrial?.trialName + "::" + currTrial?.trialTypeName + "::" + currTrial?.experiment]);
+
     return (
         <TreeRow
             data={data}
@@ -47,30 +61,6 @@ export const Trial = ({ data, setData, experiment, trialType, children }) => {
                         tooltip="Select trial for editing"
                         onClick={() => {
                             setCurrTrial({ experimentName: experiment.name, trialTypeName: trialType.name, trialName: data.name });
-
-                            setTimeout(() => {
-                                if (currTrial.trial) {
-                                    addActionOnMap((mapObject) => {
-                                        const span = new CoordsSpan().fromTrial(currTrial.trial);
-                                        const standalone = span.getFirstStandalone()
-                                        if (!standalone) {
-                                            setShownMap(undefined);
-                                            setTimeout(() => {
-                                                addActionOnMap((mapObject) => {
-                                                    mapObject.fitBounds(span.getBounds());
-                                                });
-                                            }, 100);
-                                        } else {
-                                            setShownMap(standalone);
-                                            setTimeout(() => {
-                                                addActionOnMap((mapObject) => {
-                                                    mapObject.fitBounds(span.getBounds(standalone));
-                                                });
-                                            }, 100);
-                                        }
-                                    });
-                                }
-                            }, 100);
                         }}
                     >
                         <GridOn color={data === currTrial.trial ? "primary" : ""} />

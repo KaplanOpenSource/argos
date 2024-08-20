@@ -60,13 +60,21 @@ export class CoordsSpan {
         return names.length > 0 ? names[0] : undefined;
     }
 
-    getBounds(mapName: string = RealMapName) {
+    getBounds(mapName: string = RealMapName): LatLngBounds | undefined {
         const coordMap = this.coords.get(mapName) || [];
         const good: LatLng[] = coordMap.filter(x => x && isFinite(x.lat) && isFinite(x.lng));
         if (good.length) {
             return latLngBounds(good);
         }
-        return latLngBounds([32.071128, 34.769729], [32.091128, 34.789729]);
+        // return latLngBounds([32.071128, 34.769729], [32.091128, 34.789729]);
+        return undefined;
+    }
+
+    fitBounds(mapObject: any, mapName: string = RealMapName) {
+        const bounds = this.getBounds(mapName);
+        if (bounds) {
+            mapObject.fitBounds(bounds);
+        }
     }
 
     private addCoord(lat: number | undefined, lng: number | undefined, mapName: string = RealMapName) {

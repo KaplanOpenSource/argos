@@ -18,6 +18,7 @@ import { SCOPE_CONSTANT } from "./AttributeType";
 import { useUploadExperiment } from "../IO/UploadExperiment";
 import { ActionsOnMapContext } from "../Map/ActionsOnMapContext";
 import { ShapeList } from "./ShapeList";
+import { CoordsSpan } from "./CoordsSpan";
 
 export const ExperimentRow = ({ data, setData, children }) => {
     const { deleteExperiment, setShownMap } = useContext(experimentContext);
@@ -129,7 +130,7 @@ export const ExperimentRow = ({ data, setData, children }) => {
                             setShownMap(undefined);
                             setTimeout(() => {
                                 addActionOnMap((mapObject) => {
-                                    mapObject.fitBounds(new CoordsSpan().fromExperiment(data).getBounds());
+                                    new CoordsSpan().fromExperiment(data).fitBounds(mapObject);
                                 });
                             }, 100);
                         }}
