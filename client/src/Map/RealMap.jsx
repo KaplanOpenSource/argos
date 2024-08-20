@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { TileLayer } from "react-leaflet"
 
 export const RealMap = ({ }) => {
-    const [tileServerInfo, setTileServerInfo] = useState({});
+    const [tileServerInfo, setTileServerInfo] = useState();
 
     useEffect(() => {
         (async () => {
@@ -25,10 +25,10 @@ export const RealMap = ({ }) => {
 
     return (
         <>
-            {(tileServerInfo && tileServerInfo.url)
+            {tileServerInfo 
                 ? (
                     <TileLayer
-                        attribution={tileserver.attribution || ""}
+                        attribution={tileServerInfo.attribution || ""}
                         url={tileServerInfo.url}
 
                     // attribution='&copy; <a href="https://carto.com">Carto</a> contributors'
