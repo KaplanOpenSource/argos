@@ -7,7 +7,7 @@ A system for placing devices on a map in preparation for future spatial experime
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
 ## Configuration
-- The tileserver location and attribution can be customized in `client/public/config.json`
+- The tileserver location and attribution can be customized in `client/dist/config.json`
 
 ## Definitions
 
