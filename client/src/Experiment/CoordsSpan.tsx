@@ -1,5 +1,5 @@
 import { LatLng, LatLngBounds, latLng, latLngBounds } from "leaflet"
-import { RealMapName } from "../constants/constants";
+import { DEG_TO_METERS, RealMapName } from "../constants/constants";
 import { ICoordinates, IExperiment, ITrial } from "../types/types";
 import { circleToPolygon } from "../IO/ShapesToGeoJson";
 
@@ -42,7 +42,7 @@ export class CoordsSpan {
         for (const dev of trial?.devicesOnTrial || []) {
             // if (dev?.location?.name === mapName) {
             const [lat, lng]: ICoordinates | [] = dev?.location?.coordinates || [];
-            this.addCoord(lat, lng);
+            this.addCoord(lat, lng, dev?.location?.name || RealMapName);
             // }
         }
         return this;
@@ -63,16 +63,37 @@ export class CoordsSpan {
     getBounds(mapName: string = RealMapName): LatLngBounds | undefined {
         const coordMap = this.coords.get(mapName) || [];
         const good: LatLng[] = coordMap.filter(x => x && isFinite(x.lat) && isFinite(x.lng));
-        if (good.length) {
-            return latLngBounds(good);
+        if (good.length === 0) {
+            return undefined;
+            // return latLngBounds([32.071128, 34.769729], [32.091128, 34.789729]);
         }
-        // return latLngBounds([32.071128, 34.769729], [32.091128, 34.789729]);
-        return undefined;
+        return latLngBounds(good);
     }
 
-    fitBounds(mapObject: any, mapName: string = RealMapName) {
-        const bounds = this.getBounds(mapName);
+    private minmax(bounds: LatLngBounds) {
+        const n = bounds.getNorth(), s = bounds.getSouth();
+        const w = bounds.getWest(), e = bounds.getEast();
+        const vmin = Math.min(n, s), vmax = Math.max(n, s);
+        const hmin = Math.min(w, e), hmax = Math.max(w, e);
+        return { vmin, vmax, hmin, hmax, vsize: vmax - vmin, hsize: hmax - hmin };
+    }
+
+    fitBounds(mapObject: L.Map, mapName: string = RealMapName) {
+        let bounds = this.getBounds(mapName);
         if (bounds) {
+            const { vmin, vmax, hmin, hmax, vsize, hsize } = this.minmax(bounds);
+            if (hsize === 0 || vsize === 0) {
+                let buf = 1000 / DEG_TO_METERS;
+                if (mapName !== RealMapName) {
+                    // const mapsize = this.minmax(mapObject.getBounds());
+                    // buf = Math.min(mapsize.hsize, mapsize.vsize) / 3;
+                    buf = 1;
+                }
+                bounds = latLngBounds(
+                    latLng(vmin - buf, hmin - buf),
+                    latLng(vmax + buf, hmax + buf),
+                );
+            }
             mapObject.fitBounds(bounds);
         }
     }

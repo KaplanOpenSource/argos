@@ -65,7 +65,7 @@ export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
     useEffect(() => {
         if (experiment) {
             addActionOnMap((mapObject) => {
-                mapObject.fitBounds(new CoordsSpan().fromExperiment(experiment).getBounds());
+                new CoordsSpan().fromExperiment(experiment).fitBounds(mapObject);
             });
         }
     }, [experimentName]);

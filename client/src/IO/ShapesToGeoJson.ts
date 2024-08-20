@@ -1,3 +1,4 @@
+import { DEG_TO_METERS } from "../constants/constants";
 import { ICoordinates } from "../types/types";
 
 // Convert circle to polygon with specified vertices
@@ -15,8 +16,8 @@ export const circleToPolygon = (center: ICoordinates, radius: number, numVertice
 
         // Convert meters to degrees
         const vertex = [
-            cy + dy / 111139,
-            cx + (dx / 111139) / Math.cos(cy * Math.PI / 180)
+            cy + dy / DEG_TO_METERS,
+            cx + (dx / DEG_TO_METERS) / Math.cos(cy * Math.PI / 180)
         ];
 
         coordinates.push([vertex[1], vertex[0]]);
