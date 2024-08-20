@@ -12,4 +12,15 @@ export default defineConfig({
     hmr: true,
     watch: { usePolling: false },
   },
+  build: {
+    chunkSizeWarningLimit: 10000,
+    rollupOptions: {
+      onwarn(warning, warn) {
+        if (warning.code === "MODULE_LEVEL_DIRECTIVE") {
+          return;
+        }
+        warn(warning);
+      },
+    },
+  }
 })
