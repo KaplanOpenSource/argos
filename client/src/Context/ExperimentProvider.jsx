@@ -16,8 +16,8 @@ export function change(thing, func) {
 }
 
 export const ExperimentProvider = ({ children }) => {
+    const [selection, setSelection] = useState([]);
     const [state, setState] = useState({
-        selection: [],
         showImagePlacement: false,
         ...ExperimentUpdates.initialState,
         ...TrialChoosing.initialState,
@@ -43,7 +43,7 @@ export const ExperimentProvider = ({ children }) => {
             const shownMapIndex = experiment.imageStandalone.findIndex(t => t.name === shownMapName);
             if (shownMapIndex >= 0) {
                 replaceUrlParams({ shownMapName });
-                setState(change(state, draft => { 
+                setState(change(state, draft => {
                     draft.currTrial.shownMapName = shownMapName;
                     draft.currTrial.shownMapIndex = shownMapIndex;
                 }));
@@ -51,7 +51,7 @@ export const ExperimentProvider = ({ children }) => {
             }
         }
         replaceUrlParams({ shownMapName: undefined });
-        setState(change(state, draft => { 
+        setState(change(state, draft => {
             draft.currTrial.shownMapName = undefined;
             draft.currTrial.shownMapIndex = undefined;
         }));
@@ -102,9 +102,9 @@ export const ExperimentProvider = ({ children }) => {
     }
 
     const setLocationsToStackDevices = (latlngs) => {
-        const count = setLocationsToDevices(state.selection, latlngs);
+        const count = setLocationsToDevices(selection, latlngs);
         if (count > 0) {
-            setState(change(state, draft => {  draft.selection = draft.selection.slice(count); }));
+            setSelection(selection.slice(count));
         }
     }
 
@@ -153,7 +153,7 @@ export const ExperimentProvider = ({ children }) => {
                 assignUuids(allExperiments);
                 const t = TrialChoosing.FindTrialByName({ experimentName, trialTypeName, trialName }, allExperiments);
                 TrialChoosing.ReplaceUrlByTrial(t);
-                setState(change(state, draft => { 
+                setState(change(state, draft => {
                     draft.experiments = allExperiments;
                     draft.currTrial = t;
                 }));
@@ -166,7 +166,7 @@ export const ExperimentProvider = ({ children }) => {
             if (state.serverUpdates.length > 0) {
                 (async () => {
                     const updates = state.serverUpdates;
-                    setState(change(state, draft => { 
+                    setState(change(state, draft => {
                         draft.serverUpdates = [];
                     }));
                     for (const { name, exp } of updates) {
@@ -191,13 +191,13 @@ export const ExperimentProvider = ({ children }) => {
         setTrialData,
         deleteDevice,
         deleteDeviceType,
-        selection: state.selection,
-        setSelection: val => setState(change(state, draft => {  draft.selection = val; })),
+        selection,
+        setSelection,
         setLocationsToDevices,
         setLocationsToStackDevices,
         setShownMap,
         showImagePlacement: state.showImagePlacement,
-        setShowImagePlacement: val => setState(change(state, draft => {  draft.showImagePlacement = val; })),
+        setShowImagePlacement: val => setState(change(state, draft => { draft.showImagePlacement = val; })),
     };
 
     return (
