@@ -17,7 +17,8 @@ export const useUploadExperiment = () => {
     const uploadExperiment = useCallback(async (file) => {
         try {
             const { rawExp, zip } = await readExperiment(file);
-            const experiment = checkConvert(rawExp);
+            const [experiment, errors] = checkConvert(rawExp);
+            console.log(errors)
 
             const name = createNewName(experiments, experiment.name); // this is done here to upload images with the correct experiment name
             experiment.name = name;
@@ -48,6 +49,7 @@ export const useUploadExperiment = () => {
             }
 
             addExperiment(experiment);
+            return errors;
         } catch (e) {
             alert('Upload error: ' + e)
         }
@@ -81,16 +83,15 @@ export const useUploadExperiment = () => {
     const checkConvert = (experiment) => {
         const version = (experiment || {}).version;
         if (version === argosJsonVersion) {
-            return experiment;
+            return [experiment, []];
         } else if (ConvertExperiment.isExperimentVersion2(experiment)) {
             const convertor = new ConvertExperiment();
             const newExp = convertor.go(experiment);
             if (!newExp) {
                 throw 'cannot convert experiment';
-            } else if (convertor.errors.length) {
-                throw '\n' + [...new Set(convertor.errors)].join('\n');
             }
-            return newExp;
+            const errors = [...new Set(convertor.errors)];
+            return [newExp, errors];
         } else {
             console.log('error', experiment);
             throw "unknown experiment version";
