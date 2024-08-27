@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { TreeRow } from "../App/TreeRow";
 import { TreeSublist } from "../App/TreeSublist";
-import { DateProperty } from "../Utils/DateProperty";
+import { DateProperty } from "../Property/DateProperty";
 import { Stack } from "@mui/material";
 import DownloadIcon from '@mui/icons-material/Download';
 import DeleteIcon from '@mui/icons-material/Delete';

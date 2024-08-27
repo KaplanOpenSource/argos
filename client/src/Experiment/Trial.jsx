@@ -1,4 +1,4 @@
-import { DateProperty } from "../Utils/DateProperty";
+import { DateProperty } from "../Property/DateProperty";
 import { TreeRow } from "../App/TreeRow";
 import { experimentContext } from "../Context/ExperimentProvider";
 import { useContext, useEffect } from "react";

@@ -1,7 +1,7 @@
 import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
-import { DateProperty } from "../Utils/DateProperty";
-import { BooleanProperty } from "../Utils/BooleanProperty";
-import { SelectProperty } from "../Utils/SelectProperty";
+import { DateProperty } from "../Property/DateProperty";
+import { BooleanProperty } from "../Property/BooleanProperty";
+import { SelectProperty } from "../Property/SelectProperty";
 import { Tooltip } from "@mui/material";
 
 export const VALUE_TYPE_STRING = "String";

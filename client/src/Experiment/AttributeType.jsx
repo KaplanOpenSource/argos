@@ -3,8 +3,8 @@ import { TreeRow } from "../App/TreeRow";
 import { AttributeValue, VALUE_TYPE_SELECT, VALUE_TYPE_DEFAULT, valueTypes } from "./AttributeValue";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { TreeSublist } from "../App/TreeSublist";
-import { BooleanProperty } from "../Utils/BooleanProperty";
-import { SelectProperty } from "../Utils/SelectProperty";
+import { BooleanProperty } from "../Property/BooleanProperty";
+import { SelectProperty } from "../Property/SelectProperty";
 
 export const SCOPE_TRIAL = "Trial";
 export const SCOPE_EXPERIMENT = "Device definition";
