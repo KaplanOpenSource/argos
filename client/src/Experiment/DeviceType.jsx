@@ -12,9 +12,10 @@ import { assignUuids } from "../Context/TrackUuidUtils";
 import { IconPicker } from "./IconPicker";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { Typography } from "@mui/material";
 
 export const DeviceType = ({ data, setData, experiment }) => {
-    const { deleteDeviceType, hiddenDeviceTypes, setHiddenDeviceTypes } = useContext(experimentContext);
+    const { deleteDeviceType, hiddenDeviceTypes, setHiddenDeviceTypes, currTrial } = useContext(experimentContext);
 
     const devicesEnclosingList = (data.devices || []).map(item => {
         return { deviceTypeName: data.name, deviceItemName: item.name, deviceType: data, deviceItem: item };
@@ -25,6 +26,18 @@ export const DeviceType = ({ data, setData, experiment }) => {
     const toggleHidden = () => {
         setHiddenDeviceTypes({ ...hiddenDeviceTypes, [data.name]: !isHidden });
     }
+
+    let placedDevices = '';
+    if (currTrial?.trial) {
+        let c = 0;
+        for (const {deviceTypeName} of currTrial?.trial?.devicesOnTrial || []) {
+            if (deviceTypeName === data.name) {
+                c++;
+            }
+        }
+        placedDevices = c + '/';
+    }
+    placedDevices += data?.devices?.length || 0;
 
     return (
         <TreeRow
@@ -69,6 +82,9 @@ export const DeviceType = ({ data, setData, experiment }) => {
                     >
                         {isHidden ? <VisibilityOff /> : <Visibility />}
                     </ButtonTooltip>
+                    <Typography>
+                        {placedDevices}
+                    </Typography>
                 </>
             }
         >
