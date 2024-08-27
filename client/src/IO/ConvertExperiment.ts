@@ -104,11 +104,11 @@ export class ConvertExperiment {
         try {
             location = JSON.parse(locationItem.val);
         } catch (_) {
-            this.errors.push(`cannot parse location for entity ${oldDeviceType.name} on trial ${oldTrial.name} : ${locationItem.val}`);
+            this.errors.push(`cannot parse location for entity ${oldDeviceType.name} on trial ${oldTrial.name}, got: ${locationItem.val}`);
             return undefined;
         }
         if (!location || !location.name || !location.coordinates || location.coordinates.length !== 2) {
-            this.errors.push(`invalid location for entity ${oldDeviceType.name} on trial ${oldTrial.name} : ${locationItem.val}`);
+            this.errors.push(`invalid location for entity ${oldDeviceType.name} on trial ${oldTrial.name}, got: ${locationItem.val}`);
             return undefined;
         }
 
