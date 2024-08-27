@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { Fragment, useRef, useState } from "react";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { HourglassBottom } from "@mui/icons-material";
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography } from "@mui/material";
@@ -34,10 +34,13 @@ export const UploadButton = ({ accept, tooltip, uploadFunc, children, ...restpro
                         <DialogTitle >File upload with {errors.length} errors</DialogTitle>
                         <DialogContent>
                             <DialogContentText>
-                                {errors.map((e, i) => (
-                                    <Typography key={i}>
-                                        {i + 1}: {e}
-                                    </Typography>
+                                {errors.sort().map((e, i) => (
+                                    <Fragment key={i + 1}>
+                                        <span>
+                                            {i + 1}: {`${e}`}
+                                        </span>
+                                        <br />
+                                    </Fragment>
                                 ))}
                             </DialogContentText>
                         </DialogContent>
