@@ -3,7 +3,7 @@ import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { HourglassBottom } from "@mui/icons-material";
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography } from "@mui/material";
 
-export const UploadButton = ({ accept, tooltip, uploadFunc, children }) => {
+export const UploadButton = ({ accept, tooltip, uploadFunc, children, ...restprops }) => {
     const inputFile = useRef(null);
     const [working, setWorking] = useState(false);
     const [errors, setErrors] = useState(undefined);
@@ -59,6 +59,7 @@ export const UploadButton = ({ accept, tooltip, uploadFunc, children }) => {
                         onClick={() => inputFile.current.click()}
                         disabled={working}
                         tooltip={tooltip}
+                        {...restprops}
                     >
                         {working
                             ? <HourglassBottom />

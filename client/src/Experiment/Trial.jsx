@@ -95,6 +95,7 @@ export const Trial = ({ data, setData, experiment, trialType, children }) => {
                     <UploadButton
                         tooltip={'Upload devices as geojson, csv, zip of csvs'}
                         uploadFunc={file => uploadTrial(file, data, experiment, (newData) => setData(newData))}
+                        color='default'
                     >
                         <Upload />
                     </UploadButton>
