@@ -18,7 +18,7 @@ export const DeviceMarkersShown = ({ showDeviceNames }) => {
         if (!location || !location.coordinates) {
             devicesWithoutLocation.push(dev);
         } else if (location.name === mapName) {
-            if (!hiddenDeviceTypes.includes(dev.deviceTypeName)) {
+            if (!hiddenDeviceTypes[dev.deviceTypeName]) {
                 shownDevices.push(dev);
             }
         }

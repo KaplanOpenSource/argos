@@ -20,17 +20,11 @@ export const DeviceType = ({ data, setData, experiment }) => {
         return { deviceTypeName: data.name, deviceItemName: item.name, deviceType: data, deviceItem: item };
     });
 
-    const isHidden = hiddenDeviceTypes.includes(data.name);
+    const isHidden = hiddenDeviceTypes[data.name];
 
     const toggleHidden = () => {
-        if (isHidden) {
-            setHiddenDeviceTypes(hiddenDeviceTypes.filter(x => x !== data.name));
-        } else {
-            setHiddenDeviceTypes([...hiddenDeviceTypes, data.name]);
-        }
+        setHiddenDeviceTypes({ ...hiddenDeviceTypes, [data.name]: !isHidden });
     }
-
-    console.log(hiddenDeviceTypes)
 
     return (
         <TreeRow

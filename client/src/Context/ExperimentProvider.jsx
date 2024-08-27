@@ -17,7 +17,7 @@ export function change(thing, func) {
 
 export const ExperimentProvider = ({ children }) => {
     const [selection, setSelection] = useState([]);
-    const [hiddenDeviceTypes, setHiddenDeviceTypes] = useState([]);
+    const [hiddenDeviceTypes, setHiddenDeviceTypes] = useState({});
     const [state, setState] = useState({
         showImagePlacement: false,
         ...ExperimentUpdates.initialState,
