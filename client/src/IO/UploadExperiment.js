@@ -18,7 +18,6 @@ export const useUploadExperiment = () => {
         try {
             const { rawExp, zip } = await readExperiment(file);
             const [experiment, errors] = checkConvert(rawExp);
-            console.log(errors)
 
             const name = createNewName(experiments, experiment.name); // this is done here to upload images with the correct experiment name
             experiment.name = name;
