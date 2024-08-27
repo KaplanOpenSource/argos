@@ -35,7 +35,12 @@ export const ExperimentProvider = ({ children }) => {
     const setCurrTrial = ({ experimentName, trialTypeName, trialName }) => {
         const t = TrialChoosing.FindTrialByName({ experimentName, trialTypeName, trialName }, state.experiments);
         TrialChoosing.ReplaceUrlByTrial(t);
-        setState(change(state, draft => { draft.currTrial = t; }));
+        setState(change(state, draft => {
+            draft.currTrial = t;
+        }));
+        if (experimentName !== state?.currTrial?.experimentName) {
+            setHiddenDeviceTypes({});
+        }
     }
 
     const setShownMap = (shownMapName) => {
