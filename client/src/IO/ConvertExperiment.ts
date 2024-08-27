@@ -91,12 +91,12 @@ export class ConvertExperiment {
         }
         const locationType = (oldDeviceType.properties || []).find(p => p.type === 'location');
         if (!locationType) {
-            this.errors.push(`cannot find location type for entity ${oldDeviceType.name} on trial ${oldTrial.name}`);
+            this.errors.push(`cannot find location type for entity type ${oldDeviceType.name} on trial ${oldTrial.name}`);
             return undefined;
         }
         const locationItem = (oldDeviceOnTrial.properties || []).find(p => p.key === locationType.key);
         if (!locationItem) {
-            this.errors.push(`cannot find location for entity ${oldDeviceType.name} on trial ${oldTrial.name}`);
+            this.errors.push(`cannot find location for  entity ${oldDeviceItem.name} of type ${oldDeviceType.name} on trial ${oldTrial.name} (${oldDeviceOnTrial.key})`);
             return undefined;
         }
 
@@ -104,11 +104,11 @@ export class ConvertExperiment {
         try {
             location = JSON.parse(locationItem.val);
         } catch (_) {
-            this.errors.push(`cannot parse location for entity ${oldDeviceType.name} on trial ${oldTrial.name}, got: ${locationItem.val}`);
+            this.errors.push(`cannot parse location for entity ${oldDeviceItem.name} of type ${oldDeviceType.name} on trial ${oldTrial.name} (${oldDeviceOnTrial.key}), got: ${locationItem.val}`);
             return undefined;
         }
         if (!location || !location.name || !location.coordinates || location.coordinates.length !== 2) {
-            this.errors.push(`invalid location for entity ${oldDeviceType.name} on trial ${oldTrial.name}, got: ${locationItem.val}`);
+            this.errors.push(`invalid location for entity ${oldDeviceItem.name} of type ${oldDeviceType.name} on trial ${oldTrial.name} (${oldDeviceOnTrial.key}), got: ${locationItem.val}`);
             return undefined;
         }
 
