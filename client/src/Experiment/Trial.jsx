@@ -13,6 +13,8 @@ import { UploadButton } from "../IO/UploadButton";
 import { CoordsSpan } from "./CoordsSpan";
 import { ActionsOnMapContext } from "../Map/ActionsOnMapContext";
 import { RealMapName } from "../constants/constants";
+import { sum } from "lodash";
+import { Typography } from "@mui/material";
 
 export const Trial = ({ data, setData, experiment, trialType, children }) => {
     const { currTrial, setCurrTrial, selection, setShownMap } = useContext(experimentContext);
@@ -45,6 +47,9 @@ export const Trial = ({ data, setData, experiment, trialType, children }) => {
             });
         }
     }, [currTrial?.trialName + "::" + currTrial?.trialTypeName + "::" + currTrial?.experiment]);
+
+    const totalDevices = sum((experiment?.deviceTypes || []).map(x => x.devices.length));
+    const placedDevices = (data.devicesOnTrial || []).length;
 
     return (
         <TreeRow
@@ -94,6 +99,9 @@ export const Trial = ({ data, setData, experiment, trialType, children }) => {
                         <Upload />
                     </UploadButton>
                     {children}
+                    <Typography>
+                        {placedDevices}/{totalDevices}
+                    </Typography>
                 </>
             }
         >
