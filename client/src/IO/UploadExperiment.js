@@ -1,6 +1,6 @@
 import JSZip from "jszip";
 import { useUploadImage } from "./UploadImage";
-import { ConvertExperiment, isExperimentVersion2 } from "./ConvertExperiment";
+import { ConvertExperiment } from "./ConvertExperiment";
 import { argosJsonVersion } from "../constants/constants";
 import { createNewName } from "../Utils/utils";
 import { useCallback, useContext } from "react";
@@ -82,8 +82,8 @@ export const useUploadExperiment = () => {
         const version = (experiment || {}).version;
         if (version === argosJsonVersion) {
             return experiment;
-        } else if (isExperimentVersion2(experiment)) {
-            const newExp = ConvertExperiment(experiment);
+        } else if (ConvertExperiment.isExperimentVersion2(experiment)) {
+            const newExp = new ConvertExperiment().go(experiment);
             return newExp;
         } else {
             console.log('error', experiment);

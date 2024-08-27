@@ -71,6 +71,7 @@ export interface IAttributeType {
     type?: string;
     scope?: string;
     multiple?: boolean;
+    required?: boolean;
     defaultValue?: any;
     options?: Array<ISelectOption>;
 };
