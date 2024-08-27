@@ -6,14 +6,28 @@ import { PopupSwitchProvider } from "./PopupSwitchContext";
 import { AreaMarkListener } from "./AreaMarkListener";
 
 export const DeviceMarkersShown = ({ showDeviceNames }) => {
-    const { currTrial, setTrialData, selection, setSelection } = useContext(experimentContext);
+    const { currTrial, setTrialData, selection, setSelection, hiddenDeviceTypes } = useContext(experimentContext);
     const devicesOnTrial = (currTrial.trial || {}).devicesOnTrial || [];
     const mapName = currTrial.shownMapName || RealMapName;
-    const devicesWithoutLocation = devicesOnTrial.filter(({ location }) => !location || !location.coordinates);
+    
+    const devicesWithoutLocation = [];
+    const shownDevices = [];
+
+    for (const dev of devicesOnTrial) {
+        const {location} = dev;
+        if (!location || !location.coordinates) {
+            devicesWithoutLocation.push(dev);
+        } else if (location.name === mapName) {
+            if (!hiddenDeviceTypes.includes(dev.deviceTypeName)) {
+                shownDevices.push(dev);
+            }
+        }
+    }
+
     if (devicesWithoutLocation.length) {
         console.log('no locations on devices:', JSON.stringify(devicesWithoutLocation));
     }
-    const shownDevices = devicesOnTrial.filter(({ location }) => location && location.coordinates && location.name === mapName);
+
     return (
         <>
             <PopupSwitchProvider>
@@ -39,7 +53,7 @@ export const DeviceMarkersShown = ({ showDeviceNames }) => {
                                 return s.deviceItemName === deviceItemName && s.deviceTypeName === deviceTypeName
                             });
                             if (!isSelected) {
-                                added.push({deviceItemName, deviceTypeName});
+                                added.push({ deviceItemName, deviceTypeName });
                             }
                         }
                     }

@@ -17,6 +17,7 @@ export function change(thing, func) {
 
 export const ExperimentProvider = ({ children }) => {
     const [selection, setSelection] = useState([]);
+    const [hiddenDeviceTypes, setHiddenDeviceTypes] = useState([]);
     const [state, setState] = useState({
         showImagePlacement: false,
         ...ExperimentUpdates.initialState,
@@ -198,6 +199,8 @@ export const ExperimentProvider = ({ children }) => {
         setShownMap,
         showImagePlacement: state.showImagePlacement,
         setShowImagePlacement: val => setState(change(state, draft => { draft.showImagePlacement = val; })),
+        hiddenDeviceTypes,
+        setHiddenDeviceTypes,
     };
 
     return (
