@@ -83,7 +83,13 @@ export const useUploadExperiment = () => {
         if (version === argosJsonVersion) {
             return experiment;
         } else if (ConvertExperiment.isExperimentVersion2(experiment)) {
-            const newExp = new ConvertExperiment().go(experiment);
+            const convertor = new ConvertExperiment();
+            const newExp = convertor.go(experiment);
+            if (!newExp) {
+                throw 'cannot convert experiment';
+            } else if (convertor.errors.length) {
+                throw '\n' + [...new Set(convertor.errors)].join('\n');
+            }
             return newExp;
         } else {
             console.log('error', experiment);
