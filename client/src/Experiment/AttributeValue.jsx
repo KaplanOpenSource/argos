@@ -3,10 +3,12 @@ import { DateProperty } from "../Property/DateProperty";
 import { BooleanProperty } from "../Property/BooleanProperty";
 import { SelectProperty } from "../Property/SelectProperty";
 import { Tooltip } from "@mui/material";
+import { DateTimeProperty } from "../Property/DateTimeProperty";
 
 export const VALUE_TYPE_STRING = "String";
 export const VALUE_TYPE_NUMBER = "Number";
 export const VALUE_TYPE_DATE = "Date";
+export const VALUE_TYPE_DATE_TIME = "DateTime";
 export const VALUE_TYPE_BOOLEAN = "Boolean";
 export const VALUE_TYPE_SELECT = "Select";
 export const valueTypes = [
@@ -14,6 +16,7 @@ export const valueTypes = [
     VALUE_TYPE_NUMBER,
     VALUE_TYPE_BOOLEAN,
     VALUE_TYPE_DATE,
+    VALUE_TYPE_DATE_TIME,
     VALUE_TYPE_SELECT,
 ];
 export const VALUE_TYPE_DEFAULT = VALUE_TYPE_STRING;
@@ -43,6 +46,15 @@ export const AttributeValue = ({ type, label, data, setData, attrType, ...restPr
         case VALUE_TYPE_DATE:
             return (
                 <DateProperty
+                    data={data}
+                    setData={setData}
+                    label={label}
+                    {...restProps}
+                />
+            )
+        case VALUE_TYPE_DATE_TIME:
+            return (
+                <DateTimeProperty
                     data={data}
                     setData={setData}
                     label={label}

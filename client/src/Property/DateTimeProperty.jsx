@@ -1,8 +1,8 @@
 import { Tooltip } from "@mui/material";
-import { DatePicker } from "@mui/x-date-pickers"
+import { DateTimePicker } from "@mui/x-date-pickers"
 import dayjs from 'dayjs';
 
-export const DateProperty = ({ label, data, setData, tooltipTitle = "", ...restProps }) => {
+export const DateTimeProperty = ({ label, data, setData, tooltipTitle = "", ...restProps }) => {
     let value = null;
     try {
         value = data ? dayjs(data) : null;
@@ -25,7 +25,7 @@ export const DateProperty = ({ label, data, setData, tooltipTitle = "", ...restP
                 }}
                 onClick={e => e.stopPropagation()}
             >
-                <DatePicker
+                <DateTimePicker
                     label={label}
                     slotProps={{
                         textField: {
@@ -33,7 +33,7 @@ export const DateProperty = ({ label, data, setData, tooltipTitle = "", ...restP
                             size: 'small',
                             inputProps: {
                                 style: {
-                                    width: '100px'
+                                    width: '180px'
                                 }
                             }
                         },
@@ -41,7 +41,7 @@ export const DateProperty = ({ label, data, setData, tooltipTitle = "", ...restP
                             actions: ['today', 'clear', 'accept'],
                         },
                     }}
-                    format='DD/MM/YYYY'
+                    format='DD/MM/YYYY hh:mm:ss'
                     value={value}
                     onChange={setValue}
                     {...restProps}
