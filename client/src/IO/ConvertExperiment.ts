@@ -12,8 +12,9 @@ export class ConvertExperiment {
         }
 
         const top = (oldExp.experiment || oldExp.experimentsWithData) || {};
-        const trialTypes = (oldExp.trialSets || []).map(t => this.convertTrialType(t, oldExp));
-        const deviceTypes = (oldExp.entityTypes || []).map(t => this.convertDeviceType(t, oldExp));
+        const entitiesTypes = oldExp.entityTypes || oldExp.entitiesTypes || [];
+        const trialTypes = (oldExp.trialSets || []).map(t => this.convertTrialType(t, oldExp, entitiesTypes));
+        const deviceTypes = entitiesTypes.map(t => this.convertDeviceType(t, oldExp));
         const images = top.maps || [];
         const imageStandalone = images.filter(im => (im || {}).embedded === false).map(im => this.convertImage(im));
         const imageEmbedded = images.filter(im => (im || {}).embedded === true).map(im => this.convertImage(im));
@@ -50,9 +51,9 @@ export class ConvertExperiment {
         }
     }
 
-    convertTrialType(oldTrialType, oldExp): ITrialType {
+    convertTrialType(oldTrialType, oldExp, entitiesTypes: any[]): ITrialType {
         const oldTrials = this.getOldTrials(oldExp, oldTrialType);
-        const trials = oldTrials.map(r => this.convertTrial(r, oldTrialType, oldExp));
+        const trials = oldTrials.map(r => this.convertTrial(r, oldTrialType, oldExp, entitiesTypes));
         const attributeTypes = (oldTrialType.properties || [])
             .map(r => this.convertAttrType(r));
         return {
@@ -62,9 +63,9 @@ export class ConvertExperiment {
         }
     }
 
-    convertTrial(oldTrial, oldTrialType, oldExp): ITrial {
+    convertTrial(oldTrial, oldTrialType, oldExp, entitiesTypes: any[]): ITrial {
         const devicesOnTrial = (oldTrial.entities || [])
-            .map(e => this.convertDeviceOnTrial(e, oldTrial, oldTrialType, oldExp))
+            .map(e => this.convertDeviceOnTrial(e, oldTrial, oldTrialType, oldExp, entitiesTypes))
             .filter(x => x);
         const attributes = ((oldTrial || {}).properties || [])
             .map(x => this.convertAttrValue(x, oldTrialType))
@@ -77,8 +78,8 @@ export class ConvertExperiment {
         }
     }
 
-    convertDeviceOnTrial(oldDeviceOnTrial, oldTrial, oldTrialType, oldExp): IDeviceOnTrial | undefined {
-        const oldDeviceType = (oldExp.entityTypes || []).find(et => et.key === oldDeviceOnTrial.entitiesTypeKey);
+    convertDeviceOnTrial(oldDeviceOnTrial, oldTrial, oldTrialType, oldExp, entitiesTypes: any[]): IDeviceOnTrial | undefined {
+        const oldDeviceType = entitiesTypes.find(et => et.key === oldDeviceOnTrial.entitiesTypeKey);
         if (!oldDeviceType) {
             this.errors.push(`cannot find old entity type with key ${oldDeviceOnTrial.entitiesTypeKey} on trial ${oldTrial.name}`);
             return undefined;
