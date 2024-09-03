@@ -34,8 +34,10 @@ export const AttributeValueGet = ({
     }
 
     const setValue = (val) => {
-        const attrValue = { name: attrType.name, value: val };
-        setData({ ...data, attributes: changeByName(attributes, attrType.name, attrValue) });
+        if (setData) {
+            const attrValue = { name: attrType.name, value: val };
+            setData({ ...data, attributes: changeByName(attributes, attrType.name, attrValue) });
+        }
     };
 
     const attrValueType = attrType.type || VALUE_TYPE_DEFAULT;
