@@ -15,6 +15,9 @@ export const TrialsTabularView = ({ data, setData }) => {
                             <TableRow sx={{ backgroundColor: 'lightgray' }}>
                                 <TableCell>Trial Type</TableCell>
                                 <TableCell>Trial</TableCell>
+                                {trialType?.attributeTypes?.map(attrType => (
+                                    <TableCell>{attrType.name}</TableCell>
+                                ))}
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -26,7 +29,14 @@ export const TrialsTabularView = ({ data, setData }) => {
                                         {trialType.name}
                                     </TableCell>
                                     <TableCell >{trial.name}</TableCell>
-
+                                    {trialType?.attributeTypes?.map(attrType => {
+                                        const attr = trial?.attributes?.find(x => x.name === attrType.name);
+                                        return attr
+                                            ? (
+                                                <TableCell>{JSON.stringify(attr.value)}</TableCell>
+                                            )
+                                            : null;
+                                    })}
                                 </TableRow>
 
                             ))}
