@@ -4,14 +4,15 @@ import { SCOPE_TRIAL } from "./AttributeType";
 import { Fragment } from "react";
 import { DateProperty } from "../Property/DateProperty";
 import { sum } from "lodash";
+import { AttributeTypesDialogButton } from "./AttributeTypesDialogButton";
+import { AddNewTrialButton } from "./AddNewTrialButton";
 
 export const TrialsTabularView = ({ data, setData }) => {
-    const totalDevices = sum((data?.deviceTypes || []).map(x => x.devices.length));
+    const totalDevices = sum((data?.deviceTypes || []).map(x => (x?.devices || []).length));
     return (
         <TableContainer
             style={{
                 maxHeight: '100vh',
-                minWidth: 650,
             }}
             component={Paper}
             key="1"
@@ -28,8 +29,21 @@ export const TrialsTabularView = ({ data, setData }) => {
                                     backgroundColor: 'lightgray'
                                 }}
                             >
-                                <TableCell key={':tt'}>Trial Type</TableCell>
-                                <TableCell key={':tr'}>Trial</TableCell>
+                                <TableCell key={':tt'}>
+                                    Trial Type
+                                    <AttributeTypesDialogButton
+                                        data={trialType}
+                                    // setData={setData}
+                                    // isOfDevice={false}
+                                    />
+                                </TableCell>
+                                <TableCell key={':tr'}>
+                                    Trial
+                                    <AddNewTrialButton
+                                        trialType={trialType}
+                                    // setTrialType={setData}
+                                    />
+                                </TableCell>
                                 <TableCell key={':tcd'}>Created Date</TableCell>
                                 <TableCell key={':tpos'}>Positioned Devices</TableCell>
                                 {trialType?.attributeTypes?.map(attrType => {

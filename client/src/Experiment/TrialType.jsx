@@ -4,11 +4,10 @@ import dayjs from "dayjs";
 import { changeByName, createNewName } from "../Utils/utils";
 import { IconButton, Tooltip } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
-import AddIcon from '@mui/icons-material/Add';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { AttributeTypesDialogButton } from "./AttributeTypesDialogButton";
-import { assignUuids } from "../Context/TrackUuidUtils";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
+import { AddNewTrialButton } from "./AddNewTrialButton";
 
 export const TrialType = ({ data, setData, experiment }) => {
     return (
@@ -25,20 +24,10 @@ export const TrialType = ({ data, setData, experiment }) => {
                             <DeleteIcon />
                         </IconButton>
                     </Tooltip>
-                    <Tooltip title="Add new trial" placement="top">
-                        <IconButton
-                            size="small"
-                            onClick={e => {
-                                e.stopPropagation();
-                                const name = createNewName(data.trials, 'New Trial');
-                                const createdDate = dayjs().startOf('day');
-                                const newTrial = assignUuids({ name, createdDate });
-                                setData({ ...data, trials: [...(data.trials || []), newTrial] });
-                            }}
-                        >
-                            <AddIcon />
-                        </IconButton>
-                    </Tooltip>
+                    <AddNewTrialButton
+                        trialType={data}
+                        setTrialType={setData}
+                    />
                     <AttributeTypesDialogButton
                         data={data}
                         setData={setData}
@@ -72,6 +61,6 @@ export const TrialType = ({ data, setData, experiment }) => {
                     </Trial>
                 ))
             }
-        </TreeRow>
+        </TreeRow >
     )
 }
