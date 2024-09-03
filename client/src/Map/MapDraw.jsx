@@ -44,7 +44,9 @@ export const MapDraw = ({ data, setData }) => {
             } else if (shape.type === 'Polyline') {
                 layer = L.polyline(shape.coordinates.map(coord => [coord[0], coord[1]]));
             } else if (shape.type === 'Circle') {
-                layer = L.circle([shape.center[0], shape.center[1]], { radius: shape.radius });
+                if (shape?.center?.length === 2 && shape?.radius) {
+                    layer = L.circle([shape.center[0], shape.center[1]], { radius: shape.radius });
+                }
             }
 
             if (layer) {

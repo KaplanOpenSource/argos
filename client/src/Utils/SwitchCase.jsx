@@ -1,9 +1,18 @@
 export const SwitchCase = ({ test, children }) => {
-    return children.find(child => {
-        return child.props.value === test;
-    });
+    const childrenWrapped = children instanceof Array ? children : [children];
+    for (const child of childrenWrapped) {
+        if (child.props.value === test) {
+            return child;
+        }
+    }
+    for (const child of childrenWrapped) {
+        if (child.props.isDefault) {
+            return child;
+        }
+    }
+    return undefined;
 };
 
-export const Case = ({ children, value }) => {
+export const Case = ({ children, value, isDefault = false }) => {
     return children; // I don't want do add container around my cases ! 
 };
