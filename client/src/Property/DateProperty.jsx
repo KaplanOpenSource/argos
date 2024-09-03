@@ -5,7 +5,13 @@ import dayjs from 'dayjs';
 export const DateProperty = ({ label, data, setData, tooltipTitle = "", ...restProps }) => {
     let value = null;
     try {
-        value = data ? dayjs(data) : null;
+        if (data) {
+            if (data.$d) {
+                value = dayjs(data.$d);
+            } else {
+                value = dayjs(data);
+            }
+        }
     } catch (e) {
         console.trace('problem on date', label, data, e);
     }
