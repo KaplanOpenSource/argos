@@ -48,22 +48,20 @@ export const TrialsTabularView = ({ data, setData }) => {
                                     <TableCell key={':tr'}>{trial.name}</TableCell>
                                     {trialType?.attributeTypes?.map(attrType => {
                                         const attr = trial?.attributes?.find(x => x.name === attrType.name);
-                                        return attr
-                                            ? (
-                                                <TableCell
-                                                    key={attrType.name}
-                                                >
-                                                    <AttributeItemOne
-                                                        attrType={attrType}
-                                                        data={trial}
-                                                        // setData={setData}
-                                                        scope={SCOPE_TRIAL}
-                                                        // deviceItem={deviceItem}
-                                                        reduceNames={true}
-                                                    />
-                                                </TableCell>
-                                            )
-                                            : null;
+                                        return (
+                                            <TableCell
+                                                key={attrType.name}
+                                            >
+                                                <AttributeItemOne
+                                                    attrType={attrType}
+                                                    data={trial}
+                                                    // setData={setData}
+                                                    scope={SCOPE_TRIAL}
+                                                    // deviceItem={deviceItem}
+                                                    reduceNames={true}
+                                                />
+                                            </TableCell>
+                                        )
                                     })}
                                 </TableRow>
 
