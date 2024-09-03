@@ -8,16 +8,26 @@ import { sum } from "lodash";
 export const TrialsTabularView = ({ data, setData }) => {
     const totalDevices = sum((data?.deviceTypes || []).map(x => x.devices.length));
     return (
-        <TableContainer component={Paper} key="1">
+        <TableContainer
+            style={{
+                maxHeight: '100vh',
+                minWidth: 650,
+            }}
+            component={Paper}
+            key="1"
+        >
             <Table
-                sx={{ minWidth: 650 }}
-                aria-label="simple table"
                 size="small"
+                stickyHeader
             >
                 {data?.trialTypes?.map((trialType, itt) => (
                     <Fragment key={trialType.trackUuid}>
                         <TableHead key={':th_' + trialType.name}>
-                            <TableRow sx={{ backgroundColor: 'lightgray' }}>
+                            <TableRow
+                                sx={{
+                                    backgroundColor: 'lightgray'
+                                }}
+                            >
                                 <TableCell key={':tt'}>Trial Type</TableCell>
                                 <TableCell key={':tr'}>Trial</TableCell>
                                 <TableCell key={':tcd'}>Created Date</TableCell>

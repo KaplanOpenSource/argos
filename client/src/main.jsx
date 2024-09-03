@@ -13,7 +13,7 @@ import { ShapeProvider } from './EditToolBox/ShapeContext';
 import { consoleErrorUniqueKeyFix } from './Utils/consoleErrorUniqueKeyFix';
 import { TokenProvider } from './App/TokenContext';
 
-consoleErrorUniqueKeyFix();
+// consoleErrorUniqueKeyFix();
 
 ReactDOM.createRoot(document.getElementById('root')).render(
     <LocalizationProvider dateAdapter={AdapterDayjs}>
