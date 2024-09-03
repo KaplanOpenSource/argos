@@ -9,20 +9,30 @@ export const AttributeValueGet = ({
     deviceItem, // device item when applicable
     scope, // scope of the using component 
 }) => {
-    const attributes = (data || {}).attributes || [];
-    const attrTypeScope = attrType.scope === SCOPE_EXPERIMENT_ALT ? SCOPE_EXPERIMENT : (attrType.scope || SCOPE_TRIAL);
-    const attr = attributes.find(t => t.name === attrType.name);
-    let value = attrType.defaultValue;
-    if (attr) {
-        value = attr.value;
+    console.log(attrType, data)
+
+    const obtainFromContainer = (prevValue, containerAttributes) => {
+        const attr = containerAttributes?.find(t => t.name === attrType.name);
+        if (attr && (attr.value !== undefined || attr.value !== null)) {
+            console.log(attr.value);
+            return attr.value;
+        }
+        return prevValue;
     }
 
+    const attributes = (data || {}).attributes || [];
+    const attrTypeScope = attrType.scope === SCOPE_EXPERIMENT_ALT ? SCOPE_EXPERIMENT : (attrType.scope || SCOPE_TRIAL);
+    let value = attrType.defaultValue;
+    console.log('def', value);
+    value = obtainFromContainer(value, attributes);
+
     // TODO: get value from contained devices also
-    if (deviceItem) {
-        const attrDev = (deviceItem.attributes || []).find(t => t.name === attrType.name);
-        if (attrDev) {
-            value = attrDev.value;
-        }
+    if (deviceItem && deviceItem.attributes) {
+        value = obtainFromContainer(value, deviceItem.attributes);
+    }
+
+    if (value === null) {
+        value = '';
     }
 
     const setValue = (val) => {
