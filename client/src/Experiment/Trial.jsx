@@ -48,7 +48,7 @@ export const Trial = ({ data, setData, experiment, trialType, children }) => {
         }
     }, [currTrial?.trialName + "::" + currTrial?.trialTypeName + "::" + currTrial?.experiment]);
 
-    const totalDevices = sum((experiment?.deviceTypes || []).map(x => x.devices.length));
+    const totalDevices = sum((experiment?.deviceTypes || []).map(x => (x?.devices || []).length));
     const placedDevices = (data.devicesOnTrial || []).length;
 
     return (
