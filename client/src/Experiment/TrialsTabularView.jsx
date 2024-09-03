@@ -1,4 +1,4 @@
-import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material"
+import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip } from "@mui/material"
 import { AttributeItemOne } from "./AttributeItemList";
 import { SCOPE_TRIAL } from "./AttributeType";
 import { Fragment } from "react";
@@ -17,13 +17,24 @@ export const TrialsTabularView = ({ data, setData }) => {
                             <TableRow sx={{ backgroundColor: 'lightgray' }}>
                                 <TableCell key={':tt'}>Trial Type</TableCell>
                                 <TableCell key={':tr'}>Trial</TableCell>
-                                {trialType?.attributeTypes?.map(attrType => (
-                                    <TableCell
-                                        key={attrType.name}
-                                    >
-                                        {attrType.name}
-                                    </TableCell>
-                                ))}
+                                {trialType?.attributeTypes?.map(attrType => {
+                                    let shortName = attrType.name;
+                                    if (shortName.length > 20) {
+                                        shortName = shortName.substring(0, 5) + '..' + shortName.substring(shortName.length - 8);
+                                    }
+                                    return (
+                                        <Tooltip
+                                            key={attrType.name}
+                                            title={attrType.name}
+                                        >
+                                            <TableCell
+                                                key={attrType.name}
+                                            >
+                                                {shortName}
+                                            </TableCell>
+                                        </Tooltip>
+                                    )
+                                })}
                             </TableRow>
                         </TableHead>
                         <TableBody key={':tb_' + trialType.name}>
@@ -47,9 +58,9 @@ export const TrialsTabularView = ({ data, setData }) => {
                                                         data={trial}
                                                         // setData={setData}
                                                         scope={SCOPE_TRIAL}
-                                                    // deviceItem={deviceItem}
+                                                        // deviceItem={deviceItem}
+                                                        reduceNames={true}
                                                     />
-                                                    {/* {JSON.stringify(attr.value)} */}
                                                 </TableCell>
                                             )
                                             : null;

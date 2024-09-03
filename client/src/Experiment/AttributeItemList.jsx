@@ -25,7 +25,8 @@ export const AttributeItemOne = ({
     data, // data of the container (device / trial)
     setData, // set the container
     deviceItem, // device item when applicable
-    scope, // scope of the using component     
+    scope, // scope of the using component
+    reduceNames,
 }) => {
     const {
         value,
@@ -47,6 +48,7 @@ export const AttributeItemOne = ({
             attrType={attrType}
             disabled={!editable}
             tooltipTitle={tooltipTitle}
+            reduceNames={reduceNames}
         />
     )
 }

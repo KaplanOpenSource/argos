@@ -21,7 +21,7 @@ export const valueTypes = [
 ];
 export const VALUE_TYPE_DEFAULT = VALUE_TYPE_STRING;
 
-export const AttributeValue = ({ type, label, data, setData, attrType, ...restProps }) => {
+export const AttributeValue = ({ type, label, data, setData, attrType, reduceNames, ...restProps }) => {
     switch (type) {
         case VALUE_TYPE_NUMBER:
             return (
@@ -38,7 +38,7 @@ export const AttributeValue = ({ type, label, data, setData, attrType, ...restPr
                 <BooleanProperty
                     data={data}
                     setData={setData}
-                    label={label}
+                    label={reduceNames ? '' : label}
                     {...restProps}
                 />
             )
