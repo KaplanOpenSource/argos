@@ -52,7 +52,7 @@ export const TrialType = ({ data, setData, experiment }) => {
                             onClick={e => {
                                 const cloned = structuredClone(itemData);
                                 cloned.name = createNewName(data.trials, itemData.name + " cloned");
-                                cloned.createdDate = dayjs().startOf('day');
+                                cloned.createdDate = dayjs().startOf('day').add(12, 'hours').toISOString();
                                 setData({ ...data, trials: [...(data.trials || []), cloned] });
                             }}
                         >

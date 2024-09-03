@@ -11,7 +11,7 @@ export const AddNewTrialButton = ({ trialType, setTrialType }) => {
             onClick={e => {
                 e.stopPropagation();
                 const name = createNewName(trialType.trials, 'New Trial');
-                const createdDate = dayjs().startOf('day');
+                const createdDate = dayjs().startOf('day').add(12, 'hours').toISOString();
                 const newTrial = assignUuids({ name, createdDate });
                 setTrialType({ ...trialType, trials: [...(trialType.trials || []), newTrial] });
             }}

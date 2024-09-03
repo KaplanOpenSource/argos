@@ -17,7 +17,7 @@ export const DateProperty = ({ label, data, setData, tooltipTitle = "", ...restP
     }
 
     const setValue = (val) => {
-        setData(val.toISOString());
+        setData(val.startOf('day').add(12, 'hours').toISOString());
     }
 
     return (
