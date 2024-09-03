@@ -11,7 +11,7 @@ export const TrialsTabularView = ({ data, setData }) => {
                 aria-label="simple table"
                 size="small"
             >
-                {data?.trialTypes?.map((trialType) => (
+                {data?.trialTypes?.map((trialType, itt) => (
                     <Fragment key={trialType.trackUuid}>
                         <TableHead key={':th_' + trialType.name}>
                             <TableRow sx={{ backgroundColor: 'lightgray' }}>
@@ -38,7 +38,7 @@ export const TrialsTabularView = ({ data, setData }) => {
                             </TableRow>
                         </TableHead>
                         <TableBody key={':tb_' + trialType.name}>
-                            {trialType?.trials?.map((trial) => (
+                            {trialType?.trials?.map((trial, itr) => (
                                 <TableRow
                                     key={trial.trackUuid}
                                 >
@@ -47,7 +47,6 @@ export const TrialsTabularView = ({ data, setData }) => {
                                     </TableCell>
                                     <TableCell key={':tr'}>{trial.name}</TableCell>
                                     {trialType?.attributeTypes?.map(attrType => {
-                                        const attr = trial?.attributes?.find(x => x.name === attrType.name);
                                         return (
                                             <TableCell
                                                 key={attrType.name}
@@ -55,9 +54,12 @@ export const TrialsTabularView = ({ data, setData }) => {
                                                 <AttributeItemOne
                                                     attrType={attrType}
                                                     data={trial}
-                                                    // setData={setData}
+                                                    setData={val => {
+                                                        const exp = structuredClone(data);
+                                                        exp.trialTypes[itt].trials[itr] = val;
+                                                        setData(exp);
+                                                    }}
                                                     scope={SCOPE_TRIAL}
-                                                    // deviceItem={deviceItem}
                                                     reduceNames={true}
                                                 />
                                             </TableCell>

@@ -9,8 +9,6 @@ export const AttributeValueGet = ({
     deviceItem, // device item when applicable
     scope, // scope of the using component 
 }) => {
-    console.log(attrType, data)
-
     const obtainFromContainer = (prevValue, containerAttributes) => {
         const attr = containerAttributes?.find(t => t.name === attrType.name);
         if (attr && (attr.value !== undefined || attr.value !== null)) {
