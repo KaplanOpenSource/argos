@@ -48,18 +48,21 @@ export const ShapeItem = ({ data, setData }) => {
             <SwitchCase test={data.type || "Polyline"}>
                 <Case value={"Circle"}>
                     <TextFieldDebounceOutlined
+                        key="Radius"
                         label="Radius"
                         value={data.radius || 0}
                         type='number'
                         onChange={v => setData({ ...data, radius: parseFloat(v) })}
                     />
                     <TextFieldDebounceOutlined
+                        key="Center X"
                         label="Center X"
                         value={(data?.center || [])[0] || 0}
                         type='number'
                         onChange={v => setData({ ...data, center: [parseFloat(v), data?.center?.at(1) || 0] })}
                     />
                     <TextFieldDebounceOutlined
+                        key="Center Y"
                         label="Center Y"
                         value={(data?.center || [])[1] || 0}
                         type='number'
@@ -79,14 +82,16 @@ export const ShapeItem = ({ data, setData }) => {
                                 const x = (coords || [])[0] || 0;
                                 const y = (coords || [])[1] || 0;
                                 return (
-                                    <Stack direction='row'>
+                                    <Stack direction='row' key={i}>
                                         <TextFieldDebounceOutlined
+                                            key="X"
                                             label="X"
                                             value={x}
                                             type='number'
                                             onChange={v => setOneCoord([parseFloat(v), y], i)}
                                         />
                                         <TextFieldDebounceOutlined
+                                            key="Y"
                                             label="Y"
                                             value={y}
                                             type='number'
