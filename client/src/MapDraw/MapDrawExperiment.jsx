@@ -11,12 +11,6 @@ export const MapDrawExperiment = ({ }) => {
     const { experiment } = currTrial || {};
     const shapes = experiment?.shapes || [];
 
-
-    // $$$ TODO:
-    // 1. implement edit button on shapes list
-    // 2. on edit do something like ImagePlacementStretcher for each of the shapes below
-    // 3. check that convert to geojson works
-
     return shapes.map((shape, i) => {
         return (
             <Fragment key={i}>
@@ -33,14 +27,4 @@ export const MapDrawExperiment = ({ }) => {
             </Fragment>
         )
     });
-    // (
-    //     <>
-    //         {!experiment ? null :
-    //             <MapDraw
-    //                 data={experiment?.shapes || []}
-    //                 setData={shapes => setExperiment(experiment.name, { ...experiment, shapes })}
-    //             />
-    //         }
-    //     </>
-    // )
 }
