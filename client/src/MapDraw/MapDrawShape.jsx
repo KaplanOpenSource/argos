@@ -9,10 +9,6 @@ export const MapDrawShape = ({ data, setData }) => {
                 {(data?.center?.length >= 2 && data?.radius > 0)
                     ?
                     <>
-                        <Circle
-                            center={data.center}
-                            radius={data.radius}
-                        />
                         <CircleEdit
                             data={data}
                             setData={v => setData(v)}

@@ -13,7 +13,6 @@ export const CircleEdit = ({ data, setData }) => {
     useEffect(() => {
         ref.current.editing.enable();
         ref.current.on('edit', (e) => {
-            console.log(e, ref.current);
             if (setData) {
                 setData({
                     ...data,
@@ -21,7 +20,6 @@ export const CircleEdit = ({ data, setData }) => {
                     center: [ref.current._latlng.lat, ref.current._latlng.lng],
                 });
             }
-            // }
         })
         return () => ref?.current?.off('edit');
     }, [])
