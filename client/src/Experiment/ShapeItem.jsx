@@ -4,9 +4,12 @@ import { ButtonTooltip } from "../Utils/ButtonTooltip"
 import { SelectProperty } from "../Property/SelectProperty"
 import { Case, SwitchCase } from "../Utils/SwitchCase"
 import { Stack, TextField } from "@mui/material"
+import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce"
 
 export const ShapeItem = ({ data, setData }) => {
-    // const fixedData = data?.name ? data : {...data, name: }
+    const changeItem = (arr, index, newVal) => {
+        return index < arr.length ? arr.map((x, i) => i === index ? newVal : x) : [...arr, x];
+    }
     return (
         <TreeRow
             data={data}
@@ -31,47 +34,53 @@ export const ShapeItem = ({ data, setData }) => {
                     { name: "Polyline" },
                     { name: "Circle" },
                 ]}
-            // tooltipTitle="Where can this attribute's value be changed"
             />
             <SwitchCase test={data.type || "Polyline"}>
                 <Case value={"Circle"}>
-                    <TextField
+                    <TextFieldDebounceOutlined
                         label="Radius"
                         value={data.radius || 0}
-                        InputLabelProps={{ shrink: true }}
-                        size="small"
+                        type='number'
+                        onChange={v => setData({ ...data, radius: parseFloat(v) })}
                     />
-                    <TextField
+                    <TextFieldDebounceOutlined
                         label="Center X"
                         value={(data?.center || [])[0] || 0}
-                        InputLabelProps={{ shrink: true }}
-                        size="small"
+                        type='number'
+                        onChange={v => setData({ ...data, center: [parseFloat(v), data?.center?.at(1) || 0] })}
                     />
-                    <TextField
+                    <TextFieldDebounceOutlined
                         label="Center Y"
                         value={(data?.center || [])[1] || 0}
-                        InputLabelProps={{ shrink: true }}
-                        size="small"
+                        type='number'
+                        onChange={v => setData({ ...data, center: [data?.center?.at(0) || 0, parseFloat(v)] })}
                     />
                 </Case>
                 <Case isDefault={true}>
                     <Stack direction='column'>
-                        {data?.coordinates?.map((coords, i) => (
-                            <Stack direction='row'>
-                                <TextField
-                                    label="X"
-                                    value={(coords || [])[0] || 0}
-                                    InputLabelProps={{ shrink: true }}
-                                    size="small"
-                                />
-                                <TextField
-                                    label="Y"
-                                    value={(coords || [])[1] || 0}
-                                    InputLabelProps={{ shrink: true }}
-                                    size="small"
-                                />
-                            </Stack>
-                        ))}
+                        {data?.coordinates?.map((coords, i) => {
+                            const x = (coords || [])[0] || 0;
+                            const y = (coords || [])[1] || 0;
+                            const setCoord = (newCoords) => {
+                                setData({ ...data, coordinates: changeItem(data?.coordinates || [], i, newCoords) })
+                            }
+                            return (
+                                <Stack direction='row'>
+                                    <TextFieldDebounceOutlined
+                                        label="X"
+                                        value={x}
+                                        type='number'
+                                        onChange={v => setCoord([parseFloat(v), y])}
+                                    />
+                                    <TextFieldDebounceOutlined
+                                        label="Y"
+                                        value={y}
+                                        type='number'
+                                        onChange={v => setCoord([x, parseFloat(v)])}
+                                    />
+                                </Stack>
+                            )
+                        })}
                     </Stack>
                 </Case>
             </SwitchCase>
