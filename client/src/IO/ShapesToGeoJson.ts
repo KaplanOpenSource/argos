@@ -32,7 +32,7 @@ export const shapesToGeoJSON = (shapesData, numVertices = 360) => {
     const geoJson = {
         type: "FeatureCollection",
         features: shapesData.map(shape => {
-            if (shape.type === 'Polygon') {
+            if (shape.type === 'Polygon' && shape?.coordinates) {
                 // GeoJSON coordinates are [longitude, latitude]
                 const coordinates = shape.coordinates.map(coord => [coord[1], coord[0]]);
                 coordinates.push(coordinates[0]);
@@ -44,7 +44,7 @@ export const shapesToGeoJSON = (shapesData, numVertices = 360) => {
                     },
                     properties: {}
                 };
-            } else if (shape.type === 'Polyline') {
+            } else if (shape.type === 'Polyline' && shape?.coordinates) {
                 return {
                     type: "Feature",
                     geometry: {
@@ -53,7 +53,7 @@ export const shapesToGeoJSON = (shapesData, numVertices = 360) => {
                     },
                     properties: {}
                 };
-            } else if (shape.type === 'Circle') {
+            } else if (shape.type === 'Circle' && shape?.center && shape?.radius) {
                 return {
                     type: "Feature",
                     geometry: {
