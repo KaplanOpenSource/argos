@@ -26,6 +26,24 @@ export const ShapeItem = ({ data, setData }) => {
             setData={setData}
             components={
                 <>
+                    <SelectProperty
+                        label="Type"
+                        data={data.type || "Polyline"}
+                        setData={type => setData({ ...data, type })}
+                        options={[
+                            { name: "Polygon" },
+                            { name: "Polyline" },
+                            { name: "Circle" },
+                        ]}
+                    />
+                    {data.type === "Circle" ? null : <>
+                        <ButtonTooltip
+                            tooltip="Add coordinate"
+                            onClick={() => setOneCoord([0, 0])}
+                        >
+                            <Add />
+                        </ButtonTooltip>
+                    </>}
                     <ButtonTooltip
                         tooltip="Delete shape"
                         onClick={() => setData(undefined)}
@@ -35,16 +53,6 @@ export const ShapeItem = ({ data, setData }) => {
                 </>
             }
         >
-            <SelectProperty
-                label="Type"
-                data={data.type || "Polyline"}
-                setData={type => setData({ ...data, type })}
-                options={[
-                    { name: "Polygon" },
-                    { name: "Polyline" },
-                    { name: "Circle" },
-                ]}
-            />
             <SwitchCase test={data.type || "Polyline"}>
                 <Case value={"Circle"}>
                     <TextFieldDebounceOutlined
@@ -71,12 +79,6 @@ export const ShapeItem = ({ data, setData }) => {
                 </Case>
                 <Case isDefault={true}>
                     <>
-                        <ButtonTooltip
-                            tooltip="Add coordinate"
-                            onClick={() => setOneCoord([0, 0])}
-                        >
-                            <Add />
-                        </ButtonTooltip>
                         <Stack direction='column'>
                             {data?.coordinates?.map((coords, i) => {
                                 const x = (coords || [])[0] || 0;
