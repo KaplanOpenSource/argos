@@ -8,7 +8,7 @@ import "../lib/Edit.Circle";
 export const CircleEdit = ({ data, setData }) => {
     const ref = useRef();
 
-    const { radius, center } = data;
+    const { radius, center } = data || {};
 
     useEffect(() => {
         ref.current.editing.enable();
@@ -26,11 +26,15 @@ export const CircleEdit = ({ data, setData }) => {
 
     return (
         <>
-            <Circle
-                ref={ref}
-                center={center}
-                radius={radius}
-            />
+            {(center?.length >= 2 && radius > 0)
+                ?
+                <Circle
+                    ref={ref}
+                    center={center}
+                    radius={radius}
+                />
+                : null
+            }
         </>
     )
 }

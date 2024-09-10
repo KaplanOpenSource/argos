@@ -6,16 +6,10 @@ export const MapDrawShape = ({ data, setData }) => {
     return (
         <SwitchCase test={data?.type || "Polyline"}>
             <Case value={"Circle"}>
-                {(data?.center?.length >= 2 && data?.radius > 0)
-                    ?
-                    <>
-                        <CircleEdit
-                            data={data}
-                            setData={v => setData(v)}
-                        />
-                    </>
-                    : null
-                }
+                <CircleEdit
+                    data={data}
+                    setData={v => setData(v)}
+                />
             </Case>
             <Case value={"Polyline"}>
                 {(data?.coordinates?.length > 0)
