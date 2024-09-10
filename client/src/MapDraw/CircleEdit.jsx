@@ -11,8 +11,8 @@ export const CircleEdit = ({ data, setData }) => {
     const { radius, center } = data || {};
 
     useEffect(() => {
-        ref.current.editing.enable();
-        ref.current.on('edit', (e) => {
+        ref?.current?.editing?.enable();
+        ref?.current?.on('edit', (e) => {
             if (setData) {
                 setData({
                     ...data,

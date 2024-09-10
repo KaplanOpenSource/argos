@@ -1,6 +1,6 @@
 import { Case, SwitchCase } from "../Utils/SwitchCase";
-import { Circle, Polygon, Polyline } from "react-leaflet";
 import { CircleEdit } from "./CircleEdit";
+import { PolygonEdit, PolyLineEdit } from "./PolyEdit";
 
 export const MapDrawShape = ({ data, setData }) => {
     return (
@@ -12,22 +12,18 @@ export const MapDrawShape = ({ data, setData }) => {
                 />
             </Case>
             <Case value={"Polyline"}>
-                {(data?.coordinates?.length > 0)
-                    ?
-                    <Polyline
-                        positions={data.coordinates}
-                    />
-                    : null
-                }
+                <PolyLineEdit
+                    data={data}
+                    closed={false}
+                    setData={v => setData(v)}
+                />
             </Case>
             <Case value={"Polygon"}>
-                {(data?.coordinates?.length > 0)
-                    ?
-                    <Polygon
-                        positions={data.coordinates}
-                    />
-                    : null
-                }
+                <PolygonEdit
+                    data={data}
+                    closed={true}
+                    setData={v => setData(v)}
+                />
             </Case>
         </SwitchCase>
     )
