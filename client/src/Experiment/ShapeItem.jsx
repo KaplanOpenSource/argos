@@ -1,4 +1,4 @@
-import { Delete } from "@mui/icons-material"
+import { Add, Delete } from "@mui/icons-material"
 import { TreeRow } from "../App/TreeRow"
 import { ButtonTooltip } from "../Utils/ButtonTooltip"
 import { SelectProperty } from "../Property/SelectProperty"
@@ -8,7 +8,7 @@ import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce"
 
 export const ShapeItem = ({ data, setData }) => {
     const changeItem = (arr, index, newVal) => {
-        return index < arr.length ? arr.map((x, i) => i === index ? newVal : x) : [...arr, x];
+        return index < arr.length ? arr.map((x, i) => i === index ? newVal : x) : [...arr, newVal];
     }
     return (
         <TreeRow
@@ -57,31 +57,45 @@ export const ShapeItem = ({ data, setData }) => {
                     />
                 </Case>
                 <Case isDefault={true}>
-                    <Stack direction='column'>
-                        {data?.coordinates?.map((coords, i) => {
-                            const x = (coords || [])[0] || 0;
-                            const y = (coords || [])[1] || 0;
-                            const setCoord = (newCoords) => {
-                                setData({ ...data, coordinates: changeItem(data?.coordinates || [], i, newCoords) })
-                            }
-                            return (
-                                <Stack direction='row'>
-                                    <TextFieldDebounceOutlined
-                                        label="X"
-                                        value={x}
-                                        type='number'
-                                        onChange={v => setCoord([parseFloat(v), y])}
-                                    />
-                                    <TextFieldDebounceOutlined
-                                        label="Y"
-                                        value={y}
-                                        type='number'
-                                        onChange={v => setCoord([x, parseFloat(v)])}
-                                    />
-                                </Stack>
-                            )
-                        })}
-                    </Stack>
+                    <>
+                        <ButtonTooltip
+                            tooltip="Add coordinate"
+                            onClick={() => setData({ ...data, coordinates: changeItem(data?.coordinates || [], 1e10, [0, 0]) })}
+                        >
+                            <Add />
+                        </ButtonTooltip>
+                        <Stack direction='column'>
+                            {data?.coordinates?.map((coords, i) => {
+                                const x = (coords || [])[0] || 0;
+                                const y = (coords || [])[1] || 0;
+                                const setCoord = (newCoords) => {
+                                    setData({ ...data, coordinates: changeItem(data?.coordinates || [], i, newCoords) })
+                                }
+                                return (
+                                    <Stack direction='row'>
+                                        <TextFieldDebounceOutlined
+                                            label="X"
+                                            value={x}
+                                            type='number'
+                                            onChange={v => setCoord([parseFloat(v), y])}
+                                        />
+                                        <TextFieldDebounceOutlined
+                                            label="Y"
+                                            value={y}
+                                            type='number'
+                                            onChange={v => setCoord([x, parseFloat(v)])}
+                                        />
+                                        <ButtonTooltip
+                                            tooltip="Delete coordinate"
+                                            onClick={() => setData({ ...data, coordinates: (data?.coordinates || []).filter((_, j) => j !== i) })}
+                                        >
+                                            <Delete />
+                                        </ButtonTooltip>
+                                    </Stack>
+                                )
+                            })}
+                        </Stack>
+                    </>
                 </Case>
             </SwitchCase>
         </TreeRow>
