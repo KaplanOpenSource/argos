@@ -55,16 +55,16 @@ export const ShapeList = ({ data, setData }) => {
                 <ButtonTooltip
                     tooltip='Add circle'
                     onClick={() => {
-                        // const name = createNewName(shapes, "New Circle");
-                        // const noNameData = {
-                        //     "type": "Circle",
-                        //     "center": [
-                        //         31.942839972853083,
-                        //         34.80056762695313
-                        //     ],
-                        //     "radius": 3714.772197022863,
-                        // };
-                        // setData({ ...data, shapes: [...items, assignUuids({ name, ...noNameData })] });
+                        addActionOnMap((mapObj) => {
+                            const draw = new L.Draw.Circle(mapObj);
+                            draw.enable();
+                            mapObj.on(L.Draw.Event.CREATED, (e) => {
+                                mapObj.off(L.Draw.Event.CREATED);
+                                const center = [e.layer._latlng.lat, e.layer._latlng.lng];
+                                const radius = e.layer._mRadius;
+                                addShape({ "type": "Circle", center, radius });
+                            });
+                        });
                     }}
                 >
                     <AddCircleOutline />
@@ -80,7 +80,7 @@ export const ShapeList = ({ data, setData }) => {
                                 const coordinates = e.layer._latlngs.map(({ lat, lng }) => [lat, lng]);
                                 addShape({ "type": "Polyline", coordinates });
                             });
-                        })
+                        });
                     }}
                 >
                     <PolylineIcon />
