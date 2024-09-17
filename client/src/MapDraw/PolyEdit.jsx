@@ -1,4 +1,4 @@
-import { Polygon, Polyline } from "react-leaflet";
+import { Polygon, Polyline, Tooltip } from "react-leaflet";
 import { useEffect, useRef } from "react";
 import "leaflet-draw";
 import "../lib/Edit.SimpleShape";
@@ -25,11 +25,15 @@ export const PolyLineEdit = ({ data, setData }) => {
         <Polyline
             ref={ref}
             positions={data?.coordinates || []}
-        />
+        >
+            <Tooltip>
+                {data.name}
+            </Tooltip>
+        </Polyline>
     )
 }
 
-export const PolygonEdit = ({ data, setData }) => {
+export const PolygonEdit = ({ data, setData, showNames }) => {
     const ref = useRef();
 
     useEffect(() => {
@@ -46,6 +50,10 @@ export const PolygonEdit = ({ data, setData }) => {
         <Polygon
             ref={ref}
             positions={data?.coordinates || []}
-        />
+        >
+            <Tooltip>
+                {data.name}
+            </Tooltip>
+        </Polygon>
     )
 }

@@ -1,4 +1,4 @@
-import { Circle, Rectangle } from "react-leaflet";
+import { Circle, Tooltip } from "react-leaflet";
 import { useEffect, useRef } from "react";
 import "leaflet-draw";
 import "../lib/Edit.SimpleShape";
@@ -32,7 +32,11 @@ export const CircleEdit = ({ data, setData }) => {
                     ref={ref}
                     center={center}
                     radius={radius}
-                />
+                >
+                    <Tooltip>
+                        {data.name}
+                    </Tooltip>
+                </Circle>
                 : null
             }
         </>

@@ -11,7 +11,6 @@ export const MapDrawExperiment = ({ }) => {
     const { experiment } = currTrial || {};
     const shapes = experiment?.shapes || [];
 
-
     const setShape = (newData, i) => {
         const e = {
             ...experiment,
