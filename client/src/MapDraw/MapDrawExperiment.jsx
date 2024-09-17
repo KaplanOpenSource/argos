@@ -11,18 +11,21 @@ export const MapDrawExperiment = ({ }) => {
     const { experiment } = currTrial || {};
     const shapes = experiment?.shapes || [];
 
+
+    const setShape = (newData, i) => {
+        const e = {
+            ...experiment,
+            shapes: shapes.map((x, j) => i === j ? newData : x),
+        };
+        setExperiment(e.name, e)
+    }
+
     return shapes.map((shape, i) => {
         return (
             <Fragment key={i}>
                 <MapDrawShape
                     data={shape}
-                    setData={newData => {
-                        const e = {
-                            ...experiment,
-                            shapes: shapes.map((x, j) => i === j ? newData : x),
-                        };
-                        setExperiment(e.name, e)
-                    }}
+                    setData={newData => setShape(newData, i)}
                 />
             </Fragment>
         )
