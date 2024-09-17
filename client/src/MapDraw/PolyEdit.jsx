@@ -33,7 +33,7 @@ export const PolyLineEdit = ({ data, setData }) => {
     )
 }
 
-export const PolygonEdit = ({ data, setData, showNames }) => {
+export const PolygonEdit = ({ data, setData }) => {
     const ref = useRef();
 
     useEffect(() => {
