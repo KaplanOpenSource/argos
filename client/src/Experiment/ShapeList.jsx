@@ -36,6 +36,12 @@ export const ShapeList = ({ data, setData }) => {
 
     const shapes = (data.shapes || []);
 
+    const addShape = (newShapeNoName) => {
+        const name = createNewName(shapes, "New Shape");
+        const newShape = assignUuids({ name, ...newShapeNoName });
+        setData({ ...data, shapes: [...shapes, newShape] });
+    }
+
     return (
         <TreeSublist
             parentKey={data.trackUuid}
@@ -70,14 +76,9 @@ export const ShapeList = ({ data, setData }) => {
                             const draw = new L.Draw.Polyline(mapObj);
                             draw.enable();
                             mapObj.on(L.Draw.Event.CREATED, (e) => {
-                                mapObj.off(L.Draw.Event.CREATED)
+                                mapObj.off(L.Draw.Event.CREATED);
                                 const coordinates = e.layer._latlngs.map(({ lat, lng }) => [lat, lng]);
-                                const newShape = assignUuids({
-                                    name: createNewName(shapes, "New Polyline"),
-                                    "type": "Polyline",
-                                    coordinates
-                                });
-                                setData({ ...data, shapes: [...shapes, newShape] });
+                                addShape({ "type": "Polyline", coordinates });
                             });
                         })
                     }}
