@@ -14,7 +14,7 @@ import { experimentContext } from '../Context/ExperimentProvider';
 import { SHOW_ALL_EXPERIMENTS } from './ShowConfigToggles';
 import { EnclosingListSelectionProvider } from '../Experiment/EnclosedSelectionProvider';
 import { AppHeaderButtons } from './AppHeaderButtons';
-import { MapDrawExperiment } from '../Map/MapDrawExperiment';
+import { MapDrawExperiment } from '../MapDraw/MapDrawExperiment';
 
 export function DevicePlanner() {
     const [showEditBox, setShowEditBox] = useState(false);
