@@ -4,7 +4,17 @@ import { camelCaseToWords, createNewName } from "../Utils/utils";
 import { TreeItem } from "@mui/x-tree-view/TreeItem";
 import { assignUuids } from "../Context/TrackUuidUtils";
 
-export const TreeSublist = ({ nameTemplate, fieldName, data, setData, newDataCreator, parentKey, components, children }) => {
+export const TreeSublist = ({
+    nameTemplate,
+    fieldName,
+    data,
+    setData,
+    newDataCreator,
+    parentKey,
+    components,
+    children,
+    noAddButton,
+}) => {
     const items = data[fieldName] || [];
     const key = parentKey + '_' + fieldName;
 
@@ -28,26 +38,28 @@ export const TreeSublist = ({ nameTemplate, fieldName, data, setData, newDataCre
                     }}>
                         {camelCaseToWords(fieldName)}
                     </Typography>
-                    <Tooltip title="Add New" placement="right">
-                        <IconButton
-                            sx={{
-                                display: 'flex',
-                                alignSelf: 'flex-start',
-                                alignContent: 'flex-start',
-                                alignItems: 'flex-start',
-                            }}
-                            // color="inherit"
-                            onClick={e => {
-                                e.stopPropagation();
-                                const name = createNewName(items, nameTemplate);
-                                const noNameData = newDataCreator ? newDataCreator() : {};
-                                const theData = assignUuids({ name, ...noNameData });
-                                setData({ ...data, [fieldName]: [...items, theData] });
-                            }}
-                        >
-                            <AddIcon />
-                        </IconButton>
-                    </Tooltip>
+                    {noAddButton ? null :
+                        <Tooltip title="Add New" placement="right">
+                            <IconButton
+                                sx={{
+                                    display: 'flex',
+                                    alignSelf: 'flex-start',
+                                    alignContent: 'flex-start',
+                                    alignItems: 'flex-start',
+                                }}
+                                // color="inherit"
+                                onClick={e => {
+                                    e.stopPropagation();
+                                    const name = createNewName(items, nameTemplate);
+                                    const noNameData = newDataCreator ? newDataCreator() : {};
+                                    const theData = assignUuids({ name, ...noNameData });
+                                    setData({ ...data, [fieldName]: [...items, theData] });
+                                }}
+                            >
+                                <AddIcon />
+                            </IconButton>
+                        </Tooltip>
+                    }
                     {components}
                 </Box>
             }
