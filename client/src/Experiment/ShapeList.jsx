@@ -8,6 +8,7 @@ import { AddCircleOutline } from "@mui/icons-material";
 import { assignUuids } from "../Context/TrackUuidUtils";
 import { ActionsOnMapContext } from "../Map/ActionsOnMapContext";
 import L from 'leaflet';
+import { Typography } from "@mui/material";
 
 export const ShapeList = ({ data, setData }) => {
 
@@ -34,7 +35,7 @@ export const ShapeList = ({ data, setData }) => {
         }
     }, [data]);
 
-    const shapes = (data.shapes || []);
+    const shapes = (data?.shapes || []);
 
     const addShape = (newShapeNoName) => {
         const name = createNewName(shapes, "New Shape");
@@ -91,6 +92,9 @@ export const ShapeList = ({ data, setData }) => {
                 >
                     <PolylineIcon />
                 </ButtonTooltip>
+                <Typography>
+                    {shapes.length} Shapes
+                </Typography>
             </>}
         >
             {
