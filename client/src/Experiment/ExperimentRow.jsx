@@ -65,32 +65,11 @@ export const ExperimentRow = ({ data, setData, children }) => {
                     rows={2}
                 />
             </Stack>
-            <TreeSublist
-                parentKey={data.trackUuid}
+
+            <TrialTypesList
                 data={data}
-                fieldName='trialTypes'
-                nameTemplate='New Trial Type'
                 setData={setData}
-                newDataCreator={() => {
-                    return {
-                        attributeTypes: [
-                            {
-                                "type": "Date",
-                                "name": "TrialStart",
-                            },
-                            {
-                                "type": "Date",
-                                "name": "TrialEnd",
-                            },
-                        ]
-                    }
-                }}
-            >
-                <TrialTypesList
-                    data={data}
-                    setData={setData}
-                />
-            </TreeSublist>
+            />
 
             <TreeSublist
                 parentKey={data.trackUuid}

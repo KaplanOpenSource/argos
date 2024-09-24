@@ -2,7 +2,7 @@ import { TreeRow } from "../App/TreeRow";
 import { Trial } from "./Trial";
 import dayjs from "dayjs";
 import { changeByName, createNewName } from "../Utils/utils";
-import { IconButton, Tooltip } from "@mui/material";
+import { IconButton, Tooltip, Typography } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { AttributeTypesDialogButton } from "./AttributeTypesDialogButton";
@@ -10,6 +10,7 @@ import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { AddNewTrialButton } from "./AddNewTrialButton";
 
 export const TrialType = ({ data, setData, experiment }) => {
+    const trials = data?.trials || [];
     return (
         <TreeRow
             data={data}
@@ -33,11 +34,14 @@ export const TrialType = ({ data, setData, experiment }) => {
                         setData={setData}
                         isOfDevice={false}
                     />
+                    <Typography>
+                        {trials.length} Trials
+                    </Typography>
                 </>
             }
         >
             {
-                (data.trials || []).map(itemData => (
+                trials.map(itemData => (
                     <Trial
                         key={itemData.name}
                         data={itemData}
