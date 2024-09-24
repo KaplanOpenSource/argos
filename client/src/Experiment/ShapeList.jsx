@@ -75,9 +75,15 @@ export const ShapeList = ({ data, setData }) => {
                         addActionOnMap((mapObj) => {
                             const draw = new L.Draw.Polyline(mapObj);
                             draw.enable();
+
+                            // Solving a bug in leaflet-draw
+                            for (const es of document.getElementsByClassName('leaflet-popup-pane')) {
+                                es.style.zIndex = 599;
+                            }
+
                             mapObj.on(L.Draw.Event.CREATED, (e) => {
                                 mapObj.off(L.Draw.Event.CREATED);
-                                const coordinates = e.layer._latlngs.map(({ lat, lng }) => [lat, lng]);
+                                const coordinates = e?.layer?._latlngs?.map(({ lat, lng }) => [lat, lng]) || [];
                                 addShape({ "type": "Polyline", coordinates });
                             });
                         });
