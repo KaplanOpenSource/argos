@@ -5,6 +5,7 @@ import { SelectProperty } from "../Property/SelectProperty"
 import { Case, SwitchCase } from "../Utils/SwitchCase"
 import { Stack } from "@mui/material"
 import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce"
+import { ShapeColorPicker } from "./ShapeColorPicker"
 
 export const ShapeItem = ({ data, setData }) => {
     const setCoordinates = (newCoords) => {
@@ -50,6 +51,10 @@ export const ShapeItem = ({ data, setData }) => {
                     >
                         <Delete />
                     </ButtonTooltip>
+                    <ShapeColorPicker
+                        data={data}
+                        setData={setData}
+                    />
                 </>
             }
         >
