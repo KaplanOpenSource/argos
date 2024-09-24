@@ -1,8 +1,7 @@
 import { Box, Paper, Popover, Stack, Tooltip, Typography } from "@mui/material";
 import { Path } from "leaflet";
 import { useState } from "react";
-
-const DEFAULT_COLOR = new Path().options.color;
+import { DEFAULT_COLOR, DEFAULT_FILL_OPACITY, DEFAULT_LINE_OPACITY } from "../MapDraw/defaults";
 
 const Square = ({ fillColor, lineColor, fillOpacity, lineOpacity, side = 20, tooltipTitle, ...restProps }) => {
     // Combine color and opacity for border and background
@@ -29,16 +28,16 @@ export const ShapeColorPicker = ({ data, setData, showFill = true }) => {
 
     const lineColor = data?.lineColor || DEFAULT_COLOR;
     const fillColor = data?.fillColor || DEFAULT_COLOR;
-    const lineOpacity = (data?.lineOpacity || 100);
-    const fillOpacity = (data?.fillOpacity || 20);
+    const lineOpacity = (data?.lineOpacity || DEFAULT_LINE_OPACITY);
+    const fillOpacity = (data?.fillOpacity || DEFAULT_FILL_OPACITY);
     return (
         <Box sx={{ position: 'relative' }}>
             <Square
                 tooltipTitle="Pick Color"
                 lineColor={lineColor}
                 fillColor={fillColor}
-                lineOpacity={lineOpacity / 100.0}
-                fillOpacity={fillOpacity / 100.0}
+                lineOpacity={lineOpacity}
+                fillOpacity={fillOpacity}
                 onClick={(e) => {
                     e.stopPropagation();
                     setAnchorEl(anchorEl ? null : e.currentTarget);
@@ -66,8 +65,8 @@ export const ShapeColorPicker = ({ data, setData, showFill = true }) => {
                         <Typography sx={{ minWidth: '40px' }}>Line</Typography>
                         <input
                             type="range"
-                            value={lineOpacity}
-                            onChange={e => setData({ ...data, lineOpacity: e.target.value })}
+                            value={lineOpacity * 100.0}
+                            onChange={e => setData({ ...data, lineOpacity: parseFloat(e.target.value) / 100.0 })}
                         />
                         <input
                             type="color"
@@ -79,8 +78,8 @@ export const ShapeColorPicker = ({ data, setData, showFill = true }) => {
                         <Typography sx={{ minWidth: '40px' }}>Fill</Typography>
                         <input
                             type="range"
-                            value={fillOpacity}
-                            onChange={e => setData({ ...data, fillOpacity: e.target.value })}
+                            value={fillOpacity * 100.0}
+                            onChange={e => setData({ ...data, fillOpacity: parseFloat(e.target.value) / 100.0 })}
                         />
                         <input
                             type="color"
