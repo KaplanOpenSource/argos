@@ -4,6 +4,7 @@ import "leaflet-draw";
 import "../lib/Edit.SimpleShape";
 import "../lib/Edit.CircleMarker";
 import "../lib/Edit.Circle";
+import { DEFAULT_COLOR, DEFAULT_FILL_OPACITY, DEFAULT_LINE_OPACITY } from "./defaults";
 
 export const CircleEdit = ({ data, setData }) => {
     const ref = useRef();
@@ -32,6 +33,10 @@ export const CircleEdit = ({ data, setData }) => {
                     ref={ref}
                     center={center}
                     radius={radius}
+                    fillOpacity={data?.fillOpacity ?? DEFAULT_FILL_OPACITY}
+                    opacity={data?.lineOpacity ?? DEFAULT_LINE_OPACITY}
+                    color={data?.lineColor ?? DEFAULT_COLOR}
+                    fillColor={data?.fillColor ?? DEFAULT_COLOR}        
                 >
                     <Tooltip>
                         {data.name}
