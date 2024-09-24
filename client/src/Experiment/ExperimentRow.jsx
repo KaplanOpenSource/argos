@@ -71,30 +71,11 @@ export const ExperimentRow = ({ data, setData, children }) => {
                 setData={setData}
             />
 
-            <TreeSublist
-                parentKey={data.trackUuid}
+
+            <DeviceTypesList
                 data={data}
-                fieldName='deviceTypes'
-                nameTemplate='New Device Type'
                 setData={setData}
-                newDataCreator={() => {
-                    return {
-                        attributeTypes: [
-                            {
-                                "type": "Boolean",
-                                "name": "StoreDataPerDevice",
-                                "defaultValue": false,
-                                "scope": SCOPE_CONSTANT
-                            },
-                        ]
-                    }
-                }}
-            >
-                <DeviceTypesList
-                    data={data}
-                    setData={setData}
-                />
-            </TreeSublist>
+            />
 
             <TreeSublist
                 parentKey={data.trackUuid}

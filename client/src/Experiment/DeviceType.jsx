@@ -27,17 +27,19 @@ export const DeviceType = ({ data, setData, experiment }) => {
         setHiddenDeviceTypes({ ...hiddenDeviceTypes, [data.name]: !isHidden });
     }
 
+    const devicesNum = data?.devices?.length || 0;
     let placedDevices = '';
     if (currTrial?.trial) {
         let c = 0;
-        for (const {deviceTypeName} of currTrial?.trial?.devicesOnTrial || []) {
+        for (const { deviceTypeName } of currTrial?.trial?.devicesOnTrial || []) {
             if (deviceTypeName === data.name) {
                 c++;
             }
         }
-        placedDevices = c + '/';
+        placedDevices = `${c}/${devicesNum} positioned `;
+    } else {
+        placedDevices = `${devicesNum} devices`;
     }
-    placedDevices += data?.devices?.length || 0;
 
     return (
         <TreeRow
