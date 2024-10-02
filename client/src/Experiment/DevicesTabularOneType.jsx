@@ -1,10 +1,10 @@
-import { Paper, TableBody, TableCell, TableHead, TableRow, Tooltip } from "@mui/material"
+import { TableBody, TableCell, TableHead, TableRow, Tooltip } from "@mui/material"
 import { AttributeItemOne } from "./AttributeItemList";
 import { SCOPE_EXPERIMENT } from "./AttributeType";
 import { AttributeTypesDialogButton } from "./AttributeTypesDialogButton";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { createNewName } from "../Utils/utils";
-import { Add } from "@mui/icons-material";
+import { Add, ChevronRight, ExpandMore } from "@mui/icons-material";
 import { AddMultipleDevices } from "./AddMultipleDevices";
 import { assignUuids } from "../Context/TrackUuidUtils";
 import { useState } from "react";
@@ -22,7 +22,20 @@ export const DevicesTabularOneType = ({ deviceType, setDeviceType }) => {
                     <TableCell key={':tt'}
                         onClick={() => setOpen(!open)}
                     >
-                        Device Type
+                        <Tooltip
+                            title={open ? "Click to collapse devices" : "Click to show devices"}
+                        >
+                            <span>
+                                Device Type
+                            </span>
+                        </Tooltip>
+                        <ButtonTooltip
+                            tooltip={open ? "Collapse devices" : "Show devices"}
+                            onClick={() => setOpen(!open)}
+                            style={{ margin: 0, padding: 0 }}
+                        >
+                            {open ? <ExpandMore /> : <ChevronRight />}
+                        </ButtonTooltip>
                         <AttributeTypesDialogButton
                             data={deviceType}
                             setData={val => setDeviceType(val)}
