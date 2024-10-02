@@ -19,11 +19,11 @@ export const DevicesTabularView = ({ experiment, setExperimentData }) => {
                 stickyHeader
             >
                 {experiment?.deviceTypes?.map((deviceType, itt) => {
-                    // const setTrialType = (val) => {
-                    //     const exp = structuredClone(experiment);
-                    //     exp.trialTypes[itt] = val;
-                    //     setExperimentData(exp);
-                    // }
+                    const setDeviceType = (val) => {
+                        const exp = structuredClone(experiment);
+                        exp.deviceTypes[itt] = val;
+                        setExperimentData(exp);
+                    }
                     return (
                         <Fragment key={deviceType.trackUuid}>
                             <TableHead key={':th_' + deviceType.name}>
@@ -34,17 +34,17 @@ export const DevicesTabularView = ({ experiment, setExperimentData }) => {
                                 >
                                     <TableCell key={':tt'}>
                                         Device Type
-                                        {/* <AttributeTypesDialogButton
-                                            data={trialType}
-                                            setData={val => setTrialType(val)}
-                                            isOfDevice={false}
-                                        /> */}
+                                        <AttributeTypesDialogButton
+                                            data={deviceType}
+                                            setData={val => setDeviceType(val)}
+                                            isOfDevice={true}
+                                        />
                                     </TableCell>
                                     <TableCell key={':tr'}>
                                         Device
                                         {/* <AddNewTrialButton
                                             trialType={trialType}
-                                            setTrialType={val => setTrialType(val)}
+                                            setDeviceType={val => setDeviceType(val)}
                                         /> */}
                                     </TableCell>
                                     {/* <TableCell key={':tcd'}>Created Date</TableCell>
