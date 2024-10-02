@@ -6,6 +6,11 @@ import { DateProperty } from "../Property/DateProperty";
 import { sum } from "lodash";
 import { AttributeTypesDialogButton } from "./AttributeTypesDialogButton";
 import { AddNewTrialButton } from "./AddNewTrialButton";
+import { ButtonTooltip } from "../Utils/ButtonTooltip";
+import { createNewName } from "../Utils/utils";
+import { Add } from "@mui/icons-material";
+import { AddMultipleDevices } from "./AddMultipleDevices";
+import { assignUuids } from "../Context/TrackUuidUtils";
 
 export const DevicesTabularView = ({ experiment, setExperimentData }) => {
     // const totalDevices = sum((experiment?.deviceTypes || []).map(x => (x?.devices || []).length));
@@ -42,10 +47,22 @@ export const DevicesTabularView = ({ experiment, setExperimentData }) => {
                                     </TableCell>
                                     <TableCell key={':tr'}>
                                         Device
-                                        {/* <AddNewTrialButton
-                                            trialType={trialType}
-                                            setDeviceType={val => setDeviceType(val)}
-                                        /> */}
+                                        <ButtonTooltip
+                                            tooltip="Add new device"
+                                            onClick={e => {
+                                                e.stopPropagation();
+                                                const name = createNewName(deviceType.devices, 'New Device');
+                                                setDeviceType({ ...deviceType, devices: [...(deviceType.devices || []), assignUuids({ name })] });
+                                            }}
+                                        >
+                                            <Add />
+                                        </ButtonTooltip>
+                                        <AddMultipleDevices
+                                            deviceType={deviceType}
+                                            addDevices={newDevices => {
+                                                setDeviceType({ ...deviceType, devices: [...(deviceType.devices || []), ...newDevices] })
+                                            }}
+                                        />
                                     </TableCell>
                                     {/* <TableCell key={':tcd'}>Created Date</TableCell>
                                     <TableCell key={':tpos'}>Positioned Devices</TableCell> */}
