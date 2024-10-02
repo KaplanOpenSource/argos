@@ -36,8 +36,12 @@ export function DevicePlanner() {
                 />
             </AppHeader>
             <Stack
-                direction={'row'} justifyContent="space-between" alignItems="flex-start"
-                style={{ pointerEvents: 'none' }}
+                direction={'row'}
+                justifyContent="space-between"
+                alignItems="flex-start"
+                style={{
+                    pointerEvents: 'none',
+                }}
             >
                 <EnclosingListSelectionProvider>
                     <ExperimentList

@@ -11,9 +11,6 @@ export const TrialsTabularView = ({ data, setData }) => {
     const totalDevices = sum((data?.deviceTypes || []).map(x => (x?.devices || []).length));
     return (
         <TableContainer
-            style={{
-                maxHeight: '100vh',
-            }}
             component={Paper}
             key="1"
         >
