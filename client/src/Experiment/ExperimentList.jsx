@@ -8,7 +8,7 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { Paper } from "@mui/material";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { DeviceTypesList } from "./DeviceTypesList";
-import { SHOW_ALL_EXPERIMENTS, SHOW_ONLY_DEVICES, SHOW_ONLY_TRIALS, SHOW_TRIALS_TABULAR } from "../App/ShowConfigToggles";
+import { SHOW_ALL_EXPERIMENTS, SHOW_DEVICES_TABULAR, SHOW_ONLY_DEVICES, SHOW_ONLY_TRIALS, SHOW_TRIALS_TABULAR } from "../App/ShowConfigToggles";
 import { Case, SwitchCase } from "../Utils/SwitchCase";
 import { TrialTypesList } from "./TrialTypesList";
 import { EnclosingListSelectionContext } from "./EnclosedSelectionProvider";
@@ -16,6 +16,7 @@ import { useCloneExperiment } from "../IO/CloneExperiment";
 import { ActionsOnMapContext } from "../Map/ActionsOnMapContext";
 import { CoordsSpan } from "./CoordsSpan";
 import { TrialsTabularView } from "./TrialsTabularView";
+import { DevicesTabularView } from "./DevicesTabularView";
 
 export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
     const { experiments, setExperiment, addExperiment, currTrial, setCurrTrial } = useContext(experimentContext);
@@ -135,6 +136,12 @@ export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
                         <TrialsTabularView
                             data={currTrial.experiment}
                             setData={val => setExperiment(currTrial.experiment.name, val)}
+                        />
+                    </Case>
+                    <Case value={SHOW_DEVICES_TABULAR}>
+                        <DevicesTabularView
+                            experiment={currTrial.experiment}
+                            setExperimentData={val => setExperiment(currTrial.experiment.name, val)}
                         />
                     </Case>
                 </SwitchCase>
