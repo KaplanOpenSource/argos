@@ -41,9 +41,12 @@ export const useExperimentUpdates = (state, setState) => {
 
     const deleteExperiment = (name) => {
         const experimentPrevData = state.experiments.find(t => t.name === name)
-        setState(change(state, draft => {
-            draft.experiments = draft.experiments.filter(t => t.name !== name);
-        }));
+
+        setState(prev => {
+            const experiments = prev.experiments.filter(t => t.name !== name);
+            return { ...prev, experiments };
+        });
+        
         sendUpdate(name, undefined, experimentPrevData);
     }
 
@@ -62,9 +65,12 @@ export const useExperimentUpdates = (state, setState) => {
                 description: '',
             });
         }
-        setState(change(state, draft => {
-            draft.experiments.push(exp);
-        }));
+
+        setState(prev => {
+            const experiments = [...prev.experiments, exp];
+            return { ...prev, experiments };
+        });
+
         sendUpdate(name, exp, undefined);
     }
 
@@ -82,10 +88,16 @@ export const useExperimentUpdates = (state, setState) => {
             alert("Duplicate experiment name " + data.name);// + "\n" + state.experiments.map(e => e.name).join(', '));
             return;
         }
-        setState(change(state, draft => {
-            draft.experiments[i] = data;
-        }));
-        sendUpdate(name, data, state.experiments[i]);
+
+        const experimentPrevData = state.experiments.find(t => t.name === name)
+
+        setState(prev => {
+            const experiments = prev.experiments;
+            experiments[i] = data;
+            return { ...prev, experiments };
+        });
+
+        sendUpdate(name, data, experimentPrevData);
     }
 
 
