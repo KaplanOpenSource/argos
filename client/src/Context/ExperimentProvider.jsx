@@ -76,7 +76,7 @@ export const ExperimentProvider = ({ children }) => {
         }
         const e = structuredClone(currTrial.experiment);
         e.trialTypes[currTrial.trialTypeIndex].trials[currTrial.trialIndex] = data;
-        experimentUpdates.setExperiment(currTrial.experimentName, e)
+        setExperiment(currTrial.experimentName, e)
     }
 
     const setLocationsToDevices = (deviceTypeItems, latlngs) => {
@@ -136,7 +136,7 @@ export const ExperimentProvider = ({ children }) => {
                 }
             }
         }
-        experimentUpdates.setExperiment(currTrial.experimentName, e)
+        setExperiment(currTrial.experimentName, e)
     }
 
     const deleteDeviceType = ({ experimentName, deviceTypeName }) => {
@@ -153,7 +153,7 @@ export const ExperimentProvider = ({ children }) => {
                 }
             }
         }
-        experimentUpdates.setExperiment(currTrial.experimentName, e)
+        setExperiment(currTrial.experimentName, e)
     }
 
     useEffect(() => {

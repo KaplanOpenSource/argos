@@ -19,19 +19,51 @@ export const useExperimentUpdates = (state, setState) => {
     const { hasToken } = useContext(TokenContext);
     const { saveExperimentWithData } = useFetchExperiments();
 
-    const sendUpdate = (experimentName, experimentData) => {
+    const jsonCompare = (prevData, newData) => {
+        const prevDataArr = [prevData].filter(x => x);
+        const newDataArr = [newData].filter(x => x);
+        return jsonpatch.compare(prevDataArr, newDataArr);
+    }
+
+    const jsonApply = (items, index, prevData, patchArr) => {
+        const prevDataArr = [prevData].filter(x => x);
+        const newData = jsonpatch.applyPatch(prevDataArr, patchArr, false, false).newDocument[0];
+        if (newData && index === -1) {
+            items.push(newData);
+        } else if (newData && index !== -1) {
+            items[index] = newData;
+        } else if (!newData && index !== -1) {
+            items.splice(index, 1);
+        }
+        return newData;
+    }
+
+    const sendUpdate = (experimentName, experimentNewData, experimentPrevData) => {
+        const redoPatch = jsonCompare(experimentPrevData, experimentNewData);
+        // TODO: do inverse patch instead? 
+        const undoPatch = jsonCompare(experimentNewData, experimentPrevData);
+        if (redoPatch.length === 0) {
+            return; // nothing was changed
+        }
+        // }
         setState(prev => {
-            const newUpdate = { name: experimentName, exp: experimentData };
-            const serverUpdates = [...prev.serverUpdates, newUpdate];
-            return { ...prev, serverUpdates };
+            const newUpdate = { name: experimentName, exp: experimentNewData };
+            const newUndoItem = { name: experimentName, undoPatch, redoPatch };
+            return {
+                ...prev,
+                serverUpdates: [...prev.serverUpdates, newUpdate],
+                undoStack: [...prev.undoStack, newUndoItem],
+                redoStack: [],
+            };
         });
     }
 
     const deleteExperiment = (name) => {
+        const experimentPrevData = state.experiments.find(t => t.name === name)
         setState(change(state, draft => {
             draft.experiments = draft.experiments.filter(t => t.name !== name);
         }));
-        sendUpdate(name, undefined);
+        sendUpdate(name, undefined, experimentPrevData);
     }
 
     const addExperiment = (newExp = undefined) => {
@@ -52,7 +84,7 @@ export const useExperimentUpdates = (state, setState) => {
         setState(change(state, draft => {
             draft.experiments.push(exp);
         }));
-        sendUpdate(name, exp);
+        sendUpdate(name, exp, undefined);
     }
 
     const setExperiment = (name, data) => {
@@ -69,18 +101,10 @@ export const useExperimentUpdates = (state, setState) => {
             alert("Duplicate experiment name " + data.name);// + "\n" + state.experiments.map(e => e.name).join(', '));
             return;
         }
-        const exp = state.experiments[i];
-        const redoPatch = jsonpatch.compare(exp, data);
-        const undoPatch = jsonpatch.compare(data, exp);
-        if (redoPatch.length === 0) {
-            return; // nothing was changed
-        }
         setState(change(state, draft => {
             draft.experiments[i] = data;
-            draft.undoStack.push({ name, undoPatch, redoPatch });
-            draft.redoStack = [];
         }));
-        sendUpdate(name, data);
+        sendUpdate(name, data, state.experiments[i]);
     }
 
 
@@ -90,12 +114,9 @@ export const useExperimentUpdates = (state, setState) => {
             if (item) {
                 const { name, undoPatch } = item;
                 const i = draft.experiments.findIndex(t => t.name === name)
-                if (i !== -1) {
-                    const exp = jsonpatch.applyPatch(draft.experiments[i], undoPatch, false, false).newDocument;
-                    draft.experiments[i] = exp;
-                    draft.redoStack.push(item);
-                    draft.serverUpdates.push({ name, exp });
-                }
+                const exp = jsonApply(draft.experiments, i, draft.experiments[i], undoPatch);
+                draft.redoStack.push(item);
+                draft.serverUpdates.push({ name, exp });
             }
         }));
     }
@@ -106,12 +127,9 @@ export const useExperimentUpdates = (state, setState) => {
             if (item) {
                 const { name, redoPatch } = item;
                 const i = draft.experiments.findIndex(t => t.name === name)
-                if (i !== -1) {
-                    const exp = jsonpatch.applyPatch(draft.experiments[i], redoPatch, false, false).newDocument;
-                    draft.experiments[i] = exp;
-                    draft.undoStack.push(item);
-                    draft.serverUpdates.push({ name, exp });
-                }
+                const exp = jsonApply(draft.experiments, i, draft.experiments[i], redoPatch);
+                draft.undoStack.push(item);
+                draft.serverUpdates.push({ name, exp });
             }
         }));
     }
