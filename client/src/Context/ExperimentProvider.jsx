@@ -35,9 +35,7 @@ export const ExperimentProvider = ({ children }) => {
     const setCurrTrial = ({ experimentName, trialTypeName, trialName }) => {
         const t = TrialChoosing.FindTrialByName({ experimentName, trialTypeName, trialName }, state.experiments);
         TrialChoosing.ReplaceUrlByTrial(t);
-        setState(change(state, draft => {
-            draft.currTrial = t;
-        }));
+        setState(prev => { return { ...prev, currTrial: t }; });
         if (experimentName !== state?.currTrial?.experimentName) {
             setHiddenDeviceTypes({});
         }
@@ -183,9 +181,16 @@ export const ExperimentProvider = ({ children }) => {
         }
     }, [hasToken, state.serverUpdates]);
 
+    const deleteExperiment = (name) => {
+        experimentUpdates.deleteExperiment(name);
+        if (currTrial.experimentName === name) {
+            setCurrTrial({});
+        }
+    }
+
     const store = {
         experiments: state.experiments,
-        deleteExperiment: experimentUpdates.deleteExperiment,
+        deleteExperiment,
         addExperiment: experimentUpdates.addExperiment,
         setExperiment: experimentUpdates.setExperiment,
         undoOperation: experimentUpdates.undoOperation,
