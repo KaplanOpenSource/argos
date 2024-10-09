@@ -1,12 +1,12 @@
 import dayjs from 'dayjs';
 import { createNewName } from "../Utils/utils";
 import { argosJsonVersion } from '../constants/constants';
-import * as jsonpatch from 'fast-json-patch';
 import { assignUuids, cleanUuids } from './TrackUuidUtils';
 import { change } from './ExperimentProvider';
 import { useContext, useEffect } from 'react';
 import { TokenContext } from '../App/TokenContext';
 import { useFetchExperiments } from './FetchExperiment';
+import { jsonApplyItem, jsonCompare } from '../Utils/JsonPatch';
 
 export const ExperimentUpdatesInitialState = {
     experiments: [],
@@ -18,25 +18,6 @@ export const ExperimentUpdatesInitialState = {
 export const useExperimentUpdates = (state, setState) => {
     const { hasToken } = useContext(TokenContext);
     const { saveExperimentWithData } = useFetchExperiments();
-
-    const jsonCompare = (prevData, newData) => {
-        const prevDataArr = [prevData].filter(x => x);
-        const newDataArr = [newData].filter(x => x);
-        return jsonpatch.compare(prevDataArr, newDataArr);
-    }
-
-    const jsonApply = (items, index, prevData, patchArr) => {
-        const prevDataArr = [prevData].filter(x => x);
-        const newData = jsonpatch.applyPatch(prevDataArr, patchArr, false, false).newDocument[0];
-        if (newData && index === -1) {
-            items.push(newData);
-        } else if (newData && index !== -1) {
-            items[index] = newData;
-        } else if (!newData && index !== -1) {
-            items.splice(index, 1);
-        }
-        return newData;
-    }
 
     const sendUpdate = (experimentName, experimentNewData, experimentPrevData) => {
         const redoPatch = jsonCompare(experimentPrevData, experimentNewData);
@@ -114,7 +95,7 @@ export const useExperimentUpdates = (state, setState) => {
             if (item) {
                 const { name, undoPatch } = item;
                 const i = draft.experiments.findIndex(t => t.name === name)
-                const exp = jsonApply(draft.experiments, i, draft.experiments[i], undoPatch);
+                const exp = jsonApplyItem(draft.experiments, i, draft.experiments[i], undoPatch);
                 draft.redoStack.push(item);
                 draft.serverUpdates.push({ name, exp });
             }
@@ -127,7 +108,7 @@ export const useExperimentUpdates = (state, setState) => {
             if (item) {
                 const { name, redoPatch } = item;
                 const i = draft.experiments.findIndex(t => t.name === name)
-                const exp = jsonApply(draft.experiments, i, draft.experiments[i], redoPatch);
+                const exp = jsonApplyItem(draft.experiments, i, draft.experiments[i], redoPatch);
                 draft.undoStack.push(item);
                 draft.serverUpdates.push({ name, exp });
             }
