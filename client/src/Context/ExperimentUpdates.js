@@ -19,11 +19,19 @@ export const useExperimentUpdates = (state, setState) => {
     const { hasToken } = useContext(TokenContext);
     const { saveExperimentWithData } = useFetchExperiments();
 
+    const sendUpdate = (experimentName, experimentData) => {
+        setState(prev => {
+            const newUpdate = { name: experimentName, exp: experimentData };
+            const serverUpdates = [...prev.serverUpdates, newUpdate];
+            return { ...prev, serverUpdates };
+        });
+    }
+
     const deleteExperiment = (name) => {
         setState(change(state, draft => {
             draft.experiments = draft.experiments.filter(t => t.name !== name);
-            draft.serverUpdates.push({ name, exp: undefined });
         }));
+        sendUpdate(name, undefined);
     }
 
     const addExperiment = (newExp = undefined) => {
@@ -43,8 +51,8 @@ export const useExperimentUpdates = (state, setState) => {
         }
         setState(change(state, draft => {
             draft.experiments.push(exp);
-            draft.serverUpdates.push({ name, exp });
         }));
+        sendUpdate(name, exp);
     }
 
     const setExperiment = (name, data) => {
@@ -71,8 +79,8 @@ export const useExperimentUpdates = (state, setState) => {
             draft.experiments[i] = data;
             draft.undoStack.push({ name, undoPatch, redoPatch });
             draft.redoStack = [];
-            draft.serverUpdates.push({ name, exp: data });
         }));
+        sendUpdate(name, data);
     }
 
 
