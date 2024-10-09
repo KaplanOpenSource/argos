@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react"
 import { parseUrlParams, replaceUrlParams } from "../Utils/utils";
 import { useFetchExperiments } from "./FetchExperiment";
 import { RealMapName } from "../constants/constants";
-import { ExperimentUpdates } from "./ExperimentUpdates";
+import { ExperimentUpdatesInitialState, useExperimentUpdates } from "./ExperimentUpdates";
 import { TrialChoosing } from "./TrialChoosing";
 import { assignUuids } from "./TrackUuidUtils";
 import { TokenContext } from "../App/TokenContext";
@@ -20,14 +20,21 @@ export const ExperimentProvider = ({ children }) => {
     const [hiddenDeviceTypes, setHiddenDeviceTypes] = useState({});
     const [state, setState] = useState({
         showImagePlacement: false,
-        ...ExperimentUpdates.initialState,
+        ...ExperimentUpdatesInitialState,
         ...TrialChoosing.initialState,
     });
 
-    const { hasToken } = useContext(TokenContext);
-    const { fetchAllExperiments, saveExperimentWithData } = useFetchExperiments();
+    const {
+        deleteExperiment,
+        addExperiment,
+        setExperiment,
+        undoOperation,
+        redoOperation,
+    } = useExperimentUpdates(state, setState);
 
-    const experimentUpdates = new ExperimentUpdates(state, setState);
+    const { hasToken } = useContext(TokenContext);
+    const { fetchAllExperiments } = useFetchExperiments();
+
     const trialChoosing = new TrialChoosing(state, setState);
 
     const currTrial = trialChoosing.GetCurrTrial();
@@ -166,24 +173,7 @@ export const ExperimentProvider = ({ children }) => {
     }, [hasToken])
 
     useEffect(() => {
-        if (hasToken) {
-            if (state.serverUpdates.length > 0) {
-                (async () => {
-                    const updates = state.serverUpdates;
-                    setState(change(state, draft => {
-                        draft.serverUpdates = [];
-                    }));
-                    for (const { name, exp } of updates) {
-                        await saveExperimentWithData(name, exp);
-                    }
-                })();
-            }
-        }
-    }, [hasToken, state.serverUpdates]);
-
-    useEffect(() => {
         if (currTrial?.experimentName) {
-            console.log(currTrial)
             const experiment = state?.experiments?.find(t => t.name === currTrial?.experimentName);
             if (!experiment) {
                 setCurrTrial({});
@@ -202,11 +192,11 @@ export const ExperimentProvider = ({ children }) => {
 
     const store = {
         experiments: state.experiments,
-        deleteExperiment: experimentUpdates.deleteExperiment,
-        addExperiment: experimentUpdates.addExperiment,
-        setExperiment: experimentUpdates.setExperiment,
-        undoOperation: experimentUpdates.undoOperation,
-        redoOperation: experimentUpdates.redoOperation,
+        deleteExperiment: deleteExperiment,
+        addExperiment: addExperiment,
+        setExperiment: setExperiment,
+        undoOperation: undoOperation,
+        redoOperation: redoOperation,
         undoPossible: state.undoStack.length > 0,
         redoPossible: state.redoStack.length > 0,
         setCurrTrial,
