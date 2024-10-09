@@ -181,16 +181,28 @@ export const ExperimentProvider = ({ children }) => {
         }
     }, [hasToken, state.serverUpdates]);
 
-    const deleteExperiment = (name) => {
-        experimentUpdates.deleteExperiment(name);
-        if (currTrial.experimentName === name) {
-            setCurrTrial({});
+    useEffect(() => {
+        if (currTrial?.experimentName) {
+            console.log(currTrial)
+            const experiment = state?.experiments?.find(t => t.name === currTrial?.experimentName);
+            if (!experiment) {
+                setCurrTrial({});
+            } else {
+                if (currTrial?.trialName) {
+                    const trialType = experiment?.trialTypes?.find(t => t.name === currTrial?.trialTypeName);
+                    const trial = trialType?.trials?.find(t => t.name === currTrial?.trialName);
+                    if (!trial) {
+                        // TODO: handle selected standalone map
+                        setCurrTrial({ experimentName: experiment.name });
+                    }
+                }
+            }
         }
-    }
+    }, [state]);
 
     const store = {
         experiments: state.experiments,
-        deleteExperiment,
+        deleteExperiment: experimentUpdates.deleteExperiment,
         addExperiment: experimentUpdates.addExperiment,
         setExperiment: experimentUpdates.setExperiment,
         undoOperation: experimentUpdates.undoOperation,
