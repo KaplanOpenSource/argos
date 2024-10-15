@@ -8,6 +8,7 @@ import { Add, ChevronRight, ExpandMore } from "@mui/icons-material";
 import { AddMultipleDevices } from "../AddMultipleDevices";
 import { assignUuids } from "../../Context/TrackUuidUtils";
 import { useState } from "react";
+import { DevicesTabularOneDevice } from "./DevicesTabularOneDevice";
 
 export const DevicesTabularOneType = ({ deviceType, setDeviceType }) => {
     const [open, setOpen] = useState(true);
@@ -84,40 +85,10 @@ export const DevicesTabularOneType = ({ deviceType, setDeviceType }) => {
             <TableBody key={':tb_' + deviceType.name}>
                 {open
                     ? (
-                        <>
-                            {deviceType?.devices?.map((device, itr) => {
-                                const setDevice = (val) => {
-                                    const t = structuredClone(deviceType);
-                                    t.devices[itr] = val;
-                                    setDeviceType(t);
-                                }
-                                return (
-                                    <TableRow
-                                        key={device.trackUuid}
-                                    >
-                                        <TableCell component="th" scope="row" key={':tt'}>
-                                            {deviceType.name}
-                                        </TableCell>
-                                        <TableCell key={':tr'}>{device.name}</TableCell>
-                                        {deviceType?.attributeTypes?.map(attrType => {
-                                            return (
-                                                <TableCell
-                                                    key={attrType.name}
-                                                >
-                                                    <AttributeItemOne
-                                                        attrType={attrType}
-                                                        data={device}
-                                                        setData={val => setDevice(val)}
-                                                        scope={SCOPE_EXPERIMENT}
-                                                        reduceNames={true}
-                                                    />
-                                                </TableCell>
-                                            )
-                                        })}
-                                    </TableRow>
-                                )
-                            })}
-                        </>
+                        <DevicesTabularOneDevice
+                            deviceType={deviceType}
+                            setDeviceType={setDeviceType}
+                        />
                     )
                     : (
                         <TableRow
