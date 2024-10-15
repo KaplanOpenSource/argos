@@ -2,6 +2,18 @@ import { TableCell, TableRow } from "@mui/material";
 import { AttributeItemOne } from "../AttributeItemList";
 import { SCOPE_EXPERIMENT } from "../AttributeType";
 
+const DevicesTabularOneAttr = ({ attrType, device, setDevice }) => {
+    return (
+        <AttributeItemOne
+            attrType={attrType}
+            data={device}
+            setData={val => setDevice(val)}
+            scope={SCOPE_EXPERIMENT}
+            reduceNames={true}
+        />
+    )
+}
+
 export const DevicesTabularOneDevice = ({ deviceType, setDeviceType }) => {
     return (
         <>
@@ -24,12 +36,10 @@ export const DevicesTabularOneDevice = ({ deviceType, setDeviceType }) => {
                                 <TableCell
                                     key={attrType.name}
                                 >
-                                    <AttributeItemOne
+                                    <DevicesTabularOneAttr
                                         attrType={attrType}
-                                        data={device}
-                                        setData={val => setDevice(val)}
-                                        scope={SCOPE_EXPERIMENT}
-                                        reduceNames={true}
+                                        device={device}
+                                        setDevice={setDevice}
                                     />
                                 </TableCell>
                             )
