@@ -11,11 +11,11 @@ export const experimentContext = createContext();
 
 export const ExperimentProvider = ({ children }) => {
     const [selection, setSelection] = useState([]);
-    const [hiddenDeviceTypes, setHiddenDeviceTypes] = useState({});
     const [state, setState] = useState({
-        showImagePlacement: false,
         ...ExperimentUpdatesInitialState,
         currTrial: {},
+        showImagePlacement: false,
+        hiddenDeviceTypes: {},
     });
 
     const {
@@ -35,11 +35,16 @@ export const ExperimentProvider = ({ children }) => {
 
     const setCurrTrial = ({ experimentName, trialTypeName, trialName }) => {
         const t = TrialChoosing.FindTrialByName({ experimentName, trialTypeName, trialName }, state.experiments);
-        TrialChoosing.ReplaceUrlByTrial(t);
-        setState(prev => { return { ...prev, currTrial: t }; });
-        if (experimentName !== state?.currTrial?.experimentName) {
-            setHiddenDeviceTypes({});
-        }
+        TrialChoosing.ReplaceUrlByTrial(t); // this is has side-effects, should be outside of setState func
+        setState(prev => {
+            const sameExperiment = prev.currTrial.experimentName === t?.experimentName;
+            const hiddenDeviceTypes = sameExperiment ? prev.hiddenDeviceTypes : {};
+            return {
+                ...prev,
+                hiddenDeviceTypes,
+                currTrial: t,
+            };
+        });
     }
 
     const setShownMap = (shownMapName) => {
@@ -206,8 +211,8 @@ export const ExperimentProvider = ({ children }) => {
         setShownMap,
         showImagePlacement: state.showImagePlacement,
         setShowImagePlacement: val => setState(prev => ({ ...prev, showImagePlacement: val })),
-        hiddenDeviceTypes,
-        setHiddenDeviceTypes,
+        hiddenDeviceTypes: state.hiddenDeviceTypes,
+        setHiddenDeviceTypes: val => setState(prev => ({ ...prev, hiddenDeviceTypes: val })),
     };
 
     return (
