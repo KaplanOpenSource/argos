@@ -5,19 +5,25 @@ import { useContext } from "react";
 import { experimentContext } from "../../Context/ExperimentProvider";
 
 const DevicesTabularOneAttr = ({ attrType, deviceItem, deviceType, setDeviceItem }) => {
-    const { currTrial } = useContext(experimentContext);
+    const { currTrial, setTrialData } = useContext(experimentContext);
     const devicesOnTrial = currTrial?.trial?.devicesOnTrial;
-    const deviceOnTrial = devicesOnTrial?.find(t => {
+    const deviceOnTrialIndex = (devicesOnTrial || []).findIndex(t => {
         return t.deviceItemName === deviceItem.name && t.deviceTypeName === deviceType.name;
     });
 
-    // console.log(deviceItem.name, deviceOnTrial, attrType, devicesOnTrial)
-    if (deviceOnTrial && ((!attrType?.scope) || attrType.scope === SCOPE_TRIAL)) {
+    if (deviceOnTrialIndex !== -1 && ((!attrType?.scope) || attrType.scope === SCOPE_TRIAL)) {
+        const deviceOnTrial = devicesOnTrial[deviceOnTrialIndex];
+        const setDeviceOnTrial = newDeviceData => {
+            const data = { ...currTrial.trial, devicesOnTrial: [...devicesOnTrial] };
+            data.devicesOnTrial[deviceOnTrialIndex] = newDeviceData;
+            setTrialData(data);
+        };
+
         return (
             <AttributeItemOne
                 attrType={attrType}
                 data={deviceOnTrial}
-                // setData={setDeviceOnTrial}
+                setData={setDeviceOnTrial}
                 scope={SCOPE_TRIAL}
                 deviceItem={deviceItem}
                 reduceNames={true}
