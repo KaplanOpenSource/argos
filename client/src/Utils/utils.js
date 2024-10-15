@@ -58,3 +58,9 @@ export function splitLast(arr) {
     }
     return [arr.slice(0, -1), arr.at(-1)];
 }
+
+export function change(thing, func) {
+    const draft = structuredClone(thing);
+    func(draft);
+    return draft;
+}

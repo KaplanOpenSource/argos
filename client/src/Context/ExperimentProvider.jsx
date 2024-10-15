@@ -9,19 +9,13 @@ import { TokenContext } from "../App/TokenContext";
 
 export const experimentContext = createContext();
 
-export function change(thing, func) {
-    const draft = structuredClone(thing);
-    func(draft);
-    return draft;
-}
-
 export const ExperimentProvider = ({ children }) => {
     const [selection, setSelection] = useState([]);
     const [hiddenDeviceTypes, setHiddenDeviceTypes] = useState({});
     const [state, setState] = useState({
         showImagePlacement: false,
         ...ExperimentUpdatesInitialState,
-        ...TrialChoosing.initialState,
+        currTrial: {},
     });
 
     const {
@@ -54,17 +48,17 @@ export const ExperimentProvider = ({ children }) => {
             const shownMapIndex = experiment.imageStandalone.findIndex(t => t.name === shownMapName);
             if (shownMapIndex >= 0) {
                 replaceUrlParams({ shownMapName });
-                setState(change(state, draft => {
-                    draft.currTrial.shownMapName = shownMapName;
-                    draft.currTrial.shownMapIndex = shownMapIndex;
+                setState(prev => ({
+                    ...prev,
+                    currTrial: { ...prev.currTrial, shownMapName, shownMapIndex },
                 }));
                 return;
             }
         }
         replaceUrlParams({ shownMapName: undefined });
-        setState(change(state, draft => {
-            draft.currTrial.shownMapName = undefined;
-            draft.currTrial.shownMapIndex = undefined;
+        setState(prev => ({
+            ...prev,
+            currTrial: { ...prev.currTrial, shownMapName: undefined, shownMapIndex: undefined },
         }));
     }
 
@@ -164,9 +158,10 @@ export const ExperimentProvider = ({ children }) => {
                 assignUuids(allExperiments);
                 const t = TrialChoosing.FindTrialByName({ experimentName, trialTypeName, trialName }, allExperiments);
                 TrialChoosing.ReplaceUrlByTrial(t);
-                setState(change(state, draft => {
-                    draft.experiments = allExperiments;
-                    draft.currTrial = t;
+                setState(prev => ({
+                    ...prev,
+                    experiments: allExperiments,
+                    currTrial: t,
                 }));
             }
         })()
@@ -210,7 +205,7 @@ export const ExperimentProvider = ({ children }) => {
         setLocationsToStackDevices,
         setShownMap,
         showImagePlacement: state.showImagePlacement,
-        setShowImagePlacement: val => setState(change(state, draft => { draft.showImagePlacement = val; })),
+        setShowImagePlacement: val => setState(prev => ({ ...prev, showImagePlacement: val })),
         hiddenDeviceTypes,
         setHiddenDeviceTypes,
     };

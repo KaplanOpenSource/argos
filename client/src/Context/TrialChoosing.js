@@ -6,10 +6,6 @@ export class TrialChoosing {
         this.setState = setState;
     }
 
-    static initialState = {
-        currTrial: {}
-    };
-
     GetCurrTrial() {
         return TrialChoosing.FindTrialByIndices(this.state.currTrial, this.state.experiments);
     }
