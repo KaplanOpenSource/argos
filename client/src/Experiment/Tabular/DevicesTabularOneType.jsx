@@ -1,12 +1,12 @@
 import { TableBody, TableCell, TableHead, TableRow, Tooltip } from "@mui/material"
-import { AttributeItemOne } from "./AttributeItemList";
-import { SCOPE_EXPERIMENT } from "./AttributeType";
-import { AttributeTypesDialogButton } from "./AttributeTypesDialogButton";
-import { ButtonTooltip } from "../Utils/ButtonTooltip";
-import { createNewName } from "../Utils/utils";
+import { AttributeItemOne } from "../AttributeItemList";
+import { SCOPE_EXPERIMENT } from "../AttributeType";
+import { AttributeTypesDialogButton } from "../AttributeTypesDialogButton";
+import { ButtonTooltip } from "../../Utils/ButtonTooltip";
+import { createNewName } from "../../Utils/utils";
 import { Add, ChevronRight, ExpandMore } from "@mui/icons-material";
-import { AddMultipleDevices } from "./AddMultipleDevices";
-import { assignUuids } from "../Context/TrackUuidUtils";
+import { AddMultipleDevices } from "../AddMultipleDevices";
+import { assignUuids } from "../../Context/TrackUuidUtils";
 import { useState } from "react";
 
 export const DevicesTabularOneType = ({ deviceType, setDeviceType }) => {

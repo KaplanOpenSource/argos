@@ -15,8 +15,8 @@ import { EnclosingListSelectionContext } from "./EnclosedSelectionProvider";
 import { useCloneExperiment } from "../IO/CloneExperiment";
 import { ActionsOnMapContext } from "../Map/ActionsOnMapContext";
 import { CoordsSpan } from "./CoordsSpan";
-import { TrialsTabularView } from "./TrialsTabularView";
-import { DevicesTabularView } from "./DevicesTabularView";
+import { TrialsTabularView } from "./Tabular/TrialsTabularView";
+import { DevicesTabularView } from "./Tabular/DevicesTabularView";
 
 export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
     const { experiments, setExperiment, addExperiment, currTrial, setCurrTrial } = useContext(experimentContext);
