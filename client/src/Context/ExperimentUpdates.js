@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { change, createNewName } from "../Utils/utils";
+import { createNewName } from "../Utils/utils";
 import { argosJsonVersion } from '../constants/constants';
 import { assignUuids, cleanUuids } from './TrackUuidUtils';
 import { useContext, useEffect } from 'react';
@@ -45,7 +45,7 @@ export const useExperimentUpdates = (state, setState) => {
             const experiments = prev.experiments.filter(t => t.name !== name);
             return { ...prev, experiments };
         });
-        
+
         sendUpdate(name, undefined, experimentPrevData);
     }
 
@@ -101,29 +101,33 @@ export const useExperimentUpdates = (state, setState) => {
 
 
     const undoOperation = () => {
-        setState(change(state, draft => {
-            const item = draft.undoStack.pop();
+        setState(prev => {
+            const { undoStack, experiments, redoStack, serverUpdates } = prev;
+            const item = undoStack.pop();
             if (item) {
                 const { name, undoPatch } = item;
-                const i = draft.experiments.findIndex(t => t.name === name)
-                const exp = jsonApplyItem(draft.experiments, i, draft.experiments[i], undoPatch);
-                draft.redoStack.push(item);
-                draft.serverUpdates.push({ name, exp });
+                const i = experiments.findIndex(t => t.name === name)
+                const exp = jsonApplyItem(experiments, i, experiments[i], undoPatch);
+                redoStack.push(item);
+                serverUpdates.push({ name, exp });
             }
-        }));
+            return { ...prev, undoStack, experiments, redoStack, serverUpdates };
+        });
     }
 
     const redoOperation = () => {
-        setState(change(state, draft => {
-            const item = draft.redoStack.pop();
+        setState(prev => {
+            const { undoStack, experiments, redoStack, serverUpdates } = prev;
+            const item = redoStack.pop();
             if (item) {
                 const { name, redoPatch } = item;
-                const i = draft.experiments.findIndex(t => t.name === name)
-                const exp = jsonApplyItem(draft.experiments, i, draft.experiments[i], redoPatch);
-                draft.undoStack.push(item);
-                draft.serverUpdates.push({ name, exp });
+                const i = experiments.findIndex(t => t.name === name)
+                const exp = jsonApplyItem(experiments, i, experiments[i], redoPatch);
+                undoStack.push(item);
+                serverUpdates.push({ name, exp });
             }
-        }));
+            return { ...prev, undoStack, experiments, redoStack, serverUpdates };
+        });
     }
 
     useEffect(() => {
@@ -131,8 +135,9 @@ export const useExperimentUpdates = (state, setState) => {
             if (state.serverUpdates.length > 0) {
                 (async () => {
                     const updates = state.serverUpdates;
-                    setState(change(state, draft => {
-                        draft.serverUpdates = [];
+                    setState(prev => ({
+                        ...prev,
+                        serverUpdates: [],
                     }));
                     for (const { name, exp } of updates) {
                         await saveExperimentWithData(name, exp);

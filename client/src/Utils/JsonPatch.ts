@@ -10,7 +10,7 @@ export const jsonCompare = (
 }
 
 export const jsonApplyItem = (
-    items: any[],
+    itemsToBeChanged: any[],
     index: number,
     prevData: any,
     patchArr: readonly jsonpatch.Operation[],
@@ -18,11 +18,11 @@ export const jsonApplyItem = (
     const prevDataArr = [prevData].filter(x => x);
     const newData = jsonpatch.applyPatch(prevDataArr, patchArr, false, false).newDocument[0];
     if (newData && index === -1) {
-        items.push(newData);
+        itemsToBeChanged.push(newData);
     } else if (newData && index !== -1) {
-        items[index] = newData;
+        itemsToBeChanged[index] = newData;
     } else if (!newData && index !== -1) {
-        items.splice(index, 1);
+        itemsToBeChanged.splice(index, 1);
     }
     return newData;
 }
