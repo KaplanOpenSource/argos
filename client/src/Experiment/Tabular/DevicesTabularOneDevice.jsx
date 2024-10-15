@@ -1,36 +1,58 @@
 import { TableCell, TableRow } from "@mui/material";
 import { AttributeItemOne } from "../AttributeItemList";
-import { SCOPE_EXPERIMENT } from "../AttributeType";
+import { SCOPE_EXPERIMENT, SCOPE_TRIAL } from "../AttributeType";
+import { useContext } from "react";
+import { experimentContext } from "../../Context/ExperimentProvider";
 
-const DevicesTabularOneAttr = ({ attrType, device, setDevice }) => {
-    return (
-        <AttributeItemOne
-            attrType={attrType}
-            data={device}
-            setData={val => setDevice(val)}
-            scope={SCOPE_EXPERIMENT}
-            reduceNames={true}
-        />
-    )
+const DevicesTabularOneAttr = ({ attrType, deviceItem, deviceType, setDeviceItem }) => {
+    const { currTrial } = useContext(experimentContext);
+    const devicesOnTrial = currTrial?.trial?.devicesOnTrial;
+    const deviceOnTrial = devicesOnTrial?.find(t => {
+        return t.deviceItemName === deviceItem.name && t.deviceTypeName === deviceType.name;
+    });
+
+    // console.log(deviceItem.name, deviceOnTrial, attrType, devicesOnTrial)
+    if (deviceOnTrial && ((!attrType?.scope) || attrType.scope === SCOPE_TRIAL)) {
+        return (
+            <AttributeItemOne
+                attrType={attrType}
+                data={deviceOnTrial}
+                // setData={setDeviceOnTrial}
+                scope={SCOPE_TRIAL}
+                deviceItem={deviceItem}
+                reduceNames={true}
+            />
+        )
+    } else {
+        return (
+            <AttributeItemOne
+                attrType={attrType}
+                data={deviceItem}
+                setData={val => setDeviceItem(val)}
+                scope={SCOPE_EXPERIMENT}
+                reduceNames={true}
+            />
+        )
+    }
 }
 
 export const DevicesTabularOneDevice = ({ deviceType, setDeviceType }) => {
     return (
         <>
-            {deviceType?.devices?.map((device, itr) => {
-                const setDevice = (val) => {
+            {deviceType?.devices?.map((deviceItem, itr) => {
+                const setDeviceItem = (val) => {
                     const t = structuredClone(deviceType);
                     t.devices[itr] = val;
                     setDeviceType(t);
                 }
                 return (
                     <TableRow
-                        key={device.trackUuid}
+                        key={deviceItem.trackUuid}
                     >
                         <TableCell component="th" scope="row" key={':tt'}>
                             {deviceType.name}
                         </TableCell>
-                        <TableCell key={':tr'}>{device.name}</TableCell>
+                        <TableCell key={':tr'}>{deviceItem.name}</TableCell>
                         {deviceType?.attributeTypes?.map(attrType => {
                             return (
                                 <TableCell
@@ -38,8 +60,9 @@ export const DevicesTabularOneDevice = ({ deviceType, setDeviceType }) => {
                                 >
                                     <DevicesTabularOneAttr
                                         attrType={attrType}
-                                        device={device}
-                                        setDevice={setDevice}
+                                        deviceType={deviceType}
+                                        deviceItem={deviceItem}
+                                        setDeviceItem={setDeviceItem}
                                     />
                                 </TableCell>
                             )
