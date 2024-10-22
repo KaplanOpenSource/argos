@@ -6,7 +6,7 @@ import { AddCircleOutline } from "@mui/icons-material";
 import { assignUuids } from "../Context/TrackUuidUtils";
 import { ActionsOnMapContext } from "../Map/ActionsOnMapContext";
 import L from 'leaflet';
-import { Snackbar } from "@mui/material";
+import { Alert, Snackbar, SnackbarContent } from "@mui/material";
 
 export const AddShapeButtons = ({ data, setData, onBeforeCreate = () => { } }) => {
 
@@ -15,7 +15,7 @@ export const AddShapeButtons = ({ data, setData, onBeforeCreate = () => { } }) =
 
     const shapes = (data?.shapes || []);
 
-    const addShape = (createDrawFromMap, shapeFromEvent, instructions) => {
+    const addShape = (createDrawFromMap, shapeFromEvent, instructions, detailsOnShape) => {
         onBeforeCreate();
         setSnack(instructions);
         addActionOnMap((mapObj) => {
@@ -27,14 +27,22 @@ export const AddShapeButtons = ({ data, setData, onBeforeCreate = () => { } }) =
                 es.style.zIndex = 599;
             }
 
+            mapObj.on('mousemove', e => {
+                const details = draw?._tooltip?._container?.innerText;
+                if (details) {
+                    setSnack(details);
+                }
+            })
             mapObj.on('draw:canceled', (e) => {
                 mapObj.off(L.Draw.Event.CREATED);
                 mapObj.off('draw:canceled');
+                mapObj.off('mousemove');
                 setSnack();
             });
             mapObj.on(L.Draw.Event.CREATED, (e) => {
                 mapObj.off(L.Draw.Event.CREATED);
                 mapObj.off('draw:canceled');
+                mapObj.off('mousemove');
                 setSnack();
                 const name = createNewName(shapes, "New Shape");
                 const newShape = assignUuids({ name, ...shapeFromEvent(e) });
@@ -52,6 +60,7 @@ export const AddShapeButtons = ({ data, setData, onBeforeCreate = () => { } }) =
                 return { "type": "Circle", center, radius };
             },
             'Click on the center and drag to the radius',
+            (draw) => draw._shape && `radius ${draw._shape._mRadius}`,
         );
     }
 
@@ -62,7 +71,8 @@ export const AddShapeButtons = ({ data, setData, onBeforeCreate = () => { } }) =
                 const coordinates = e?.layer?._latlngs?.map(({ lat, lng }) => [lat, lng]) || [];
                 return { "type": "Polyline", coordinates };
             },
-            'Click on each point, to finish click on the last point',
+            'Click on each point to finish click on the last point',
+            (draw) => (draw._markers && draw._markers.length) ? `total ${draw._measurementRunningTotal} of ${draw._markers.length} points` : undefined
         )
     }
 
@@ -80,9 +90,12 @@ export const AddShapeButtons = ({ data, setData, onBeforeCreate = () => { } }) =
             <PolylineIcon />
         </ButtonTooltip>
         <Snackbar
-            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
             open={snack !== undefined}
-            message={snack}
-        />
+        >
+            <Alert color="info">
+                {snack}
+            </Alert>
+        </Snackbar>
     </>)
 }
