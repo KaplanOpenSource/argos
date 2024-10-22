@@ -37,14 +37,6 @@ export const ShapeItem = ({ data, setData }) => {
                             { name: "Circle" },
                         ]}
                     />
-                    {data.type === "Circle" ? null : <>
-                        <ButtonTooltip
-                            tooltip="Add coordinate"
-                            onClick={() => setOneCoord([0, 0])}
-                        >
-                            <Add />
-                        </ButtonTooltip>
-                    </>}
                     <ButtonTooltip
                         tooltip="Delete shape"
                         onClick={() => setData(undefined)}
@@ -55,6 +47,14 @@ export const ShapeItem = ({ data, setData }) => {
                         data={data}
                         setData={setData}
                     />
+                    {data.type === "Circle" ? null : <>
+                        <ButtonTooltip
+                            tooltip="Add coordinate"
+                            onClick={() => setOneCoord([0, 0])}
+                        >
+                            <Add />
+                        </ButtonTooltip>
+                    </>}
                 </>
             }
         >
