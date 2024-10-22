@@ -1,11 +1,16 @@
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { TreeSublist } from "../App/TreeSublist";
 import { ShapeItem } from "./ShapeItem";
 import { changeByName } from "../Utils/utils";
 import { Typography } from "@mui/material";
 import { AddShapeButtons } from "./AddShapeButtons";
+import { ExperimentTreeNodesExpandedContext } from "./ExperimentTreeNodesExpandedProvider";
 
 export const ShapeList = ({ data, setData }) => {
+
+    const {
+        addExpandedNode,
+    } = useContext(ExperimentTreeNodesExpandedContext);
 
     // Taking care of old shapes without names
     useEffect(() => {
@@ -43,6 +48,7 @@ export const ShapeList = ({ data, setData }) => {
                 <AddShapeButtons
                     data={data}
                     setData={setData}
+                    onBeforeCreate={() => addExpandedNode(data.trackUuid + '_shapes')}
                 />
                 <Typography>
                     {shapes.length} Shapes

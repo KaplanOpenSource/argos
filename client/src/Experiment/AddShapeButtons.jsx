@@ -8,7 +8,7 @@ import { ActionsOnMapContext } from "../Map/ActionsOnMapContext";
 import L from 'leaflet';
 import { Snackbar } from "@mui/material";
 
-export const AddShapeButtons = ({ data, setData }) => {
+export const AddShapeButtons = ({ data, setData, onBeforeCreate = () => { } }) => {
 
     const { addActionOnMap } = useContext(ActionsOnMapContext);
     const [snack, setSnack] = useState();
@@ -22,12 +22,19 @@ export const AddShapeButtons = ({ data, setData }) => {
     }
 
     const addCircle = () => {
+        onBeforeCreate();
+        setSnack('Click on the center and drag to the radius');
         addActionOnMap((mapObj) => {
-            setSnack('Click on the center and drag to the radius');
             const draw = new L.Draw.Circle(mapObj);
             draw.enable();
+            mapObj.on('draw:canceled', (e) => {
+                mapObj.off(L.Draw.Event.CREATED);
+                mapObj.off('draw:canceled');
+                setSnack();
+            });
             mapObj.on(L.Draw.Event.CREATED, (e) => {
                 mapObj.off(L.Draw.Event.CREATED);
+                mapObj.off('draw:canceled');
                 setSnack();
                 const center = [e.layer._latlng.lat, e.layer._latlng.lng];
                 const radius = e.layer._mRadius;
@@ -37,8 +44,9 @@ export const AddShapeButtons = ({ data, setData }) => {
     }
 
     const addPolyline = () => {
+        onBeforeCreate();
+        setSnack('Click on each point, to finish click on the last point');
         addActionOnMap((mapObj) => {
-            setSnack('Click on each point, to finish click on the last point');
             const draw = new L.Draw.Polyline(mapObj);
             draw.enable();
 
@@ -47,8 +55,14 @@ export const AddShapeButtons = ({ data, setData }) => {
                 es.style.zIndex = 599;
             }
 
+            mapObj.on('draw:canceled', (e) => {
+                mapObj.off(L.Draw.Event.CREATED);
+                mapObj.off('draw:canceled');
+                setSnack();
+            });
             mapObj.on(L.Draw.Event.CREATED, (e) => {
                 mapObj.off(L.Draw.Event.CREATED);
+                mapObj.off('draw:canceled');
                 setSnack();
                 const coordinates = e?.layer?._latlngs?.map(({ lat, lng }) => [lat, lng]) || [];
                 addShape({ "type": "Polyline", coordinates });
