@@ -1,7 +1,7 @@
 import { Box, Chip, FormControl, InputLabel, ListItemText, MenuItem, Select, Tooltip } from "@mui/material";
 
 
-export const SelectProperty = ({ label, data, setData, options, multiple, tooltipTitle = "", ...restProps }) => {
+export const SelectProperty = ({ label, data, setData, options, multiple = false, tooltipTitle = "", ...restProps }) => {
     function makeArray(val) {
         return ((typeof val === 'string' ? val.split(',') : val) || []);
     }

@@ -6,6 +6,7 @@ import { Case, SwitchCase } from "../Utils/SwitchCase"
 import { Stack } from "@mui/material"
 import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce"
 import { ShapeColorPicker } from "./ShapeColorPicker"
+import { ShapeTypeSelect } from "./ShapeTypeSelect"
 
 export const ShapeItem = ({ data, setData }) => {
     const setCoordinates = (newCoords) => {
@@ -27,15 +28,9 @@ export const ShapeItem = ({ data, setData }) => {
             setData={setData}
             components={
                 <>
-                    <SelectProperty
-                        label="Type"
-                        data={data.type || "Polyline"}
-                        setData={type => setData({ ...data, type })}
-                        options={[
-                            { name: "Polygon" },
-                            { name: "Polyline" },
-                            { name: "Circle" },
-                        ]}
+                    <ShapeTypeSelect
+                        type={data.type}
+                        setType={type => setData({ ...data, type })}
                     />
                     <ButtonTooltip
                         tooltip="Delete shape"
