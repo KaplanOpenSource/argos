@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { createNewName } from "../Utils/utils";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import PolylineIcon from '@mui/icons-material/Polyline';
@@ -6,10 +6,12 @@ import { AddCircleOutline } from "@mui/icons-material";
 import { assignUuids } from "../Context/TrackUuidUtils";
 import { ActionsOnMapContext } from "../Map/ActionsOnMapContext";
 import L from 'leaflet';
+import { Snackbar } from "@mui/material";
 
 export const AddShapeButtons = ({ data, setData }) => {
 
     const { addActionOnMap } = useContext(ActionsOnMapContext);
+    const [snack, setSnack] = useState();
 
     const shapes = (data?.shapes || []);
 
@@ -21,10 +23,12 @@ export const AddShapeButtons = ({ data, setData }) => {
 
     const addCircle = () => {
         addActionOnMap((mapObj) => {
+            setSnack('Click on the center and drag to the radius');
             const draw = new L.Draw.Circle(mapObj);
             draw.enable();
             mapObj.on(L.Draw.Event.CREATED, (e) => {
                 mapObj.off(L.Draw.Event.CREATED);
+                setSnack();
                 const center = [e.layer._latlng.lat, e.layer._latlng.lng];
                 const radius = e.layer._mRadius;
                 addShape({ "type": "Circle", center, radius });
@@ -34,6 +38,7 @@ export const AddShapeButtons = ({ data, setData }) => {
 
     const addPolyline = () => {
         addActionOnMap((mapObj) => {
+            setSnack('Click on each point, to finish click on the last point');
             const draw = new L.Draw.Polyline(mapObj);
             draw.enable();
 
@@ -44,6 +49,7 @@ export const AddShapeButtons = ({ data, setData }) => {
 
             mapObj.on(L.Draw.Event.CREATED, (e) => {
                 mapObj.off(L.Draw.Event.CREATED);
+                setSnack();
                 const coordinates = e?.layer?._latlngs?.map(({ lat, lng }) => [lat, lng]) || [];
                 addShape({ "type": "Polyline", coordinates });
             });
@@ -63,5 +69,10 @@ export const AddShapeButtons = ({ data, setData }) => {
         >
             <PolylineIcon />
         </ButtonTooltip>
+        <Snackbar
+            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            open={snack !== undefined}
+            message={snack}
+        />
     </>)
 }
