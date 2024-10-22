@@ -15,39 +15,11 @@ export const AddShapeButtons = ({ data, setData, onBeforeCreate = () => { } }) =
 
     const shapes = (data?.shapes || []);
 
-    const addShape = (newShapeNoName) => {
-        const name = createNewName(shapes, "New Shape");
-        const newShape = assignUuids({ name, ...newShapeNoName });
-        setData({ ...data, shapes: [...shapes, newShape] });
-    }
-
-    const addCircle = () => {
+    const addShape = (createDrawFromMap, shapeFromEvent, instructions) => {
         onBeforeCreate();
-        setSnack('Click on the center and drag to the radius');
+        setSnack(instructions);
         addActionOnMap((mapObj) => {
-            const draw = new L.Draw.Circle(mapObj);
-            draw.enable();
-            mapObj.on('draw:canceled', (e) => {
-                mapObj.off(L.Draw.Event.CREATED);
-                mapObj.off('draw:canceled');
-                setSnack();
-            });
-            mapObj.on(L.Draw.Event.CREATED, (e) => {
-                mapObj.off(L.Draw.Event.CREATED);
-                mapObj.off('draw:canceled');
-                setSnack();
-                const center = [e.layer._latlng.lat, e.layer._latlng.lng];
-                const radius = e.layer._mRadius;
-                addShape({ "type": "Circle", center, radius });
-            });
-        });
-    }
-
-    const addPolyline = () => {
-        onBeforeCreate();
-        setSnack('Click on each point, to finish click on the last point');
-        addActionOnMap((mapObj) => {
-            const draw = new L.Draw.Polyline(mapObj);
+            const draw = createDrawFromMap(mapObj);
             draw.enable();
 
             // Solving a bug in leaflet-draw
@@ -64,10 +36,34 @@ export const AddShapeButtons = ({ data, setData, onBeforeCreate = () => { } }) =
                 mapObj.off(L.Draw.Event.CREATED);
                 mapObj.off('draw:canceled');
                 setSnack();
-                const coordinates = e?.layer?._latlngs?.map(({ lat, lng }) => [lat, lng]) || [];
-                addShape({ "type": "Polyline", coordinates });
+                const name = createNewName(shapes, "New Shape");
+                const newShape = assignUuids({ name, ...shapeFromEvent(e) });
+                setData({ ...data, shapes: [...shapes, newShape] });
             });
         });
+    }
+
+    const addCircle = () => {
+        addShape(
+            (mapObj) => new L.Draw.Circle(mapObj),
+            (e) => {
+                const center = [e.layer._latlng.lat, e.layer._latlng.lng];
+                const radius = e.layer._mRadius;
+                return { "type": "Circle", center, radius };
+            },
+            'Click on the center and drag to the radius',
+        );
+    }
+
+    const addPolyline = () => {
+        addShape(
+            (mapObj) => new L.Draw.Polyline(mapObj),
+            (e) => {
+                const coordinates = e?.layer?._latlngs?.map(({ lat, lng }) => [lat, lng]) || [];
+                return { "type": "Polyline", coordinates };
+            },
+            'Click on each point, to finish click on the last point',
+        )
     }
 
     return (<>
