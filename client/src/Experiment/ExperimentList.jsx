@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { experimentContext } from "../Context/ExperimentProvider";
 import { ExperimentRow } from "./ExperimentRow";
 import { TreeView } from '@mui/x-tree-view/TreeView';
@@ -17,6 +17,7 @@ import { ActionsOnMapContext } from "../Map/ActionsOnMapContext";
 import { CoordsSpan } from "./CoordsSpan";
 import { TrialsTabularView } from "./Tabular/TrialsTabularView";
 import { DevicesTabularView } from "./Tabular/DevicesTabularView";
+import { ExperimentTreeNodesExpandedContext } from "./ExperimentTreeNodesExpandedProvider";
 
 export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
     const { experiments, setExperiment, addExperiment, currTrial, setCurrTrial } = useContext(experimentContext);
@@ -24,12 +25,15 @@ export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
     const { cloneExperiment } = useCloneExperiment();
     const { addActionOnMap } = useContext(ActionsOnMapContext);
 
-    const [expanded, setExpanded] = useState([]);
-
     const {
         selectionOnEnclosingUuids,
         setSelectionOnEnclosingUuids,
     } = useContext(EnclosingListSelectionContext);
+
+    const {
+        expandedNodes,
+        setExpandedNodes,
+    } = useContext(ExperimentTreeNodesExpandedContext);
 
     const findExperimentByUuid = (uuid) => {
         if (uuid) {
@@ -38,14 +42,14 @@ export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
         return undefined;
     }
     const handleNodeToggle = (e, nodeIds) => {
-        const newlyExpanded = nodeIds.filter(nodeId => !expanded.includes(nodeId));
+        const newlyExpanded = nodeIds.filter(nodeId => !expandedNodes.includes(nodeId));
         const foundExperiment = findExperimentByUuid(newlyExpanded[0]);
         if (foundExperiment) {
             setCurrTrial({ experimentName: foundExperiment.name });
             const nonExpNodeIds = nodeIds.filter(u => !findExperimentByUuid(u));
-            setExpanded([newlyExpanded[0], ...nonExpNodeIds]);
+            setExpandedNodes([newlyExpanded[0], ...nonExpNodeIds]);
         } else {
-            setExpanded(nodeIds);
+            setExpandedNodes(nodeIds);
         }
     };
 
@@ -74,7 +78,7 @@ export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
 
     useEffect(() => {
         if (experiment && showConfig === SHOW_ONLY_TRIALS) {
-            setExpanded(experiment.trialTypes.map(t => t.trackUuid));
+            setExpandedNodes(experiment.trialTypes.map(t => t.trackUuid));
         }
     }, [showConfig]);
 
@@ -96,7 +100,7 @@ export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
             <TreeView
                 defaultCollapseIcon={<ExpandMoreIcon />}
                 defaultExpandIcon={<ChevronRightIcon />}
-                expanded={expanded}
+                expanded={expandedNodes}
                 onNodeToggle={handleNodeToggle}
                 multiSelect
                 selected={selectionOnEnclosingUuids}
