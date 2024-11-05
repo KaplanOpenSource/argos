@@ -61,37 +61,47 @@ export const UploadDevicesButton = ({ data, experiment, setData }) => {
         }
     }
 
-    const uploadTrialFromText = (text, fileExt, trial, experiment, setTrialData) => {
+    const obtainDeviceFromJson = (text) => {
+        const json = JSON.parse(text);
         const devices = [];
-        if (fileExt.endsWith('json')) {
-            const json = JSON.parse(text);
-            for (const dev of json.features) {
-                devices.push([
-                    dev.properties.type,
-                    dev.properties.name,
-                    dev.properties.MapName,
-                    dev.geometry.coordinates[1],
-                    dev.geometry.coordinates[0],
-                    dev.properties]);
-            }
-        } else if (fileExt === 'csv') {
-            const lines = parse(text);
-            const deviceLines = lines.slice(1).map(line => {
-                return Object.fromEntries(lines[0].map((o, i) => [o, line[i]]));
-            });
-            for (const dev of deviceLines) {
-                devices.push([
-                    dev.type,
-                    dev.name,
-                    dev.MapName,
-                    dev.Latitude,
-                    dev.Longitude,
-                    dev]);
-            }
-        } else {
-            throw "unknown file extension " + fileExt;
+        for (const dev of json.features) {
+            devices.push([
+                dev.properties.type,
+                dev.properties.name,
+                dev.properties.MapName,
+                dev.geometry.coordinates[1],
+                dev.geometry.coordinates[0],
+                dev.properties]);
         }
         return devices;
+    }
+
+    const obtainDeviceFromCsv = (text) => {
+        const devices = [];
+        const lines = parse(text);
+        const deviceLines = lines.slice(1).map(line => {
+            return Object.fromEntries(lines[0].map((o, i) => [o, line[i]]));
+        });
+        for (const dev of deviceLines) {
+            devices.push([
+                dev.type,
+                dev.name,
+                dev.MapName,
+                dev.Latitude,
+                dev.Longitude,
+                dev]);
+        }
+        return devices;
+    }
+
+    const uploadTrialFromText = (text, ext) => {
+        if (ext.endsWith('json')) {
+            return obtainDeviceFromJson(text);
+        } else if (ext === 'csv') {
+            return obtainDeviceFromCsv(text);
+        } else {
+            throw "unknown file extension " + ext;
+        }
     }
 
     const uploadTrial = async (file, trial, experiment, setTrialData) => {
@@ -100,16 +110,14 @@ export const UploadDevicesButton = ({ data, experiment, setData }) => {
         const ext = file.name.split('.').pop().toLowerCase();
         if (ext === 'json' || ext === 'geojson' || ext === 'csv') {
             const text = await ReadFileAsText(file);
-            const newdevs = uploadTrialFromText(text, ext, trial, experiment, setTrialData);
-            devices.push(...newdevs);
+            devices.push(...uploadTrialFromText(text, ext));
         } else if (ext === 'zip') {
             const zip = await JSZip().loadAsync(file);
             for (const z of Object.values(zip.files)) {
                 const zext = z.name.split('.').pop().toLowerCase();
                 if (zext === 'json' || zext === 'geojson' || zext === 'csv') {
                     const ztext = await z.async('text');
-                    const newdevs = uploadTrialFromText(ztext, zext, trial, experiment, setTrialData);
-                    devices.push(...newdevs);
+                    devices.push(...uploadTrialFromText(ztext, zext));
                 }
             }
         } else {
