@@ -15,6 +15,7 @@ import { ActionsOnMapContext } from "../Map/ActionsOnMapContext";
 import { RealMapName } from "../constants/constants";
 import { sum } from "lodash";
 import { Typography } from "@mui/material";
+import { UploadDevices } from "../IO/UploadDevices";
 
 export const Trial = ({ data, setData, experiment, trialType, children }) => {
     const { currTrial, setCurrTrial, selection, setShownMap } = useContext(experimentContext);
@@ -92,13 +93,11 @@ export const Trial = ({ data, setData, experiment, trialType, children }) => {
                     >
                         <Download />
                     </ButtonMenu>
-                    <UploadButton
-                        tooltip={'Upload devices as geojson, csv, zip of csvs'}
-                        uploadFunc={file => uploadTrial(file, data, experiment, (newData) => setData(newData))}
-                        color='default'
-                    >
-                        <Upload />
-                    </UploadButton>
+                    <UploadDevices
+                        data={data}
+                        experiment={experiment}
+                        setData={setData}
+                    />
                     {children}
                     <Typography>
                         {placedDevices}/{totalDevices}
