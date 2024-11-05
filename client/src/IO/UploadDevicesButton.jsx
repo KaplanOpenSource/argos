@@ -4,10 +4,12 @@ import { useState } from "react";
 import { ButtonFile } from "../Utils/ButtonFile";
 import { ErrorsDialog } from "./ErrorsDialog";
 import { obtainDevicesFromFile } from "./obtainDevicesFromFile";
+import { Button, Dialog, DialogActions, DialogTitle } from "@mui/material";
 
 export const UploadDevicesButton = ({ data, experiment, setData }) => {
     const [working, setWorking] = useState(false);
     const [errors, setErrors] = useState(undefined);
+    const [devices, setDevices] = useState([]);
 
     const setDeviceOnTrial = (trial, experiment, deviceTypeName, deviceItemName, MapName, Latitude, Longitude, otherProps) => {
         const deviceType = experiment?.deviceTypes?.find(x => x.name === deviceTypeName);
@@ -49,29 +51,33 @@ export const UploadDevicesButton = ({ data, experiment, setData }) => {
                 throw "empty file";
             }
 
-            const devices = [];
+            setDevices([]);
             for (const file of files) {
-                await obtainDevicesFromFile(file, (devs) => devices.push(...devs));
+                await obtainDevicesFromFile(file, (devs) => {
+                    setDevices(prev => [...prev, ...devs])
+                });
             }
-
-            const newTrial = structuredClone(data);
-            for (const [deviceTypeName, deviceItemName, MapName, Latitude, Longitude, attributes] of devices) {
-                setDeviceOnTrial(
-                    newTrial,
-                    experiment,
-                    deviceTypeName,
-                    deviceItemName,
-                    MapName,
-                    Latitude,
-                    Longitude,
-                    attributes);
-            }
-
-            setData(newTrial);
         } catch (error) {
             setErrors([error?.message || error]);
         }
         setWorking(false);
+    };
+
+    const uploadTrial = () => {
+        const newTrial = structuredClone(data);
+        for (const [deviceTypeName, deviceItemName, MapName, Latitude, Longitude, attributes] of devices) {
+            setDeviceOnTrial(
+                newTrial,
+                experiment,
+                deviceTypeName,
+                deviceItemName,
+                MapName,
+                Latitude,
+                Longitude,
+                attributes);
+        }
+        setData(newTrial);
+        setDevices(_ => []);
     };
 
     return (
@@ -89,10 +95,23 @@ export const UploadDevicesButton = ({ data, experiment, setData }) => {
                 }
             </ButtonFile>
             <ErrorsDialog
-                isOpen={errors && errors?.length}
+                isOpen={errors?.length}
                 errors={errors}
                 onClose={() => setErrors(undefined)}
             />
+            {errors?.length || !devices?.length ? null :
+                <Dialog
+                    open={true}
+                    maxWidth={false} fullWidth={true} scroll="paper"
+                    onClose={() => setDevices(_ => [])}
+                >
+                    <DialogTitle >File upload for {devices?.length} devices</DialogTitle>
+                    {devices.map(x => <span>{JSON.stringify(x)}</span>)}
+                    <DialogActions>
+                        <Button onClick={uploadTrial}>Go</Button>
+                    </DialogActions>
+                </Dialog>
+            }
         </>
     )
 }
