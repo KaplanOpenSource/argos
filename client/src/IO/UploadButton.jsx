@@ -1,7 +1,7 @@
-import React, { Fragment, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { HourglassBottom } from "@mui/icons-material";
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography } from "@mui/material";
+import { ErrorsDialog } from "./ErrorsDialog";
 
 export const UploadButton = ({ accept, tooltip, uploadFunc, children, ...restprops }) => {
     const inputFile = useRef(null);
@@ -29,26 +29,10 @@ export const UploadButton = ({ accept, tooltip, uploadFunc, children, ...restpro
     return (
         <>
             {errors && errors.length
-                ? <>
-                    <Dialog open={true} onClose={() => setErrors(undefined)} maxWidth={false} fullWidth={true} scroll="paper">
-                        <DialogTitle >File upload with {errors.length} errors</DialogTitle>
-                        <DialogContent>
-                            <DialogContentText>
-                                {errors.sort().map((e, i) => (
-                                    <Fragment key={i + 1}>
-                                        <span>
-                                            {i + 1}: {`${e}`}
-                                        </span>
-                                        <br />
-                                    </Fragment>
-                                ))}
-                            </DialogContentText>
-                        </DialogContent>
-                        <DialogActions>
-                            <Button onClick={() => setErrors(undefined)}>Close</Button>
-                        </DialogActions>
-                    </Dialog>
-                </>
+                ? <ErrorsDialog
+                    errors={errors}
+                    onClose={() => setErrors(undefined)}
+                />
                 : <>
                     <input
                         type="file"
