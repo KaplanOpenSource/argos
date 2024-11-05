@@ -28,7 +28,7 @@ export const UploadButton = ({ accept, tooltip, uploadFunc, children, ...restpro
 
     return (
         <>
-            {errors
+            {errors && errors.length
                 ? <>
                     <Dialog open={true} onClose={() => setErrors(undefined)} maxWidth={false} fullWidth={true} scroll="paper">
                         <DialogTitle >File upload with {errors.length} errors</DialogTitle>
