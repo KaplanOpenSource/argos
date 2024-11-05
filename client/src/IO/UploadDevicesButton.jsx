@@ -1,11 +1,32 @@
-import { Upload } from "@mui/icons-material"
-import { UploadButton } from "./UploadButton"
+import { HourglassBottom, Upload } from "@mui/icons-material"
 import { SCOPE_TRIAL } from "../Experiment/AttributeType";
 import { ReadFileAsText } from "./FileIo";
 import JSZip from "jszip";
 import { parse } from 'csv-parse/browser/esm/sync';
+import { useState } from "react";
+import { ButtonFile } from "../Utils/ButtonFile";
+import { ErrorsDialog } from "./ErrorsDialog";
 
 export const UploadDevicesButton = ({ data, experiment, setData }) => {
+    const [working, setWorking] = useState(false);
+    const [errors, setErrors] = useState(undefined);
+
+    const handleChangeFile = async (files) => {
+        try {
+            setWorking(true);
+            if (!files || !files.length) {
+                throw "empty file";
+            }
+            const errors = await uploadTrial(files[0], data, experiment, (newData) => setData(newData));
+            if (errors) {
+                setErrors(errors);
+            }
+        } catch (error) {
+            console.log(error)
+            alert(`problem uploading:\n${error}`)
+        }
+        setWorking(false);
+    };
 
     const setDeviceOnTrial = (trial, experiment, deviceTypeName, deviceItemName, MapName, Latitude, Longitude, otherProps) => {
         const deviceType = experiment?.deviceTypes?.find(x => x.name === deviceTypeName);
@@ -98,12 +119,24 @@ export const UploadDevicesButton = ({ data, experiment, setData }) => {
     }
 
     return (
-        <UploadButton
-            tooltip={'Upload devices as geojson, csv, zip of csvs'}
-            uploadFunc={file => uploadTrial(file, data, experiment, (newData) => setData(newData))}
-            color='default'
-        >
-            <Upload />
-        </UploadButton>
+        <>
+            <ButtonFile
+                color='default'
+                accept=".json,.geojson,.csv,.zip"
+                tooltip={'Upload devices as geojson, csv, zip of csvs'}
+                onChange={handleChangeFile}
+                disabled={working}
+            >
+                {working
+                    ? <HourglassBottom />
+                    : <Upload />
+                }
+            </ButtonFile>
+            <ErrorsDialog
+                isOpen={errors && errors?.length}
+                errors={errors}
+                onClose={() => setErrors(undefined)}
+            />
+        </>
     )
 }
