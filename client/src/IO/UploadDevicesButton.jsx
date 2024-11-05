@@ -61,7 +61,7 @@ export const UploadDevicesButton = ({ data, experiment, setData }) => {
         }
     }
 
-    const uploadTrialFromText = async (text, fileExt, trial, experiment, setTrialData) => {
+    const uploadTrialFromText = (text, fileExt, trial, experiment, setTrialData) => {
         const devices = [];
         if (fileExt.endsWith('json')) {
             const json = JSON.parse(text);
@@ -91,6 +91,31 @@ export const UploadDevicesButton = ({ data, experiment, setData }) => {
         } else {
             throw "unknown file extension " + fileExt;
         }
+        return devices;
+    }
+
+    const uploadTrial = async (file, trial, experiment, setTrialData) => {
+        const devices = [];
+
+        const ext = file.name.split('.').pop().toLowerCase();
+        if (ext === 'json' || ext === 'geojson' || ext === 'csv') {
+            const text = await ReadFileAsText(file);
+            const newdevs = uploadTrialFromText(text, ext, trial, experiment, setTrialData);
+            devices.push(...newdevs);
+        } else if (ext === 'zip') {
+            const zip = await JSZip().loadAsync(file);
+            for (const z of Object.values(zip.files)) {
+                const zext = z.name.split('.').pop().toLowerCase();
+                if (zext === 'json' || zext === 'geojson' || zext === 'csv') {
+                    const ztext = await z.async('text');
+                    const newdevs = uploadTrialFromText(ztext, zext, trial, experiment, setTrialData);
+                    devices.push(...newdevs);
+                }
+            }
+        } else {
+            throw "unknown file extension " + file.name;
+        }
+
         const newTrial = structuredClone(trial);
         for (const [deviceTypeName, deviceItemName, MapName, Latitude, Longitude, attributes] of devices) {
             setDeviceOnTrial(
@@ -104,25 +129,6 @@ export const UploadDevicesButton = ({ data, experiment, setData }) => {
                 attributes);
         }
         setTrialData(newTrial);
-    }
-
-    const uploadTrial = async (file, trial, experiment, setTrialData) => {
-        const ext = file.name.split('.').pop().toLowerCase();
-        if (ext === 'json' || ext === 'geojson' || ext === 'csv') {
-            const text = await ReadFileAsText(file);
-            uploadTrialFromText(text, ext, trial, experiment, setTrialData);
-        } else if (ext === 'zip') {
-            const zip = await JSZip().loadAsync(file);
-            for (const z of Object.values(zip.files)) {
-                const zext = z.name.split('.').pop().toLowerCase();
-                if (zext === 'json' || zext === 'geojson' || zext === 'csv') {
-                    const ztext = await z.async('text');
-                    uploadTrialFromText(ztext, zext, trial, experiment, setTrialData);
-                }
-            }
-        } else {
-            throw "unknown file extension " + file.name;
-        }
     }
 
     return (
