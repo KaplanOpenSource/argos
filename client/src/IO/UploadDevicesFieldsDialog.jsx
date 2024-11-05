@@ -1,5 +1,6 @@
 import { Button, Dialog, DialogActions, DialogTitle } from "@mui/material";
 import { SCOPE_TRIAL } from "../Experiment/AttributeType";
+import { groupBy } from "lodash";
 
 export const UploadDevicesFieldsDialog = ({ devices, setDevices, data, setData, experiment }) => {
 
@@ -53,6 +54,12 @@ export const UploadDevicesFieldsDialog = ({ devices, setDevices, data, setData, 
         setDevices(_ => []);
     };
 
+    const devicesByType = Object.values(groupBy(devices, x => x[1]));
+
+    /// TODO: attach fields from csv to device attributes for each device type
+    // nice to have: allow changing the csv fields for name, type, coords etc..
+    // refactor needed: get each device as struct, not list
+
     return (
         <Dialog
             open={true}
@@ -60,7 +67,12 @@ export const UploadDevicesFieldsDialog = ({ devices, setDevices, data, setData, 
             onClose={() => setDevices(_ => [])}
         >
             <DialogTitle>File upload for {devices?.length} devices</DialogTitle>
-            {devices.map((x, i) => <span key={i}>{JSON.stringify(x)}</span>)}
+            {devicesByType.map((x, i) => (
+                <>
+                    <span key={i}>{JSON.stringify(x)}</span>
+                    <br />
+                </>
+            ))}
             <DialogActions>
                 <Button onClick={uploadTrial}>Upload</Button>
             </DialogActions>
