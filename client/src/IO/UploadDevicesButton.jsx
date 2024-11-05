@@ -62,41 +62,48 @@ export const UploadDevicesButton = ({ data, experiment, setData }) => {
     }
 
     const uploadTrialFromText = async (text, fileExt, trial, experiment, setTrialData) => {
+        const devices = [];
         if (fileExt.endsWith('json')) {
             const json = JSON.parse(text);
-            const newTrial = structuredClone(trial);
             for (const dev of json.features) {
-                setDeviceOnTrial(
-                    newTrial,
-                    experiment,
+                devices.push([
                     dev.properties.type,
                     dev.properties.name,
                     dev.properties.MapName,
                     dev.geometry.coordinates[1],
                     dev.geometry.coordinates[0],
-                    dev.properties);
+                    dev.properties]);
             }
-            setTrialData(newTrial);
         } else if (fileExt === 'csv') {
             const lines = parse(text);
             const deviceLines = lines.slice(1).map(line => {
                 return Object.fromEntries(lines[0].map((o, i) => [o, line[i]]));
             });
-            const newTrial = structuredClone(trial);
             for (const dev of deviceLines) {
-                setDeviceOnTrial(newTrial,
-                    experiment,
+                devices.push([
                     dev.type,
                     dev.name,
                     dev.MapName,
                     dev.Latitude,
                     dev.Longitude,
-                    dev);
+                    dev]);
             }
-            setTrialData(newTrial);
         } else {
             throw "unknown file extension " + fileExt;
         }
+        const newTrial = structuredClone(trial);
+        for (const [deviceTypeName, deviceItemName, MapName, Latitude, Longitude, attributes] of devices) {
+            setDeviceOnTrial(
+                newTrial,
+                experiment,
+                deviceTypeName,
+                deviceItemName,
+                MapName,
+                Latitude,
+                Longitude,
+                attributes);
+        }
+        setTrialData(newTrial);
     }
 
     const uploadTrial = async (file, trial, experiment, setTrialData) => {
