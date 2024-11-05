@@ -90,8 +90,13 @@ export const useTrialGeoJson = () => {
 
     const setDeviceOnTrial = (trial, experiment, deviceTypeName, deviceItemName, MapName, Latitude, Longitude, otherProps) => {
         const deviceType = experiment?.deviceTypes?.find(x => x.name === deviceTypeName);
-        const deviceOnTrial = trial?.devicesOnTrial?.find(x => x.deviceTypeName === deviceTypeName && x.deviceItemName === deviceItemName);
-        if (deviceType && deviceOnTrial) {
+        if (deviceType) {
+            trial.devicesOnTrial ||= [];
+            let deviceOnTrial = trial.devicesOnTrial?.find(x => x.deviceTypeName === deviceTypeName && x.deviceItemName === deviceItemName);
+            if (!deviceOnTrial) {
+                deviceOnTrial = { deviceTypeName, deviceItemName };
+                trial.devicesOnTrial.push(deviceOnTrial);
+            }
             deviceOnTrial.location = {
                 "name": MapName,
                 "coordinates": [
