@@ -2,20 +2,19 @@ import React, { useRef, useState } from "react";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { HourglassBottom } from "@mui/icons-material";
 import { ErrorsDialog } from "./ErrorsDialog";
+import { ButtonFile } from "../Utils/ButtonFile";
 
 export const UploadButton = ({ accept, tooltip, uploadFunc, children, ...restprops }) => {
-    const inputFile = useRef(null);
     const [working, setWorking] = useState(false);
     const [errors, setErrors] = useState(undefined);
 
-    const handleChangeFile = async (event) => {
+    const handleChangeFile = async (files) => {
         try {
             setWorking(true);
-            const file = event.target.files[0];
-            if (!file) {
+            if (!files || !files.length) {
                 throw "empty file";
             }
-            const errors = await uploadFunc(file);
+            const errors = await uploadFunc(files[0]);
             if (errors) {
                 setErrors(errors);
             }
@@ -33,29 +32,21 @@ export const UploadButton = ({ accept, tooltip, uploadFunc, children, ...restpro
                     errors={errors}
                     onClose={() => setErrors(undefined)}
                 />
-                : <>
-                    <input
-                        type="file"
-                        ref={inputFile}
-                        style={{ display: "none" }}
-                        onChange={handleChangeFile}
-                        accept={accept}
-                    />
-                    <ButtonTooltip
-                        color="inherit"
-                        onClick={() => inputFile.current.click()}
-                        disabled={working}
-                        tooltip={tooltip}
-                        {...restprops}
-                    >
-                        {working
-                            ? <HourglassBottom />
-                            : <>
-                                {children}
-                            </>
-                        }
-                    </ButtonTooltip>
-                </>
+                : <ButtonFile
+                    color="inherit"
+                    accept={accept}
+                    tooltip={tooltip}
+                    onChange={handleChangeFile}
+                    disabled={working}
+                    {...restprops}
+                >
+                    {working
+                        ? <HourglassBottom />
+                        : <>
+                            {children}
+                        </>
+                    }
+                </ButtonFile>
             }
         </>
     );
