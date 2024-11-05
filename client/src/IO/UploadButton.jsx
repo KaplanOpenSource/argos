@@ -27,27 +27,26 @@ export const UploadButton = ({ accept, tooltip, uploadFunc, children, ...restpro
 
     return (
         <>
-            {errors && errors.length
-                ? <ErrorsDialog
-                    errors={errors}
-                    onClose={() => setErrors(undefined)}
-                />
-                : <ButtonFile
-                    color="inherit"
-                    accept={accept}
-                    tooltip={tooltip}
-                    onChange={handleChangeFile}
-                    disabled={working}
-                    {...restprops}
-                >
-                    {working
-                        ? <HourglassBottom />
-                        : <>
-                            {children}
-                        </>
-                    }
-                </ButtonFile>
-            }
+            <ButtonFile
+                color="inherit"
+                accept={accept}
+                tooltip={tooltip}
+                onChange={handleChangeFile}
+                disabled={working}
+                {...restprops}
+            >
+                {working
+                    ? <HourglassBottom />
+                    : <>
+                        {children}
+                    </>
+                }
+            </ButtonFile>
+            <ErrorsDialog
+                isOpen={errors && errors?.length}
+                errors={errors}
+                onClose={() => setErrors(undefined)}
+            />
         </>
     );
 };
