@@ -3,6 +3,7 @@ import { groupBy } from "lodash";
 import { UploadDevicesTypeFieldsMatcher } from "./UploadDevicesTypeFieldsMatcher";
 import { useState } from "react";
 import { changeDeviceOnTrial } from "./changeDeviceOnTrial";
+import { FIELD_UNASSIGNED, LOCATION_FIELDS } from "./uploadDefs";
 
 export const UploadDevicesFieldsDialog = ({ devicesToUpload, setDevicesToUpload, data, setData, experiment }) => {
 
@@ -19,8 +20,14 @@ export const UploadDevicesFieldsDialog = ({ devicesToUpload, setDevicesToUpload,
 
     const devicesByType = Object.values(groupBy(devicesToUpload, x => x[1]));
 
-    /// TODO: attach fields from csv to device attributes for each device type
-    // nice to have: allow changing the csv fields for name, type, coords etc..
+    let disabled = false;
+    for (const a of Object.values(attrMatch)) {
+        for (const f of LOCATION_FIELDS) {
+            if ((a[f] || FIELD_UNASSIGNED) === FIELD_UNASSIGNED) {
+                disabled = true;
+            }
+        }
+    }
 
     return (
         <Dialog
@@ -51,7 +58,12 @@ export const UploadDevicesFieldsDialog = ({ devicesToUpload, setDevicesToUpload,
                 )
             })}
             <DialogActions>
-                <Button onClick={uploadTrial}>Upload</Button>
+                <Button
+                    onClick={uploadTrial}
+                    disabled={disabled}
+                >
+                    Upload
+                </Button>
             </DialogActions>
         </Dialog>
     )
