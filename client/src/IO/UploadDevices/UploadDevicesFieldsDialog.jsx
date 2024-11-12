@@ -29,6 +29,9 @@ export const UploadDevicesFieldsDialog = ({ devicesToUpload, setDevicesToUpload,
         }
     }
 
+
+    //$$$$$ TODO: uploading multiple device types from geojson doesnt work
+
     console.log(devicesToUpload)
     console.log(devicesByType)
 
