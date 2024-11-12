@@ -6,39 +6,24 @@ function uniq(list) {
 
 const IGNORE_FIELDS = ['type', 'name'];
 
-export const UploadDevicesTypeFieldsMatcher = ({ devicesDetails, experiment }) => {
+export const UploadDevicesTypeFieldsMatcher = ({ devicesDetails, deviceType, experiment }) => {
     const fieldNamesOnDetails = uniq(devicesDetails.flatMap(x => {
         return Object.keys(x.attributes).filter(f => !IGNORE_FIELDS.includes(f));
     }));
 
-    const deviceTypeName = devicesDetails[0]?.type;
-
-    const deviceType = experiment?.deviceTypes?.find(x => x.name === deviceTypeName);
-    const attributeTypes = deviceType?.attributeTypes || []
+    const attributeTypeNames = deviceType?.attributeTypes?.map(x => x.name) || []
 
     return (
         <Paper sx={{ margin: 1 }}>
-            <Typography variant="h6" sx={{ margin: 1 }}>{deviceTypeName}</Typography>
-            {!deviceType
-                ? <Typography>Undefined device type</Typography>
-                : <>
-                    {fieldNamesOnDetails.map((x, i) => (
-                        <Box key={i}>
-                            <span>{x}</span>
-                        </Box>
-                    ))}
-                    {attributeTypes.map((x, i) =>
-                        <Typography key={' ' + i}>{JSON.stringify(x)}</Typography>
-                    )}
-                </>
-            }
-            {devicesDetails.map((devItem, i) => (
+            <Typography variant="h6" sx={{ margin: 1 }}>{deviceType?.name}</Typography>
+            {fieldNamesOnDetails.map((x, i) => (
                 <Box key={i}>
-                    <Typography variant="h6" sx={{ margin: 1 }}>{devItem.name}</Typography>
-                    {/* <Typography variant="h6" sx={{ margin: 1 }}>{devItem.name}</Typography> */}
-                    {JSON.stringify(devItem)}
+                    <span>{x}</span>
                 </Box>
             ))}
+            {attributeTypeNames.map((x, i) =>
+                <Typography key={' ' + i}>{x}</Typography>
+            )}
         </Paper>
     )
 }

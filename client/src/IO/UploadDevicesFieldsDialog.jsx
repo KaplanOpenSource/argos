@@ -68,13 +68,26 @@ export const UploadDevicesFieldsDialog = ({ devices, setDevices, data, setData, 
             onClose={() => setDevices(_ => [])}
         >
             <DialogTitle>File upload for {devices?.length} devices</DialogTitle>
-            {devicesByType.map((devType, i) => (
-                <UploadDevicesTypeFieldsMatcher
-                    key={i}
-                    devicesDetails={devType}
-                    experiment={experiment}
-                />
-            ))}
+            {devicesByType.map((devType, i) => {
+                const deviceTypeName = devType[0]?.type;
+                const deviceType = experiment?.deviceTypes?.find(x => x.name === deviceTypeName);
+                return (
+                    <Paper
+                        sx={{ margin: 1 }}
+                        key={i}
+                    >
+                        <Typography variant="h6" sx={{ margin: 1 }}>{deviceTypeName}</Typography>
+                        {!deviceType
+                            ? <Typography>Undefined device type</Typography>
+                            : <UploadDevicesTypeFieldsMatcher
+                                devicesDetails={devType}
+                                experiment={experiment}
+                                deviceType={deviceType}
+                            />
+                        }
+                    </Paper>
+                )
+            })}
             <DialogActions>
                 <Button onClick={uploadTrial}>Upload</Button>
             </DialogActions>
