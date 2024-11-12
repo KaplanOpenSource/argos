@@ -9,21 +9,19 @@ function uniq(list) {
 const IGNORE_FIELDS = ['type', 'name'];
 const UNASSIGNED = '* unassigned *';
 
-export const UploadDevicesTypeFieldsMatcher = ({ devicesDetails, deviceType }) => {
+export const UploadDevicesTypeFieldsMatcher = ({ devicesDetails, deviceType, attrMatch, setAttrMatch }) => {
     const fieldNamesOnDetails = uniq(devicesDetails.flatMap(x => {
         return Object.keys(x.attributes).filter(f => !IGNORE_FIELDS.includes(f));
     }));
 
     const attributeTypeNames = deviceType?.attributeTypes?.map(x => x.name) || []
 
-    const [attrMatch, setAttrMatch] = useState({});
-
     useEffect(() => {
         const matches = {};
         for (const attr of attributeTypeNames) {
             matches[attr] = fieldNamesOnDetails.includes(attr) ? attr : UNASSIGNED;
         }
-        return matches;
+        setAttrMatch(matches);
     }, [])
 
     const attrOptions = fieldNamesOnDetails.map(f => ({ name: f })).concat([{ name: UNASSIGNED }]);

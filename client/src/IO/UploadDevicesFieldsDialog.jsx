@@ -1,9 +1,12 @@
-import { Box, Button, Dialog, DialogActions, DialogTitle, Paper, Typography } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogTitle, Paper, Typography } from "@mui/material";
 import { SCOPE_TRIAL } from "../Experiment/AttributeType";
 import { groupBy } from "lodash";
 import { UploadDevicesTypeFieldsMatcher } from "./UploadDevicesTypeFieldsMatcher";
+import { useState } from "react";
 
 export const UploadDevicesFieldsDialog = ({ devices, setDevices, data, setData, experiment }) => {
+
+    const [attrMatch, setAttrMatch] = useState({});
 
     const setDeviceOnTrial = (trial, experiment, deviceTypeName, deviceItemName, MapName, Latitude, Longitude, otherProps) => {
         const deviceType = experiment?.deviceTypes?.find(x => x.name === deviceTypeName);
@@ -82,6 +85,8 @@ export const UploadDevicesFieldsDialog = ({ devices, setDevices, data, setData, 
                             : <UploadDevicesTypeFieldsMatcher
                                 devicesDetails={devType}
                                 deviceType={deviceType}
+                                attrMatch={attrMatch[deviceTypeName] || {}}
+                                setAttrMatch={v => setAttrMatch({ ...attrMatch, [deviceTypeName]: v })}
                             />
                         }
                     </Paper>
