@@ -18,6 +18,7 @@ import { CoordsSpan } from "./CoordsSpan";
 import { TrialsTabularView } from "./Tabular/TrialsTabularView";
 import { DevicesTabularView } from "./Tabular/DevicesTabularView";
 import { ExperimentTreeNodesExpandedContext } from "./ExperimentTreeNodesExpandedProvider";
+import { sum } from "lodash";
 
 export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
     const { experiments, setExperiment, addExperiment, currTrial, setCurrTrial } = useContext(experimentContext);
@@ -41,16 +42,40 @@ export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
         }
         return undefined;
     }
-    const handleNodeToggle = (e, nodeIds) => {
+
+    const handleNodeToggle = (_e, nodeIds) => {
         const newlyExpanded = nodeIds.filter(nodeId => !expandedNodes.includes(nodeId));
+
         const foundExperiment = findExperimentByUuid(newlyExpanded[0]);
         if (foundExperiment) {
             setCurrTrial({ experimentName: foundExperiment.name });
-            const nonExpNodeIds = nodeIds.filter(u => !findExperimentByUuid(u));
-            setExpandedNodes([newlyExpanded[0], ...nonExpNodeIds]);
-        } else {
-            setExpandedNodes(nodeIds);
+            const newNodes = [
+                foundExperiment.trackUuid,
+                ...nodeIds.filter(u => !findExperimentByUuid(u)),
+            ];
+            if (foundExperiment?.trialTypes?.length < 10) {
+                newNodes.push(foundExperiment.trackUuid + '_trialTypes');
+            }
+            if (sum(foundExperiment?.trialTypes.map(x => x?.trials?.length || 0)) < 10) {
+                newNodes.push(...(foundExperiment?.trialTypes?.map(tt => tt.trackUuid) || []));
+            }
+            setExpandedNodes(newNodes);
+            return;
         }
+
+        if (newlyExpanded[0] === experiment?.trackUuid + '_trialTypes') {
+            const trialsNum = sum(experiment?.trialTypes.map(x => x?.trials?.length || 0));
+            if (trialsNum < 10) {
+                const trialTypesUuids = experiment?.trialTypes?.map(tt => tt.trackUuid) || [];
+                setExpandedNodes([
+                    ...nodeIds,
+                    ...trialTypesUuids,
+                ]);
+                return;
+            }
+        }
+
+        setExpandedNodes(nodeIds);
     };
 
     useEffect(() => {
