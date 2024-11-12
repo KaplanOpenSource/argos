@@ -19,9 +19,8 @@ export const UploadDevicesButton = ({ data, experiment, setData }) => {
 
             setDevices([]);
             for (const file of files) {
-                await obtainDevicesFromFile(file, (devs) => {
-                    setDevices(prev => [...prev, ...devs])
-                });
+                const devices = await obtainDevicesFromFile(file);
+                setDevices(prev => [...prev, ...devices])
             }
         } catch (error) {
             setErrors([error?.message || error]);
