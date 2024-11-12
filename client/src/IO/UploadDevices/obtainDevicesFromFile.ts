@@ -1,15 +1,7 @@
 import { ReadFileAsText } from "../FileIo";
 import JSZip from "jszip";
 import { parse } from 'csv-parse/browser/esm/sync';
-
-export interface DevicesFromFile {
-    type: string;
-    name: string;
-    MapName: string;
-    Latitude: string;
-    Longitude: string;
-    attributes: any;
-}
+import { DevicesFromFile } from "./uploadDefs";
 
 const obtainDeviceFromJson = (text: string): DevicesFromFile[] => {
     const json = JSON.parse(text);

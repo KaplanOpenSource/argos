@@ -1,13 +1,11 @@
 import { Grid, Stack, Typography } from "@mui/material"
 import { SelectProperty } from "../../Property/SelectProperty";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { ATTR_UNASSIGNED, IGNORE_FIELDS } from "./uploadDefs";
 
 function uniq(list) {
     return list.reduce((acc, d) => acc.includes(d) ? acc : acc.concat(d), []);
 }
-
-const IGNORE_FIELDS = ['type', 'name'];
-export const ATTR_UNASSIGNED = '* unassigned *';
 
 export const UploadDevicesTypeFieldsMatcher = ({ devicesDetails, deviceType, attrMatch, setAttrMatch }) => {
     const fieldNamesOnDetails = uniq(devicesDetails.flatMap(x => {

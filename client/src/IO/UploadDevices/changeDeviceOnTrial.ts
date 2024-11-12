@@ -1,6 +1,5 @@
 import { SCOPE_TRIAL } from "../../Experiment/AttributeType";
-import { DevicesFromFile } from "./obtainDevicesFromFile";
-import { ATTR_UNASSIGNED } from "./UploadDevicesTypeFieldsMatcher";
+import { ATTR_UNASSIGNED, DevicesFromFile } from "./uploadDefs";
 
 export const changeDeviceOnTrial = (
     trial: { devicesOnTrial: any[]; },
