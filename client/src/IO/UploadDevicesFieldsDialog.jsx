@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogActions, DialogTitle } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogTitle, Paper, Typography } from "@mui/material";
 import { SCOPE_TRIAL } from "../Experiment/AttributeType";
 import { groupBy } from "lodash";
 
@@ -67,11 +67,17 @@ export const UploadDevicesFieldsDialog = ({ devices, setDevices, data, setData, 
             onClose={() => setDevices(_ => [])}
         >
             <DialogTitle>File upload for {devices?.length} devices</DialogTitle>
-            {devicesByType.map((x, i) => (
-                <>
-                    <span key={i}>{JSON.stringify(x)}</span>
-                    <br />
-                </>
+            {devicesByType.map((devType, i) => (
+                <Paper key={i} sx={{ margin: 1 }}>
+                    <Typography variant="h6" sx={{ margin: 1 }}>{devType[0]?.type}</Typography>
+                    {devType.map(devItem => (
+                        <Box>
+                            <Typography variant="h6" sx={{ margin: 1 }}>{devItem.name}</Typography>
+                            {/* <Typography variant="h6" sx={{ margin: 1 }}>{devItem.name}</Typography> */}
+                            {JSON.stringify(devItem)}
+                        </Box>
+                    ))}
+                </Paper>
             ))}
             <DialogActions>
                 <Button onClick={uploadTrial}>Upload</Button>
