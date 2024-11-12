@@ -7,13 +7,16 @@ const obtainDeviceFromJson = (text: string): DevicesFromFile[] => {
     const json = JSON.parse(text);
     const devices: DevicesFromFile[] = [];
     for (const dev of json.features) {
-        devices.push({
-            type: dev.properties.type,
-            name: dev.properties.name,
+        const attributes = {
+            ...dev.properties,
             MapName: dev.properties.MapName,
             Latitude: dev.geometry.coordinates[1],
             Longitude: dev.geometry.coordinates[0],
-            attributes: dev.properties
+        };
+        devices.push({
+            type: dev.properties.type,
+            name: dev.properties.name,
+            attributes,
         });
     }
     return devices;
@@ -29,9 +32,6 @@ const obtainDeviceFromCsv = (text: string): DevicesFromFile[] => {
         devices.push({
             type: dev.type,
             name: dev.name,
-            MapName: dev.MapName,
-            Latitude: dev.Latitude,
-            Longitude: dev.Longitude,
             attributes: dev
         });
     }

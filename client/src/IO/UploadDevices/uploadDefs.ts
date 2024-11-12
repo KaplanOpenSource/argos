@@ -9,8 +9,5 @@ export const IGNORE_FIELDS = [FIELD_TYPE, FIELD_TYPE];
 export interface DevicesFromFile {
     type: string;
     name: string;
-    MapName: string;
-    Latitude: string;
-    Longitude: string;
     attributes: any;
 }

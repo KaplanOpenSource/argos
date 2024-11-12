@@ -1,7 +1,7 @@
 import { Grid, Stack, Typography } from "@mui/material"
 import { SelectProperty } from "../../Property/SelectProperty";
 import { useEffect } from "react";
-import { FIELD_UNASSIGNED, IGNORE_FIELDS } from "./uploadDefs";
+import { FIELD_LATITUDE, FIELD_LONGITUDE, FIELD_MAPNAME, FIELD_UNASSIGNED, IGNORE_FIELDS } from "./uploadDefs";
 
 function uniq(list) {
     return list.reduce((acc, d) => acc.includes(d) ? acc : acc.concat(d), []);
@@ -12,7 +12,9 @@ export const UploadDevicesTypeFieldsMatcher = ({ devicesDetails, deviceType, att
         return Object.keys(x.attributes).filter(f => !IGNORE_FIELDS.includes(f));
     }));
 
-    const attributeTypeNames = deviceType?.attributeTypes?.map(x => x.name) || []
+    // TODO: enforce location fields
+    const attributeTypeNames = deviceType?.attributeTypes?.map(x => x.name) || [];
+    attributeTypeNames.unshift(FIELD_LATITUDE, FIELD_LONGITUDE, FIELD_MAPNAME);
 
     useEffect(() => {
         const matches = {};
@@ -22,7 +24,8 @@ export const UploadDevicesTypeFieldsMatcher = ({ devicesDetails, deviceType, att
         setAttrMatch(matches);
     }, [])
 
-    const attrOptions = fieldNamesOnDetails.map(f => ({ name: f })).concat([{ name: FIELD_UNASSIGNED }]);
+    const attrOptions = fieldNamesOnDetails.map(f => ({ name: f }));
+    attrOptions.push({ name: FIELD_UNASSIGNED });
 
     return (
         <Stack direction='column' spacing={1} sx={{ margin: 1 }}>

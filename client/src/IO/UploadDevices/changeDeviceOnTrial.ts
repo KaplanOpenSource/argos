@@ -1,5 +1,5 @@
 import { SCOPE_TRIAL } from "../../Experiment/AttributeType";
-import { FIELD_UNASSIGNED, DevicesFromFile } from "./uploadDefs";
+import { FIELD_UNASSIGNED, DevicesFromFile, FIELD_MAPNAME, FIELD_LATITUDE, FIELD_LONGITUDE } from "./uploadDefs";
 
 export const changeDeviceOnTrial = (
     trial: { devicesOnTrial: any[]; },
@@ -7,7 +7,7 @@ export const changeDeviceOnTrial = (
     deviceToUpload: DevicesFromFile,
     attrMatch: { [key: string]: number; },
 ) => {
-    const { type, name, MapName, Latitude, Longitude, attributes } = deviceToUpload;
+    const { type, name, attributes } = deviceToUpload;
     const deviceType = experiment?.deviceTypes?.find(x => x.name === type);
     if (deviceType) {
         trial.devicesOnTrial ||= [];
@@ -17,16 +17,22 @@ export const changeDeviceOnTrial = (
             trial.devicesOnTrial.push(deviceOnTrial);
         }
 
-        deviceOnTrial.location = {
-            "name": MapName,
-            "coordinates": [
-                parseFloat(Latitude),
-                parseFloat(Longitude),
-            ]
+        const attrMatchForType = attrMatch[deviceType.name];
+
+        const MapName = attributes[attrMatchForType[FIELD_MAPNAME]];
+        const Latitude = parseFloat(attributes[attrMatchForType[FIELD_LATITUDE]]);
+        const Longitude = parseFloat(attributes[attrMatchForType[FIELD_LONGITUDE]]);
+
+        if (!MapName || !isFinite(Latitude) || !isFinite(Longitude)) {
+            throw "Unparsable location on device: " + JSON.stringify(deviceToUpload);
         }
 
-        const attrMatchForType = Object.entries(attrMatch[deviceType.name]);
-        for (const [attrNameOnDev, attrNameFromFile] of attrMatchForType) {
+        deviceOnTrial.location = {
+            "name": MapName,
+            "coordinates": [Latitude, Longitude]
+        }
+
+        for (const [attrNameOnDev, attrNameFromFile] of Object.entries(attrMatchForType)) {
             if (attrNameFromFile || FIELD_UNASSIGNED !== FIELD_UNASSIGNED) {
                 const attrType = deviceType?.attributeTypes?.find(x => x.name === attrNameOnDev);
                 if (attrType && (attrType.scope || SCOPE_TRIAL) === SCOPE_TRIAL) {
