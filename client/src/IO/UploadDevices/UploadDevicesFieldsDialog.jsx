@@ -1,5 +1,5 @@
 import { Button, Dialog, DialogActions, DialogTitle, Paper, Typography } from "@mui/material";
-import { SCOPE_TRIAL } from "../Experiment/AttributeType";
+import { SCOPE_TRIAL } from "../../Experiment/AttributeType";
 import { groupBy } from "lodash";
 import { ATTR_UNASSIGNED, UploadDevicesTypeFieldsMatcher } from "./UploadDevicesTypeFieldsMatcher";
 import { useState } from "react";

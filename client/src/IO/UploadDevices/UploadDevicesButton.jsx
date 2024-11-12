@@ -1,7 +1,7 @@
 import { HourglassBottom, Upload } from "@mui/icons-material"
 import { useState } from "react";
-import { ButtonFile } from "../Utils/ButtonFile";
-import { ErrorsDialog } from "./ErrorsDialog";
+import { ButtonFile } from "../../Utils/ButtonFile";
+import { ErrorsDialog } from "../ErrorsDialog";
 import { obtainDevicesFromFile } from "./obtainDevicesFromFile";
 import { UploadDevicesFieldsDialog } from "./UploadDevicesFieldsDialog";
 

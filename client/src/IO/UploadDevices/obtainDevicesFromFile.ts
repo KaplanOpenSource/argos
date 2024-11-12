@@ -1,4 +1,4 @@
-import { ReadFileAsText } from "./FileIo";
+import { ReadFileAsText } from "../FileIo";
 import JSZip from "jszip";
 import { parse } from 'csv-parse/browser/esm/sync';
 

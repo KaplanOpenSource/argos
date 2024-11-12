@@ -1,5 +1,5 @@
 import { Grid, Stack, Typography } from "@mui/material"
-import { SelectProperty } from "../Property/SelectProperty";
+import { SelectProperty } from "../../Property/SelectProperty";
 import { useEffect, useState } from "react";
 
 function uniq(list) {

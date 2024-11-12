@@ -14,7 +14,7 @@ import { ActionsOnMapContext } from "../Map/ActionsOnMapContext";
 import { RealMapName } from "../constants/constants";
 import { sum } from "lodash";
 import { Typography } from "@mui/material";
-import { UploadDevicesButton } from "../IO/UploadDevicesButton";
+import { UploadDevicesButton } from "../IO/UploadDevices/UploadDevicesButton";
 
 export const Trial = ({ data, setData, experiment, trialType, children }) => {
     const { currTrial, setCurrTrial, selection, setShownMap } = useContext(experimentContext);
