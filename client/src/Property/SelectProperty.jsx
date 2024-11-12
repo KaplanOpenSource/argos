@@ -1,7 +1,7 @@
 import { Box, Chip, FormControl, InputLabel, ListItemText, MenuItem, Select, Tooltip } from "@mui/material";
 
 
-export const SelectProperty = ({ label, data, setData, options, multiple = false, tooltipTitle = "", ...restProps }) => {
+export const SelectProperty = ({ label, data, setData, options, multiple = false, tooltipTitle = "", styleFormControl = {}, ...restProps }) => {
     function makeArray(val) {
         return ((typeof val === 'string' ? val.split(',') : val) || []);
     }
@@ -33,7 +33,7 @@ export const SelectProperty = ({ label, data, setData, options, multiple = false
             title={tooltipTitle}
             placement='top'
         >
-            <FormControl sx={{ minWidth: 120 }}>
+            <FormControl sx={{ minWidth: 120, ...styleFormControl }}>
                 <InputLabel>{label}</InputLabel>
                 <Select
                     key={multiple} // this is needed because the changing multiple causes crush
