@@ -59,14 +59,16 @@ export const obtainDevicesFromFile = async (file: File): Promise<DevicesFromFile
     }
 
     if (ext === 'zip') {
-        const devices = [];
+        const devices: DevicesFromFile[] = [];
+        
         const zip = await JSZip().loadAsync(file);
         for (const z of Object.values(zip.files)) {
             const zext = z?.name?.split('.')?.pop()?.toLowerCase() || '';
 
             if (zext === 'csv' || zext?.endsWith('json')) {
                 const text = await z.async('text');
-                return obtainDeviceFromText(zext, text) || [];
+                const currdevs = obtainDeviceFromText(zext, text) || [];
+                devices.push(...currdevs);
             }
         }
 

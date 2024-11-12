@@ -3,7 +3,7 @@ import { groupBy } from "lodash";
 import { UploadDevicesTypeFieldsMatcher } from "./UploadDevicesTypeFieldsMatcher";
 import { useState } from "react";
 import { changeDeviceOnTrial } from "./changeDeviceOnTrial";
-import { FIELD_UNASSIGNED, LOCATION_FIELDS } from "./uploadDefs";
+import { FIELD_TYPE, FIELD_UNASSIGNED, LOCATION_FIELDS } from "./uploadDefs";
 
 export const UploadDevicesFieldsDialog = ({ devicesToUpload, setDevicesToUpload, data, setData, experiment }) => {
 
@@ -18,7 +18,7 @@ export const UploadDevicesFieldsDialog = ({ devicesToUpload, setDevicesToUpload,
         setDevicesToUpload(_ => []);
     };
 
-    const devicesByType = Object.values(groupBy(devicesToUpload, x => x[1]));
+    const devicesByType = Object.values(groupBy(devicesToUpload, x => x[FIELD_TYPE]));
 
     let disabled = false;
     for (const a of Object.values(attrMatch)) {
@@ -28,6 +28,9 @@ export const UploadDevicesFieldsDialog = ({ devicesToUpload, setDevicesToUpload,
             }
         }
     }
+
+    console.log(devicesToUpload)
+    console.log(devicesByType)
 
     return (
         <Dialog

@@ -17,11 +17,12 @@ export const UploadDevicesButton = ({ data, experiment, setData }) => {
                 throw "empty file";
             }
 
-            setDevicesToUpload([]);
+            const alldevs = [];
             for (const file of files) {
                 const devices = await obtainDevicesFromFile(file);
-                setDevicesToUpload(prev => [...prev, ...devices])
+                alldevs.push(...devices);
             }
+            setDevicesToUpload(alldevs);
         } catch (error) {
             setErrors([error?.message || error]);
         }
