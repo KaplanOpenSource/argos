@@ -8,7 +8,7 @@ import { UploadDevicesFieldsDialog } from "./UploadDevicesFieldsDialog";
 export const UploadDevicesButton = ({ data, experiment, setData }) => {
     const [working, setWorking] = useState(false);
     const [errors, setErrors] = useState(undefined);
-    const [devices, setDevices] = useState([]);
+    const [devicesToUpload, setDevicesToUpload] = useState([]);
 
     const handleChangeFile = async (files) => {
         setWorking(true);
@@ -17,10 +17,10 @@ export const UploadDevicesButton = ({ data, experiment, setData }) => {
                 throw "empty file";
             }
 
-            setDevices([]);
+            setDevicesToUpload([]);
             for (const file of files) {
                 const devices = await obtainDevicesFromFile(file);
-                setDevices(prev => [...prev, ...devices])
+                setDevicesToUpload(prev => [...prev, ...devices])
             }
         } catch (error) {
             setErrors([error?.message || error]);
@@ -47,10 +47,10 @@ export const UploadDevicesButton = ({ data, experiment, setData }) => {
                 errors={errors}
                 onClose={() => setErrors(undefined)}
             />
-            {errors?.length || !devices?.length ? null :
+            {errors?.length || !devicesToUpload?.length ? null :
                 <UploadDevicesFieldsDialog
-                    devices={devices}
-                    setDevices={setDevices}
+                    devicesToUpload={devicesToUpload}
+                    setDevicesToUpload={setDevicesToUpload}
                     data={data}
                     setData={setData}
                     experiment={experiment}

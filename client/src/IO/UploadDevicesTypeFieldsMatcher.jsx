@@ -7,7 +7,7 @@ function uniq(list) {
 }
 
 const IGNORE_FIELDS = ['type', 'name'];
-const UNASSIGNED = '* unassigned *';
+export const ATTR_UNASSIGNED = '* unassigned *';
 
 export const UploadDevicesTypeFieldsMatcher = ({ devicesDetails, deviceType, attrMatch, setAttrMatch }) => {
     const fieldNamesOnDetails = uniq(devicesDetails.flatMap(x => {
@@ -19,12 +19,12 @@ export const UploadDevicesTypeFieldsMatcher = ({ devicesDetails, deviceType, att
     useEffect(() => {
         const matches = {};
         for (const attr of attributeTypeNames) {
-            matches[attr] = fieldNamesOnDetails.includes(attr) ? attr : UNASSIGNED;
+            matches[attr] = fieldNamesOnDetails.includes(attr) ? attr : ATTR_UNASSIGNED;
         }
         setAttrMatch(matches);
     }, [])
 
-    const attrOptions = fieldNamesOnDetails.map(f => ({ name: f })).concat([{ name: UNASSIGNED }]);
+    const attrOptions = fieldNamesOnDetails.map(f => ({ name: f })).concat([{ name: ATTR_UNASSIGNED }]);
 
     return (
         <Stack direction='column' spacing={1} sx={{ margin: 1 }}>
@@ -37,7 +37,7 @@ export const UploadDevicesTypeFieldsMatcher = ({ devicesDetails, deviceType, att
                         <SelectProperty
                             styleFormControl={{ width: '100%' }}
                             label={attrName}
-                            data={attrMatch[attrName] || UNASSIGNED}
+                            data={attrMatch[attrName] || ATTR_UNASSIGNED}
                             setData={v => setAttrMatch({ ...attrMatch, [attrName]: v })}
                             options={attrOptions}
                         />
