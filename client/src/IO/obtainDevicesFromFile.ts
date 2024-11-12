@@ -74,7 +74,7 @@ export const obtainDevicesFromFile = async (file: File): Promise<DevicesFromFile
 
             if (zext === 'csv' || zext?.endsWith('json')) {
                 const text = await z.async('text');
-                return obtainDeviceFromText(ext, text) || [];
+                return obtainDeviceFromText(zext, text) || [];
             }
         }
 

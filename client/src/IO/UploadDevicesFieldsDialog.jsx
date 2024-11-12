@@ -72,6 +72,7 @@ export const UploadDevicesFieldsDialog = ({ devices, setDevices, data, setData, 
                 <UploadDevicesTypeFieldsMatcher
                     key={i}
                     devicesDetails={devType}
+                    experiment={experiment}
                 />
             ))}
             <DialogActions>
