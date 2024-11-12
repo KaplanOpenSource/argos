@@ -81,7 +81,6 @@ export const UploadDevicesFieldsDialog = ({ devices, setDevices, data, setData, 
                             ? <Typography>Undefined device type</Typography>
                             : <UploadDevicesTypeFieldsMatcher
                                 devicesDetails={devType}
-                                experiment={experiment}
                                 deviceType={deviceType}
                             />
                         }

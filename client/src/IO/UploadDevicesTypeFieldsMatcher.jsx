@@ -1,45 +1,51 @@
-import { Box, Grid, Paper, Stack, Typography } from "@mui/material"
+import { Grid, Stack, Typography } from "@mui/material"
 import { SelectProperty } from "../Property/SelectProperty";
+import { useEffect, useState } from "react";
 
 function uniq(list) {
     return list.reduce((acc, d) => acc.includes(d) ? acc : acc.concat(d), []);
 }
 
 const IGNORE_FIELDS = ['type', 'name'];
+const UNASSIGNED = '* unassigned *';
 
-export const UploadDevicesTypeFieldsMatcher = ({ devicesDetails, deviceType, experiment }) => {
+export const UploadDevicesTypeFieldsMatcher = ({ devicesDetails, deviceType }) => {
     const fieldNamesOnDetails = uniq(devicesDetails.flatMap(x => {
         return Object.keys(x.attributes).filter(f => !IGNORE_FIELDS.includes(f));
     }));
 
     const attributeTypeNames = deviceType?.attributeTypes?.map(x => x.name) || []
 
+    const [attrMatch, setAttrMatch] = useState({});
+
+    useEffect(() => {
+        const matches = {};
+        for (const attr of attributeTypeNames) {
+            matches[attr] = fieldNamesOnDetails.includes(attr) ? attr : UNASSIGNED;
+        }
+        return matches;
+    }, [])
+
+    const attrOptions = fieldNamesOnDetails.map(f => ({ name: f })).concat([{ name: UNASSIGNED }]);
+
     return (
         <Stack direction='column' spacing={1} sx={{ margin: 1 }}>
-            {attributeTypeNames.map((x, i) => (
+            {attributeTypeNames.map((attrName, i) => (
                 <Grid container direction='row' key={i}>
                     <Grid item xs={3} alignSelf={'center'}>
-                        <Typography key={'a' + i}>{x}</Typography>
+                        <Typography key={'a' + i}>{attrName}</Typography>
                     </Grid>
                     <Grid item xs={4}>
                         <SelectProperty
                             styleFormControl={{ width: '100%' }}
-                            label={x}
-                            data={""} //type || "Polyline"}
-                            setData={newtype => { }}//setType(newtype)}
-                            options={fieldNamesOnDetails.map(f => ({ name: f }))}
+                            label={attrName}
+                            data={attrMatch[attrName] || UNASSIGNED}
+                            setData={v => setAttrMatch({ ...attrMatch, [attrName]: v })}
+                            options={attrOptions}
                         />
                     </Grid>
                 </Grid>
             ))}
         </Stack>
     )
-    //     // <Paper sx={{ margin: 1 }}>
-    //         {/* <Typography variant="h6" sx={{ margin: 1 }}>{deviceType?.name}</Typography> */}
-    //         {/* {fieldNamesOnDetails.map((x, i) => (
-    //             <Box key={i + 'f'}>
-    //                 <span>{x}</span>
-    //             </Box>
-    //         ))} */}
-    // // </Paper>
 }
