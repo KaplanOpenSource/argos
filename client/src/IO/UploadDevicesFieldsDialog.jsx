@@ -1,6 +1,7 @@
 import { Box, Button, Dialog, DialogActions, DialogTitle, Paper, Typography } from "@mui/material";
 import { SCOPE_TRIAL } from "../Experiment/AttributeType";
 import { groupBy } from "lodash";
+import { UploadDevicesTypeFieldsMatcher } from "./UploadDevicesTypeFieldsMatcher";
 
 export const UploadDevicesFieldsDialog = ({ devices, setDevices, data, setData, experiment }) => {
 
@@ -68,16 +69,10 @@ export const UploadDevicesFieldsDialog = ({ devices, setDevices, data, setData, 
         >
             <DialogTitle>File upload for {devices?.length} devices</DialogTitle>
             {devicesByType.map((devType, i) => (
-                <Paper key={i} sx={{ margin: 1 }}>
-                    <Typography variant="h6" sx={{ margin: 1 }}>{devType[0]?.type}</Typography>
-                    {devType.map(devItem => (
-                        <Box>
-                            <Typography variant="h6" sx={{ margin: 1 }}>{devItem.name}</Typography>
-                            {/* <Typography variant="h6" sx={{ margin: 1 }}>{devItem.name}</Typography> */}
-                            {JSON.stringify(devItem)}
-                        </Box>
-                    ))}
-                </Paper>
+                <UploadDevicesTypeFieldsMatcher
+                    key={i}
+                    devicesDetails={devType}
+                />
             ))}
             <DialogActions>
                 <Button onClick={uploadTrial}>Upload</Button>
