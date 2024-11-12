@@ -1,7 +1,7 @@
 import { Grid, Stack, Typography } from "@mui/material"
 import { SelectProperty } from "../../Property/SelectProperty";
 import { useEffect } from "react";
-import { ATTR_UNASSIGNED, IGNORE_FIELDS } from "./uploadDefs";
+import { FIELD_UNASSIGNED, IGNORE_FIELDS } from "./uploadDefs";
 
 function uniq(list) {
     return list.reduce((acc, d) => acc.includes(d) ? acc : acc.concat(d), []);
@@ -17,12 +17,12 @@ export const UploadDevicesTypeFieldsMatcher = ({ devicesDetails, deviceType, att
     useEffect(() => {
         const matches = {};
         for (const attr of attributeTypeNames) {
-            matches[attr] = fieldNamesOnDetails.includes(attr) ? attr : ATTR_UNASSIGNED;
+            matches[attr] = fieldNamesOnDetails.includes(attr) ? attr : FIELD_UNASSIGNED;
         }
         setAttrMatch(matches);
     }, [])
 
-    const attrOptions = fieldNamesOnDetails.map(f => ({ name: f })).concat([{ name: ATTR_UNASSIGNED }]);
+    const attrOptions = fieldNamesOnDetails.map(f => ({ name: f })).concat([{ name: FIELD_UNASSIGNED }]);
 
     return (
         <Stack direction='column' spacing={1} sx={{ margin: 1 }}>
@@ -35,7 +35,7 @@ export const UploadDevicesTypeFieldsMatcher = ({ devicesDetails, deviceType, att
                         <SelectProperty
                             styleFormControl={{ width: '100%' }}
                             label={attrName}
-                            data={attrMatch[attrName] || ATTR_UNASSIGNED}
+                            data={attrMatch[attrName] || FIELD_UNASSIGNED}
                             setData={v => setAttrMatch({ ...attrMatch, [attrName]: v })}
                             options={attrOptions}
                         />

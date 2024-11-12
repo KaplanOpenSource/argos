@@ -1,5 +1,5 @@
 import { SCOPE_TRIAL } from "../../Experiment/AttributeType";
-import { ATTR_UNASSIGNED, DevicesFromFile } from "./uploadDefs";
+import { FIELD_UNASSIGNED, DevicesFromFile } from "./uploadDefs";
 
 export const changeDeviceOnTrial = (
     trial: { devicesOnTrial: any[]; },
@@ -27,7 +27,7 @@ export const changeDeviceOnTrial = (
 
         const attrMatchForType = Object.entries(attrMatch[deviceType.name]);
         for (const [attrNameOnDev, attrNameFromFile] of attrMatchForType) {
-            if (attrNameFromFile || ATTR_UNASSIGNED !== ATTR_UNASSIGNED) {
+            if (attrNameFromFile || FIELD_UNASSIGNED !== FIELD_UNASSIGNED) {
                 const attrType = deviceType?.attributeTypes?.find(x => x.name === attrNameOnDev);
                 if (attrType && (attrType.scope || SCOPE_TRIAL) === SCOPE_TRIAL) {
                     const value = attributes[attrNameFromFile];
