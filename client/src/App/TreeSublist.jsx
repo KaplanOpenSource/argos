@@ -3,6 +3,8 @@ import AddIcon from '@mui/icons-material/Add';
 import { camelCaseToWords, createNewName } from "../Utils/utils";
 import { TreeItem } from "@mui/x-tree-view/TreeItem";
 import { assignUuids } from "../Context/TrackUuidUtils";
+import { ExperimentTreeNodesExpandedContext } from "../Experiment/ExperimentTreeNodesExpandedProvider";
+import { useContext } from "react";
 
 export const TreeSublist = ({
     nameTemplate,
@@ -15,6 +17,10 @@ export const TreeSublist = ({
     children,
     noAddButton,
 }) => {
+    const {
+        addExpandedNode,
+    } = useContext(ExperimentTreeNodesExpandedContext);
+
     const items = data[fieldName] || [];
     const key = parentKey + '_' + fieldName;
 
@@ -54,6 +60,7 @@ export const TreeSublist = ({
                                     const noNameData = newDataCreator ? newDataCreator() : {};
                                     const theData = assignUuids({ name, ...noNameData });
                                     setData({ ...data, [fieldName]: [...items, theData] });
+                                    addExpandedNode(key);
                                 }}
                             >
                                 <AddIcon />
