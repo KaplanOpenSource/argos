@@ -30,11 +30,6 @@ export const UploadDevicesFieldsDialog = ({ devicesToUpload, setDevicesToUpload,
     }
 
 
-    //$$$$$ TODO: uploading multiple device types from geojson doesnt work
-
-    console.log(devicesToUpload)
-    console.log(devicesByType)
-
     return (
         <Dialog
             open={true}
@@ -57,7 +52,9 @@ export const UploadDevicesFieldsDialog = ({ devicesToUpload, setDevicesToUpload,
                                 devicesDetails={devType}
                                 deviceType={deviceType}
                                 attrMatch={attrMatch[deviceTypeName] || {}}
-                                setAttrMatch={v => setAttrMatch({ ...attrMatch, [deviceTypeName]: v })}
+                                setAttrMatch={updater => {
+                                    setAttrMatch(prev => ({ ...(prev || {}), [deviceTypeName]: updater((prev || {})[deviceTypeName]) }));
+                                }}
                             />
                         }
                     </Paper>
