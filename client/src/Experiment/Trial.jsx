@@ -93,9 +93,10 @@ export const Trial = ({ data, setData, experiment, trialType, children }) => {
                         <Download />
                     </ButtonMenu>
                     <UploadDevicesButton
-                        data={data}
+                        trial={data}
+                        trialType={trialType}
                         experiment={experiment}
-                        setData={setData}
+                        setTrialData={setData}
                     />
                     {children}
                     <Typography>

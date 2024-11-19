@@ -1,14 +1,21 @@
 import { HourglassBottom, Upload } from "@mui/icons-material"
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { ButtonFile } from "../../Utils/ButtonFile";
 import { ErrorsDialog } from "../ErrorsDialog";
 import { obtainDevicesFromFile } from "./obtainDevicesFromFile";
 import { UploadDevicesFieldsDialog } from "./UploadDevicesFieldsDialog";
+import { experimentContext } from "../../Context/ExperimentProvider";
 
-export const UploadDevicesButton = ({ data, experiment, setData }) => {
+export const UploadDevicesButton = ({
+    trial,
+    setTrialData,
+    trialType,
+    experiment,
+}) => {
     const [working, setWorking] = useState(false);
     const [errors, setErrors] = useState(undefined);
     const [devicesToUpload, setDevicesToUpload] = useState([]);
+    const { setCurrTrial } = useContext(experimentContext);
 
     const handleChangeFile = async (files) => {
         setWorking(true);
@@ -36,6 +43,7 @@ export const UploadDevicesButton = ({ data, experiment, setData }) => {
                 accept=".json,.geojson,.csv,.zip"
                 tooltip={'Upload devices as geojson, csv, zip of csvs'}
                 onChange={handleChangeFile}
+                onClickCapture={() => setCurrTrial({ experimentName: experiment.name, trialTypeName: trialType.name, trialName: trial.name })}
                 disabled={working}
             >
                 {working
@@ -52,8 +60,8 @@ export const UploadDevicesButton = ({ data, experiment, setData }) => {
                 <UploadDevicesFieldsDialog
                     devicesToUpload={devicesToUpload}
                     setDevicesToUpload={setDevicesToUpload}
-                    data={data}
-                    setData={setData}
+                    data={trial}
+                    setData={setTrialData}
                     experiment={experiment}
                 />
             }
