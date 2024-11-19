@@ -1,9 +1,9 @@
 import { useContext } from "react";
-import { experimentContext } from "../Context/ExperimentProvider";
-import { RealMapName } from "../constants/constants";
+import { experimentContext } from "../../Context/ExperimentProvider";
+import { RealMapName } from "../../constants/constants";
 import { DeviceMarker } from "./DeviceMarker";
-import { PopupSwitchProvider } from "./PopupSwitchContext";
-import { AreaMarkListener } from "./AreaMarkListener";
+import { PopupSwitchProvider } from "../PopupSwitchContext";
+import { AreaMarkListener } from "../AreaMarkListener";
 
 export const DeviceMarkersShown = ({ showDeviceNames }) => {
     const { currTrial, setTrialData, selection, setSelection, hiddenDeviceTypes } = useContext(experimentContext);

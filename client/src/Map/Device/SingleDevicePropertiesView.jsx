@@ -6,17 +6,16 @@ import {
     Edit,
     LocationOff,
 } from "@mui/icons-material";
-import { ButtonTooltip } from '../Utils/ButtonTooltip';
-import { experimentContext } from '../Context/ExperimentProvider';
-import { SelectDeviceButton } from '../Experiment/SelectDeviceButton';
-import { AttributeItemList } from '../Experiment/AttributeItemList';
-import { SCOPE_TRIAL } from '../Experiment/AttributeType';
-import { AddContainedButton } from '../Experiment/Contained/AddContainedButton';
-import { ContainedDevice } from '../Experiment/Contained/ContainedDevice';
+import { ButtonTooltip } from '../../Utils/ButtonTooltip';
+import { experimentContext } from '../../Context/ExperimentProvider';
+import { SelectDeviceButton } from '../../Experiment/SelectDeviceButton';
+import { AttributeItemList } from '../../Experiment/AttributeItemList';
+import { SCOPE_TRIAL } from '../../Experiment/AttributeType';
+import { AddContainedButton } from '../../Experiment/Contained/AddContainedButton';
+import { ContainedDevice } from '../../Experiment/Contained/ContainedDevice';
+import { DeviceLocationEdit } from './DeviceLocationEdit';
 
 export const SingleDevicePropertiesView = ({ deviceOnTrial, setDeviceOnTrial, children }) => {
-    const [isEditLocation, setIsEditLocation] = useState(false);
-
     const { currTrial, setLocationsToDevices, setTrialData } = useContext(experimentContext);
     const experiment = currTrial.experiment || {};
     const { deviceTypeName, deviceItemName } = deviceOnTrial;
@@ -45,22 +44,9 @@ export const SingleDevicePropertiesView = ({ deviceOnTrial, setDeviceOnTrial, ch
                 {deviceTypeName}
             </Typography>
             <br />
-            {
-                isEditLocation
-                    ? null
-                    : <Stack direction='row'>
-                        <Typography variant='overline'>
-                            {devLocation.map(x => Math.round(x * 1e7) / 1e7).join(',')}
-                        </Typography>
-                        {/* <ButtonTooltip
-                        // tooltip={'Edit location'}
-                        // onClick={() => setIsEditLocation(true)}
-                        >
-                            <Edit />
-                        </ButtonTooltip> */}
-                    </Stack>
-            }
-            <br />
+            <DeviceLocationEdit
+                devLocation={devLocation}
+            />
             {deviceItem
                 ? <AttributeItemList
                     attributeTypes={deviceType.attributeTypes}

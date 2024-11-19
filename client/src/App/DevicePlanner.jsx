@@ -4,7 +4,7 @@ import { MapShower } from '../Map/MapShower';
 import { DeviceTable } from '../DeviceTable/DeviceTable';
 import { Stack } from '@mui/material';
 import { MapPlacer } from '../Map/MapPlacer';
-import { DeviceMarkersShown } from '../Map/DeviceMarkersShown';
+import { DeviceMarkersShown } from '../Map/Device/DeviceMarkersShown';
 import { MapPositionOnUrl } from '../Map/MapPositionOnUrl';
 import { EditToolBox } from '../EditToolBox/EditToolBox';
 import { useContext, useState } from 'react';
