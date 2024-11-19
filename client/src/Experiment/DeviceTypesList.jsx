@@ -1,4 +1,3 @@
-import { Typography } from "@mui/material";
 import { TreeSublist } from "../App/TreeSublist";
 import { changeByName } from "../Utils/utils";
 import { SCOPE_CONSTANT } from "./AttributeType";
