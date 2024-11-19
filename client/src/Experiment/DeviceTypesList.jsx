@@ -27,11 +27,7 @@ export const DeviceTypesList = ({ data, setData }) => {
                     ]
                 }
             }}
-            components={<>
-                <Typography>
-                    {deviceTypes.length} Types {devicesNum} Devices
-                </Typography>
-            </>}
+            textOnRow={devicesNum + ' Devices'}
         >
             {deviceTypes.map(itemData => (
                 <DeviceType
