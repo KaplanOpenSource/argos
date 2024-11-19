@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import { Stack, TextField, Typography } from "@mui/material";
 import { locationToString } from "../../Utils/utils";
 import { ButtonTooltip } from "../../Utils/ButtonTooltip";
-import { Edit } from "@mui/icons-material";
-import { TextFieldDebounce } from "../../Utils/TextFieldDebounce";
+import { Edit, PlayArrow } from "@mui/icons-material";
 
 const NumberTextField = ({ label, value, setValue }: {
     label: string,
@@ -49,6 +48,10 @@ export const DeviceLocationEdit = ({ location, setLocation }) => {
     const [isEditLocation, setIsEditLocation] = useState<boolean>(false);
     const [innerLocation, setInnerLocation] = useState(location);
 
+    const changeLocation = () => {
+        setIsEditLocation(false);
+        setLocation(innerLocation);
+    }
     return isEditLocation
         ? <Stack direction='row' sx={{ marginTop: '10px' }}>
             <NumberTextField
@@ -66,6 +69,14 @@ export const DeviceLocationEdit = ({ location, setLocation }) => {
                 value={innerLocation[1] || 0}
                 setValue={v => setInnerLocation([innerLocation[0], v])}
             />
+            <ButtonTooltip
+                tooltip={'Update location'}
+                onClick={changeLocation}
+            >
+                <PlayArrow
+                    color="success"
+                />
+            </ButtonTooltip>
         </Stack>
         : <Stack direction='row'>
             <Typography variant='overline'>
