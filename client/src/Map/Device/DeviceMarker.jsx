@@ -5,9 +5,8 @@ import { usePopupSwitch } from "../PopupSwitchContext";
 import { experimentContext } from "../../Context/ExperimentProvider";
 import { renderToStaticMarkup } from "react-dom/server";
 import { divIcon } from "leaflet";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMapMarkerAlt } from "@fortawesome/free-solid-svg-icons";
 import { IconDeviceByName } from "../../Experiment/IconPicker";
+import { locationToString } from "../../Utils/utils";
 
 export const DeviceMarker = ({ deviceOnTrial, setDeviceOnTrial, showDeviceNames }) => {
     const { selection, setLocationsToDevices, currTrial } = useContext(experimentContext);
@@ -25,10 +24,6 @@ export const DeviceMarker = ({ deviceOnTrial, setDeviceOnTrial, showDeviceNames 
 
     const setLocation = (latlng) => {
         setLocationsToDevices([{ deviceTypeName, deviceItemName }], [latlng]);
-    }
-
-    const locationToString = (coords) => {
-        return coords.map(x => Math.round(x * 1e8) / 1e8).join(',')
     }
 
     const isSelected = selection.find(s => s.deviceItemName === deviceItemName && s.deviceTypeName === deviceTypeName);
@@ -88,6 +83,7 @@ export const DeviceMarker = ({ deviceOnTrial, setDeviceOnTrial, showDeviceNames 
                 <SingleDevicePropertiesView
                     deviceOnTrial={deviceOnTrial}
                     setDeviceOnTrial={setDeviceOnTrial}
+                    setLocation={setLocation}
                 >
                 </SingleDevicePropertiesView>
             </Popup>

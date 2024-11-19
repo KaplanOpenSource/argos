@@ -15,14 +15,12 @@ import { AddContainedButton } from '../../Experiment/Contained/AddContainedButto
 import { ContainedDevice } from '../../Experiment/Contained/ContainedDevice';
 import { DeviceLocationEdit } from './DeviceLocationEdit';
 
-export const SingleDevicePropertiesView = ({ deviceOnTrial, setDeviceOnTrial, children }) => {
+export const SingleDevicePropertiesView = ({ deviceOnTrial, setDeviceOnTrial, setLocation, children }) => {
     const { currTrial, setLocationsToDevices, setTrialData } = useContext(experimentContext);
     const experiment = currTrial.experiment || {};
     const { deviceTypeName, deviceItemName } = deviceOnTrial;
     const deviceType = (experiment.deviceTypes || []).find(t => t.name === deviceTypeName);
     const deviceItem = ((deviceType || []).devices || []).find(t => t.name === deviceItemName);
-
-    const devLocation = deviceOnTrial.location.coordinates;
 
     const devicesOnTrial = (currTrial.trial || {}).devicesOnTrial || [];
     const containedDevicesIndices = devicesOnTrial
@@ -45,7 +43,8 @@ export const SingleDevicePropertiesView = ({ deviceOnTrial, setDeviceOnTrial, ch
             </Typography>
             <br />
             <DeviceLocationEdit
-                devLocation={devLocation}
+                location={deviceOnTrial.location.coordinates}
+                setLocation={setLocation}
             />
             {deviceItem
                 ? <AttributeItemList

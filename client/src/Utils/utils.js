@@ -64,3 +64,7 @@ export function change(thing, func) {
     func(draft);
     return draft;
 }
+
+export const locationToString = (coords) => {
+    return coords.map(x => Math.round(x * 1e8) / 1e8).join(',')
+}
