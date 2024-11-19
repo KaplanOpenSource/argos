@@ -43,7 +43,9 @@ export const UploadDevicesButton = ({
                 accept=".json,.geojson,.csv,.zip"
                 tooltip={'Upload devices as geojson, csv, zip of csvs'}
                 onChange={handleChangeFile}
-                onClickCapture={() => setCurrTrial({ experimentName: experiment.name, trialTypeName: trialType.name, trialName: trial.name })}
+                onClickCapture={() => {
+                    setCurrTrial({ experimentName: experiment.name, trialTypeName: trialType.name, trialName: trial.name })
+                }}
                 disabled={working}
             >
                 {working
