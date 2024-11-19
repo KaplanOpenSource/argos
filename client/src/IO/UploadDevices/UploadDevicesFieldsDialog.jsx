@@ -29,7 +29,6 @@ export const UploadDevicesFieldsDialog = ({ devicesToUpload, setDevicesToUpload,
         }
     }
 
-
     return (
         <Dialog
             open={true}

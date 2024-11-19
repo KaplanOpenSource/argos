@@ -11,6 +11,7 @@ export const ButtonFile = ({ accept, tooltip, onChange, children, ...restprops }
                 ref={inputFile}
                 style={{ display: "none" }}
                 onChange={e => onChange(e.target.files)}
+                onClick={e => e.stopPropagation()}
                 accept={accept}
             />
             <ButtonTooltip
