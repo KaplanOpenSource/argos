@@ -1,6 +1,6 @@
 import { TreeRow } from "../App/TreeRow"
 import DeleteIcon from '@mui/icons-material/Delete';
-import { UploadImageIcon } from "../IO/UploadImageIcon";
+import { UploadImageButton } from "../IO/UploadImageButton";
 import { ImageOnServer } from "../IO/ImageOnServer";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { EditLocationAlt, EditLocationOutlined, OpenInFull } from "@mui/icons-material";
@@ -30,7 +30,7 @@ export const ImageEmbedded = ({ data, setData, experiment }) => {
                     >
                         <DeleteIcon />
                     </ButtonTooltip>
-                    <UploadImageIcon
+                    <UploadImageButton
                         imageName={data.name}
                         experimentName={experiment.name}
                         onChangeFile={(filename, height, width) => {
