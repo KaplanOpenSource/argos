@@ -16,7 +16,6 @@ export const TreeSublist = ({
     components,
     children,
     noAddButton,
-    textOnRow
 }) => {
     const {
         addExpandedNode,
@@ -44,7 +43,7 @@ export const TreeSublist = ({
                         fontWeight: 'inherit',
                         //  flexGrow: 1
                     }}>
-                        {niceName}
+                        {niceName} ({items.length})
                     </Typography>
                     {noAddButton ? null :
                         <Tooltip title="Add New" placement="right">
@@ -69,7 +68,6 @@ export const TreeSublist = ({
                             </IconButton>
                         </Tooltip>
                     }
-                    <Typography>{items.length} {niceName} {textOnRow}</Typography>
                     {components}
                 </Box>
             }

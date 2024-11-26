@@ -44,15 +44,11 @@ export const ShapeList = ({ data, setData }) => {
             setData={setData}
             noAddButton={true}
             components={<>
-                &nbsp;
                 <AddShapeButtons
                     data={data}
                     setData={setData}
                     onBeforeCreate={() => addExpandedNode(data.trackUuid + '_shapes')}
                 />
-                <Typography>
-                    {shapes.length} Shapes
-                </Typography>
             </>}
         >
             {

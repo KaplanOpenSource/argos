@@ -56,7 +56,7 @@ export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
             if (foundExperiment?.trialTypes?.length < 10) {
                 newNodes.push(foundExperiment.trackUuid + '_trialTypes');
             }
-            if (sum(foundExperiment?.trialTypes.map(x => x?.trials?.length || 0)) < 10) {
+            if (sum(foundExperiment?.trialTypes?.map(x => x?.trials?.length || 0)) < 10) {
                 newNodes.push(...(foundExperiment?.trialTypes?.map(tt => tt.trackUuid) || []));
             }
             setExpandedNodes(newNodes);
@@ -64,7 +64,7 @@ export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
         }
 
         if (newlyExpanded[0] === experiment?.trackUuid + '_trialTypes') {
-            const trialsNum = sum(experiment?.trialTypes.map(x => x?.trials?.length || 0));
+            const trialsNum = sum(experiment?.trialTypes?.map(x => x?.trials?.length || 0));
             if (trialsNum < 10) {
                 const trialTypesUuids = experiment?.trialTypes?.map(tt => tt.trackUuid) || [];
                 setExpandedNodes([

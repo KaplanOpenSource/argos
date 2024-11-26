@@ -1,3 +1,4 @@
+import { Typography } from "@mui/material";
 import { TreeSublist } from "../App/TreeSublist";
 import { changeByName } from "../Utils/utils";
 import { TrialType } from "./TrialType";
@@ -27,7 +28,9 @@ export const TrialTypesList = ({ data, setData }) => {
                     ]
                 }
             }}
-            textOnRow={trialsNum + ' Trials'}
+            components={<>
+                <Typography>{trialsNum} Trials</Typography>
+            </>}
         >
             {trialTypes.map(itemData => (
                 <TrialType

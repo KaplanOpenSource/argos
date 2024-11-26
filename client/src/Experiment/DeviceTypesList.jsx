@@ -1,3 +1,4 @@
+import { Typography } from "@mui/material";
 import { TreeSublist } from "../App/TreeSublist";
 import { changeByName } from "../Utils/utils";
 import { SCOPE_CONSTANT } from "./AttributeType";
@@ -26,7 +27,9 @@ export const DeviceTypesList = ({ data, setData }) => {
                     ]
                 }
             }}
-            textOnRow={devicesNum + ' Devices'}
+            components={<>
+                <Typography>{devicesNum} Devices</Typography>
+            </>}
         >
             {deviceTypes.map(itemData => (
                 <DeviceType
