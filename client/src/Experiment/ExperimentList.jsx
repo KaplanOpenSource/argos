@@ -98,6 +98,9 @@ export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
             addActionOnMap((mapObject) => {
                 new CoordsSpan().fromExperiment(experiment).fitBounds(mapObject);
             });
+            if (!expandedNodes.includes(experiment.trackUuid)) {
+                handleNodeToggle(undefined, [...expandedNodes, experiment.trackUuid]);
+            }
         }
     }, [experimentName]);
 
