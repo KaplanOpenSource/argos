@@ -79,21 +79,6 @@ export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
     };
 
     useEffect(() => {
-        if (!experiment) {
-            setShowConfig(SHOW_ALL_EXPERIMENTS);
-            // setExpanded(experiments.map(e => EXPERIMENT_NODE_ID_PREFIX + e));
-            // } else if (trialName) {
-            //     setExpanded([
-            //         experiment.trackUuid,
-            //         experimentName + "_trialTypes",
-            //         trialType.trackUuid,
-            //         experimentName + "_deviceTypes",
-            //         trial.trackUuid,
-            //     ]);
-        }
-    }, [experimentName, trialTypeName, trialName]);
-
-    useEffect(() => {
         if (experiment) {
             addActionOnMap((mapObject) => {
                 new CoordsSpan().fromExperiment(experiment).fitBounds(mapObject);
@@ -101,6 +86,8 @@ export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
             if (!expandedNodes.includes(experiment.trackUuid)) {
                 handleNodeToggle(undefined, [...expandedNodes, experiment.trackUuid]);
             }
+        } else {
+            setShowConfig(SHOW_ALL_EXPERIMENTS);
         }
     }, [experimentName]);
 
