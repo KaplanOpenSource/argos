@@ -84,6 +84,13 @@ export const ImageStandalone = ({ data, setData, experiment }) => {
                             : <EditLocationOutlined />
                         }
                     </ButtonTooltip>
+                    <ImageOnServer
+                        showSize={false}
+                        maxHeight={40}
+                        data={data}
+                        experiment={experiment}
+                        style={{ borderRadius: 10 }}
+                    />
                 </>
             }
         >

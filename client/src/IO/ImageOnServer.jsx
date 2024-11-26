@@ -2,7 +2,7 @@ import { Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useUploadImage } from "./UploadImage";
 
-export const ImageOnServer = ({ data, experiment }) => {
+export const ImageOnServer = ({ data, experiment, maxWidth = 500, maxHeight = 500, showSize = true, ...restProps }) => {
     const { downloadImageAsUrl } = useUploadImage();
     const [src, setSrc] = useState();
 
@@ -22,22 +22,24 @@ export const ImageOnServer = ({ data, experiment }) => {
     }
 
     let { width, height } = data;
-    if (Math.max(width, height) > 500 && Math.min(width, height) > 0) {
-        if (width > height) {
-            height = height / width * 500;
-            width = 500;
-        } else {
-            width = width / height * 500;
-            height = 500;
+    if (Math.min(width, height) > 0) {
+        const ratio = Math.min(maxWidth / width, maxHeight / height);
+        if (ratio < 1) {
+            width *= ratio;
+            height *= ratio;
         }
     }
+
     return (
         <>
-            <Typography variant="body2">Size: {data.width} x {data.height}</Typography>
+            {showSize
+                ? <Typography variant="body2">Size: {data.width} x {data.height}</Typography>
+                : null}
             <img
                 src={src}
                 width={width}
                 height={height}
+                {...restProps}
             />
         </>
     )
