@@ -54,7 +54,6 @@ export function DevicePlanner() {
                     <EnclosingListSelectionProvider>
                         <DeviceTable
                             showAttributes={showAttributes}
-                            setShowAttributes={setShowAttributes}
                         />
                     </EnclosingListSelectionProvider>
                 }
