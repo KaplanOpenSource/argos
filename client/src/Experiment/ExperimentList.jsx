@@ -91,12 +91,6 @@ export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
         }
     }, [experimentName]);
 
-    useEffect(() => {
-        if (experiment && showConfig === SHOW_ONLY_TRIALS) {
-            setExpandedNodes(experiment.trialTypes.map(t => t.trackUuid));
-        }
-    }, [showConfig]);
-
     return (
         <Paper
             style={{
