@@ -1,13 +1,15 @@
 import { SCOPE_TRIAL } from "../../Experiment/AttributeType";
-import { FIELD_UNASSIGNED, DevicesFromFile, FIELD_MAPNAME, FIELD_LATITUDE, FIELD_LONGITUDE } from "./uploadDefs";
+import { FIELD_UNASSIGNED, FIELD_MAPNAME, FIELD_LATITUDE, FIELD_LONGITUDE } from "./uploadDefs";
 
 export const changeDeviceOnTrial = (
     trial: { devicesOnTrial: any[]; },
     experiment: { deviceTypes: any[]; },
-    deviceToUpload: DevicesFromFile,
+    deviceToUpload: { [key: string]: any },
     attrMatch: { [key: string]: number; },
 ) => {
-    const { type, name, attributes } = deviceToUpload;
+    let { type, name, ...attributes } = deviceToUpload;
+    type = type.trim();
+    name = name.trim();
     const deviceType = experiment?.deviceTypes?.find(x => x.name === type);
     if (deviceType) {
         trial.devicesOnTrial ||= [];

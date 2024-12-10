@@ -1,44 +1,29 @@
 import { ReadFileAsText } from "../FileIo";
 import JSZip from "jszip";
 import { parse } from 'csv-parse/browser/esm/sync';
-import { DevicesFromFile } from "./uploadDefs";
 
-const obtainDeviceFromJson = (text: string): DevicesFromFile[] => {
+const obtainDeviceFromJson = (text: string): { [key: string]: any }[] => {
     const json = JSON.parse(text);
-    const devices: DevicesFromFile[] = [];
+    const devices: { [key: string]: any }[] = [];
     for (const dev of json.features) {
-        const attributes = {
+        devices.push({
             ...dev.properties,
-            MapName: dev.properties.MapName,
             Latitude: dev.geometry.coordinates[1],
             Longitude: dev.geometry.coordinates[0],
-        };
-        devices.push({
-            type: dev.properties.type,
-            name: dev.properties.name,
-            attributes,
         });
     }
     return devices;
 }
 
-const obtainDeviceFromCsv = (text: string): DevicesFromFile[] => {
-    const devices: DevicesFromFile[] = [];
-    const lines = parse(text);
+const obtainDeviceFromCsv = (text: string): { [key: string]: any }[] => {
+    const lines: string[][] = parse(text);
     const deviceLines = lines.slice(1).map(line => {
-        return Object.fromEntries(lines[0].map((o, i) => [o, line[i]]));
+        return Object.fromEntries(lines[0].map((o: string, i: any) => [o.trim(), line[i].trim()]));
     });
-    for (const dev of deviceLines) {
-        devices.push({
-            type: dev.type,
-            name: dev.name,
-            attributes: dev
-        });
-    }
-    return devices;
+    return deviceLines;
 }
 
-const obtainDeviceFromText = (ext: string, text: string): DevicesFromFile[] => {
+const obtainDeviceFromText = (ext: string, text: string): { [key: string]: any }[] => {
     if (ext === 'csv') {
         return obtainDeviceFromCsv(text);
     }
@@ -50,7 +35,7 @@ const obtainDeviceFromText = (ext: string, text: string): DevicesFromFile[] => {
     throw "unknown file extension " + ext;
 }
 
-export const obtainDevicesFromFile = async (file: File): Promise<DevicesFromFile[]> => {
+export const obtainDevicesFromFile = async (file: File): Promise<{ [key: string]: any }[]> => {
     const ext = file?.name?.split('.')?.pop()?.toLowerCase() || '';
 
     if (ext === 'csv' || ext?.endsWith('json')) {
@@ -59,8 +44,7 @@ export const obtainDevicesFromFile = async (file: File): Promise<DevicesFromFile
     }
 
     if (ext === 'zip') {
-        const devices: DevicesFromFile[] = [];
-        
+        const devices: { [key: string]: any }[] = [];
         const zip = await JSZip().loadAsync(file);
         for (const z of Object.values(zip.files)) {
             const zext = z?.name?.split('.')?.pop()?.toLowerCase() || '';

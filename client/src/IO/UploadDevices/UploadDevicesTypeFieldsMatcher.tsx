@@ -45,13 +45,13 @@ const UploadDevicesTypeFieldsMatcherOne = ({ oneMatch, setOneMatch, attrName, at
 }
 
 export const UploadDevicesTypeFieldsMatcher = ({ devicesDetails, deviceType, attrMatch, setAttrMatch }: {
-    devicesDetails: { attributes: { [key: string]: any } }[],
+    devicesDetails: { [key: string]: any }[],
     deviceType: { attributeTypes: { name: string }[] },
     attrMatch: { [key: string]: string },
     setAttrMatch: (updater: (prev: { [key: string]: string }) => { [key: string]: string }) => void,
 }) => {
     const fieldNamesOnDetails = uniq(devicesDetails.flatMap(x => {
-        return Object.keys(x.attributes).filter(f => !IGNORE_FIELDS.includes(f));
+        return Object.keys(x).filter(f => !IGNORE_FIELDS.includes(f));
     }));
 
     const attributeTypeNames = deviceType?.attributeTypes?.map(x => x.name) || [];
