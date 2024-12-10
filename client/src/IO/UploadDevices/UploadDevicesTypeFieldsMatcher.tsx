@@ -1,8 +1,9 @@
 import { Grid, Stack, Typography } from "@mui/material"
 import { SelectProperty } from "../../Property/SelectProperty";
 import { useEffect } from "react";
-import { FIELD_UNASSIGNED, IGNORE_FIELDS, LOCATION_FIELDS } from "./uploadDefs";
+import { FIELD_MAPNAME, FIELD_UNASSIGNED, IGNORE_FIELDS, LOCATION_FIELDS } from "./uploadDefs";
 import React from "react";
+import { RealMapName } from "../../constants/constants";
 
 function uniq(list) {
     return list.reduce((acc, d) => acc.includes(d) ? acc : acc.concat(d), []);
@@ -31,13 +32,21 @@ const UploadDevicesTypeFieldsMatcherOne = ({ oneMatch, setOneMatch, attrName, at
                     styleFormControl={{ width: '100%' }}
                     label={attrName}
                     data={oneMatch}
-                    setData={v => setOneMatch(prev => v)}
+                    setData={v => setOneMatch(() => v)}
                     options={attrOptions}
                 />
             </Grid>
             <Grid item xs={2} alignSelf={'center'} sx={{ margin: 1, color: 'red' }}>
-                {!locationUnassigned ? null :
-                    <Typography>Assign location fields</Typography>
+                {!locationUnassigned
+                    ? null
+                    : (
+                        <Typography>
+                            {attrName === FIELD_MAPNAME
+                                ? "Default " + RealMapName + " will be used"
+                                : "Assign location fields"
+                            }
+                        </Typography>
+                    )
                 }
             </Grid>
         </Grid>

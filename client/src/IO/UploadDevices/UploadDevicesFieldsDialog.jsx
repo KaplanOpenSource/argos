@@ -3,7 +3,7 @@ import { groupBy } from "lodash";
 import { UploadDevicesTypeFieldsMatcher } from "./UploadDevicesTypeFieldsMatcher";
 import { useState } from "react";
 import { changeDeviceOnTrial } from "./changeDeviceOnTrial";
-import { FIELD_TYPE, FIELD_UNASSIGNED, LOCATION_FIELDS } from "./uploadDefs";
+import { FIELD_MAPNAME, FIELD_TYPE, FIELD_UNASSIGNED, LOCATION_FIELDS } from "./uploadDefs";
 
 export const UploadDevicesFieldsDialog = ({ devicesToUpload, setDevicesToUpload, data, setData, experiment }) => {
 
@@ -22,7 +22,7 @@ export const UploadDevicesFieldsDialog = ({ devicesToUpload, setDevicesToUpload,
 
     let disabled = false;
     for (const a of Object.values(attrMatch)) {
-        for (const f of LOCATION_FIELDS) {
+        for (const f of LOCATION_FIELDS.filter(x => x !== FIELD_MAPNAME)) {
             if ((a[f] || FIELD_UNASSIGNED) === FIELD_UNASSIGNED) {
                 disabled = true;
             }

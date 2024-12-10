@@ -1,3 +1,4 @@
+import { RealMapName } from "../../constants/constants";
 import { SCOPE_TRIAL } from "../../Experiment/AttributeType";
 import { FIELD_UNASSIGNED, FIELD_MAPNAME, FIELD_LATITUDE, FIELD_LONGITUDE } from "./uploadDefs";
 
@@ -21,7 +22,10 @@ export const changeDeviceOnTrial = (
 
         const attrMatchForType = attrMatch[deviceType.name];
 
-        const MapName = attributes[attrMatchForType[FIELD_MAPNAME]];
+        let MapName = RealMapName;
+        if (attrMatchForType[FIELD_MAPNAME] !== FIELD_UNASSIGNED) {
+            MapName = attributes[attrMatchForType[FIELD_MAPNAME]];
+        }
         const Latitude = parseFloat(attributes[attrMatchForType[FIELD_LATITUDE]]);
         const Longitude = parseFloat(attributes[attrMatchForType[FIELD_LONGITUDE]]);
 
