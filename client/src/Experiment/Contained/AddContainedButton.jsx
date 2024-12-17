@@ -75,12 +75,16 @@ export const AddContainedButton = ({ deviceItem, deviceType }) => {
 
     const menuItems = [
         { label: tooltip, callback: handleClick },
-        // {
-        //     label: 'Add all selected devices to be contained in this', callback: () => {
-
-        //     }
-        // },
-        // { label: 'Remove all selected devices to be contained in this', callback: () => { } },
+        {
+            label: 'Add all selected devices to be contained in this', callback: () => {
+                const devicesOnTrialCopy = [...devicesOnTrial];
+                for (const { deviceItemName, deviceTypeName } of selection) {
+                    addContained(devicesOnTrialCopy, deviceItem.name, deviceType.name, deviceItemName, deviceTypeName);
+                }
+                setTrialData({ ...currTrial.trial, devicesOnTrial: devicesOnTrialCopy });
+            }
+        },
+        // { label: 'Remove all selected devices that are contained in this', callback: () => { } },
         {
             label: 'Remove all contained devices',
             callback: () => {
