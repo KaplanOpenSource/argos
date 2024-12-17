@@ -1,13 +1,19 @@
 import { Button, Dialog, DialogActions, DialogTitle, Paper, Typography } from "@mui/material";
-import { groupBy } from "lodash";
+import { groupBy, uniq } from "lodash";
 import { UploadDevicesTypeFieldsMatcher } from "./UploadDevicesTypeFieldsMatcher";
 import { useState } from "react";
 import { changeDeviceOnTrial } from "./changeDeviceOnTrial";
 import { FIELD_MAPNAME, FIELD_NAME, FIELD_TYPE, FIELD_UNASSIGNED, LOCATION_FIELDS } from "./uploadDefs";
+import { SelectFieldWithName } from "./SelectFieldWithName";
 
 export const UploadDevicesFieldsDialog = ({ devicesToUpload, setDevicesToUpload, data, setData, experiment }) => {
-
-    const [attrMatch, setAttrMatch] = useState({});
+    const fields = uniq(devicesToUpload.flatMap(x => Object.keys(x)));
+    const [attrMatch, setAttrMatch] = useState(() => {
+        return {
+            [FIELD_TYPE]: fields.includes(FIELD_TYPE) ? FIELD_TYPE : FIELD_UNASSIGNED,
+            // FIELD_NAME: fields.includes(FIELD_NAME) ? FIELD_NAME : FIELD_UNASSIGNED,
+        }
+    });
 
     const uploadTrial = () => {
         const newTrial = structuredClone(data);
@@ -18,17 +24,20 @@ export const UploadDevicesFieldsDialog = ({ devicesToUpload, setDevicesToUpload,
         setDevicesToUpload(_ => []);
     };
 
-    const devicesByType = Object.values(groupBy(devicesToUpload, x => x[FIELD_TYPE]));
+    const devicesByType = Object.values(groupBy(devicesToUpload, x => x[attrMatch[FIELD_TYPE]]));
 
-    let disabled = false;
-    for (const a of Object.values(attrMatch)) {
-        for (const f of LOCATION_FIELDS.filter(x => x !== FIELD_MAPNAME)) {
-            if ((a[f] || FIELD_UNASSIGNED) === FIELD_UNASSIGNED) {
-                disabled = true;
+    let disabled = attrMatch[FIELD_TYPE] === FIELD_UNASSIGNED;
+    for (const [k, a] of Object.entries(attrMatch)) {
+        if (k !== FIELD_TYPE && k !== FIELD_NAME) {
+            for (const f of LOCATION_FIELDS.filter(x => x !== FIELD_MAPNAME)) {
+                if ((a[f] || FIELD_UNASSIGNED) === FIELD_UNASSIGNED) {
+                    disabled = true;
+                }
             }
         }
     }
 
+    console.log(attrMatch)
     return (
         <Dialog
             open={true}
@@ -36,8 +45,21 @@ export const UploadDevicesFieldsDialog = ({ devicesToUpload, setDevicesToUpload,
             onClose={() => setDevicesToUpload(_ => [])}
         >
             <DialogTitle>File upload for {devicesToUpload?.length} devices</DialogTitle>
+            <SelectFieldWithName
+                attrName={FIELD_TYPE}
+                attrOptions={fields.map(x => ({ name: x }))}
+                oneMatch={attrMatch[FIELD_TYPE] || FIELD_UNASSIGNED}
+                setOneMatch={updater => {
+                    setAttrMatch(prev => {
+                        const val = updater((prev || {})[FIELD_TYPE]);
+                        return { ...(prev || {}), [FIELD_TYPE]: val };
+                    });
+                }}
+            />
+
             {devicesByType.map((devType, i) => {
-                const deviceTypeName = devType[0]?.type;
+                const fieldType = attrMatch[FIELD_TYPE];
+                const deviceTypeName = devType[0] && devType[0][fieldType];
                 const deviceType = experiment?.deviceTypes?.find(x => x.name === deviceTypeName);
                 return (
                     <Paper
@@ -54,7 +76,7 @@ export const UploadDevicesFieldsDialog = ({ devicesToUpload, setDevicesToUpload,
                                 setAttrMatch={updater => {
                                     setAttrMatch(prev => ({ ...(prev || {}), [deviceTypeName]: updater((prev || {})[deviceTypeName]) }));
                                 }}
-                                headerFields={[FIELD_TYPE, FIELD_NAME]}
+                                headerFields={[attrMatch[FIELD_TYPE], FIELD_NAME]}
                             />
                         }
                     </Paper>

@@ -1,13 +1,9 @@
-import { Grid, Stack, Typography } from "@mui/material"
-import { SelectProperty } from "../../Property/SelectProperty";
-import { useEffect } from "react";
+import { Stack } from "@mui/material"
 import { FIELD_MAPNAME, FIELD_UNASSIGNED, LOCATION_FIELDS } from "./uploadDefs";
 import React from "react";
 import { RealMapName } from "../../constants/constants";
-
-function uniq(list) {
-    return list.reduce((acc, d) => acc.includes(d) ? acc : acc.concat(d), []);
-}
+import { SelectFieldWithName } from "./SelectFieldWithName";
+import { uniq } from "lodash";
 
 const UploadDevicesTypeFieldsMatcherOne = ({ oneMatch, setOneMatch, attrName, attrOptions, }: {
     oneMatch: string,
@@ -15,41 +11,21 @@ const UploadDevicesTypeFieldsMatcherOne = ({ oneMatch, setOneMatch, attrName, at
     attrName: string,
     attrOptions: { name: string }[],
 }) => {
-    const locationUnassigned = oneMatch === FIELD_UNASSIGNED && LOCATION_FIELDS.includes(attrName);
-
-    useEffect(() => {
-        const defMatch = attrOptions.find(a => a.name === attrName) ? attrName : FIELD_UNASSIGNED;
-        setOneMatch(() => defMatch);
-    }, [])
+    let message: string | undefined = undefined;
+    if (oneMatch === FIELD_UNASSIGNED && LOCATION_FIELDS.includes(attrName)) {
+        message = attrName === FIELD_MAPNAME
+            ? "Default " + RealMapName + " will be used"
+            : "Assign location fields";
+    }
 
     return (
-        <Grid container direction='row'>
-            <Grid item xs={3} alignSelf={'center'}>
-                <Typography>{attrName}</Typography>
-            </Grid>
-            <Grid item xs={4}>
-                <SelectProperty
-                    styleFormControl={{ width: '100%' }}
-                    label={attrName}
-                    data={oneMatch}
-                    setData={v => setOneMatch(() => v)}
-                    options={attrOptions}
-                />
-            </Grid>
-            <Grid item xs={2} alignSelf={'center'} sx={{ margin: 1, color: 'red' }}>
-                {!locationUnassigned
-                    ? null
-                    : (
-                        <Typography>
-                            {attrName === FIELD_MAPNAME
-                                ? "Default " + RealMapName + " will be used"
-                                : "Assign location fields"
-                            }
-                        </Typography>
-                    )
-                }
-            </Grid>
-        </Grid>
+        <SelectFieldWithName
+            attrName={attrName}
+            attrOptions={attrOptions}
+            oneMatch={oneMatch}
+            setOneMatch={setOneMatch}
+            message={message}
+        />
     )
 }
 
