@@ -84,7 +84,15 @@ export const AddContainedButton = ({ deviceItem, deviceType }) => {
                 setTrialData({ ...currTrial.trial, devicesOnTrial: devicesOnTrialCopy });
             }
         },
-        // { label: 'Remove all selected devices that are contained in this', callback: () => { } },
+        {
+            label: 'Remove all selected devices that are also contained in this', callback: () => {
+                const devicesOnTrialCopy = [...devicesOnTrial];
+                for (const { deviceItemName, deviceTypeName } of selection) {
+                    removeContained(devicesOnTrialCopy, deviceItemName, deviceTypeName);
+                }
+                setTrialData({ ...currTrial.trial, devicesOnTrial: devicesOnTrialCopy });
+            }
+        },
         {
             label: 'Remove all contained devices',
             callback: () => {
