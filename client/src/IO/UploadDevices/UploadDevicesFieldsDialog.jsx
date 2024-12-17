@@ -3,7 +3,7 @@ import { groupBy } from "lodash";
 import { UploadDevicesTypeFieldsMatcher } from "./UploadDevicesTypeFieldsMatcher";
 import { useState } from "react";
 import { changeDeviceOnTrial } from "./changeDeviceOnTrial";
-import { FIELD_MAPNAME, FIELD_TYPE, FIELD_UNASSIGNED, LOCATION_FIELDS } from "./uploadDefs";
+import { FIELD_MAPNAME, FIELD_NAME, FIELD_TYPE, FIELD_UNASSIGNED, LOCATION_FIELDS } from "./uploadDefs";
 
 export const UploadDevicesFieldsDialog = ({ devicesToUpload, setDevicesToUpload, data, setData, experiment }) => {
 
@@ -54,6 +54,7 @@ export const UploadDevicesFieldsDialog = ({ devicesToUpload, setDevicesToUpload,
                                 setAttrMatch={updater => {
                                     setAttrMatch(prev => ({ ...(prev || {}), [deviceTypeName]: updater((prev || {})[deviceTypeName]) }));
                                 }}
+                                headerFields={[FIELD_TYPE, FIELD_NAME]}
                             />
                         }
                     </Paper>

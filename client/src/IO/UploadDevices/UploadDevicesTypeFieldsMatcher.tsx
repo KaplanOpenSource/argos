@@ -1,7 +1,7 @@
 import { Grid, Stack, Typography } from "@mui/material"
 import { SelectProperty } from "../../Property/SelectProperty";
 import { useEffect } from "react";
-import { FIELD_MAPNAME, FIELD_UNASSIGNED, IGNORE_FIELDS, LOCATION_FIELDS } from "./uploadDefs";
+import { FIELD_MAPNAME, FIELD_UNASSIGNED, LOCATION_FIELDS } from "./uploadDefs";
 import React from "react";
 import { RealMapName } from "../../constants/constants";
 
@@ -53,14 +53,15 @@ const UploadDevicesTypeFieldsMatcherOne = ({ oneMatch, setOneMatch, attrName, at
     )
 }
 
-export const UploadDevicesTypeFieldsMatcher = ({ devicesDetails, deviceType, attrMatch, setAttrMatch }: {
+export const UploadDevicesTypeFieldsMatcher = ({ devicesDetails, deviceType, attrMatch, setAttrMatch, headerFields }: {
     devicesDetails: { [key: string]: any }[],
     deviceType: { attributeTypes: { name: string }[] },
     attrMatch: { [key: string]: string },
     setAttrMatch: (updater: (prev: { [key: string]: string }) => { [key: string]: string }) => void,
+    headerFields: string[],
 }) => {
     const fieldNamesOnDetails = uniq(devicesDetails.flatMap(x => {
-        return Object.keys(x).filter(f => !IGNORE_FIELDS.includes(f));
+        return Object.keys(x).filter(f => !headerFields.includes(f));
     }));
 
     const attributeTypeNames = deviceType?.attributeTypes?.map(x => x.name) || [];
