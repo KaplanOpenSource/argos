@@ -46,6 +46,7 @@ export const DeviceItem = ({ data, setData, deviceType, showAttributes, devicesE
                         deviceType={deviceType}
                         deviceItem={data}
                         hasLocation={hasLocation}
+                        surroundingDevices={devicesEnclosingList}
                     />
                 </>
             }

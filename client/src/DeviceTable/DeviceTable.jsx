@@ -112,6 +112,7 @@ const DeviceTableSmall = ({ shownDevices }) => {
                         <DeviceItemLocationButton
                             deviceType={deviceType}
                             deviceItem={deviceItem}
+                            surroundingDevices={shownDevices}
                         />
                     </Stack>
                 </Paper>
