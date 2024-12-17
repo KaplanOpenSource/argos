@@ -91,7 +91,7 @@ export const useExperimentUpdates = (state, setState) => {
         const experimentPrevData = state.experiments.find(t => t.name === name)
 
         setState(prev => {
-            const experiments = prev.experiments;
+            const experiments = [...prev.experiments];
             experiments[i] = data;
             return { ...prev, experiments };
         });

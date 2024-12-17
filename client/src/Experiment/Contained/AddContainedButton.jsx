@@ -25,7 +25,9 @@ export const AddContainedButton = ({ deviceItem, deviceType }) => {
         const containedIn = { deviceItemName: deviceItemParentName, deviceTypeName: deviceTypeParentName }
         const i = devicesOnTrialCopy.findIndex(t => t.deviceItemName === deviceItemChildName && t.deviceTypeName === deviceTypeChildName);
         if (i !== -1) {
-            devicesOnTrialCopy[i].containedIn = containedIn;
+            const dev = { ...devicesOnTrialCopy[i] };
+            dev.containedIn = containedIn;
+            devicesOnTrialCopy[i] = dev;
         } else {
             devicesOnTrialCopy.push({
                 deviceTypeName: deviceTypeChildName,
@@ -38,11 +40,19 @@ export const AddContainedButton = ({ deviceItem, deviceType }) => {
     const removeContained = (devicesOnTrialCopy, deviceItemChildName, deviceTypeChildName) => {
         const i = devicesOnTrialCopy.findIndex(t => t.deviceItemName === deviceItemChildName && t.deviceTypeName === deviceTypeChildName);
         if (i !== -1) {
-            delete devicesOnTrialCopy[i].containedIn;
             if (!devicesOnTrialCopy[i].location) {
                 devicesOnTrialCopy.splice(i, 1);
+            } else {
+                const dev = { ...devicesOnTrialCopy[i] };
+                delete dev.containedIn;
+                devicesOnTrialCopy[i] = dev;
             }
         }
+    }
+
+    const isContainedInThis = (deviceOnTrial) => {
+        return deviceOnTrial?.containedIn?.deviceItemName === deviceItem.name
+            && deviceOnTrial?.containedIn?.deviceTypeName === deviceType.name;
     }
 
     const handleClick = () => {
@@ -65,22 +75,22 @@ export const AddContainedButton = ({ deviceItem, deviceType }) => {
 
     const menuItems = [
         { label: tooltip, callback: handleClick },
-        {
-            label: 'Add all selected devices to be contained in this', callback: () => {
+        // {
+        //     label: 'Add all selected devices to be contained in this', callback: () => {
 
-            }
-        },
-        { label: 'Remove all selected devices to be contained in this', callback: () => { } },
+        //     }
+        // },
+        // { label: 'Remove all selected devices to be contained in this', callback: () => { } },
         {
             label: 'Remove all contained devices',
             callback: () => {
-                // const devs = [...devicesOnTrial];
-                // if (topSelectedIndex !== -1) {
-                //     devs[topSelectedIndex] = dev;
-                // } else {
-                //     devs.push(dev);
-                // }
-                // setTrialData({ ...currTrial.trial, devicesOnTrial: devs });
+                const devicesOnTrialCopy = [...devicesOnTrial];
+                for (const d of devicesOnTrialCopy) {
+                    if (isContainedInThis(d)) {
+                        removeContained(devicesOnTrialCopy, d.deviceItemName, d.deviceTypeName);
+                    }
+                }
+                setTrialData({ ...currTrial.trial, devicesOnTrial: devicesOnTrialCopy });
             }
         },
     ];
