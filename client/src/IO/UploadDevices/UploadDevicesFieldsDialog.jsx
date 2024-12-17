@@ -11,7 +11,7 @@ export const UploadDevicesFieldsDialog = ({ devicesToUpload, setDevicesToUpload,
     const [attrMatch, setAttrMatch] = useState(() => {
         return {
             [FIELD_TYPE]: fields.includes(FIELD_TYPE) ? FIELD_TYPE : FIELD_UNASSIGNED,
-            // FIELD_NAME: fields.includes(FIELD_NAME) ? FIELD_NAME : FIELD_UNASSIGNED,
+            [FIELD_NAME]: fields.includes(FIELD_NAME) ? FIELD_NAME : FIELD_UNASSIGNED,
         }
     });
 
@@ -26,7 +26,7 @@ export const UploadDevicesFieldsDialog = ({ devicesToUpload, setDevicesToUpload,
 
     const devicesByType = Object.values(groupBy(devicesToUpload, x => x[attrMatch[FIELD_TYPE]]));
 
-    let disabled = attrMatch[FIELD_TYPE] === FIELD_UNASSIGNED;
+    let disabled = attrMatch[FIELD_TYPE] === FIELD_UNASSIGNED || attrMatch[FIELD_NAME] === FIELD_UNASSIGNED;
     for (const [k, a] of Object.entries(attrMatch)) {
         if (k !== FIELD_TYPE && k !== FIELD_NAME) {
             for (const f of LOCATION_FIELDS.filter(x => x !== FIELD_MAPNAME)) {
@@ -45,17 +45,32 @@ export const UploadDevicesFieldsDialog = ({ devicesToUpload, setDevicesToUpload,
             onClose={() => setDevicesToUpload(_ => [])}
         >
             <DialogTitle>File upload for {devicesToUpload?.length} devices</DialogTitle>
-            <SelectFieldWithName
-                attrName={FIELD_TYPE}
-                attrOptions={fields.map(x => ({ name: x }))}
-                oneMatch={attrMatch[FIELD_TYPE] || FIELD_UNASSIGNED}
-                setOneMatch={updater => {
-                    setAttrMatch(prev => {
-                        const val = updater((prev || {})[FIELD_TYPE]);
-                        return { ...(prev || {}), [FIELD_TYPE]: val };
-                    });
-                }}
-            />
+            <div style={{ margin: '3px' }}>
+                <SelectFieldWithName
+                    attrName={FIELD_TYPE}
+                    attrOptions={fields.map(x => ({ name: x }))}
+                    oneMatch={attrMatch[FIELD_TYPE] || FIELD_UNASSIGNED}
+                    setOneMatch={updater => {
+                        setAttrMatch(prev => {
+                            const val = updater((prev || {})[FIELD_TYPE]);
+                            return { ...(prev || {}), [FIELD_TYPE]: val };
+                        });
+                    }}
+                />
+            </div>
+            <div style={{ margin: '3px' }}>
+                <SelectFieldWithName
+                    attrName={FIELD_NAME}
+                    attrOptions={fields.map(x => ({ name: x }))}
+                    oneMatch={attrMatch[FIELD_NAME] || FIELD_UNASSIGNED}
+                    setOneMatch={updater => {
+                        setAttrMatch(prev => {
+                            const val = updater((prev || {})[FIELD_NAME]);
+                            return { ...(prev || {}), [FIELD_NAME]: val };
+                        });
+                    }}
+                />
+            </div>
 
             {devicesByType.map((devType, i) => {
                 const fieldType = attrMatch[FIELD_TYPE];
@@ -76,7 +91,7 @@ export const UploadDevicesFieldsDialog = ({ devicesToUpload, setDevicesToUpload,
                                 setAttrMatch={updater => {
                                     setAttrMatch(prev => ({ ...(prev || {}), [deviceTypeName]: updater((prev || {})[deviceTypeName]) }));
                                 }}
-                                headerFields={[attrMatch[FIELD_TYPE], FIELD_NAME]}
+                                headerFields={[attrMatch[FIELD_TYPE], attrMatch[FIELD_NAME]]}
                             />
                         }
                     </Paper>
