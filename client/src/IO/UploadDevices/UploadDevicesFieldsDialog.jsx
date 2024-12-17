@@ -37,7 +37,6 @@ export const UploadDevicesFieldsDialog = ({ devicesToUpload, setDevicesToUpload,
         }
     }
 
-    console.log(attrMatch)
     return (
         <Dialog
             open={true}

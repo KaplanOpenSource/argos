@@ -1,6 +1,6 @@
 import { RealMapName } from "../../constants/constants";
 import { SCOPE_TRIAL } from "../../Experiment/AttributeType";
-import { FIELD_UNASSIGNED, FIELD_MAPNAME, FIELD_LATITUDE, FIELD_LONGITUDE } from "./uploadDefs";
+import { FIELD_UNASSIGNED, FIELD_MAPNAME, FIELD_LATITUDE, FIELD_LONGITUDE, FIELD_TYPE, FIELD_NAME } from "./uploadDefs";
 
 export const changeDeviceOnTrial = (
     trial: { devicesOnTrial: any[]; },
@@ -8,9 +8,8 @@ export const changeDeviceOnTrial = (
     deviceToUpload: { [key: string]: any },
     attrMatch: { [key: string]: number; },
 ) => {
-    let { type, name, ...attributes } = deviceToUpload;
-    type = type.trim();
-    name = name.trim();
+    const type = deviceToUpload[attrMatch[FIELD_TYPE]].trim();
+    const name = deviceToUpload[attrMatch[FIELD_NAME]].trim();
     const deviceType = experiment?.deviceTypes?.find(x => x.name === type);
     if (deviceType) {
         trial.devicesOnTrial ||= [];
@@ -24,10 +23,10 @@ export const changeDeviceOnTrial = (
 
         let MapName = RealMapName;
         if (attrMatchForType[FIELD_MAPNAME] !== FIELD_UNASSIGNED) {
-            MapName = attributes[attrMatchForType[FIELD_MAPNAME]];
+            MapName = deviceToUpload[attrMatchForType[FIELD_MAPNAME]];
         }
-        const Latitude = parseFloat(attributes[attrMatchForType[FIELD_LATITUDE]]);
-        const Longitude = parseFloat(attributes[attrMatchForType[FIELD_LONGITUDE]]);
+        const Latitude = parseFloat(deviceToUpload[attrMatchForType[FIELD_LATITUDE]]);
+        const Longitude = parseFloat(deviceToUpload[attrMatchForType[FIELD_LONGITUDE]]);
 
         if (!MapName || !isFinite(Latitude) || !isFinite(Longitude)) {
             throw "Unparsable location on device: " + JSON.stringify(deviceToUpload);
@@ -42,7 +41,7 @@ export const changeDeviceOnTrial = (
             if (attrNameFromFile || FIELD_UNASSIGNED !== FIELD_UNASSIGNED) {
                 const attrType = deviceType?.attributeTypes?.find(x => x.name === attrNameOnDev);
                 if (attrType && (attrType.scope || SCOPE_TRIAL) === SCOPE_TRIAL) {
-                    const value = attributes[attrNameFromFile];
+                    const value = deviceToUpload[attrNameFromFile];
                     if (value || value === 0 || value === '') {
                         const attr = deviceOnTrial.attributes?.find(x => x.name === attrType.name);
                         if (attr) {
