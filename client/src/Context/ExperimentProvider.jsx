@@ -87,18 +87,23 @@ export const ExperimentProvider = ({ children }) => {
             for (let i = 0, il = Math.min(deviceTypeItems.length, latlngs.length); i < il; ++i) {
                 const { deviceTypeName, deviceItemName } = deviceTypeItems[i];
                 let coordinates = latlngs[i];
+                const idev = devicesOnTrial.findIndex(t => {
+                    return t.deviceItemName === deviceItemName && t.deviceTypeName === deviceTypeName;
+                });
                 if (coordinates) {
                     if (coordinates.lat) {
                         coordinates = [coordinates.lat, coordinates.lng];
                     }
                     const location = { name: mapName, coordinates };
-                    const i = devicesOnTrial.findIndex(t => {
-                        return t.deviceItemName === deviceItemName && t.deviceTypeName === deviceTypeName;
-                    });
-                    if (i !== -1) {
-                        devicesOnTrial[i] = { ...devicesOnTrial[i], location }; // Done like this because location is frozen
+                    if (idev !== -1) {
+                        devicesOnTrial[idev] = { ...devicesOnTrial[idev], location }; // Done like this because location is frozen
                     } else {
                         devicesOnTrial.push({ deviceTypeName, deviceItemName, location });
+                    }
+                    count++;
+                } else {
+                    if (idev !== -1) {
+                        devicesOnTrial.splice(idev, 1);
                     }
                     count++;
                 }
