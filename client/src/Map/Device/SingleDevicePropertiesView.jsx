@@ -1,9 +1,8 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import {
     Stack, Typography
 } from '@mui/material';
 import {
-    Edit,
     LocationOff,
 } from "@mui/icons-material";
 import { ButtonTooltip } from '../../Utils/ButtonTooltip';
@@ -14,6 +13,7 @@ import { SCOPE_TRIAL } from '../../Experiment/AttributeType';
 import { AddContainedButton } from '../../Experiment/Contained/AddContainedButton';
 import { ContainedDevice } from '../../Experiment/Contained/ContainedDevice';
 import { DeviceLocationEdit } from './DeviceLocationEdit';
+import { ContainedDevicesList } from './ContainedDevicesList';
 
 export const SingleDevicePropertiesView = ({ deviceOnTrial, setDeviceOnTrial, setLocation, children }) => {
     const { currTrial, setLocationsToDevices, setTrialData } = useContext(experimentContext);
@@ -96,25 +96,18 @@ export const SingleDevicePropertiesView = ({ deviceOnTrial, setDeviceOnTrial, se
                     />
                 </>
             )}
-            {containedDevicesIndices.length > 0 && (
-                <>
-                    <br />
-                    contained:
-                    {containedDevicesIndices.map(({ dev, index }) => (
-                        <ContainedDevice
-                            key={'contained ' + dev.deviceItemName + '_' + dev.deviceTypeName}
-                            deviceItemName={dev.deviceItemName}
-                            deviceTypeName={dev.deviceTypeName}
-                            disconnectDevice={() => {
-                                const devs = [...devicesOnTrial];
-                                devs[index] = { ...dev };
-                                delete devs[index].containedIn;
-                                setTrialData({ ...currTrial.trial, devicesOnTrial: devs });
-                            }}
+            {containedDevicesIndices?.length > 0
+                ? (
+                    <>
+                        <br />
+                        contained:
+                        <ContainedDevicesList
+                            containedDevices={containedDevicesIndices}
+                            devicesOnTrial={devicesOnTrial}
                         />
-                    ))}
-                </>
-            )}
+                    </>
+                )
+                : null}
         </>
     )
 }
