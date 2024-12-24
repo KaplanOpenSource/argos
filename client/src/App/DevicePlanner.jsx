@@ -15,6 +15,7 @@ import { SHOW_ALL_EXPERIMENTS } from './ShowConfigToggles';
 import { EnclosingListSelectionProvider } from '../Experiment/EnclosedSelectionProvider';
 import { AppHeaderButtons } from './AppHeaderButtons';
 import { MapDrawExperiment } from '../MapDraw/MapDrawExperiment';
+import { UndoInterceptor } from './UndoInterceptor';
 
 export function DevicePlanner() {
     const [showEditBox, setShowEditBox] = useState(false);
@@ -27,6 +28,7 @@ export function DevicePlanner() {
 
     return (
         <>
+            <UndoInterceptor />
             <AppHeader>
                 <AppHeaderButtons
                     fullscreen={fullscreen} setFullscreen={setFullscreen}
