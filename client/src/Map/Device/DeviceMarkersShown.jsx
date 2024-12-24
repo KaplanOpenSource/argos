@@ -46,18 +46,18 @@ export const DeviceMarkersShown = ({ showDeviceNames }) => {
             </PopupSwitchProvider>
             <AreaMarkListener
                 onAreaMarked={({ boxZoomBounds }) => {
-                    const added = [];
+                    const newSelection = [...selection];
                     for (const { deviceItemName, deviceTypeName, location } of shownDevices) {
                         if (boxZoomBounds.contains(location.coordinates)) {
-                            const isSelected = selection.find(s => {
+                            const isSelected = newSelection.find(s => {
                                 return s.deviceItemName === deviceItemName && s.deviceTypeName === deviceTypeName
                             });
                             if (!isSelected) {
-                                added.push({ deviceItemName, deviceTypeName });
+                                newSelection.push({ deviceItemName, deviceTypeName });
                             }
                         }
                     }
-                    setSelection([...selection, ...added]);
+                    setSelection(newSelection);
                 }}
             />
         </>
