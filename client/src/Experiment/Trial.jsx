@@ -3,7 +3,7 @@ import { TreeRow } from "../App/TreeRow";
 import { experimentContext } from "../Context/ExperimentProvider";
 import { useContext, useEffect } from "react";
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Download, GridOn, ReadMore } from "@mui/icons-material";
+import { Download, Edit, ReadMore } from "@mui/icons-material";
 import { AttributeItemList } from "./AttributeItemList";
 import { SCOPE_TRIAL } from "./AttributeType";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
@@ -55,6 +55,16 @@ export const Trial = ({ data, setData, experiment, trialType, children }) => {
         <TreeRow
             data={data}
             setData={setData}
+            textProps={data === currTrial.trial
+                ? {
+                    InputProps: {
+                        style: {
+                            fontWeight: 'bold',
+                        },
+                    }
+                }
+                : {}
+            }
             components={
                 <>
                     <DateProperty
@@ -68,7 +78,7 @@ export const Trial = ({ data, setData, experiment, trialType, children }) => {
                             setCurrTrial({ experimentName: experiment.name, trialTypeName: trialType.name, trialName: data.name });
                         }}
                     >
-                        <GridOn color={data === currTrial.trial ? "primary" : ""} />
+                        <Edit color={data === currTrial.trial ? "primary" : ""} />
                     </ButtonTooltip>
                     <ButtonTooltip
                         tooltip="Delete trial"
