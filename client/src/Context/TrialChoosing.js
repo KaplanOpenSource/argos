@@ -15,7 +15,21 @@ export class TrialChoosing {
             const experimentIndex = allExperiments.findIndex(t => t.name === experimentName);
             if (experimentIndex >= 0) {
                 const experiment = allExperiments[experimentIndex];
-                const trialTypeIndex = ((experiment || {}).trialTypes || []).findIndex(t => t.name === trialTypeName);
+                const trialTypes = (experiment || {}).trialTypes || [];
+
+                if (!trialTypeName && trialTypes.length > 0) {
+                    const trialType = experiment.trialTypes[0];
+                    const trials = (trialType || {}).trials || [];
+                    if (trials.length > 0) {
+                        return {
+                            experimentName, experimentIndex,
+                            trialTypeName: trialType.name, trialTypeIndex: 0,
+                            trialName: trials[0].name, trialIndex: 0,
+                        };
+                    }
+                }
+
+                const trialTypeIndex = trialTypes.findIndex(t => t.name === trialTypeName);
                 if (trialTypeIndex >= 0) {
                     const trialType = experiment.trialTypes[trialTypeIndex];
                     const trialIndex = ((trialType || {}).trials || []).findIndex(t => t.name === trialName);
@@ -26,11 +40,11 @@ export class TrialChoosing {
                             trialName, trialIndex,
                         };
                     }
-                } else {
-                    return {
-                        experimentName, experimentIndex,
-                    };
                 }
+
+                return {
+                    experimentName, experimentIndex,
+                };
             }
         }
         return {};

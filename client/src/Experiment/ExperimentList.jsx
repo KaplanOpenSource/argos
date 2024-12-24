@@ -48,7 +48,9 @@ export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
 
         const foundExperiment = findExperimentByUuid(newlyExpanded[0]);
         if (foundExperiment) {
-            setCurrTrial({ experimentName: foundExperiment.name });
+            if (experiment.name !== foundExperiment.name) {
+                setCurrTrial({ experimentName: foundExperiment.name });
+            }
             const newNodes = [
                 foundExperiment.trackUuid,
                 ...nodeIds.filter(u => !findExperimentByUuid(u)),
