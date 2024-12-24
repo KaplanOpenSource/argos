@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { ContainedDevice } from "../../Experiment/Contained/ContainedDevice";
 import { experimentContext } from "../../Context/ExperimentProvider";
+import { Box } from "@mui/material";
 
 export const ContainedDevicesList = ({
     containedDevices,
@@ -12,7 +13,7 @@ export const ContainedDevicesList = ({
     const { currTrial, setTrialData } = useContext(experimentContext);
 
     return (
-        <>
+        <Box sx={{ maxHeight: '300px', overflowY: 'auto' }}>
             {containedDevices?.map(({ dev, index }) => (
                 <ContainedDevice
                     key={'contained ' + dev.deviceItemName + '_' + dev.deviceTypeName}
@@ -26,6 +27,6 @@ export const ContainedDevicesList = ({
                     }}
                 />
             ))}
-        </>
+        </Box>
     )
 }
