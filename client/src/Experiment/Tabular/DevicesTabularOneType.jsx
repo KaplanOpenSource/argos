@@ -62,6 +62,12 @@ export const DevicesTabularOneType = ({ deviceType, setDeviceType }) => {
                             }}
                         />
                     </TableCell>
+                    <TableCell key={':tlat'}>
+                        Latitude
+                    </TableCell>
+                    <TableCell key={':tlng'}>
+                        Longitude
+                    </TableCell>
                     {deviceType?.attributeTypes?.map(attrType => {
                         let shortName = attrType.name;
                         if (shortName.length > 20) {
