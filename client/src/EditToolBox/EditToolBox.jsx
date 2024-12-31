@@ -30,7 +30,9 @@ import {
     CHOOSE_SHAPE,
     CHOOSE_TITLE,
     ARC_TITLE,
-    ARC_SHAPE
+    ARC_SHAPE,
+    SELECT_SHAPE,
+    SELECT_TITLE
 } from './utils/constants.js';
 
 import { EditTool } from './EditTool.jsx';
@@ -39,6 +41,7 @@ import DistributeAlongLine from './ToolsBar/DistributeAlongLine.jsx';
 import DistributeAlongArc from './ToolsBar/DistributeAlongArc.jsx';
 import Rectangle from './ToolsBar/Rectangle.jsx';
 import { experimentContext } from '../Context/ExperimentProvider.jsx';
+import { PlaylistAdd } from '@mui/icons-material';
 
 export const EditToolBox = ({
     handleSetOne,
@@ -89,6 +92,15 @@ export const EditToolBox = ({
                     id={CHOOSE_SHAPE}
                     icon={<PlaceIcon />}
                     title={CHOOSE_TITLE}
+                >
+                </EditTool>
+                <EditTool
+                    shape={shape}
+                    onClickIcon={onClickIcon}
+                    showEditBox={false}
+                    id={SELECT_SHAPE}
+                    icon={<PlaylistAdd />}
+                    title={SELECT_TITLE}
                 >
                 </EditTool>
                 <EditTool

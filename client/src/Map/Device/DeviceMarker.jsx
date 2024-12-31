@@ -7,11 +7,20 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { divIcon } from "leaflet";
 import { IconDeviceByName } from "../../Experiment/IconPicker";
 import { locationToString } from "../../Utils/utils";
+import { useShape } from "../../EditToolBox/ShapeContext";
+import { SELECT_SHAPE } from "../../EditToolBox/utils/constants";
 
 export const DeviceMarker = ({ deviceOnTrial, setDeviceOnTrial, showDeviceNames }) => {
-    const { selection, setLocationsToDevices, currTrial } = useContext(experimentContext);
+    const {
+        selection,
+        setSelection,
+        setLocationsToDevices,
+        currTrial,
+    } = useContext(experimentContext);
     const ref = useRef(null);
     const { isPopupSwitchedTo } = usePopupSwitch();
+    const { shape } = useShape();
+
     useEffect(() => {
         if (isPopupSwitchedTo(deviceOnTrial.deviceTypeName + ' : ' + deviceOnTrial.deviceItemName)) {
             ref.current.openPopup();
@@ -65,7 +74,19 @@ export const DeviceMarker = ({ deviceOnTrial, setDeviceOnTrial, showDeviceNames 
                 },
                 drag: e => {
                     document.getElementById('tooltip-marker').textContent = locationToString([e.latlng.lat, e.latlng.lng]);
-                }
+                },
+                click: e => {
+                    if (shape === SELECT_SHAPE) {
+                        const selectedIndex = selection.findIndex(t => {
+                            return t.deviceTypeName === deviceTypeName && t.deviceItemName === deviceItemName;
+                        });
+                        if (selectedIndex !== -1) {
+                            setSelection(selection.filter((_, i) => i !== selectedIndex));
+                        } else {
+                            setSelection([...selection, { deviceTypeName, deviceItemName }]);
+                        }
+                    }
+                },
             }}
         >
             <Tooltip>
