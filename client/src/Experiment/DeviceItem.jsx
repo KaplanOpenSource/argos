@@ -14,9 +14,8 @@ export const DeviceItem = ({ data, setData, deviceType, showAttributes, devicesE
     const { currTrial, deleteDevice } = useContext(experimentContext);
 
     const { device } = useDevice({ deviceTypeName: deviceType.name, deviceItemName: data.name })
-    const mapName = currTrial.shownMapName || RealMapName;
 
-    return !device.deviceOnTrial() ? null : (
+    return (
         <TreeRow
             data={data}
             setData={setData}
@@ -38,7 +37,7 @@ export const DeviceItem = ({ data, setData, deviceType, showAttributes, devicesE
                     <DeviceItemLocationButton
                         deviceType={deviceType}
                         deviceItem={data}
-                        hasLocation={device.hasLocation(mapName)}
+                        hasLocation={device.hasLocationOnMap((currTrial.shownMapName || RealMapName))}
                         surroundingDevices={devicesEnclosingList}
                     />
                 </>
@@ -47,8 +46,8 @@ export const DeviceItem = ({ data, setData, deviceType, showAttributes, devicesE
             {currTrial.experiment && showAttributes &&
                 <AttributeItemList
                     attributeTypes={deviceType.attributeTypes}
-                    data={scope === SCOPE_TRIAL ? device.deviceOnTrial() : data}
-                    setData={scope === SCOPE_TRIAL ? device.setDeviceOnTrial : setData}
+                    data={scope === SCOPE_TRIAL ? device.onTrial() : data}
+                    setData={scope === SCOPE_TRIAL ? device.setOnTrial : setData}
                     scope={scope}
                     deviceItem={scope === SCOPE_TRIAL ? data : null}
                 />
