@@ -8,11 +8,13 @@ export const useDevice = ({ deviceTypeName, deviceItemName }) => {
     const devicesOnTrial = (currTrial.trial || {}).devicesOnTrial || [];
 
     class DeviceObject {
-        private indexOnTrial = devicesOnTrial.findIndex(d => d.deviceTypeName === deviceTypeName && d.deviceItemName === deviceItemName);
+        private indexOnTrial: number = -1;
 
         onTrial() {
-            const deviceOnTrial = devicesOnTrial[this.indexOnTrial];
-            return deviceOnTrial;
+            if (this.indexOnTrial === -1) {
+                this.indexOnTrial = devicesOnTrial.findIndex(d => d.deviceTypeName === deviceTypeName && d.deviceItemName === deviceItemName);
+            }
+            return devicesOnTrial[this.indexOnTrial];
         }
 
         setOnTrial(newData: any): void {
@@ -25,7 +27,8 @@ export const useDevice = ({ deviceTypeName, deviceItemName }) => {
             return this.onTrial()?.location?.coordinates !== undefined;
         }
 
-        hasLocationOnMap(checkMapName: string): boolean {
+        hasLocationOnMap(checkMapName: string | undefined = undefined): boolean {
+            checkMapName ||= currTrial.shownMapName || RealMapName;
             return this.hasLocation() && this.onTrial()?.location?.name === checkMapName;
         }
     }

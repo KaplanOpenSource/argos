@@ -3,7 +3,6 @@ import { TreeRow } from "../App/TreeRow";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { AttributeItemList } from "./AttributeItemList";
 import { SelectDeviceButton } from "./SelectDeviceButton";
-import { RealMapName } from "../constants/constants";
 import { useContext } from "react";
 import { experimentContext } from "../Context/ExperimentProvider";
 import { SCOPE_TRIAL } from "./AttributeType";
@@ -37,7 +36,7 @@ export const DeviceItem = ({ data, setData, deviceType, showAttributes, devicesE
                     <DeviceItemLocationButton
                         deviceType={deviceType}
                         deviceItem={data}
-                        hasLocation={device.hasLocationOnMap((currTrial.shownMapName || RealMapName))}
+                        hasLocation={device.hasLocationOnMap()}
                         surroundingDevices={devicesEnclosingList}
                     />
                 </>
