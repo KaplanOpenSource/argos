@@ -100,7 +100,9 @@ export const DeviceMarker = ({ deviceOnTrial, setDeviceOnTrial, showDeviceNames 
                     {locationToString(coordinates)}
                 </span>
             </Tooltip>
-            <Popup>
+            <Popup
+                offset={[-3, -15]}
+            >
                 <SingleDevicePropertiesView
                     deviceOnTrial={deviceOnTrial}
                     setDeviceOnTrial={setDeviceOnTrial}
