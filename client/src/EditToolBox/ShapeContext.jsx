@@ -7,7 +7,7 @@ export const ShapeContext = createContext(null)
 export const useShape = () => useContext(ShapeContext);
 
 export const ShapeProvider = ({ children }) => {
-    const [shape, setShape] = React.useState(CHOOSE_SHAPE);
+    const [shape, setShape] = React.useState(SELECT_SHAPE);
     const [rectAngle, setRectAngle] = React.useState(0);
     const [rectRows, setRectRows] = React.useState(3);
 
