@@ -9,6 +9,8 @@ export const useDevice = ({ deviceTypeName, deviceItemName }) => {
 
     class DeviceObject {
         private indexOnTrial: number = -1;
+        public deviceTypeName: string = deviceTypeName;
+        public deviceItemName: string = deviceItemName;
 
         onTrial() {
             if (this.indexOnTrial === -1) {
@@ -30,6 +32,15 @@ export const useDevice = ({ deviceTypeName, deviceItemName }) => {
         hasLocationOnMap(checkMapName: string | undefined = undefined): boolean {
             checkMapName ||= currTrial.shownMapName || RealMapName;
             return this.hasLocation() && this.onTrial()?.location?.name === checkMapName;
+        }
+
+        isContainedIn(potentialParent: DeviceObject) {
+            if (this.onTrial() && potentialParent.onTrial()) {
+                const containedIn = this.onTrial()?.containedIn;
+                return containedIn?.deviceItemName === potentialParent?.deviceItemName
+                    && containedIn?.deviceTypeName === potentialParent?.deviceTypeName;
+            }
+            return false;
         }
     }
 

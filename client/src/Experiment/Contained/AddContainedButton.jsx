@@ -3,18 +3,17 @@ import { ButtonTooltip } from "../../Utils/ButtonTooltip"
 import { useContext } from "react";
 import { experimentContext } from "../../Context/ExperimentProvider";
 import { ContextMenu } from "../../Utils/ContextMenu";
+import { useDevice } from "../../Context/useDevice";
 
 export const AddContainedButton = ({ deviceItem, deviceType }) => {
     const { selection, currTrial, setTrialData } = useContext(experimentContext);
+    const { device } = useDevice({ deviceTypeName: deviceType.name, deviceItemName: deviceItem.name });
+
     const devicesOnTrial = ((currTrial.trial || {}).devicesOnTrial) || [];
 
     const { deviceItemName, deviceTypeName } = selection[0] || {};
-    const topSelectedIndex = devicesOnTrial.findIndex(t => t.deviceItemName === deviceItemName && t.deviceTypeName === deviceTypeName);
-    const topSelected = topSelectedIndex === -1 ? undefined : devicesOnTrial[topSelectedIndex];
-    const topSelectedIsContained = topSelected
-        && topSelected.containedIn
-        && topSelected.containedIn.deviceItemName === deviceItem.name
-        && topSelected.containedIn.deviceTypeName === deviceType.name;
+    const { device: topSelectedDevice } = useDevice({ deviceTypeName, deviceItemName });
+    const topSelectedIsContained = topSelectedDevice.isContainedIn(device);
 
     let disabled = currTrial.trial && selection.length === 0;
     if (selection.length >= 1) {
