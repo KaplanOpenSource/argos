@@ -34,13 +34,18 @@ export const useDevice = ({ deviceTypeName, deviceItemName }) => {
             return this.hasLocation() && this.onTrial()?.location?.name === checkMapName;
         }
 
-        isContainedIn(potentialParent: DeviceObject) {
-            if (this.onTrial() && potentialParent.onTrial()) {
+        isContainedIn(other: DeviceObject) {
+            if (this.onTrial() && other.onTrial()) {
                 const containedIn = this.onTrial()?.containedIn;
-                return containedIn?.deviceItemName === potentialParent?.deviceItemName
-                    && containedIn?.deviceTypeName === potentialParent?.deviceTypeName;
+                return containedIn?.deviceItemName === other?.deviceItemName
+                    && containedIn?.deviceTypeName === other?.deviceTypeName;
             }
             return false;
+        }
+
+        isSame(other: DeviceObject) {
+            return this.onTrial()?.deviceItemName === other?.onTrial()?.deviceItemName
+                && this.onTrial()?.deviceTypeName === other?.onTrial()?.deviceTypeName;
         }
     }
 

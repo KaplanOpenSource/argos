@@ -16,8 +16,8 @@ export const AddContainedButton = ({ deviceItem, deviceType }) => {
     const topSelectedIsContained = topSelectedDevice.isContainedIn(device);
 
     let disabled = currTrial.trial && selection.length === 0;
-    if (selection.length >= 1) {
-        disabled = deviceItemName === deviceItem.name && deviceTypeName === deviceType.name;
+    if (topSelectedDevice.isSame(device)) {
+        disabled = true;
     }
 
     const addContained = (devicesOnTrialCopy, deviceItemParentName, deviceTypeParentName, deviceItemChildName, deviceTypeChildName) => {
