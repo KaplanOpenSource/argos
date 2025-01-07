@@ -7,12 +7,14 @@ import { useContext } from "react";
 import { experimentContext } from "../Context/ExperimentProvider";
 import { SCOPE_TRIAL } from "./AttributeType";
 import { DeviceItemLocationButton } from "./DeviceItemLocationButton";
-import { useDevice } from "../Context/useDevice";
+import { RealMapName } from "../constants/constants";
+import { useCurrTrial } from "../Context/useCurrTrial";
 
 export const DeviceItem = ({ data, setData, deviceType, showAttributes, devicesEnclosingList, scope, experiment }) => {
     const { currTrial, deleteDevice } = useContext(experimentContext);
 
-    const { device } = useDevice({ deviceTypeName: deviceType.name, deviceItemName: data.name })
+    const { trial } = useCurrTrial({});
+    const device = trial.getDevice(deviceType.name, data.name);
 
     return (
         <TreeRow
@@ -36,7 +38,7 @@ export const DeviceItem = ({ data, setData, deviceType, showAttributes, devicesE
                     <DeviceItemLocationButton
                         deviceType={deviceType}
                         deviceItem={data}
-                        hasLocation={device.hasLocationOnMap()}
+                        hasLocation={device.hasLocationOnMap(currTrial?.shownMapName || RealMapName)}
                         surroundingDevices={devicesEnclosingList}
                     />
                 </>
