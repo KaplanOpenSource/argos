@@ -13,7 +13,7 @@ export class DeviceObject {
     }
 
     onTrial() {
-        const devicesOnTrial = this.trial?.trialData?.devicesOnTrial || [];
+        const devicesOnTrial = this.trial?.getTrialData()?.devicesOnTrial || [];
         if (this.indexOnTrial === -1) {
             this.indexOnTrial = devicesOnTrial.findIndex(d => {
                 return d.deviceTypeName === this.deviceTypeName && d.deviceItemName === this.deviceItemName;
@@ -24,8 +24,8 @@ export class DeviceObject {
 
     setOnTrial(newData: any): void {
         const data = {
-            ...(this.trial?.trialData || {}),
-            devicesOnTrial: [...(this.trial?.trialData?.devicesOnTrial || [])]
+            ...(this.trial?.getTrialData() || {}),
+            devicesOnTrial: [...(this.trial?.getTrialData()?.devicesOnTrial || [])]
         };
         data.devicesOnTrial[this.indexOnTrial] = newData;
         this.trial.setTrialData(data);

@@ -75,20 +75,24 @@ export const AddContainedButton = ({ deviceItem, deviceType }) => {
         { label: tooltip, callback: handleClick },
         {
             label: 'Add all selected devices to be contained in this', callback: () => {
-                const devicesOnTrialCopy = [...devicesOnTrial];
-                for (const { deviceItemName, deviceTypeName } of selection) {
-                    addContained(devicesOnTrialCopy, deviceItem.name, deviceType.name, deviceItemName, deviceTypeName);
+                const draft = trial.createDraft();
+                for (const { deviceTypeName, deviceItemName } of selection) {
+                    const s = draft.getDevice(deviceTypeName, deviceItemName);
+                    s.setContainedIn(device);
                 }
-                setTrialData({ ...currTrial.trial, devicesOnTrial: devicesOnTrialCopy });
+                trial.setTrialData(draft.getTrialData());
             }
         },
         {
             label: 'Remove all selected devices that are also contained in this', callback: () => {
-                const devicesOnTrialCopy = [...devicesOnTrial];
-                for (const { deviceItemName, deviceTypeName } of selection) {
-                    removeContained(devicesOnTrialCopy, deviceItemName, deviceTypeName);
+                const draft = trial.createDraft();
+                for (const { deviceTypeName, deviceItemName } of selection) {
+                    const s = draft.getDevice(deviceTypeName, deviceItemName);
+                    if (s.isContainedIn(device)) {
+                        s.setContainedIn(undefined);
+                    }
                 }
-                setTrialData({ ...currTrial.trial, devicesOnTrial: devicesOnTrialCopy });
+                trial.setTrialData(draft.getTrialData());
             }
         },
         {

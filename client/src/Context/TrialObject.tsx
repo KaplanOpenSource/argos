@@ -2,7 +2,7 @@ import { DeviceObject } from "./DeviceObject";
 
 export class TrialObject {
     constructor(
-        public trialData: any,
+        public getTrialData: any,
         public setTrialData: any,
     ) {
 
@@ -13,5 +13,10 @@ export class TrialObject {
         deviceItemName: string,
     ) {
         return new DeviceObject(deviceTypeName, deviceItemName, this);
+    }
+
+    createDraft(): TrialObject {
+        let draft = structuredClone(this.getTrialData());
+        return new TrialObject(() => draft, (newTrialData) => draft = newTrialData);
     }
 }
