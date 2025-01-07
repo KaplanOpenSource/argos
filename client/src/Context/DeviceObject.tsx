@@ -1,4 +1,5 @@
 import { RealMapName } from "../constants/constants";
+import { ILocation } from "../types/types";
 import { TrialObject } from "./TrialObject";
 
 export class DeviceObject {
@@ -27,16 +28,34 @@ export class DeviceObject {
             ...(this.trial?.getTrialData() || {}),
             devicesOnTrial: [...(this.trial?.getTrialData()?.devicesOnTrial || [])]
         };
-        data.devicesOnTrial[this.indexOnTrial] = newData;
+        if (this.onTrial()) {
+            data.devicesOnTrial[this.indexOnTrial] = newData;
+        } else {
+            data.devicesOnTrial.push({
+                ...newData,
+                deviceTypeName: this.deviceTypeName,
+                deviceItemName: this.deviceItemName,
+            });
+        }
         this.trial.setTrialData(data);
     }
 
+    getLocation(): ILocation | undefined {
+        const parent = this.getParent();
+        if (parent) {
+            return parent.getLocation();
+        } else {
+            return this.onTrial()?.location;
+        }
+    }
+
     hasLocation(): boolean {
-        return this.onTrial()?.location?.coordinates !== undefined;
+        return this.getLocation()?.coordinates !== undefined;
     }
 
     hasLocationOnMap(checkMapName: string | undefined = undefined): boolean {
-        return this.hasLocation() && this.onTrial()?.location?.name === (checkMapName || RealMapName);
+        const loc = this.getLocation();
+        return loc?.coordinates !== undefined && loc?.name === (checkMapName || RealMapName);
     }
 
     hasParent(other: DeviceObject) {
@@ -58,15 +77,22 @@ export class DeviceObject {
         if (futureParent && this.isSame(futureParent)) {
             return;
         }
-        if (this.onTrial()) {
-            const newData = { ...this.onTrial() };
-            const parent = futureParent?.onTrial();
-            if (parent) {
-                newData.containedIn = { deviceItemName: parent.deviceItemName, deviceTypeName: parent.deviceTypeName };
+        const parent = futureParent?.onTrial();
+        if (parent) {
+            const containedIn = { deviceItemName: parent.deviceItemName, deviceTypeName: parent.deviceTypeName };
+            if (this.onTrial()) {
+                const newDeviceData = { ...this.onTrial(), containedIn };
+                delete newDeviceData.location;
+                this.setOnTrial(newDeviceData);
             } else {
-                delete newData.containedIn;
+                this.setOnTrial({ containedIn });
             }
-            this.setOnTrial(newData);
+        } else {
+            if (this.onTrial()) {
+                const newData = { ...this.onTrial() };
+                delete newData.containedIn;
+                this.setOnTrial(newData);
+            }
         }
     }
 

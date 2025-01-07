@@ -32,7 +32,10 @@ export const AddContainedButton = ({ deviceItem, deviceType }) => {
             : 'Add the top selected device to be contained in this');
 
     const menuItems = [
-        { label: tooltip, callback: handleClick },
+        {
+            label: tooltip,
+            callback: handleClick
+        },
         {
             label: 'Add all selected devices to be contained in this', callback: () => {
                 const draft = trial.createDraft();

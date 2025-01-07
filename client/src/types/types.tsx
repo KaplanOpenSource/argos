@@ -21,16 +21,18 @@ export interface IImageEmbedded extends IImage {
     lngeast?: number;
 };
 
+export interface ILocation {
+    name?: string;
+    coordinates?: ICoordinates
+};
+
 export interface IDeviceOnTrial {
     deviceTypeName: string;
     deviceItemName: string;
-    location?: {
-        name?: string;
-        coordinates?: ICoordinates
-    };
-    containedIn? : {
+    location?: ILocation;
+    containedIn?: {
         deviceTypeName: string;
-        deviceItemName: string;    
+        deviceItemName: string;
     }
     attributes?: Array<IAttribute>;
 };
