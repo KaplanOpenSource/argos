@@ -15,12 +15,14 @@ export const ImageStandalone = ({ data, setData, experiment }) => {
     const { addActionOnMap } = useContext(ActionsOnMapContext);
     const {
         currTrial,
+        setExperiment,
         setShownMap,
         showImagePlacement,
         setShowImagePlacement,
     } = useContext(experimentContext);
 
-    const isBeingEdit = showImagePlacement && currTrial.shownMapName === data.name && currTrial.experimentName === experiment.name;
+    const isShown = currTrial.shownMapName === data.name && currTrial.experimentName === experiment.name;
+    const isBeingEdit = showImagePlacement && isShown;
 
     const fitBoundsToImage = () => {
         addActionOnMap((mapObject) => {
@@ -35,10 +37,39 @@ export const ImageStandalone = ({ data, setData, experiment }) => {
         }, 100);
     }
 
+    const setDataCheckName = (newData) => {
+        const newName = newData?.name;
+        const oldName = data?.name;
+        if (newName === oldName) {
+            setData(newData);
+        } else {
+            console.log('image name changed from', data?.name, 'to', newData?.name);
+            const exp = structuredClone(currTrial?.experiment);
+            for (const trialType of exp?.trialTypes || []) {
+                for (const trial of trialType?.trials || []) {
+                    for (const d of trial?.devicesOnTrial || []) {
+                        if (d.location.name === oldName) {
+                            d.location.name = newName;
+                        }
+                    }
+                }
+            }
+            for (const s of exp?.imageStandalone || []) {
+                if (s?.name === oldName) {
+                    s.name = newName;
+                }
+            }
+            setExperiment(exp.name, exp);
+            if (isShown) {
+                setShownMap(newName)
+            }
+        }
+    }
+
     return (
         <TreeRow
             data={data}
-            setData={setData}
+            setData={setDataCheckName}
             components={
                 <>
                     <ButtonTooltip
