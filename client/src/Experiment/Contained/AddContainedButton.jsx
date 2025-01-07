@@ -6,54 +6,14 @@ import { ContextMenu } from "../../Utils/ContextMenu";
 import { useCurrTrial } from "../../Context/useCurrTrial";
 
 export const AddContainedButton = ({ deviceItem, deviceType }) => {
-    const { selection, currTrial, setTrialData } = useContext(experimentContext);
+    const { selection, currTrial } = useContext(experimentContext);
     const { trial } = useCurrTrial({});
     const device = trial.getDevice(deviceType.name, deviceItem.name);
 
-    const devicesOnTrial = ((currTrial.trial || {}).devicesOnTrial) || [];
-
     const { deviceItemName, deviceTypeName } = selection[0] || {};
     const topSelectedDevice = trial.getDevice(deviceTypeName, deviceItemName);
-    const topSelectedIsContained = topSelectedDevice.isContainedIn(device);
 
-    let disabled = currTrial.trial && selection.length === 0;
-    if (topSelectedDevice.isSame(device)) {
-        disabled = true;
-    }
-
-    const addContained = (devicesOnTrialCopy, deviceItemParentName, deviceTypeParentName, deviceItemChildName, deviceTypeChildName) => {
-        const containedIn = { deviceItemName: deviceItemParentName, deviceTypeName: deviceTypeParentName }
-        const i = devicesOnTrialCopy.findIndex(t => t.deviceItemName === deviceItemChildName && t.deviceTypeName === deviceTypeChildName);
-        if (i !== -1) {
-            const dev = { ...devicesOnTrialCopy[i] };
-            dev.containedIn = containedIn;
-            devicesOnTrialCopy[i] = dev;
-        } else {
-            devicesOnTrialCopy.push({
-                deviceTypeName: deviceTypeChildName,
-                deviceItemName: deviceItemChildName,
-                containedIn
-            });
-        }
-    }
-
-    const removeContained = (devicesOnTrialCopy, deviceItemChildName, deviceTypeChildName) => {
-        const i = devicesOnTrialCopy.findIndex(t => t.deviceItemName === deviceItemChildName && t.deviceTypeName === deviceTypeChildName);
-        if (i !== -1) {
-            if (!devicesOnTrialCopy[i].location) {
-                devicesOnTrialCopy.splice(i, 1);
-            } else {
-                const dev = { ...devicesOnTrialCopy[i] };
-                delete dev.containedIn;
-                devicesOnTrialCopy[i] = dev;
-            }
-        }
-    }
-
-    const isContainedInThis = (deviceOnTrial) => {
-        return deviceOnTrial?.containedIn?.deviceItemName === deviceItem.name
-            && deviceOnTrial?.containedIn?.deviceTypeName === deviceType.name;
-    }
+    const disabled = !currTrial.trial || selection.length === 0 || topSelectedDevice.isSame(device);
 
     const handleClick = () => {
         if (!disabled) {
@@ -67,7 +27,7 @@ export const AddContainedButton = ({ deviceItem, deviceType }) => {
 
     const tooltip = disabled
         ? 'Device cannot contain itself, select another device'
-        : (topSelectedIsContained
+        : (topSelectedDevice.isContainedIn(device)
             ? 'Remove the top selected device from being contained in this'
             : 'Add the top selected device to be contained in this');
 
@@ -117,7 +77,7 @@ export const AddContainedButton = ({ deviceItem, deviceType }) => {
                 disabled={disabled}
                 tooltip={tooltip}
                 onClick={handleClick}
-                color={topSelectedIsContained ? "primary" : ""}
+                color={topSelectedDevice.isContainedIn(device) ? "primary" : ""}
             >
                 <MergeType />
             </ButtonTooltip>
