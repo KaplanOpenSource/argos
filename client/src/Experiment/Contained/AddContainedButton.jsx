@@ -98,13 +98,13 @@ export const AddContainedButton = ({ deviceItem, deviceType }) => {
         {
             label: 'Remove all contained devices',
             callback: () => {
-                const devicesOnTrialCopy = [...devicesOnTrial];
-                for (const d of devicesOnTrialCopy) {
-                    if (isContainedInThis(d)) {
-                        removeContained(devicesOnTrialCopy, d.deviceItemName, d.deviceTypeName);
+                const draft = trial.createDraft();
+                for (const d of draft.getDevicesOnTrial()) {
+                    if (d.isContainedIn(device)) {
+                        d.setContainedIn(undefined);
                     }
                 }
-                setTrialData({ ...currTrial.trial, devicesOnTrial: devicesOnTrialCopy });
+                trial.setTrialData(draft.getTrialData());
             }
         },
     ];

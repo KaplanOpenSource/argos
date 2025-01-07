@@ -15,6 +15,10 @@ export class TrialObject {
         return new DeviceObject(deviceTypeName, deviceItemName, this);
     }
 
+    getDevicesOnTrial() {
+        return (this.getTrialData()?.devicesOnTrial || []).map(d => this.getDevice(d.deviceTypeName, d.deviceItemName));
+    }
+
     createDraft(): TrialObject {
         let draft = structuredClone(this.getTrialData());
         return new TrialObject(() => draft, (newTrialData) => draft = newTrialData);
