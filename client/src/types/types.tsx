@@ -22,12 +22,16 @@ export interface IImageEmbedded extends IImage {
 };
 
 export interface IDeviceOnTrial {
-    deviceTypeName?: string;
-    deviceItemName?: string;
+    deviceTypeName: string;
+    deviceItemName: string;
     location?: {
         name?: string;
         coordinates?: ICoordinates
     };
+    containedIn? : {
+        deviceTypeName: string;
+        deviceItemName: string;    
+    }
     attributes?: Array<IAttribute>;
 };
 

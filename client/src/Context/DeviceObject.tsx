@@ -39,7 +39,7 @@ export class DeviceObject {
         return this.hasLocation() && this.onTrial()?.location?.name === (checkMapName || RealMapName);
     }
 
-    isContainedIn(other: DeviceObject) {
+    hasParent(other: DeviceObject) {
         if (this.onTrial() && other.onTrial()) {
             const containedIn = this.onTrial()?.containedIn;
             return containedIn?.deviceItemName === other?.deviceItemName
@@ -54,7 +54,7 @@ export class DeviceObject {
     }
 
     /** Sets the parent device of this device */
-    setContainedIn(futureParent: DeviceObject | undefined) {
+    setParent(futureParent: DeviceObject | undefined) {
         if (futureParent && this.isSame(futureParent)) {
             return;
         }
@@ -67,6 +67,13 @@ export class DeviceObject {
                 delete newData.containedIn;
             }
             this.setOnTrial(newData);
+        }
+    }
+
+    getParent(): DeviceObject | undefined {
+        const containedIn = this.onTrial()?.containedIn;
+        if (containedIn) {
+            return new DeviceObject(containedIn.deviceTypeName, containedIn.deviceItemName, this.trial);
         }
     }
 }

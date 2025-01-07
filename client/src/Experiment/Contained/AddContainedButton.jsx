@@ -17,17 +17,17 @@ export const AddContainedButton = ({ deviceItem, deviceType }) => {
 
     const handleClick = () => {
         if (!disabled) {
-            if (topSelectedDevice.isContainedIn(device)) {
-                topSelectedDevice.setContainedIn(undefined);
+            if (topSelectedDevice.hasParent(device)) {
+                topSelectedDevice.setParent(undefined);
             } else {
-                topSelectedDevice.setContainedIn(device);
+                topSelectedDevice.setParent(device);
             }
         }
     }
 
     const tooltip = disabled
         ? 'Device cannot contain itself, select another device'
-        : (topSelectedDevice.isContainedIn(device)
+        : (topSelectedDevice.hasParent(device)
             ? 'Remove the top selected device from being contained in this'
             : 'Add the top selected device to be contained in this');
 
@@ -38,7 +38,7 @@ export const AddContainedButton = ({ deviceItem, deviceType }) => {
                 const draft = trial.createDraft();
                 for (const { deviceTypeName, deviceItemName } of selection) {
                     const s = draft.getDevice(deviceTypeName, deviceItemName);
-                    s.setContainedIn(device);
+                    s.setParent(device);
                 }
                 trial.setTrialData(draft.getTrialData());
             }
@@ -48,8 +48,8 @@ export const AddContainedButton = ({ deviceItem, deviceType }) => {
                 const draft = trial.createDraft();
                 for (const { deviceTypeName, deviceItemName } of selection) {
                     const s = draft.getDevice(deviceTypeName, deviceItemName);
-                    if (s.isContainedIn(device)) {
-                        s.setContainedIn(undefined);
+                    if (s.hasParent(device)) {
+                        s.setParent(undefined);
                     }
                 }
                 trial.setTrialData(draft.getTrialData());
@@ -60,8 +60,8 @@ export const AddContainedButton = ({ deviceItem, deviceType }) => {
             callback: () => {
                 const draft = trial.createDraft();
                 for (const d of draft.getDevicesOnTrial()) {
-                    if (d.isContainedIn(device)) {
-                        d.setContainedIn(undefined);
+                    if (d.hasParent(device)) {
+                        d.setParent(undefined);
                     }
                 }
                 trial.setTrialData(draft.getTrialData());
@@ -77,7 +77,7 @@ export const AddContainedButton = ({ deviceItem, deviceType }) => {
                 disabled={disabled}
                 tooltip={tooltip}
                 onClick={handleClick}
-                color={topSelectedDevice.isContainedIn(device) ? "primary" : ""}
+                color={topSelectedDevice.hasParent(device) ? "primary" : ""}
             >
                 <MergeType />
             </ButtonTooltip>
