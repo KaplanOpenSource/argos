@@ -56,18 +56,16 @@ export const AddContainedButton = ({ deviceItem, deviceType }) => {
 
     const handleClick = () => {
         if (!disabled) {
-            const devicesOnTrialCopy = [...devicesOnTrial];
-            if (topSelectedIsContained) {
-                removeContained(devicesOnTrialCopy, deviceItemName, deviceTypeName);
+            if (topSelectedDevice.isContainedIn(device)) {
+                topSelectedDevice.setContainedIn(undefined);
             } else {
-                addContained(devicesOnTrialCopy, deviceItem.name, deviceType.name, deviceItemName, deviceTypeName);
+                topSelectedDevice.setContainedIn(device);
             }
-            setTrialData({ ...currTrial.trial, devicesOnTrial: devicesOnTrialCopy });
         }
     }
 
     const tooltip = disabled
-        ? 'To add a contained device, select a device that is not this one'
+        ? 'Device cannot contain itself, select another device'
         : (topSelectedIsContained
             ? 'Remove the top selected device from being contained in this'
             : 'Add the top selected device to be contained in this');

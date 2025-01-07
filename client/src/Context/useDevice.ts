@@ -47,6 +47,36 @@ export const useDevice = ({ deviceTypeName, deviceItemName }) => {
             return this.onTrial()?.deviceItemName === other?.onTrial()?.deviceItemName
                 && this.onTrial()?.deviceTypeName === other?.onTrial()?.deviceTypeName;
         }
+
+        /** Sets the parent device of this device */
+        setContainedIn(futureParent: DeviceObject | undefined) {
+            if (futureParent && this.isSame(futureParent)) {
+                return;
+            }
+            if (this.onTrial()) {
+                const newData = { ...this.onTrial() };
+                const parent = futureParent?.onTrial();
+                if (parent) {
+                    newData.containedIn = { deviceItemName: parent.deviceItemName, deviceTypeName: parent.deviceTypeName };
+                } else {
+                    delete newData.containedIn;
+                }
+                this.setOnTrial(newData);
+            }
+        }
+
+        // /** Sets the child devices of this device */
+        // setContained(others: DeviceObject[]) {
+        //     if (this.onTrial()) {
+        //         for (const other of others) {
+        //             if (other.onTrial()) {
+        //                 const newData = this.onTrial();
+        //                 const containedIn = { deviceItemName: this.onTrial().deviceItemName, deviceTypeName: this.onTrial().deviceTypeName };
+        //                 newData.containedIn = containedIn;
+        //             }
+        //         }
+        //     }
+        // }
     }
 
     const device = new DeviceObject();
