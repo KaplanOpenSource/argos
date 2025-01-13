@@ -11,7 +11,7 @@ export const DeviceItemLocationButton = ({
     deviceItem,
     surroundingDevices,
 }) => {
-    const { currTrial, setLocationsToDevices } = useContext(experimentContext);
+    const { currTrial } = useContext(experimentContext);
 
     const { trial } = useCurrTrial({});
     const device = trial.getDevice(deviceType.name, deviceItem.name);
@@ -20,7 +20,7 @@ export const DeviceItemLocationButton = ({
     const hasParent = device.hasParent()
 
     const removeLocation = () => {
-        setLocationsToDevices([{ deviceTypeName: deviceType.name, deviceItemName: deviceItem.name }], [undefined]);
+        device.setLocation(undefined);
     }
 
     const menuItems = [
@@ -34,11 +34,12 @@ export const DeviceItemLocationButton = ({
         menuItems.push({
             label: 'Remove locations to all devices in list',
             callback: () => {
-                const devicesToRemove = surroundingDevices.map(d => {
-                    return { deviceTypeName: d.deviceType.name, deviceItemName: d.deviceItem.name };
-                });
-                const locationsEmpty = devicesToRemove.map(() => undefined);
-                setLocationsToDevices(devicesToRemove, locationsEmpty);
+                const draft = trial.createDraft();
+                for (const { deviceTypeName, deviceItemName } of surroundingDevices) {
+                    const dev = draft.getDevice(deviceTypeName, deviceItemName);
+                    dev.setLocation(undefined);
+                }
+                trial.setTrialData(draft.getTrialData());
             }
         })
     }
