@@ -26,14 +26,14 @@ export interface ILocation {
     coordinates?: ICoordinates
 };
 
-export interface IDeviceOnTrial {
+export interface IDeviceTypeAndItem {
     deviceTypeName: string;
     deviceItemName: string;
+}
+
+export interface IDeviceOnTrial extends IDeviceTypeAndItem {
     location?: ILocation;
-    containedIn?: {
-        deviceTypeName: string;
-        deviceItemName: string;
-    }
+    containedIn?: IDeviceTypeAndItem
     attributes?: Array<IAttribute>;
 };
 

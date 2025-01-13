@@ -1,8 +1,12 @@
 import { RealMapName } from "../constants/constants";
-import { ILocation } from "../types/types";
+import { ICoordinates, IDeviceOnTrial, IDeviceTypeAndItem, ILocation } from "../types/types";
 import { TrialObject } from "./TrialObject";
 
-export class DeviceObject {
+export const isSameName = (one: IDeviceTypeAndItem, two: IDeviceTypeAndItem) => {
+    return one.deviceTypeName === two.deviceTypeName && one.deviceItemName === two.deviceItemName;
+}
+
+export class DeviceObject implements IDeviceTypeAndItem {
     private indexOnTrial: number = -1;
 
     constructor(
@@ -13,31 +17,41 @@ export class DeviceObject {
 
     }
 
-    onTrial() {
+    isSame(other: DeviceObject) {
+        const thisOnTrial = this.onTrial();
+        const otherOnTrial = other?.onTrial();
+        return thisOnTrial && otherOnTrial && isSameName(thisOnTrial, otherOnTrial);
+    }
+
+    onTrial(): IDeviceOnTrial | undefined {
         const devicesOnTrial = this.trial?.getTrialData()?.devicesOnTrial || [];
         if (this.indexOnTrial === -1) {
             this.indexOnTrial = devicesOnTrial.findIndex(d => {
-                return d.deviceTypeName === this.deviceTypeName && d.deviceItemName === this.deviceItemName;
+                return isSameName(d, this);
             });
         }
         return devicesOnTrial[this.indexOnTrial];
     }
 
-    setOnTrial(newData: any): void {
-        const data = {
+    setOnTrial(newData: IDeviceOnTrial | undefined): void {
+        const trialData = {
             ...(this.trial?.getTrialData() || {}),
             devicesOnTrial: [...(this.trial?.getTrialData()?.devicesOnTrial || [])]
         };
-        if (this.onTrial()) {
-            data.devicesOnTrial[this.indexOnTrial] = newData;
+
+        if (!newData) {
+            trialData.devicesOnTrial = trialData.devicesOnTrial.filter(d => !isSameName(d, this));
         } else {
-            data.devicesOnTrial.push({
-                ...newData,
-                deviceTypeName: this.deviceTypeName,
-                deviceItemName: this.deviceItemName,
-            });
+            // Make sure data has the same name
+            const namedData = { ...newData, ...(this as IDeviceTypeAndItem) };
+            const dev = this.onTrial();
+            if (dev) {
+                trialData.devicesOnTrial[this.indexOnTrial] = namedData;
+            } else {
+                trialData.devicesOnTrial.push(namedData);
+            }
         }
-        this.trial.setTrialData(data);
+        this.trial.setTrialData(trialData);
     }
 
     getLocation(): ILocation | undefined {
@@ -55,7 +69,32 @@ export class DeviceObject {
 
     hasLocationOnMap(checkMapName: string | undefined = undefined): boolean {
         const loc = this.getLocation();
-        return loc?.coordinates !== undefined && loc?.name === (checkMapName || RealMapName);
+        const mapName = checkMapName || RealMapName; // default map is the real map
+        return loc?.coordinates !== undefined && loc?.name === mapName;
+    }
+
+    setLocation(location: ILocation | undefined) {
+        if (!location) {
+            this.setOnTrial(undefined);
+        } else {
+            const dev = this.onTrial();
+            if (!dev) {
+                this.setOnTrial({ ...(this as IDeviceTypeAndItem), location });
+            } else {
+                const newData: IDeviceOnTrial = { ...dev, location };
+                delete newData.containedIn;
+                this.setOnTrial(newData);
+            }
+        }
+    }
+
+    setLocationOnMap(coordinates: ICoordinates | undefined, mapName: string | undefined = undefined) {
+        if (!coordinates) {
+            this.setLocation(undefined)
+        } else {
+            const name = mapName || RealMapName; // default map is the real map
+            this.setLocation({ name, coordinates });
+        }
     }
 
     hasParent(other: DeviceObject) {
@@ -67,29 +106,25 @@ export class DeviceObject {
         return false;
     }
 
-    isSame(other: DeviceObject) {
-        return this.onTrial()?.deviceItemName === other?.onTrial()?.deviceItemName
-            && this.onTrial()?.deviceTypeName === other?.onTrial()?.deviceTypeName;
-    }
-
     /** Sets the parent device of this device */
     setParent(futureParent: DeviceObject | undefined) {
         if (futureParent && this.isSame(futureParent)) {
             return;
         }
+        const dev = this.onTrial();
         const parent = futureParent?.onTrial();
         if (parent) {
             const containedIn = { deviceItemName: parent.deviceItemName, deviceTypeName: parent.deviceTypeName };
-            if (this.onTrial()) {
-                const newDeviceData = { ...this.onTrial(), containedIn };
+            if (dev) {
+                const newDeviceData = { ...dev, containedIn };
                 delete newDeviceData.location;
                 this.setOnTrial(newDeviceData);
             } else {
-                this.setOnTrial({ containedIn });
+                this.setOnTrial({ ...(this as IDeviceTypeAndItem), containedIn });
             }
         } else {
-            if (this.onTrial()) {
-                const newData = { ...this.onTrial() };
+            if (dev) {
+                const newData = { ...dev };
                 delete newData.containedIn;
                 this.setOnTrial(newData);
             }
