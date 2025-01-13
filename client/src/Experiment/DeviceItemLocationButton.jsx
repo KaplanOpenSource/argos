@@ -4,17 +4,19 @@ import { useContext } from "react";
 import { experimentContext } from "../Context/ExperimentProvider";
 import { RealMapName } from "../constants/constants";
 import { ContextMenu } from "../Utils/ContextMenu";
+import { useCurrTrial } from "../Context/useCurrTrial";
 
-export const DeviceItemLocationButton = ({ deviceType, deviceItem, hasLocation, surroundingDevices, }) => {
+export const DeviceItemLocationButton = ({
+    deviceType,
+    deviceItem,
+    surroundingDevices,
+}) => {
     const { currTrial, setLocationsToDevices } = useContext(experimentContext);
-    let hasLocationCalced = hasLocation;
-    if (hasLocation === undefined) {
-        const devicesOnTrial = (currTrial.trial || {}).devicesOnTrial || [];
-        const mapName = currTrial.shownMapName || RealMapName;
-        const index = devicesOnTrial.findIndex(d => d.location.name === mapName && d.deviceTypeName === deviceType.name && d.deviceItemName === deviceItem.name);
-        const deviceTrial = devicesOnTrial[index];
-        hasLocationCalced = deviceTrial && deviceTrial.location && deviceTrial.location.coordinates;
-    }
+
+    const { trial } = useCurrTrial({});
+    const device = trial.getDevice(deviceType.name, deviceItem.name);
+
+    let hasLocation = device.hasLocationOnMap(currTrial?.shownMapName || RealMapName);
 
     const removeLocation = () => {
         setLocationsToDevices([{ deviceTypeName: deviceType.name, deviceItemName: deviceItem.name }], [undefined]);
@@ -41,11 +43,11 @@ export const DeviceItemLocationButton = ({ deviceType, deviceItem, hasLocation, 
             {currTrial.trial && (
                 <ContextMenu menuItems={menuItems}>
                     <ButtonTooltip
-                        tooltip={hasLocationCalced ? "Remove location" : "Has no location"}
+                        tooltip={hasLocation ? "Remove location" : "Has no location"}
                         onClick={removeLocation}
-                        disabled={!hasLocationCalced}
+                        disabled={!hasLocation}
                     >
-                        {hasLocationCalced ? <LocationOff /> : <LocationOffOutlined />}
+                        {hasLocation ? <LocationOff /> : <LocationOffOutlined />}
                     </ButtonTooltip>
                 </ContextMenu>
             )}

@@ -38,7 +38,7 @@ export const DeviceItem = ({ data, setData, deviceType, showAttributes, devicesE
                     <DeviceItemLocationButton
                         deviceType={deviceType}
                         deviceItem={data}
-                        hasLocation={device.hasLocationOnMap(currTrial?.shownMapName || RealMapName)}
+                        // hasLocation={device.hasLocationOnMap(currTrial?.shownMapName || RealMapName)}
                         surroundingDevices={devicesEnclosingList}
                     />
                 </>
