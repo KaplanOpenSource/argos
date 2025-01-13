@@ -17,7 +17,7 @@ export const AddContainedButton = ({ deviceItem, deviceType }) => {
 
     const handleClick = () => {
         if (!disabled) {
-            if (topSelectedDevice.hasParent(device)) {
+            if (topSelectedDevice.checkParentIs(device)) {
                 topSelectedDevice.setParent(undefined);
             } else {
                 topSelectedDevice.setParent(device);
@@ -27,7 +27,7 @@ export const AddContainedButton = ({ deviceItem, deviceType }) => {
 
     const tooltip = disabled
         ? 'Device cannot contain itself, select another device'
-        : (topSelectedDevice.hasParent(device)
+        : (topSelectedDevice.checkParentIs(device)
             ? 'Remove the top selected device from being contained in this'
             : 'Add the top selected device to be contained in this');
 
@@ -51,7 +51,7 @@ export const AddContainedButton = ({ deviceItem, deviceType }) => {
                 const draft = trial.createDraft();
                 for (const { deviceTypeName, deviceItemName } of selection) {
                     const s = draft.getDevice(deviceTypeName, deviceItemName);
-                    if (s.hasParent(device)) {
+                    if (s.checkParentIs(device)) {
                         s.setParent(undefined);
                     }
                 }
@@ -63,7 +63,7 @@ export const AddContainedButton = ({ deviceItem, deviceType }) => {
             callback: () => {
                 const draft = trial.createDraft();
                 for (const d of draft.getDevicesOnTrial()) {
-                    if (d.hasParent(device)) {
+                    if (d.checkParentIs(device)) {
                         d.setParent(undefined);
                     }
                 }
@@ -80,7 +80,7 @@ export const AddContainedButton = ({ deviceItem, deviceType }) => {
                 disabled={disabled}
                 tooltip={tooltip}
                 onClick={handleClick}
-                color={topSelectedDevice.hasParent(device) ? "primary" : ""}
+                color={topSelectedDevice.checkParentIs(device) ? "primary" : ""}
             >
                 <MergeType />
             </ButtonTooltip>

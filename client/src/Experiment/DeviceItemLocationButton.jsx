@@ -1,4 +1,4 @@
-import { LocationOff, LocationOffOutlined } from "@mui/icons-material"
+import { NotListedLocation, PersonPinCircle, Place, PlaceOutlined } from "@mui/icons-material"
 import { ButtonTooltip } from "../Utils/ButtonTooltip"
 import { useContext } from "react";
 import { experimentContext } from "../Context/ExperimentProvider";
@@ -16,19 +16,24 @@ export const DeviceItemLocationButton = ({
     const { trial } = useCurrTrial({});
     const device = trial.getDevice(deviceType.name, deviceItem.name);
 
-    let hasLocation = device.hasLocationOnMap(currTrial?.shownMapName || RealMapName);
+    const hasLocation = device.hasLocationOnMap(currTrial?.shownMapName || RealMapName);
+    const hasParent = device.hasParent()
 
     const removeLocation = () => {
         setLocationsToDevices([{ deviceTypeName: deviceType.name, deviceItemName: deviceItem.name }], [undefined]);
     }
 
     const menuItems = [
-        { label: 'Remove location', callback: removeLocation },
+        {
+            label: 'Remove location',
+            callback: removeLocation
+        },
     ];
 
     if (surroundingDevices) {
         menuItems.push({
-            label: 'Remove locations to all devices in list', callback: () => {
+            label: 'Remove locations to all devices in list',
+            callback: () => {
                 const devicesToRemove = surroundingDevices.map(d => {
                     return { deviceTypeName: d.deviceType.name, deviceItemName: d.deviceItem.name };
                 });
@@ -38,16 +43,36 @@ export const DeviceItemLocationButton = ({
         })
     }
 
+    let tooltip;
+    if (hasLocation && hasParent) {
+        tooltip = 'Has location and parent, remove both';
+    } else if (!hasLocation && hasParent) {
+        tooltip = 'Remove from parent';
+    } else if (hasLocation && !hasParent) {
+        tooltip = 'Remove location';
+    } else if (!hasLocation && !hasParent) {
+        tooltip = 'Has no location';
+    }
+
     return (
         <>
             {currTrial.trial && (
                 <ContextMenu menuItems={menuItems}>
                     <ButtonTooltip
-                        tooltip={hasLocation ? "Remove location" : "Has no location"}
+                        tooltip={tooltip}
                         onClick={removeLocation}
                         disabled={!hasLocation}
                     >
-                        {hasLocation ? <LocationOff /> : <LocationOffOutlined />}
+                        {hasLocation
+                            ? (hasParent
+                                ? <NotListedLocation />
+                                : <Place />
+                            )
+                            : (hasParent
+                                ? <PersonPinCircle />
+                                : <PlaceOutlined />
+                            )
+                        }
                     </ButtonTooltip>
                 </ContextMenu>
             )}

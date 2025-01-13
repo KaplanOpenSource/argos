@@ -3,7 +3,7 @@ import {
     Stack, Typography
 } from '@mui/material';
 import {
-    LocationOff,
+    Place,
 } from "@mui/icons-material";
 import { ButtonTooltip } from '../../Utils/ButtonTooltip';
 import { experimentContext } from '../../Context/ExperimentProvider';
@@ -69,7 +69,7 @@ export const SingleDevicePropertiesView = ({ deviceOnTrial, setDeviceOnTrial, se
                     tooltip="Remove location"
                     onClick={() => setLocationsToDevices([{ deviceTypeName, deviceItemName }], [undefined])}
                 >
-                    <LocationOff />
+                    <Place />
                 </ButtonTooltip>
                 {deviceItem &&
                     <AddContainedButton

@@ -97,7 +97,11 @@ export class DeviceObject implements IDeviceTypeAndItem {
         }
     }
 
-    hasParent(other: DeviceObject) {
+    hasParent(): boolean {
+        return !!(this.onTrial()?.containedIn);
+    }
+
+    checkParentIs(other: DeviceObject): boolean {
         if (this.onTrial() && other.onTrial()) {
             const containedIn = this.onTrial()?.containedIn;
             return containedIn?.deviceItemName === other?.deviceItemName
@@ -133,8 +137,9 @@ export class DeviceObject implements IDeviceTypeAndItem {
 
     getParent(): DeviceObject | undefined {
         const containedIn = this.onTrial()?.containedIn;
-        if (containedIn) {
-            return new DeviceObject(containedIn.deviceTypeName, containedIn.deviceItemName, this.trial);
+        if (!containedIn) {
+            return undefined;
         }
+        return new DeviceObject(containedIn.deviceTypeName, containedIn.deviceItemName, this.trial);
     }
 }

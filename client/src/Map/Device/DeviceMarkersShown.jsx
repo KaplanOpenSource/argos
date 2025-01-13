@@ -24,9 +24,9 @@ export const DeviceMarkersShown = ({ showDeviceNames }) => {
         }
     }
 
-    if (devicesWithoutLocation.length) {
-        console.log('no locations on devices:', JSON.stringify(devicesWithoutLocation));
-    }
+    // if (devicesWithoutLocation.length) {
+    //     console.log('no locations on devices:', JSON.stringify(devicesWithoutLocation));
+    // }
 
     return (
         <>
