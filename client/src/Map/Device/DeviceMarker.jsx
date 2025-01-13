@@ -9,14 +9,16 @@ import { IconDeviceByName } from "../../Experiment/IconPicker";
 import { locationToString } from "../../Utils/utils";
 import { useShape } from "../../EditToolBox/ShapeContext";
 import { SELECT_SHAPE } from "../../EditToolBox/utils/constants";
+import { useCurrTrial } from "../../Context/useCurrTrial";
 
 export const DeviceMarker = ({ deviceOnTrial, setDeviceOnTrial, showDeviceNames }) => {
     const {
         selection,
         setSelection,
-        setLocationsToDevices,
         currTrial,
     } = useContext(experimentContext);
+    const { trial } = useCurrTrial({});
+
     const ref = useRef(null);
     const { isPopupSwitchedTo } = usePopupSwitch();
     const { shape } = useShape();
@@ -32,7 +34,7 @@ export const DeviceMarker = ({ deviceOnTrial, setDeviceOnTrial, showDeviceNames 
     if (!coordinates) return null;
 
     const setLocation = (latlng) => {
-        setLocationsToDevices([{ deviceTypeName, deviceItemName }], [latlng]);
+        trial.getDevice(deviceTypeName, deviceItemName).setLocationOnMap([latlng.lat, latlng.lng], currTrial.shownMapName);
     }
 
     const isSelected = selection.find(s => s.deviceItemName === deviceItemName && s.deviceTypeName === deviceTypeName);
@@ -75,7 +77,7 @@ export const DeviceMarker = ({ deviceOnTrial, setDeviceOnTrial, showDeviceNames 
                 drag: e => {
                     document.getElementById('tooltip-marker').textContent = locationToString([e.latlng.lat, e.latlng.lng]);
                 },
-                click: e => {
+                click: () => {
                     if (shape === SELECT_SHAPE) {
                         const selectedIndex = selection.findIndex(t => {
                             return t.deviceTypeName === deviceTypeName && t.deviceItemName === deviceItemName;
@@ -106,7 +108,6 @@ export const DeviceMarker = ({ deviceOnTrial, setDeviceOnTrial, showDeviceNames 
                 <SingleDevicePropertiesView
                     deviceOnTrial={deviceOnTrial}
                     setDeviceOnTrial={setDeviceOnTrial}
-                    setLocation={setLocation}
                 >
                 </SingleDevicePropertiesView>
             </Popup>

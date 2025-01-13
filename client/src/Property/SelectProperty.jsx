@@ -1,4 +1,5 @@
 import { Box, Chip, FormControl, InputLabel, ListItemText, MenuItem, Select, Tooltip } from "@mui/material";
+import { TooltipItem } from "../Utils/TooltipItem";
 
 
 export const SelectProperty = ({ label, data, setData, options, multiple = false, tooltipTitle = "", styleFormControl = {}, ...restProps }) => {
@@ -29,9 +30,8 @@ export const SelectProperty = ({ label, data, setData, options, multiple = false
     }
 
     return (
-        <Tooltip
+        <TooltipItem
             title={tooltipTitle}
-            placement='top'
         >
             <FormControl sx={{ minWidth: 120, ...styleFormControl }}>
                 <InputLabel>{label}</InputLabel>
@@ -68,6 +68,6 @@ export const SelectProperty = ({ label, data, setData, options, multiple = false
                     ))}
                 </Select>
             </FormControl>
-        </Tooltip>
+        </TooltipItem>
     )
 }

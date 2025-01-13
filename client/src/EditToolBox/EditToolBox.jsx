@@ -1,11 +1,8 @@
 import React from 'react';
 import { useContext } from 'react';
 import {
-    Divider,
-    Box,
     Stack,
     Paper,
-    IconButton,
 } from '@mui/material';
 import RotateLeftIcon from '@mui/icons-material/RotateLeft';
 import PlaceIcon from '@mui/icons-material/Place';
@@ -42,6 +39,7 @@ import DistributeAlongArc from './ToolsBar/DistributeAlongArc.jsx';
 import Rectangle from './ToolsBar/Rectangle.jsx';
 import { experimentContext } from '../Context/ExperimentProvider.jsx';
 import { PlaylistAdd } from '@mui/icons-material';
+import { useCurrTrial } from '../Context/useCurrTrial';
 
 export const EditToolBox = ({
     handleSetOne,
@@ -54,7 +52,8 @@ export const EditToolBox = ({
 }) => {
     const { shape, setShape, shapeData, } = useShape();
 
-    const { selection, setLocationsToStackDevices } = useContext(experimentContext);
+    const { selection, setSelection, currTrial } = useContext(experimentContext);
+    const { trial } = useCurrTrial({});
 
     const onClickIcon = (id) => {
         if (id === shape) {
@@ -67,8 +66,19 @@ export const EditToolBox = ({
     };
 
     const setMultipleDeviceLocations = () => {
-        const positions = shapeData.toPositions(markedPoints, selection.length);
-        setLocationsToStackDevices(positions);
+        if (selection.length > 0) {
+            const positions = shapeData.toPositions(markedPoints, selection.length);
+
+            const draft = trial.createDraft();
+            let i = 0;
+            for (const s of selection) {
+                const dev = draft.getDevice(s.deviceTypeName, s.deviceItemName);
+                dev.setLocationOnMap(positions[i++], currTrial.shownMapName);
+            }
+            trial.setTrialData(draft.getTrialData());
+            setSelection([]);
+        }
+
         setMarkedPoints([]);
         setShowEditBox(false);
     }

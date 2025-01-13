@@ -7,7 +7,6 @@ import { useContext } from "react";
 import { experimentContext } from "../Context/ExperimentProvider";
 import { SCOPE_TRIAL } from "./AttributeType";
 import { DeviceItemLocationButton } from "./DeviceItemLocationButton";
-import { RealMapName } from "../constants/constants";
 import { useCurrTrial } from "../Context/useCurrTrial";
 
 export const DeviceItem = ({ data, setData, deviceType, showAttributes, devicesEnclosingList, scope, experiment }) => {
@@ -38,7 +37,7 @@ export const DeviceItem = ({ data, setData, deviceType, showAttributes, devicesE
                     <DeviceItemLocationButton
                         deviceType={deviceType}
                         deviceItem={data}
-                        hasLocation={device.hasLocationOnMap(currTrial?.shownMapName || RealMapName)}
+                        // hasLocation={device.hasLocationOnMap(currTrial?.shownMapName || RealMapName)}
                         surroundingDevices={devicesEnclosingList}
                     />
                 </>

@@ -3,6 +3,7 @@ import { DevicesTabularOneAttr } from "./DevicesTabularOneAttr";
 import { useContext } from "react";
 import { experimentContext } from "../../Context/ExperimentProvider";
 import { TextFieldDebounceOutlined } from "../../Utils/TextFieldDebounce";
+import { useCurrTrial } from "../../Context/useCurrTrial";
 
 const NumberCoordField = ({ value, setValue, label }) => {
     return (
@@ -21,19 +22,22 @@ const NumberCoordField = ({ value, setValue, label }) => {
 }
 
 export const DevicesTabularOneDevice = ({ deviceType, setDeviceType }) => {
-    const { currTrial, setLocationsToDevices } = useContext(experimentContext);
+    const { currTrial } = useContext(experimentContext);
+    const { trial } = useCurrTrial({});
 
     const devicesOnTrial = currTrial?.trial?.devicesOnTrial;
 
     return (
         <>
             {deviceType?.devices?.map((deviceItem, itr) => {
+                const device = trial.getDevice(deviceType.name, deviceItem.name);
+
                 const setDeviceItem = (val) => {
                     const t = structuredClone(deviceType);
                     t.devices[itr] = val;
                     setDeviceType(t);
                 }
-
+                
                 const deviceOnTrial = devicesOnTrial?.find(t => {
                     return t.deviceItemName === deviceItem.name && t.deviceTypeName === deviceType.name;
                 });
@@ -54,9 +58,7 @@ export const DevicesTabularOneDevice = ({ deviceType, setDeviceType }) => {
                                     label={'Latitude'}
                                     value={deviceOnTrial?.location?.coordinates[0]}
                                     setValue={v => {
-                                        setLocationsToDevices(
-                                            [{ deviceItemName: deviceItem.name, deviceTypeName: deviceType.name }],
-                                            [[v, deviceOnTrial?.location?.coordinates[1]]]);
+                                        device.setLocationOnMap([v, device.getLocation().coordinates[1]], currTrial.shownMapName);
                                     }}
                                 />
                                 : null}
@@ -67,9 +69,7 @@ export const DevicesTabularOneDevice = ({ deviceType, setDeviceType }) => {
                                     label={'Longitude'}
                                     value={deviceOnTrial?.location?.coordinates[1]}
                                     setValue={v => {
-                                        setLocationsToDevices(
-                                            [{ deviceItemName: deviceItem.name, deviceTypeName: deviceType.name }],
-                                            [[deviceOnTrial?.location?.coordinates[0], v]]);
+                                        device.setLocationOnMap([device.getLocation().coordinates[0], v], currTrial.shownMapName);
                                     }}
                                 />
                                 : null}

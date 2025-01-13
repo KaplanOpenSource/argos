@@ -1,11 +1,11 @@
-import { FormControlLabel, FormGroup, Switch, Tooltip } from "@mui/material";
+import { FormControlLabel, FormGroup, Switch } from "@mui/material";
+import { TooltipItem } from "../Utils/TooltipItem";
 
 export const BooleanProperty = ({ data, setData, label, tooltipTitle = "", ...restProps }) => {
     const value = (!data || data === 'false' || data === '0') ? false : true; // for legacy experiments
     return (
-        <Tooltip
+        <TooltipItem
             title={tooltipTitle}
-            placement='top'
         >
             <FormGroup>
                 <FormControlLabel
@@ -23,6 +23,6 @@ export const BooleanProperty = ({ data, setData, label, tooltipTitle = "", ...re
                     {...restProps}
                 />
             </FormGroup>
-        </Tooltip>
+        </TooltipItem>
     )
 }

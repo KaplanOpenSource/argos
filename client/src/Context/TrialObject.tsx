@@ -21,6 +21,16 @@ export class TrialObject {
         return (this.getTrialData()?.devicesOnTrial || []).map(d => this.getDevice(d.deviceTypeName, d.deviceItemName));
     }
 
+    /**
+     * Draft is needed when updating few devices on one dom update, otherwise updated trial data will be corrupt.  
+     * Usage:  
+     * const draft = trial.createDraft();  
+     * draft.getDevice(deviceTypeName1, deviceItemName1).setLocation(...);  
+     * draft.getDevice(deviceTypeName2, deviceItemName2).setLocation(...);  
+     * trial.setTrialData(draft.getTrialData());  
+     * 
+     * @returns deep clone of the trial
+     */
     createDraft(): TrialObject {
         let draft = structuredClone(this.getTrialData());
         return new TrialObject(() => draft, (newTrialData) => draft = newTrialData);

@@ -33,7 +33,7 @@ export const TextFieldDebounce = ({ value, onChange = () => { }, debounceMs = 50
     return (
         <Tooltip
             title={tooltipTitle}
-            placement='top'
+            placement='bottom'
         >
             <TextField
                 {...props} // Pass any additional props to the TextField
