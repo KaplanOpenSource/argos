@@ -17,6 +17,10 @@ export class DeviceObject implements IDeviceTypeAndItem {
 
     }
 
+    name(): IDeviceTypeAndItem {
+        return { deviceTypeName: this.deviceTypeName, deviceItemName: this.deviceItemName };
+    }
+
     isSame(other: DeviceObject) {
         const thisOnTrial = this.onTrial();
         const otherOnTrial = other?.onTrial();
@@ -43,7 +47,7 @@ export class DeviceObject implements IDeviceTypeAndItem {
             trialData.devicesOnTrial = trialData.devicesOnTrial.filter(d => !isSameName(d, this));
         } else {
             // Make sure data has the same name
-            const namedData = { ...newData, ...(this as IDeviceTypeAndItem) };
+            const namedData = { ...newData, ...this.name() };
             const dev = this.onTrial();
             if (dev) {
                 trialData.devicesOnTrial[this.indexOnTrial] = namedData;
@@ -79,7 +83,7 @@ export class DeviceObject implements IDeviceTypeAndItem {
         } else {
             const dev = this.onTrial();
             if (!dev) {
-                this.setOnTrial({ ...(this as IDeviceTypeAndItem), location });
+                this.setOnTrial({ ...this.name(), location });
             } else {
                 const newData: IDeviceOnTrial = { ...dev, location };
                 delete newData.containedIn;
@@ -124,7 +128,7 @@ export class DeviceObject implements IDeviceTypeAndItem {
                 delete newDeviceData.location;
                 this.setOnTrial(newDeviceData);
             } else {
-                this.setOnTrial({ ...(this as IDeviceTypeAndItem), containedIn });
+                this.setOnTrial({ ...this.name(), containedIn });
             }
         } else {
             if (dev) {

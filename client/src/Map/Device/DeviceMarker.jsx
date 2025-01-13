@@ -106,7 +106,6 @@ export const DeviceMarker = ({ deviceOnTrial, setDeviceOnTrial, showDeviceNames 
                 <SingleDevicePropertiesView
                     deviceOnTrial={deviceOnTrial}
                     setDeviceOnTrial={setDeviceOnTrial}
-                    setLocation={setLocation}
                 >
                 </SingleDevicePropertiesView>
             </Popup>
