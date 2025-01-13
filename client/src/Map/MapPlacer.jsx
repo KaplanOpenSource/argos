@@ -5,16 +5,15 @@ import { MarkedShape } from "./MarkedShape";
 import { useShape } from "../EditToolBox/ShapeContext";
 import { CHOOSE_SHAPE, FREEPOSITIONING_SHAPE, POINT_SHAPE } from "../EditToolBox/utils/constants";
 import { MapContextMenu } from "./MapContextMenu";
+import { useCurrTrial } from "../Context/useCurrTrial";
 
 export const MapPlacer = ({
     markedPoints,
     setMarkedPoints,
 }) => {
-    const { selection, setLocationsToStackDevices } = useContext(experimentContext);
-    const {
-        shape,
-        shapeData,
-    } = useShape();
+    const { selection, setSelection, currTrial } = useContext(experimentContext);
+    const { shape, shapeData } = useShape();
+    const { trial } = useCurrTrial({});
 
     const onMapClick = (e, mapObj) => {
         const latlng = [e.latlng.lat, e.latlng.lng];
@@ -27,10 +26,20 @@ export const MapPlacer = ({
         } else {
             if (shape === FREEPOSITIONING_SHAPE) {
                 if (selection.length > 0) {
-                    setLocationsToStackDevices([latlng]);
+                    const dev = trial.getDevice(selection[0].deviceTypeName, selection[0].deviceItemName);
+                    dev.setLocationOnMap(latlng, currTrial.shownMapName);
+                    setSelection(selection.slice(1));
                 }
             } else if (shape === POINT_SHAPE) {
-                setLocationsToStackDevices(selection.map(_ => latlng));
+                if (selection.length > 0) {
+                    const draft = trial.createDraft();
+                    for (const s of selection) {
+                        const dev = draft.getDevice(s.deviceTypeName, s.deviceItemName);
+                        dev.setLocationOnMap(latlng, currTrial.shownMapName);
+                    }
+                    trial.setTrialData(draft.getTrialData());
+                    setSelection([]);
+                }
             } else if (shape === CHOOSE_SHAPE) {
                 var tooltip = L.tooltip({ direction: 'top', content: 'Nothing to choose here', }).setLatLng(latlng)
                 mapObj.openTooltip(tooltip);
@@ -59,7 +68,9 @@ export const MapPlacer = ({
                         label: 'Place top point here',
                         callback: (e, latlng) => {
                             if (selection.length > 0) {
-                                setLocationsToStackDevices([latlng]);
+                                const dev = trial.getDevice(selection[0].deviceTypeName, selection[0].deviceItemName);
+                                dev.setLocationOnMap(latlng, currTrial.shownMapName);
+                                setSelection(selection.slice(1));
                             }
                         }
                     }
