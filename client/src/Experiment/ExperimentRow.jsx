@@ -15,14 +15,13 @@ import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { DeviceTypesList } from "./DeviceTypesList";
 import { TrialTypesList } from "./TrialTypesList";
 import { useUploadExperiment } from "../IO/UploadExperiment";
-import { ActionsOnMapContext } from "../Map/ActionsOnMapContext";
 import { ShapeList } from "./ShapeList";
-import { CoordsSpan } from "./CoordsSpan";
+import { useShownMap } from "../Context/useShownMap";
 
 export const ExperimentRow = ({ data, setData, children }) => {
-    const { deleteExperiment, setShownMap, currTrial } = useContext(experimentContext);
+    const { deleteExperiment, currTrial } = useContext(experimentContext);
     const { downloadExperimentAsZip } = useUploadExperiment();
-    const { addActionOnMap } = useContext(ActionsOnMapContext);
+    const { switchToMap } = useShownMap({});
     return (
         <TreeRow
             data={data}
@@ -95,14 +94,7 @@ export const ExperimentRow = ({ data, setData, children }) => {
                 components={
                     <ButtonTooltip
                         tooltip={'Switch to show real geographic map'}
-                        onClick={() => {
-                            setShownMap(undefined);
-                            setTimeout(() => {
-                                addActionOnMap((mapObject) => {
-                                    new CoordsSpan().fromExperiment(data).fitBounds(mapObject);
-                                });
-                            }, 100);
-                        }}
+                        onClick={() => switchToMap(undefined)}
                     >
                         <PublicIcon />
                     </ButtonTooltip>

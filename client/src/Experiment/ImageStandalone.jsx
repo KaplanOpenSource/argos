@@ -10,9 +10,9 @@ import { experimentContext } from "../Context/ExperimentProvider";
 import { ActionsOnMapContext } from "../Map/ActionsOnMapContext";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { EditLocationAlt, EditLocationOutlined, OpenInFull } from "@mui/icons-material";
+import { useShownMap } from "../Context/useShownMap";
 
 export const ImageStandalone = ({ data, setData, experiment }) => {
-    const { addActionOnMap } = useContext(ActionsOnMapContext);
     const {
         currTrial,
         setExperiment,
@@ -20,22 +20,10 @@ export const ImageStandalone = ({ data, setData, experiment }) => {
         showImagePlacement,
         setShowImagePlacement,
     } = useContext(experimentContext);
+    const { switchToMap , fitBoundsToImage} = useShownMap({});
 
     const isShown = currTrial.shownMapName === data.name && currTrial.experimentName === experiment.name;
     const isBeingEdit = showImagePlacement && isShown;
-
-    const fitBoundsToImage = () => {
-        addActionOnMap((mapObject) => {
-            mapObject.fitBounds([[data.ytop, data.xleft], [data.ybottom, data.xright]]);
-        });
-    }
-
-    const switchToMap = () => {
-        setShownMap(data.name);
-        setTimeout(() => {
-            fitBoundsToImage();
-        }, 100);
-    }
 
     const setDataCheckName = (newData) => {
         const newName = newData?.name;
@@ -93,18 +81,11 @@ export const ImageStandalone = ({ data, setData, experiment }) => {
                         })}
                     />
                     <ButtonTooltip
-                        tooltip={currTrial.experiment ? "Switch to this image" : "First choose a trial before switching to this image"}
-                        onClick={() => switchToMap()}
-                        disabled={!currTrial.experiment}
+                        tooltip={currTrial.experiment ? "Switch to this image" : "First choose an experiment before switching to this image"}
+                        onClick={() => switchToMap(data.name)}
+                        disabled={!currTrial.experiment || (data || {}).ytop === undefined}
                     >
                         <MapIcon />
-                    </ButtonTooltip>
-                    <ButtonTooltip
-                        tooltip="Fit image to screen"
-                        onClick={() => fitBoundsToImage()}
-                        disabled={(data || {}).ytop === undefined}
-                    >
-                        <OpenInFull />
                     </ButtonTooltip>
                     <ButtonTooltip
                         tooltip="Edit image placement"
