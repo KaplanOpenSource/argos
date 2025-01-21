@@ -7,9 +7,8 @@ import { UploadImageButton } from "../IO/UploadImageButton";
 import DeleteIcon from '@mui/icons-material/Delete';
 import MapIcon from '@mui/icons-material/Map';
 import { experimentContext } from "../Context/ExperimentProvider";
-import { ActionsOnMapContext } from "../Map/ActionsOnMapContext";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
-import { EditLocationAlt, EditLocationOutlined, OpenInFull } from "@mui/icons-material";
+import { EditLocationAlt, EditLocationOutlined } from "@mui/icons-material";
 import { useShownMap } from "../Context/useShownMap";
 
 export const ImageStandalone = ({ data, setData, experiment }) => {
@@ -20,7 +19,7 @@ export const ImageStandalone = ({ data, setData, experiment }) => {
         showImagePlacement,
         setShowImagePlacement,
     } = useContext(experimentContext);
-    const { switchToMap , fitBoundsToImage} = useShownMap({});
+    const { switchToMap } = useShownMap({});
 
     const isShown = currTrial.shownMapName === data.name && currTrial.experimentName === experiment.name;
     const isBeingEdit = showImagePlacement && isShown;

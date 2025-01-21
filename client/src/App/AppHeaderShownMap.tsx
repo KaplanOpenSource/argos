@@ -6,27 +6,23 @@ import MapIcon from '@mui/icons-material/Map';
 import PublicIcon from '@mui/icons-material/Public';
 import { ButtonMenu } from "../Utils/ButtonMenu";
 import { IImageStandalone } from "../types/types";
+import { useShownMap } from "../Context/useShownMap";
 
 export const AppHeaderShownMap = ({ }) => {
-    const {
-        currTrial,
-        setShownMap,
-    } = useContext(experimentContext);
-    const {
-        shownMapName,
-        experiment,
-    } = currTrial;
+    const { currTrial } = useContext(experimentContext);
+    const { shownMapName, experiment } = currTrial;
+    const { switchToMap } = useShownMap({});
 
     const standaloneNames: string[] = experiment?.imageStandalone?.map((x: IImageStandalone) => x.name);
     const menuItems = standaloneNames.map(name => ({
         name,
-        action: () => setShownMap(name)
+        action: () => switchToMap(name)
     }));
 
     const realMapText = "Real map with embedding";
     menuItems.push({
         name: realMapText,
-        action: () => setShownMap(undefined)
+        action: () => switchToMap(undefined)
     });
 
     return (
