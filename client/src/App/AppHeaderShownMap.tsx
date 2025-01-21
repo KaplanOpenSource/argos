@@ -10,20 +10,15 @@ export const AppHeaderShownMap = ({ }) => {
     const { shownMapName } = currTrial;
 
     return (
-        <>
-            {shownMapName
-                ? <Tooltip title={"Shown map"}>
-                    <Stack direction={"row"}>
-                        <MapIcon />
-                        <Typography variant="body1" paddingRight={1}>
-                            {shownMapName}
-                        </Typography>
-                    </Stack>
-                </Tooltip>
-                : <Tooltip title={"Real map with embedding"}>
-                    <PublicIcon />
-                </Tooltip>
-            }
-        </>
+        <Tooltip title={shownMapName ? "Shown map" : "Real map with embedding"}>
+            <Stack direction={"row"}>
+                {shownMapName ? <MapIcon /> : <PublicIcon />}
+                {shownMapName && (
+                    <Typography variant="body1" paddingRight={1}>
+                        {shownMapName}
+                    </Typography>
+                )}
+            </Stack>
+        </Tooltip>
     )
 }
