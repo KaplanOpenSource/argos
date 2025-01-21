@@ -31,46 +31,47 @@ export const AddContainedButton = ({ deviceItem, deviceType }) => {
             ? 'Remove the top selected device from being contained in this'
             : 'Add the top selected device to be contained in this');
 
-    const menuItems = [
-        {
-            label: tooltip,
-            callback: handleClick
-        },
-        {
-            label: 'Add all selected devices to be contained in this', callback: () => {
-                const draft = trial.createDraft();
-                for (const { deviceTypeName, deviceItemName } of selection) {
-                    const s = draft.getDevice(deviceTypeName, deviceItemName);
-                    s.setParent(device);
-                }
-                trial.setTrialData(draft.getTrialData());
+    const removeAll = () => {
+        const draft = trial.createDraft();
+        for (const d of draft.getDevicesOnTrial()) {
+            if (d.checkParentIs(device)) {
+                d.setParent(undefined);
             }
-        },
-        {
-            label: 'Remove all selected devices that are also contained in this', callback: () => {
-                const draft = trial.createDraft();
-                for (const { deviceTypeName, deviceItemName } of selection) {
-                    const s = draft.getDevice(deviceTypeName, deviceItemName);
-                    if (s.checkParentIs(device)) {
-                        s.setParent(undefined);
-                    }
-                }
-                trial.setTrialData(draft.getTrialData());
+        }
+        trial.setTrialData(draft.getTrialData());
+    };
+    const removeAllSelected = () => {
+        const draft = trial.createDraft();
+        for (const { deviceTypeName, deviceItemName } of selection) {
+            const s = draft.getDevice(deviceTypeName, deviceItemName);
+            if (s.checkParentIs(device)) {
+                s.setParent(undefined);
             }
-        },
-        {
-            label: 'Remove all contained devices',
-            callback: () => {
-                const draft = trial.createDraft();
-                for (const d of draft.getDevicesOnTrial()) {
-                    if (d.checkParentIs(device)) {
-                        d.setParent(undefined);
-                    }
-                }
-                trial.setTrialData(draft.getTrialData());
-            }
-        },
-    ];
+        }
+        trial.setTrialData(draft.getTrialData());
+    };
+    const addAllSelected = () => {
+        const draft = trial.createDraft();
+        for (const { deviceTypeName, deviceItemName } of selection) {
+            const s = draft.getDevice(deviceTypeName, deviceItemName);
+            s.setParent(device);
+        }
+        trial.setTrialData(draft.getTrialData());
+    };
+
+    const menuItems = [{
+        label: tooltip,
+        callback: handleClick
+    }, {
+        label: 'Add all selected devices to be contained in this',
+        callback: addAllSelected
+    }, {
+        label: 'Remove all selected devices that are also contained in this',
+        callback: removeAllSelected
+    }, {
+        label: 'Remove all contained devices',
+        callback: removeAll
+    }];
 
     return (
         <ContextMenu

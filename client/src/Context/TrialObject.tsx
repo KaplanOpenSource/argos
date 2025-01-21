@@ -23,6 +23,7 @@ export class TrialObject {
 
     /**
      * Draft is needed when updating few devices on one dom update, otherwise updated trial data will be corrupt.  
+     * 
      * Usage:  
      * const draft = trial.createDraft();  
      * draft.getDevice(deviceTypeName1, deviceItemName1).setLocation(...);  
