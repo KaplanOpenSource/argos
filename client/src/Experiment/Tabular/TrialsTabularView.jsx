@@ -13,6 +13,7 @@ export const TrialsTabularView = ({ data, setData }) => {
         <TableContainer
             component={Paper}
             key="1"
+            sx={{ overflowX: "visible" }}
         >
             <Table
                 size="small"
