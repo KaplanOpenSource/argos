@@ -14,20 +14,29 @@ import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { DeviceTypesList } from "./DeviceTypesList";
 import { TrialTypesList } from "./TrialTypesList";
-import { SCOPE_CONSTANT } from "./AttributeType";
 import { useUploadExperiment } from "../IO/UploadExperiment";
 import { ActionsOnMapContext } from "../Map/ActionsOnMapContext";
 import { ShapeList } from "./ShapeList";
 import { CoordsSpan } from "./CoordsSpan";
 
 export const ExperimentRow = ({ data, setData, children }) => {
-    const { deleteExperiment, setShownMap } = useContext(experimentContext);
+    const { deleteExperiment, setShownMap, currTrial } = useContext(experimentContext);
     const { downloadExperimentAsZip } = useUploadExperiment();
     const { addActionOnMap } = useContext(ActionsOnMapContext);
     return (
         <TreeRow
             data={data}
             setData={setData}
+            textProps={data === currTrial.experiment
+                ? {
+                    InputProps: {
+                        style: {
+                            fontWeight: 'bold',
+                        },
+                    }
+                }
+                : {}
+            }
             components={
                 <>
                     <DateProperty

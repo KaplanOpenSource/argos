@@ -135,7 +135,7 @@ export const AppHeaderButtons = ({
                         <Tooltip
                             title="Experiment and trial currently edited"
                         >
-                            <Typography variant="body1" paddingRight={1}>
+                            <Typography variant="body1">
                                 {experimentName}
                                 {trialName
                                     ? <>

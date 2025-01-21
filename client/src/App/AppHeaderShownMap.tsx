@@ -4,21 +4,51 @@ import { experimentContext } from "../Context/ExperimentProvider";
 import { Tooltip, Stack, Typography } from "@mui/material";
 import MapIcon from '@mui/icons-material/Map';
 import PublicIcon from '@mui/icons-material/Public';
+import { ButtonMenu } from "../Utils/ButtonMenu";
+import { IImageStandalone } from "../types/types";
 
 export const AppHeaderShownMap = ({ }) => {
-    const { currTrial } = useContext(experimentContext);
-    const { shownMapName } = currTrial;
+    const {
+        currTrial,
+        setShownMap,
+    } = useContext(experimentContext);
+    const {
+        shownMapName,
+        experiment,
+    } = currTrial;
+
+    const standaloneNames: string[] = experiment?.imageStandalone?.map((x: IImageStandalone) => x.name);
+    const menuItems = standaloneNames.map(name => ({
+        name,
+        action: () => setShownMap(name)
+    }));
+
+    const realMapText = "Real map with embedding";
+    menuItems.push({
+        name: realMapText,
+        action: () => setShownMap(undefined)
+    });
 
     return (
-        <Tooltip title={shownMapName ? "Shown map" : "Real map with embedding"}>
-            <Stack direction={"row"}>
+        <Stack
+            direction={"row"}
+            justifyContent="flex-end"
+            alignItems="center"
+        >
+            <ButtonMenu
+                tooltip={(shownMapName ? "Shown map" : realMapText) + ", click to change"}
+                color={'inherit'}
+                menuItems={menuItems}
+            >
                 {shownMapName ? <MapIcon /> : <PublicIcon />}
-                {shownMapName && (
+            </ButtonMenu>
+            {shownMapName && (
+                <Tooltip title={"Name of the map shown"}>
                     <Typography variant="body1" paddingRight={1}>
                         {shownMapName}
                     </Typography>
-                )}
-            </Stack>
-        </Tooltip>
+                </Tooltip>
+            )}
+        </Stack>
     )
 }
