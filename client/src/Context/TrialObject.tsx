@@ -1,4 +1,4 @@
-import { ITrial } from "../types/types";
+import { IDeviceTypeAndItem, ITrial } from "../types/types";
 import { DeviceObject } from "./DeviceObject";
 
 export class TrialObject {
@@ -19,6 +19,10 @@ export class TrialObject {
     getDevicesOnTrial(): DeviceObject[] {
         // TODO: optimize by setting DeviceObject.indexOnTrial internal member directly
         return (this.getTrialData()?.devicesOnTrial || []).map(d => this.getDevice(d.deviceTypeName, d.deviceItemName));
+    }
+
+    getDevicesByNames(names: IDeviceTypeAndItem[]) {
+        return names.map(n => this.getDevice(n.deviceTypeName, n.deviceItemName));
     }
 
     /**

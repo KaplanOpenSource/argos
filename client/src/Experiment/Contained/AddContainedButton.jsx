@@ -4,46 +4,39 @@ import { useContext } from "react";
 import { experimentContext } from "../../Context/ExperimentProvider";
 import { ContextMenu } from "../../Utils/ContextMenu";
 import { useCurrTrial } from "../../Context/useCurrTrial";
+import { isSameName } from "../../Context/DeviceObject";
 
-export const AddContainedButton = ({ deviceItem, deviceType }) => {
-    const { selection, currTrial } = useContext(experimentContext);
+export const AddContainedButton = ({ deviceItem, deviceType, hasContainedDevices }) => {
+    const { selection, setSelection } = useContext(experimentContext);
     const { trial } = useCurrTrial({});
     const device = trial.getDevice(deviceType.name, deviceItem.name);
 
     const { deviceItemName, deviceTypeName } = selection[0] || {};
     const topSelectedDevice = trial.getDevice(deviceTypeName, deviceItemName);
 
-    const disabled = !currTrial.trial || selection.length === 0 || topSelectedDevice.isSame(device);
-
-    const handleClick = () => {
-        if (!disabled) {
-            if (topSelectedDevice.checkParentIs(device)) {
-                topSelectedDevice.setParent(undefined);
-            } else {
-                topSelectedDevice.setParent(device);
-            }
-        }
-    }
-
-    const tooltip = disabled
-        ? 'Device cannot contain itself, select another device'
-        : (topSelectedDevice.checkParentIs(device)
-            ? 'Remove the top selected device from being contained in this'
-            : 'Add the top selected device to be contained in this');
-
     const removeAll = () => {
         const draft = trial.createDraft();
+        const newSelection = [];
         for (const d of draft.getDevicesOnTrial()) {
             if (d.checkParentIs(device)) {
                 d.setParent(undefined);
+                newSelection.push(d.name());
             }
         }
         trial.setTrialData(draft.getTrialData());
+
+        const oldSelection = [];
+        for (const olds of selection) {
+            if (!newSelection.find(news => isSameName(news, olds))) {
+                oldSelection.push(olds);
+            }
+        }
+
+        setSelection([...newSelection, ...oldSelection])
     };
     const removeAllSelected = () => {
         const draft = trial.createDraft();
-        for (const { deviceTypeName, deviceItemName } of selection) {
-            const s = draft.getDevice(deviceTypeName, deviceItemName);
+        for (const s of draft.getDevicesByNames(selection)) {
             if (s.checkParentIs(device)) {
                 s.setParent(undefined);
             }
@@ -52,36 +45,50 @@ export const AddContainedButton = ({ deviceItem, deviceType }) => {
     };
     const addAllSelected = () => {
         const draft = trial.createDraft();
-        for (const { deviceTypeName, deviceItemName } of selection) {
-            const s = draft.getDevice(deviceTypeName, deviceItemName);
+        for (const s of draft.getDevicesByNames(selection)) {
             s.setParent(device);
         }
         trial.setTrialData(draft.getTrialData());
+        setSelection([]);
     };
 
     const menuItems = [{
-        label: tooltip,
-        callback: handleClick
+        label: 'Add just top selected device to be contained in this',
+        callback: () => topSelectedDevice.setParent(undefined)
+    }, {
+        label: 'Remove just top selected device from being contained in this',
+        callback: () => topSelectedDevice.setParent(device)
     }, {
         label: 'Add all selected devices to be contained in this',
         callback: addAllSelected
     }, {
-        label: 'Remove all selected devices that are also contained in this',
-        callback: removeAllSelected
-    }, {
         label: 'Remove all contained devices',
         callback: removeAll
+    }, {
+        label: 'Remove just selected devices that are also contained in this',
+        callback: removeAllSelected
     }];
+
+    const handleClick = () => {
+        if (hasContainedDevices) {
+            removeAll();
+        } else {
+            addAllSelected()
+        }
+    }
+
+    const tooltip = hasContainedDevices
+        ? 'Remove all contained devices'
+        : 'Add all selected devices to be contained in this';
 
     return (
         <ContextMenu
             menuItems={menuItems}
         >
             <ButtonTooltip
-                disabled={disabled}
                 tooltip={tooltip}
                 onClick={handleClick}
-                color={topSelectedDevice.checkParentIs(device) ? "primary" : ""}
+                color={hasContainedDevices ? "primary" : ""}
             >
                 <MergeType />
             </ButtonTooltip>

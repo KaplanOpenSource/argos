@@ -116,13 +116,6 @@ export const ExperimentProvider = ({ children }) => {
         return count;
     }
 
-    const setLocationsToStackDevices = (latlngs) => {
-        const count = setLocationsToDevices(selection, latlngs);
-        if (count > 0) {
-            setSelection(selection.slice(count));
-        }
-    }
-
     const deleteDevice = ({ experimentName, deviceItemName, deviceTypeName }) => {
         const e = structuredClone(state.experiments.find(e => e.name === experimentName));
         if (!e) {
@@ -212,7 +205,6 @@ export const ExperimentProvider = ({ children }) => {
         selection,
         setSelection,
         setLocationsToDevices,
-        setLocationsToStackDevices,
         setShownMap,
         showImagePlacement: state.showImagePlacement,
         setShowImagePlacement: val => setState(prev => ({ ...prev, showImagePlacement: val })),
