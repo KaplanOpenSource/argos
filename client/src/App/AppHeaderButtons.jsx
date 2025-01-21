@@ -1,6 +1,4 @@
 import CloseIcon from '@mui/icons-material/Close';
-import MapIcon from '@mui/icons-material/Map';
-import PublicIcon from '@mui/icons-material/Public';
 import {
     Stack,
     Tooltip,
@@ -27,6 +25,7 @@ import { ShowConfigToggles } from './ShowConfigToggles';
 import { UploadButton } from '../IO/UploadButton';
 import { useUploadExperiment } from '../IO/UploadExperiment';
 import { DocumentationButton } from '../Doc/DocumentationButton';
+import { AppHeaderShownMap } from './AppHeaderShownMap';
 
 export const AppHeaderButtons = ({
     fullscreen, setFullscreen,
@@ -46,7 +45,7 @@ export const AppHeaderButtons = ({
         addExperiment,
     } = useContext(experimentContext);
     const { uploadExperiment } = useUploadExperiment();
-    const { experimentName, trialTypeName, trialName, shownMapName } = currTrial;
+    const { experimentName, trialTypeName, trialName } = currTrial;
     return (
         <Stack
             direction='row'
@@ -148,19 +147,8 @@ export const AppHeaderButtons = ({
                                     : null}
                             </Typography>
                         </Tooltip>
-                        {shownMapName
-                            ? <Tooltip title={"Shown map"}>
-                                <Stack direction={"row"}>
-                                    <MapIcon />
-                                    <Typography variant="body1" paddingRight={1}>
-                                        {shownMapName}
-                                    </Typography>
-                                </Stack>
-                            </Tooltip>
-                            : <Tooltip title={"Real map with embedding"}>
-                                <PublicIcon />
-                            </Tooltip>
-                        }
+                        <AppHeaderShownMap
+                        />
                         <ButtonTooltip
                             color='inherit'
                             onClick={() => setShowImagePlacement(!showImagePlacement)}
