@@ -16,7 +16,7 @@ import { EnclosingListSelectionProvider } from '../Experiment/EnclosedSelectionP
 import { AppHeaderButtons } from './AppHeaderButtons';
 import { MapDrawExperiment } from '../MapDraw/MapDrawExperiment';
 import { UndoInterceptor } from './UndoInterceptor';
-import { CurrMouseLocation } from '../Context/CurrMouseLocation';
+import { CurrMouseLocation } from '../Context/useCurrMouseLocation';
 
 export function DevicePlanner() {
     const [showEditBox, setShowEditBox] = useState(false);
