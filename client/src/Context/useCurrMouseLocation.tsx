@@ -4,7 +4,7 @@ import {
 import { create } from 'zustand';
 
 type CurrMouseLocationStore = {
-    latlng: { lat: number, lng: number },
+    latlng: { lat: number, lng: number }, // change to ICoordinates
     setLatlng: (lat: number, lng: number) => void,
 };
 

@@ -10,13 +10,11 @@ import { locationToString } from "../../Utils/utils";
 import { useShape } from "../../EditToolBox/ShapeContext";
 import { SELECT_SHAPE } from "../../EditToolBox/utils/constants";
 import { useCurrTrial } from "../../Context/useCurrTrial";
+import { useDeviceSeletion } from "../../Context/useDeviceSeletion";
 
 export const DeviceMarker = ({ deviceOnTrial, setDeviceOnTrial, showDeviceNames }) => {
-    const {
-        selection,
-        setSelection,
-        currTrial,
-    } = useContext(experimentContext);
+    const { selection, setSelection } = useDeviceSeletion();
+    const { currTrial } = useContext(experimentContext);
     const { trial } = useCurrTrial({});
 
     const ref = useRef(null);

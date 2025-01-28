@@ -15,9 +15,11 @@ import { RealMapName } from "../constants/constants";
 import { sum } from "lodash";
 import { Typography } from "@mui/material";
 import { UploadDevicesButton } from "../IO/UploadDevices/UploadDevicesButton";
+import { useDeviceSeletion } from "../Context/useDeviceSeletion";
 
 export const Trial = ({ data, setData, experiment, trialType, children }) => {
-    const { currTrial, setCurrTrial, selection, setShownMap } = useContext(experimentContext);
+    const { selection } = useDeviceSeletion();
+    const { currTrial, setCurrTrial, setShownMap } = useContext(experimentContext);
     const { downloadGeojson, downloadZipCsv } = useTrialGeoJson();
     const { addActionOnMap } = useContext(ActionsOnMapContext);
 

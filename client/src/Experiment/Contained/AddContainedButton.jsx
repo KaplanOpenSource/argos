@@ -1,13 +1,12 @@
 import { MergeType } from "@mui/icons-material"
 import { ButtonTooltip } from "../../Utils/ButtonTooltip"
-import { useContext } from "react";
-import { experimentContext } from "../../Context/ExperimentProvider";
 import { ContextMenu } from "../../Utils/ContextMenu";
 import { useCurrTrial } from "../../Context/useCurrTrial";
 import { isSameName } from "../../Context/DeviceObject";
+import { useDeviceSeletion } from "../../Context/useDeviceSeletion";
 
 export const AddContainedButton = ({ deviceItem, deviceType, hasContainedDevices }) => {
-    const { selection, setSelection } = useContext(experimentContext);
+    const { selection, setSelection } = useDeviceSeletion();
     const { trial } = useCurrTrial({});
     const device = trial.getDevice(deviceType.name, deviceItem.name);
 

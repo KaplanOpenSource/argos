@@ -10,7 +10,6 @@ import { TokenContext } from "../App/TokenContext";
 export const experimentContext = createContext();
 
 export const ExperimentProvider = ({ children }) => {
-    const [selection, setSelection] = useState([]);
     const [state, setState] = useState({
         ...ExperimentUpdatesInitialState,
         currTrial: {},
@@ -202,8 +201,6 @@ export const ExperimentProvider = ({ children }) => {
         setTrialData,
         deleteDevice,
         deleteDeviceType,
-        selection,
-        setSelection,
         setLocationsToDevices,
         setShownMap,
         showImagePlacement: state.showImagePlacement,

@@ -40,6 +40,7 @@ import Rectangle from './ToolsBar/Rectangle.jsx';
 import { experimentContext } from '../Context/ExperimentProvider.jsx';
 import { PlaylistAdd } from '@mui/icons-material';
 import { useCurrTrial } from '../Context/useCurrTrial';
+import { useDeviceSeletion } from '../Context/useDeviceSeletion';
 
 export const EditToolBox = ({
     handleSetOne,
@@ -52,7 +53,8 @@ export const EditToolBox = ({
 }) => {
     const { shape, setShape, shapeData, } = useShape();
 
-    const { selection, setSelection, currTrial } = useContext(experimentContext);
+    const { selection, setSelection } = useDeviceSeletion();
+    const { currTrial } = useContext(experimentContext);
     const { trial } = useCurrTrial({});
 
     const onClickIcon = (id) => {

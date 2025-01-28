@@ -6,12 +6,14 @@ import { useShape } from "../EditToolBox/ShapeContext";
 import { CHOOSE_SHAPE, FREEPOSITIONING_SHAPE, POINT_SHAPE } from "../EditToolBox/utils/constants";
 import { MapContextMenu } from "./MapContextMenu";
 import { useCurrTrial } from "../Context/useCurrTrial";
+import { useDeviceSeletion } from "../Context/useDeviceSeletion";
 
 export const MapPlacer = ({
     markedPoints,
     setMarkedPoints,
 }) => {
-    const { selection, setSelection, currTrial } = useContext(experimentContext);
+    const { selection, setSelection } = useDeviceSeletion();
+    const { currTrial } = useContext(experimentContext);
     const { shape, shapeData } = useShape();
     const { trial } = useCurrTrial({});
 

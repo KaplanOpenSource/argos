@@ -9,9 +9,11 @@ import { SCOPE_TRIAL } from "../Experiment/AttributeType";
 import { SelectDeviceButton } from "../Experiment/SelectDeviceButton";
 import { DeviceItemLocationButton } from "../Experiment/DeviceItemLocationButton";
 import { EnclosingListSelectionContext } from "../Experiment/EnclosedSelectionProvider";
+import { useDeviceSeletion } from "../Context/useDeviceSeletion";
 
 export const DeviceTable = ({ showAttributes }) => {
-    const { selection, currTrial } = useContext(experimentContext);
+    const { selection } = useDeviceSeletion();
+    const { currTrial } = useContext(experimentContext);
 
     const shownDevices = [];
     for (const { deviceTypeName, deviceItemName } of selection || []) {
