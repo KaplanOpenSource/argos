@@ -50,7 +50,7 @@ export const ExperimentProvider = ({ children }) => {
     const setShownMap = (shownMapName) => {
         if (state.currTrial.experimentName) {
             const experiment = state.experiments[state.currTrial.experimentIndex];
-            const shownMapIndex = experiment.imageStandalone.findIndex(t => t.name === shownMapName);
+            const shownMapIndex = (experiment.imageStandalone || []).findIndex(t => t.name === shownMapName);
             if (shownMapIndex >= 0) {
                 replaceUrlParams({ shownMapName });
                 setState(prev => ({
