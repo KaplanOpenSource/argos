@@ -99,7 +99,7 @@ export const SingleDevicePropertiesView = ({ deviceOnTrial, setDeviceOnTrial, ch
                 ? (
                     <>
                         <br />
-                        contained:
+                        contains:
                         <ContainedDevicesList
                             containedDevices={containedDevicesIndices}
                             devicesOnTrial={devicesOnTrial}
