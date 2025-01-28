@@ -2,7 +2,7 @@ import React from 'react';
 import {
     Paper
 } from "@mui/material";
-import { useCurrMouseLocation } from './CurrMouseLocation';
+import { useCurrMouseLocation } from '../Context/CurrMouseLocation';
 
 export const MapCoordinates = ({ showAsLatLong = true }) => {
     const { latlng } = useCurrMouseLocation();
