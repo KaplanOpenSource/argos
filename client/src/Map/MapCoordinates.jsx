@@ -1,17 +1,11 @@
-import React, { useState } from 'react';
-import {
-    useMapEvents,
-} from "react-leaflet";
+import React from 'react';
 import {
     Paper
 } from "@mui/material";
+import { useCurrMouseLocation } from './CurrMouseLocation';
 
 export const MapCoordinates = ({ showAsLatLong = true }) => {
-    const [latlng, setLatlng] = useState({ lat: 0, lng: 0 });
-
-    const mapObj = useMapEvents({
-        mousemove: (e) => setLatlng(e.latlng)
-    });
+    const { latlng } = useCurrMouseLocation();
 
     const round = (num, digits) => {
         const c = 10 ** digits;
@@ -27,7 +21,11 @@ export const MapCoordinates = ({ showAsLatLong = true }) => {
 
     return (
         <Paper style={{ paddingTop: '15px', paddingBottom: '15px', paddingLeft: '5px', paddingRight: '5px', }}>
-            <span>
+            <span style={{
+                fontFamily: 'Helvetica Neue, Arial, Helvetica, sans-serif',
+                fontSize: '12px',
+                lineHeight: '18px',
+            }}>
                 {str}
             </span>
         </Paper>

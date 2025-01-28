@@ -16,6 +16,7 @@ import { EnclosingListSelectionProvider } from '../Experiment/EnclosedSelectionP
 import { AppHeaderButtons } from './AppHeaderButtons';
 import { MapDrawExperiment } from '../MapDraw/MapDrawExperiment';
 import { UndoInterceptor } from './UndoInterceptor';
+import { CurrMouseLocation } from '../Map/CurrMouseLocation';
 
 export function DevicePlanner() {
     const [showEditBox, setShowEditBox] = useState(false);
@@ -79,18 +80,21 @@ export function DevicePlanner() {
                 </EnclosingListSelectionProvider>
                 <ActionsOnMapDoer
                 />
+                <CurrMouseLocation
+                />
 
-                <EditToolBox
-                    // handleSetOne={handleMapClick}
-                    // handleSetMany={handlePutEntities}
-                    markedPoints={markedPoints}
-                    setMarkedPoints={setMarkedPoints}
-                    showEditBox={showEditBox}
-                    setShowEditBox={setShowEditBox}
-                >
-                    <MapCoordinates showAsLatLong={!currTrial.shownMapName} />
-                </EditToolBox>
             </MapShower>
+
+            <EditToolBox
+                // handleSetOne={handleMapClick}
+                // handleSetMany={handlePutEntities}
+                markedPoints={markedPoints}
+                setMarkedPoints={setMarkedPoints}
+                showEditBox={showEditBox}
+                setShowEditBox={setShowEditBox}
+            >
+                <MapCoordinates showAsLatLong={!currTrial.shownMapName} />
+            </EditToolBox>
         </>
     )
 }
