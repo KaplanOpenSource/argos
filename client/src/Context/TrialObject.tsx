@@ -18,7 +18,9 @@ export class TrialObject {
 
     getDevicesOnTrial(): DeviceObject[] {
         // TODO: optimize by setting DeviceObject.indexOnTrial internal member directly
-        return (this.getTrialData()?.devicesOnTrial || []).map(d => this.getDevice(d.deviceTypeName, d.deviceItemName));
+        return (this.getTrialData()?.devicesOnTrial || []).map((d, i) => {
+            return new DeviceObject(d.deviceTypeName, d.deviceItemName, this, i);
+        });
     }
 
     getDevicesByNames(names: IDeviceTypeAndItem[]) {

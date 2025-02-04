@@ -7,12 +7,12 @@ export const isSameName = (one: IDeviceTypeAndItem, two: IDeviceTypeAndItem) => 
 }
 
 export class DeviceObject implements IDeviceTypeAndItem {
-    private indexOnTrial: number = -1;
-
+    
     constructor(
         public deviceTypeName: string,
         public deviceItemName: string,
         public trial: TrialObject,
+        protected indexOnTrial: number = -1,
     ) {
 
     }
