@@ -14,15 +14,16 @@ export const AddContainedButton = ({ deviceItem, deviceType, hasContainedDevices
     const topSelectedDevice = trial.getDevice(deviceTypeName, deviceItemName);
 
     const removeAll = () => {
-        const draft = trial.createDraft();
         const newSelection = [];
-        for (const d of draft.getDevicesOnTrial()) {
-            if (d.checkParentIs(device)) {
-                d.setParent(undefined);
-                newSelection.push(d.name());
+
+        trial.batch(draft => {
+            for (const d of draft.getDevicesOnTrial()) {
+                if (d.checkParentIs(device)) {
+                    d.setParent(undefined);
+                    newSelection.push(d.name());
+                }
             }
-        }
-        trial.setTrialData(draft.getTrialData());
+        });
 
         const oldSelection = [];
         for (const olds of selection) {
@@ -34,20 +35,20 @@ export const AddContainedButton = ({ deviceItem, deviceType, hasContainedDevices
         setSelection([...newSelection, ...oldSelection])
     };
     const removeAllSelected = () => {
-        const draft = trial.createDraft();
-        for (const s of draft.getDevicesByNames(selection)) {
-            if (s.checkParentIs(device)) {
-                s.setParent(undefined);
+        trial.batch(draft => {
+            for (const s of draft.getDevicesByNames(selection)) {
+                if (s.checkParentIs(device)) {
+                    s.setParent(undefined);
+                }
             }
-        }
-        trial.setTrialData(draft.getTrialData());
+        });
     };
     const addAllSelected = () => {
-        const draft = trial.createDraft();
-        for (const s of draft.getDevicesByNames(selection)) {
-            s.setParent(device);
-        }
-        trial.setTrialData(draft.getTrialData());
+        trial.batch(draft => {
+            for (const s of draft.getDevicesByNames(selection)) {
+                s.setParent(device);
+            }
+        });
         setSelection([]);
     };
 

@@ -26,23 +26,7 @@ export class TrialObject {
     }
 
     /**
-     * Draft is needed when updating few devices on one dom update, otherwise updated trial data will be corrupt.  
-     * 
-     * Usage:  
-     * const draft = trial.createDraft();  
-     * draft.getDevice(deviceTypeName1, deviceItemName1).setLocation(...);  
-     * draft.getDevice(deviceTypeName2, deviceItemName2).setLocation(...);  
-     * trial.setTrialData(draft.getTrialData());  
-     * 
-     * @returns deep clone of the trial
-     */
-    createDraft(): TrialObject {
-        let draft = structuredClone(this.getTrialData());
-        return new TrialObject(() => draft, (newTrialData) => draft = newTrialData);
-    }
-
-    /**
-     * Draft is needed when updating few devices on one dom update, otherwise updated trial data will be corrupt.  
+     * When updating multiple devices together, to avoid trial data corruption, the trial data should be submitted together.
      * @param trialMutation function that accepts a copy of the trial for multiple mutations that will be submitted together
      * @returns this
      */
