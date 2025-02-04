@@ -46,7 +46,7 @@ export const DeviceItemLocationButton = ({
     const { trial } = useCurrTrial({});
     const device = trial.getDevice(deviceType.name, deviceItem.name);
 
-    const {tooltip, icon} = locationIconTooltip(device, currTrial?.shownMapName || RealMapName);
+    const { tooltip, icon } = locationIconTooltip(device, currTrial?.shownMapName || RealMapName);
 
     const removeLocation = () => {
         device.setLocation(undefined);
@@ -63,12 +63,12 @@ export const DeviceItemLocationButton = ({
         menuItems.push({
             label: 'Remove locations to all devices in list',
             callback: () => {
-                const draft = trial.createDraft();
-                for (const { deviceTypeName, deviceItemName } of surroundingDevices) {
-                    const dev = draft.getDevice(deviceTypeName, deviceItemName);
-                    dev.setLocation(undefined);
-                }
-                trial.setTrialData(draft.getTrialData());
+                trial.batch(draft => {
+                    for (const { deviceTypeName, deviceItemName } of surroundingDevices) {
+                        const dev = draft.getDevice(deviceTypeName, deviceItemName);
+                        dev.setLocation(undefined);
+                    }
+                });
             }
         })
     }
@@ -80,7 +80,7 @@ export const DeviceItemLocationButton = ({
                     <ButtonTooltip
                         tooltip={tooltip}
                         onClick={removeLocation}
-                        // disabled={!hasLocation}
+                    // disabled={!hasLocation}
                     >
                         {icon}
                     </ButtonTooltip>

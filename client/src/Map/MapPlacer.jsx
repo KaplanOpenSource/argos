@@ -34,12 +34,12 @@ export const MapPlacer = ({
                 }
             } else if (shape === POINT_SHAPE) {
                 if (selection.length > 0) {
-                    const draft = trial.createDraft();
-                    for (const s of selection) {
-                        const dev = draft.getDevice(s.deviceTypeName, s.deviceItemName);
-                        dev.setLocationOnMap(latlng, currTrial.shownMapName);
-                    }
-                    trial.setTrialData(draft.getTrialData());
+                    trial.batch(draft => {
+                        for (const s of selection) {
+                            const dev = draft.getDevice(s.deviceTypeName, s.deviceItemName);
+                            dev.setLocationOnMap(latlng, currTrial.shownMapName);
+                        }
+                    });
                     setSelection([]);
                 }
             } else if (shape === CHOOSE_SHAPE) {

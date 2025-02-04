@@ -41,9 +41,18 @@ export class TrialObject {
         return new TrialObject(() => draft, (newTrialData) => draft = newTrialData);
     }
 
-    batch(func: (draft: TrialObject) => void): TrialObject {
-        let draft = this.createDraft();
-        func(draft);
+    /**
+     * Draft is needed when updating few devices on one dom update, otherwise updated trial data will be corrupt.  
+     * @param trialMutation function that accepts a copy of the trial for multiple mutations that will be submitted together
+     * @returns this
+     */
+    batch(trialMutation: (draft: TrialObject) => void): TrialObject {
+        let draftData = structuredClone(this.getTrialData());
+        const draft = new TrialObject(
+            () => draftData,
+            (newTrialData) => draftData = newTrialData
+        );
+        trialMutation(draft);
         this.setTrialData(draft.getTrialData());
         return this;
     }

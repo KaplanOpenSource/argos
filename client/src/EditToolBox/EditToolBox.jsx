@@ -71,13 +71,13 @@ export const EditToolBox = ({
         if (selection.length > 0) {
             const positions = shapeData.toPositions(markedPoints, selection.length);
 
-            const draft = trial.createDraft();
-            let i = 0;
-            for (const s of selection) {
-                const dev = draft.getDevice(s.deviceTypeName, s.deviceItemName);
-                dev.setLocationOnMap(positions[i++], currTrial.shownMapName);
-            }
-            trial.setTrialData(draft.getTrialData());
+            trial.batch((draft) => {
+                let i = 0;
+                for (const s of selection) {
+                    const dev = draft.getDevice(s.deviceTypeName, s.deviceItemName);
+                    dev.setLocationOnMap(positions[i++], currTrial.shownMapName);
+                }
+            });
             setSelection([]);
         }
 
