@@ -58,17 +58,19 @@ export class DeviceObject implements IDeviceTypeAndItem {
         this.trial.setTrialData(trialData);
     }
 
-    getLocation(): ILocation | undefined {
-        const parent = this.getParent();
-        if (parent) {
-            return parent.getLocation();
-        } else {
-            return this.onTrial()?.location;
+    getLocation(recursiveParents: boolean = true): ILocation | undefined {
+        const loc = this.onTrial()?.location;
+        if (!loc && recursiveParents) {
+            const parent = this.getParent();
+            if (parent) {
+                return parent.getLocation();
+            }
         }
+        return loc;
     }
 
-    hasLocation(): boolean {
-        return this.getLocation()?.coordinates !== undefined;
+    hasLocation(recursiveParents: boolean = true): boolean {
+        return this.getLocation(recursiveParents)?.coordinates !== undefined;
     }
 
     hasLocationOnMap(checkMapName: string | undefined = undefined): boolean {
