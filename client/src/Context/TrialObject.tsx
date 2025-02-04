@@ -40,4 +40,11 @@ export class TrialObject {
         let draft = structuredClone(this.getTrialData());
         return new TrialObject(() => draft, (newTrialData) => draft = newTrialData);
     }
+
+    batch(func: (draft: TrialObject) => void): TrialObject {
+        let draft = this.createDraft();
+        func(draft);
+        this.setTrialData(draft.getTrialData());
+        return this;
+    }
 }

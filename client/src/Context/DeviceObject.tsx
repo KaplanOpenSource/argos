@@ -81,7 +81,13 @@ export class DeviceObject implements IDeviceTypeAndItem {
 
     setLocation(location: ILocation | undefined) {
         if (!location) {
-            this.setOnTrial(undefined);
+            this.trial.batch((draft) => {
+                const self = draft.getDevice(this.deviceTypeName, this.deviceItemName);
+                for (const c of self.getAllDescendants()) {
+                    c.setOnTrial(undefined);
+                }
+                self.setOnTrial(undefined);
+            });
         } else {
             const dev = this.onTrial();
             if (!dev) {
@@ -147,5 +153,19 @@ export class DeviceObject implements IDeviceTypeAndItem {
             return undefined;
         }
         return new DeviceObject(containedIn.deviceTypeName, containedIn.deviceItemName, this.trial);
+    }
+
+    getDirectChildren(): DeviceObject[] {
+        const devicesOnTrial = this.trial.getDevicesOnTrial();
+        const children = devicesOnTrial.filter(d => d.checkParentIs(this));
+        return children;
+    }
+
+    getAllDescendants(): DeviceObject[] {
+        const ret = this.getDirectChildren();
+        for (let i = 0; i < ret.length; ++i) {
+            ret.push(...ret[i].getDirectChildren());
+        }
+        return ret;
     }
 }
