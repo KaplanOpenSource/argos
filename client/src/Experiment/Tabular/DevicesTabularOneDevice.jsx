@@ -46,10 +46,7 @@ export const DevicesTabularOneDevice = ({ deviceType, setDeviceType }) => {
                     <TableRow
                         key={deviceItem.trackUuid}
                     >
-                        <TableCell component="th" scope="row" key={':tt'}>
-                            {deviceType.name}
-                        </TableCell>
-                        <TableCell key={':tr'}>
+                        <TableCell key={':tr'} sx={{paddingRight: 0}}>
                             {deviceItem.name}
                         </TableCell>
                         <TableCell key={':tlat'}>
