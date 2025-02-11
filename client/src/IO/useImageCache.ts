@@ -17,31 +17,28 @@ export const useImageCache = create<CacheState>()((set, get) => ({
     cache: {},
     addCachedImage: (experimentName, imageName, data) => {
         const now = Date.now();
-        const cleanedCache = Object.fromEntries(
-            Object.entries(get().cache).filter(([key, value]) => {
-                const isRecent = value.lastAccessed > now - ONE_HOUR_AGO;
-                return isRecent;
-            })
-        );
-        set({
-            cache: {
-                ...cleanedCache,
-                [imageKey(experimentName, imageName)]: { data, lastAccessed: now },
-            },
-        });
+        const cache = {};
+        for (const [k, v] of Object.entries(get().cache)) {
+            if (v.lastAccessed > now - ONE_HOUR_AGO) {
+                cache[k] = v;
+            }
+        }
+
+        const key = imageKey(experimentName, imageName);
+        cache[key] = { data, lastAccessed: now };
+
+        set({ cache });
     },
     getCachedImage: (experimentName, imageName) => {
-        const cache = get().cache;
+        const origCache = get().cache;
         const key = imageKey(experimentName, imageName);
-        if (cache[key]) {
-            set({
-                cache: {
-                    ...cache,
-                    [key]: { ...cache[key], lastAccessed: Date.now() },
-                },
-            });
+        const entry = origCache[key];
+        if (entry) {
+            const cache = { ...origCache };
+            cache[key] = { ...entry, lastAccessed: Date.now() };
+            set({ cache });
         }
-        return cache[key]?.data;
+        return entry?.data;
     },
 }));
 
