@@ -3,7 +3,6 @@ import { TreeRow } from "../App/TreeRow";
 import { TreeSublist } from "../App/TreeSublist";
 import { DateProperty } from "../Property/DateProperty";
 import { Stack } from "@mui/material";
-import DownloadIcon from '@mui/icons-material/Download';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PublicIcon from '@mui/icons-material/Public';
 import { changeByName } from "../Utils/utils";
@@ -14,13 +13,12 @@ import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { DeviceTypesList } from "./DeviceTypesList";
 import { TrialTypesList } from "./TrialTypesList";
-import { useUploadExperiment } from "../IO/UploadExperiment";
 import { ShapeList } from "./ShapeList";
 import { useShownMap } from "../Context/useShownMap";
+import { DownloadExperimentButton } from "../IO/DownloadExperimentButton";
 
 export const ExperimentRow = ({ data, setData, children }) => {
     const { deleteExperiment, currTrial } = useContext(experimentContext);
-    const { downloadExperimentAsZip } = useUploadExperiment();
     const { switchToMap } = useShownMap({});
     return (
         <TreeRow
@@ -48,12 +46,9 @@ export const ExperimentRow = ({ data, setData, children }) => {
                         setData={val => setData({ ...data, endDate: val })}
                         label="End Date"
                     />
-                    <ButtonTooltip
-                        tooltip={"Download experiment"}
-                        onClick={() => downloadExperimentAsZip(data)}
-                    >
-                        <DownloadIcon />
-                    </ButtonTooltip>
+                    <DownloadExperimentButton
+                        experiment={data}
+                    />
                     <ButtonTooltip
                         tooltip={"Delete experiment"}
                         onClick={() => deleteExperiment(data.name)}
