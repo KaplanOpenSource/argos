@@ -1,11 +1,13 @@
 import { useCallback, useContext } from "react";
 import { experimentContext } from "../Context/ExperimentProvider";
-import { useUploadImage } from "./UploadImage";
+import { useUploadImage } from "./useUploadImage";
 import { createNewName } from "../Utils/utils";
+import { useDownloadImage } from "./useDownloadImage";
 
 export const useCloneExperiment = () => {
     const { experiments, addExperiment } = useContext(experimentContext);
-    const { uploadImage, downloadImageAsBlob } = useUploadImage();
+    const { uploadImage } = useUploadImage();
+    const { downloadImageAsBlob } = useDownloadImage();
 
     const cloneExperiment = useCallback(async (experiment) => {
         const name = createNewName(experiments, experiment.name + " cloned");

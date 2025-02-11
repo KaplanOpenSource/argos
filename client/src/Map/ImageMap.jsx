@@ -1,9 +1,9 @@
 import { ImageOverlay } from "react-leaflet"
 import { useEffect, useState } from "react";
-import { useUploadImage } from "../IO/UploadImage";
+import { useDownloadImage } from "../IO/useDownloadImage";
 
 export const ImageMap = ({ experiment, image }) => {
-    const { downloadImageAsUrl } = useUploadImage();
+    const { downloadImageAsUrl } = useDownloadImage();
     const [src, setSrc] = useState();
     useEffect(() => {
         (async () => {

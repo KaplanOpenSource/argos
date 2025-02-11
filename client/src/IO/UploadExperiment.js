@@ -1,5 +1,5 @@
 import JSZip from "jszip";
-import { useUploadImage } from "./UploadImage";
+import { useUploadImage } from "./useUploadImage";
 import { ConvertExperiment } from "./ConvertExperiment";
 import { argosJsonVersion } from "../constants/constants";
 import { createNewName } from "../Utils/utils";
@@ -9,10 +9,12 @@ import { cleanUuids } from "../Context/TrackUuidUtils";
 import { shapesToGeoJSON } from "./ShapesToGeoJson";
 import { saveAs } from 'file-saver';
 import { ReadFileAsText } from "./FileIo";
+import { useDownloadImage } from "./useDownloadImage";
 
 export const useUploadExperiment = () => {
     const { experiments, addExperiment } = useContext(experimentContext);
-    const { uploadImage, downloadImageAsBlob } = useUploadImage();
+    const { uploadImage } = useUploadImage();
+    const { downloadImageAsBlob } = useDownloadImage();
 
     const uploadExperiment = useCallback(async (file) => {
         try {

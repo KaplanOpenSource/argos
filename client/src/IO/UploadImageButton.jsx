@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import HourglassBottomIcon from '@mui/icons-material/HourglassBottom';
-import { useUploadImage } from "./UploadImage";
+import { useUploadImage } from "./useUploadImage";
 import { ButtonFile } from "../Utils/ButtonFile";
 
 export const UploadImageButton = ({ onChangeFile, imageName, experimentName }) => {

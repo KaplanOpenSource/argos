@@ -1,9 +1,9 @@
 import { Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useUploadImage } from "./UploadImage";
+import { useDownloadImage } from "./useDownloadImage";
 
 export const ImageOnServer = ({ data, experiment, maxWidth = 500, maxHeight = 500, showSize = true, ...restProps }) => {
-    const { downloadImageAsUrl } = useUploadImage();
+    const { downloadImageAsUrl } = useDownloadImage();
     const [src, setSrc] = useState();
 
 
