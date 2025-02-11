@@ -13,12 +13,13 @@ import { MARKER_DEFAULT_ICON } from "../Experiment/IconPicker";
 import html2canvas from 'html2canvas';
 import { isEqual } from "lodash";
 
-const IconToBlob = ({ iconName, obtainBlob }) => {
+const IconToBlob = ({ iconName, obtainIcon }) => {
+    const divRef = useRef(null);
     const iconRef = useRef(null);
     useEffect(() => {
         (async () => {
-            if (iconRef?.current) {
-                const canvas = await html2canvas(iconRef.current, { logging: false });
+            if (divRef?.current && iconRef?.current) {
+                const canvas = await html2canvas(divRef.current, { logging: false });
                 const dataURL = canvas.toDataURL('image/png')
                 const binaryData = atob(dataURL.split(',')[1])
                 const arrayBuffer = new ArrayBuffer(binaryData.length)
@@ -26,18 +27,21 @@ const IconToBlob = ({ iconName, obtainBlob }) => {
                 for (let i = 0; i < binaryData.length; i++) {
                     uint8Array[i] = binaryData.charCodeAt(i)
                 }
-                const blob = new Blob([uint8Array], { type: 'image/png' });
-                obtainBlob(blob);
+                const imageBlob = new Blob([uint8Array], { type: 'image/png' });
+
+                const svgString = iconRef.current.outerHTML;
+                obtainIcon({ imageBlob, svgString });
             }
         })();
-    }, [iconName, iconRef?.current]);
+    }, [iconName, divRef?.current, iconRef?.current]);
 
     return (
         <div
-            ref={iconRef}
+            ref={divRef}
         >
             <FontAwesomeIcon
                 icon={iconName ? fa_all['fa' + iconName] : MARKER_DEFAULT_ICON}
+                ref={iconRef}
             />
         </div>
     )
@@ -64,9 +68,9 @@ export const DownloadExperimentButton = ({ experiment }) => {
             }
         }
 
-        for (const [iconName, iconBlob] of Object.entries(iconBlobs)) {
-            const filename = `icons/${iconName}.png`;
-            zip.file(filename, iconBlob, { binary: true });
+        for (const [iconName, { imageBlob, svgString }] of Object.entries(iconBlobs)) {
+            zip.file(`icons/${iconName}.png`, imageBlob, { binary: true });
+            zip.file(`icons/${iconName}.svg`, svgString);
         }
 
         if (experiment.shapes) {
@@ -114,7 +118,9 @@ export const DownloadExperimentButton = ({ experiment }) => {
                         <IconToBlob
                             key={name}
                             iconName={name}
-                            obtainBlob={(blob) => setIconBlobs(prev => ({ ...prev, [name]: blob }))}
+                            obtainIcon={({ imageBlob, svgString }) => {
+                                setIconBlobs(prev => ({ ...prev, [name]: { imageBlob, svgString } }));
+                            }}
                         />
                     ))}
                 </Box>
