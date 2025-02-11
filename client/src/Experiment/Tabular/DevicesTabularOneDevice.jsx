@@ -1,9 +1,10 @@
-import { TableCell, TableRow } from "@mui/material";
+import { Stack, TableCell, TableRow, Typography } from "@mui/material";
 import { DevicesTabularOneAttr } from "./DevicesTabularOneAttr";
 import { useContext } from "react";
 import { experimentContext } from "../../Context/ExperimentProvider";
 import { TextFieldDebounceOutlined } from "../../Utils/TextFieldDebounce";
 import { useCurrTrial } from "../../Context/useCurrTrial";
+import { SelectDeviceButton } from "../SelectDeviceButton";
 
 const NumberCoordField = ({ value, setValue, label }) => {
     return (
@@ -25,11 +26,16 @@ export const DevicesTabularOneDevice = ({ deviceType, setDeviceType }) => {
     const { currTrial } = useContext(experimentContext);
     const { trial } = useCurrTrial({});
 
+    const devices = deviceType?.devices || [];
     const devicesOnTrial = currTrial?.trial?.devicesOnTrial;
+
+    const devicesEnclosingList = devices.map(deviceItem => {
+        return { deviceTypeName: deviceType.name, deviceItemName: deviceItem.name, deviceType, deviceItem };
+    });
 
     return (
         <>
-            {deviceType?.devices?.map((deviceItem, itr) => {
+            {devices.map((deviceItem, itr) => {
                 const device = trial.getDevice(deviceType.name, deviceItem.name);
 
                 const setDeviceItem = (val) => {
@@ -37,7 +43,7 @@ export const DevicesTabularOneDevice = ({ deviceType, setDeviceType }) => {
                     t.devices[itr] = val;
                     setDeviceType(t);
                 }
-                
+
                 const deviceOnTrial = devicesOnTrial?.find(t => {
                     return t.deviceItemName === deviceItem.name && t.deviceTypeName === deviceType.name;
                 });
@@ -46,8 +52,17 @@ export const DevicesTabularOneDevice = ({ deviceType, setDeviceType }) => {
                     <TableRow
                         key={deviceItem.trackUuid}
                     >
-                        <TableCell key={':tr'} sx={{paddingRight: 0}}>
-                            {deviceItem.name}
+                        <TableCell key={':tr'} sx={{ paddingY: 0, marginY: 0 }}>
+                            <Stack direction={'row'} sx={{ padding: 0, margin: 0, alignItems: 'center' }}>
+                                <SelectDeviceButton
+                                    deviceItem={deviceItem}
+                                    deviceType={deviceType}
+                                    devicesEnclosingList={devicesEnclosingList}
+                                />
+                                <Typography>
+                                    {deviceItem.name}
+                                </Typography>
+                            </Stack>
                         </TableCell>
                         <TableCell key={':tlat'}>
                             {deviceOnTrial?.location?.coordinates?.length === 2

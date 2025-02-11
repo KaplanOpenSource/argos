@@ -1,6 +1,4 @@
-import { Stack, TableBody, TableCell, TableHead, TableRow, Tooltip } from "@mui/material"
-import { AttributeItemOne } from "../AttributeItemList";
-import { SCOPE_EXPERIMENT } from "../AttributeType";
+import { TableBody, TableCell, TableHead, TableRow, Tooltip } from "@mui/material"
 import { AttributeTypesDialogButton } from "../AttributeTypesDialogButton";
 import { ButtonTooltip } from "../../Utils/ButtonTooltip";
 import { createNewName } from "../../Utils/utils";
