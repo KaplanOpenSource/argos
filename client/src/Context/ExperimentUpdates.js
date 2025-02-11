@@ -3,7 +3,7 @@ import { createNewName } from "../Utils/utils";
 import { argosJsonVersion } from '../constants/constants';
 import { assignUuids, cleanUuids } from './TrackUuidUtils';
 import { useContext, useEffect } from 'react';
-import { TokenContext } from '../App/TokenContext';
+import { useTokenStore } from '../App/TokenContext';
 import { useFetchExperiments } from './FetchExperiment';
 import { jsonApplyItem, jsonCompare } from '../Utils/JsonPatch';
 
@@ -15,7 +15,7 @@ export const ExperimentUpdatesInitialState = {
 }
 
 export const useExperimentUpdates = (state, setState) => {
-    const { hasToken } = useContext(TokenContext);
+    const { hasToken } = useTokenStore();
     const { saveExperimentWithData } = useFetchExperiments();
 
     const sendUpdate = (experimentName, experimentNewData, experimentPrevData) => {
@@ -131,7 +131,7 @@ export const useExperimentUpdates = (state, setState) => {
     }
 
     useEffect(() => {
-        if (hasToken) {
+        if (hasToken()) {
             if (state.serverUpdates.length > 0) {
                 (async () => {
                     const updates = state.serverUpdates;
@@ -145,7 +145,7 @@ export const useExperimentUpdates = (state, setState) => {
                 })();
             }
         }
-    }, [hasToken, state.serverUpdates]);
+    }, [hasToken(), state.serverUpdates]);
 
     return {
         deleteExperiment,

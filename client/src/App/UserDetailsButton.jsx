@@ -2,7 +2,7 @@ import { Button, Dialog, DialogTitle, Slide, Stack, TextField } from "@mui/mater
 import { ButtonTooltip } from "../Utils/ButtonTooltip"
 import MenuIcon from '@mui/icons-material/Menu';
 import { forwardRef, useContext, useEffect, useState } from "react";
-import { TokenContext } from "./TokenContext";
+import { useTokenStore } from "./TokenContext";
 
 const Transition = forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -10,13 +10,13 @@ const Transition = forwardRef(function Transition(props, ref) {
 
 export const UserDetailsButton = ({ }) => {
     const [open, setOpen] = useState(false);
-    const { hasToken } = useContext(TokenContext);
+    const { hasToken } = useTokenStore();
 
     useEffect(() => {
-        if (!hasToken && !open) {
+        if (!hasToken() && !open) {
             setOpen(true);
         }
-    }, [hasToken, open]);
+    }, [hasToken(), open]);
 
     return (
         <>
@@ -36,7 +36,7 @@ export const UserDetailsButton = ({ }) => {
 }
 
 const UserDetailsDialog = ({ open, setOpen }) => {
-    const { hasToken, doLogin, doLogout, baseUrl, setBaseUrl } = useContext(TokenContext);
+    const { hasToken, doLogin, doLogout, baseUrl, setBaseUrl } = useTokenStore();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [inputElement, setInputElement] = useState();
@@ -71,7 +71,7 @@ const UserDetailsDialog = ({ open, setOpen }) => {
                     inputRef={input => {
                         setInputElement(input)
                     }}
-                    disabled={hasToken}
+                    disabled={hasToken()}
                     onKeyDown={onKeyDown}
                 />
                 <TextField
@@ -82,15 +82,15 @@ const UserDetailsDialog = ({ open, setOpen }) => {
                     sx={{ marginTop: 1 }}
                     value={password}
                     onChange={e => setPassword(e.target.value)}
-                    disabled={hasToken}
+                    disabled={hasToken()}
                 />
             </Stack>
             <Stack direction='row' spacing={1} sx={{ margin: 1 }} justifyContent={'center'}>
                 <Button variant="contained"
-                    disabled={username === '' || password === '' || hasToken}
+                    disabled={username === '' || password === '' || hasToken()}
                     onClick={async () => {
                         await doLogin(username, password);
-                        if (hasToken) {
+                        if (hasToken()) {
                             setUsername("");
                             setPassword("");
                             setOpen(false);
@@ -102,10 +102,10 @@ const UserDetailsDialog = ({ open, setOpen }) => {
             </Stack>
             <Stack direction='row' spacing={1} sx={{ margin: 1 }} justifyContent={'center'}>
                 <Button variant="contained"
-                    disabled={!hasToken}
+                    disabled={!hasToken()}
                     onClick={async () => {
                         await doLogout();
-                        if (!hasToken) {
+                        if (!hasToken()) {
                             setUsername("");
                             setPassword("");
                             setOpen(false);

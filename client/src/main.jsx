@@ -11,7 +11,6 @@ import { ExperimentProvider } from './Context/ExperimentProvider';
 import { ActionsOnMapProvider } from './Map/ActionsOnMapContext';
 import { ShapeProvider } from './EditToolBox/ShapeContext';
 import { consoleErrorUniqueKeyFix } from './Utils/consoleErrorUniqueKeyFix';
-import { TokenProvider } from './App/TokenContext';
 import { ExperimentTreeNodesExpandedProvider } from './Experiment/ExperimentTreeNodesExpandedProvider';
 
 // consoleErrorUniqueKeyFix();
@@ -19,17 +18,15 @@ import { ExperimentTreeNodesExpandedProvider } from './Experiment/ExperimentTree
 ReactDOM.createRoot(document.getElementById('root')).render(
     <LocalizationProvider dateAdapter={AdapterDayjs}>
         <React.StrictMode>
-            <TokenProvider>
-                <ExperimentTreeNodesExpandedProvider>
-                    <ExperimentProvider>
-                        <ActionsOnMapProvider>
-                            <ShapeProvider>
-                                <App />
-                            </ShapeProvider>
-                        </ActionsOnMapProvider>
-                    </ExperimentProvider>
-                </ExperimentTreeNodesExpandedProvider>
-            </TokenProvider>
+            <ExperimentTreeNodesExpandedProvider>
+                <ExperimentProvider>
+                    <ActionsOnMapProvider>
+                        <ShapeProvider>
+                            <App />
+                        </ShapeProvider>
+                    </ActionsOnMapProvider>
+                </ExperimentProvider>
+            </ExperimentTreeNodesExpandedProvider>
         </React.StrictMode>
     </LocalizationProvider>
 )

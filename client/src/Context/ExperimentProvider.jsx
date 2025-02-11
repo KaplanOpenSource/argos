@@ -5,7 +5,7 @@ import { RealMapName } from "../constants/constants";
 import { ExperimentUpdatesInitialState, useExperimentUpdates } from "./ExperimentUpdates";
 import { TrialChoosing } from "./TrialChoosing";
 import { assignUuids } from "./TrackUuidUtils";
-import { TokenContext } from "../App/TokenContext";
+import { useTokenStore } from "../App/TokenContext";
 
 export const experimentContext = createContext();
 
@@ -25,7 +25,7 @@ export const ExperimentProvider = ({ children }) => {
         redoOperation,
     } = useExperimentUpdates(state, setState);
 
-    const { hasToken } = useContext(TokenContext);
+    const { hasToken } = useTokenStore();
     const { fetchAllExperiments } = useFetchExperiments();
 
     const trialChoosing = new TrialChoosing(state, setState);
@@ -154,7 +154,7 @@ export const ExperimentProvider = ({ children }) => {
 
     useEffect(() => {
         (async () => {
-            if (hasToken) {
+            if (hasToken()) {
                 const { experimentName, trialTypeName, trialName } = parseUrlParams();
                 const allExperiments = await fetchAllExperiments();
                 assignUuids(allExperiments);
@@ -167,7 +167,7 @@ export const ExperimentProvider = ({ children }) => {
                 }));
             }
         })()
-    }, [hasToken])
+    }, [hasToken()])
 
     useEffect(() => {
         if (currTrial?.experimentName) {
