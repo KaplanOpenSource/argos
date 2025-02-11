@@ -9,7 +9,7 @@ import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
 const PAGE_ROWS = 12;
 const PAGE_COLS = 12;
 const PAGE_LEN = PAGE_COLS * PAGE_ROWS;
-const MARKER_DEFAULT_ICON = fa_all.faMapMarkerAlt;
+export const MARKER_DEFAULT_ICON = fa_all.faMapMarkerAlt;
 
 export const IconDeviceByName = ({ iconName, ...props }) => {
     return <FontAwesomeIcon
