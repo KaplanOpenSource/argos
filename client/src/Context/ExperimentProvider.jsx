@@ -1,11 +1,11 @@
-import { createContext, useContext, useEffect, useState } from "react"
-import { parseUrlParams, replaceUrlParams } from "../Utils/utils";
-import { useFetchExperiments } from "./FetchExperiment";
+import { createContext, useEffect, useState } from "react";
 import { RealMapName } from "../constants/constants";
+import { parseUrlParams, replaceUrlParams } from "../Utils/utils";
 import { ExperimentUpdatesInitialState, useExperimentUpdates } from "./ExperimentUpdates";
-import { TrialChoosing } from "./TrialChoosing";
+import { useFetchExperiments } from "./FetchExperiment";
 import { assignUuids } from "./TrackUuidUtils";
-import { useTokenStore } from "../App/TokenContext";
+import { TrialChoosing } from "./TrialChoosing";
+    import { useTokenStore } from "./useTokenStore";
 
 export const experimentContext = createContext();
 

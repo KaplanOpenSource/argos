@@ -3,7 +3,7 @@ import { createNewName } from "../Utils/utils";
 import { argosJsonVersion } from '../constants/constants';
 import { assignUuids, cleanUuids } from './TrackUuidUtils';
 import { useContext, useEffect } from 'react';
-import { useTokenStore } from '../App/TokenContext';
+import { useTokenStore } from './useTokenStore';
 import { useFetchExperiments } from './FetchExperiment';
 import { jsonApplyItem, jsonCompare } from '../Utils/JsonPatch';
 

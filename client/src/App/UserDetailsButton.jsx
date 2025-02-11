@@ -2,7 +2,7 @@ import { Button, Dialog, DialogTitle, Slide, Stack, TextField } from "@mui/mater
 import { ButtonTooltip } from "../Utils/ButtonTooltip"
 import MenuIcon from '@mui/icons-material/Menu';
 import { forwardRef, useContext, useEffect, useState } from "react";
-import { useTokenStore } from "./TokenContext";
+import { useTokenStore } from "../Context/useTokenStore";
 
 const Transition = forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;

@@ -1,5 +1,5 @@
 import { useCallback, useContext } from "react";
-import { useTokenStore } from "../App/TokenContext";
+import { useTokenStore } from "../Context/useTokenStore";
 
 export const useUploadImage = () => {
     const { hasToken, axiosToken } = useTokenStore();

@@ -1,5 +1,5 @@
 import { useCallback, useContext } from "react";
-import { useTokenStore } from "../App/TokenContext";
+import { useTokenStore } from "./useTokenStore";
 
 export const useFetchExperiments = () => {
     const { axiosToken } = useTokenStore();
