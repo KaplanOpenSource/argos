@@ -1,12 +1,12 @@
-import { useCallback, useContext } from "react";
+import { useCallback } from "react";
 import { useTokenStore } from "./useTokenStore";
 
 export const useFetchExperiments = () => {
-    const { axiosToken } = useTokenStore();
+    const { axiosSecure } = useTokenStore();
 
     const saveExperimentWithData = useCallback(async (name, data) => {
         try {
-            const json = await axiosToken().post("experiment_set/" + name, data);
+            const json = await axiosSecure().post("experiment_set/" + name, data);
             if ((json || {}).error) {
                 alert('save error: ' + json.error);
                 return false;
@@ -16,11 +16,11 @@ export const useFetchExperiments = () => {
             return false;
         }
         return true;
-    }, [axiosToken]);
+    }, [axiosSecure]);
 
     const fetchAllExperiments = useCallback(async () => {
         try {
-            const json = await axiosToken().get("experiment_list");
+            const json = await axiosSecure().get("experiment_list");
             if (!json || (json || {}).error) {
                 alert(!json ? 'You are logged out' : 'Fetch experiments error ' + (json?.error || ''));
                 return;
@@ -32,7 +32,7 @@ export const useFetchExperiments = () => {
             const errors = [];
             for (const name of (json.data || [])) {
                 const url = "experiment/" + name.replaceAll(' ', '%20');
-                const json = await axiosToken().get(url);
+                const json = await axiosSecure().get(url);
                 if ((json || {}).error) {
                     errors.push('fetch ' + name + ': ' + json.error);
                     continue;
@@ -54,7 +54,7 @@ export const useFetchExperiments = () => {
             alert('fetch crush: ' + e);
         }
         return;
-    }, [axiosToken]);
+    }, [axiosSecure]);
 
     return {
         fetchAllExperiments,

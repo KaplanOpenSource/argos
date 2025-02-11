@@ -1,11 +1,11 @@
-import { useCallback, useContext } from "react";
+import { useCallback } from "react";
 import { useTokenStore } from "../Context/useTokenStore";
 
 export const useUploadImage = () => {
-    const { hasToken, axiosToken } = useTokenStore();
+    const { isLoggedIn, axiosSecure } = useTokenStore();
 
     const uploadImage = useCallback(async (fileBlob, imageName, experimentName, blobFilenameOptional) => {
-        if (!hasToken()) {
+        if (!isLoggedIn()) {
             alert('not logged in');
             return;
         }
@@ -31,7 +31,7 @@ export const useUploadImage = () => {
         formData.append('fileData', dataURL);
         formData.append('imageName', imageName);
         formData.append('experimentName', experimentName);
-        const ret = await axiosToken().post("upload", formData, {
+        const ret = await axiosSecure().post("upload", formData, {
             headers: { "Content-Type": "multipart/form-data" },
         });
         console.log('uploaded:', ret);
@@ -42,7 +42,7 @@ export const useUploadImage = () => {
         }
 
         return { filename: ret.data.filename, height, width };
-    }, [axiosToken]);
+    }, [axiosSecure]);
 
     const getImageSize = async (imageFile) => {
         return new Promise(resolve => {
@@ -62,24 +62,24 @@ export const useUploadImage = () => {
     }
 
     const downloadImageAsUrl = useCallback(async (experimentName, dataFilename) => {
-        if (!hasToken()) {
+        if (!isLoggedIn()) {
             return undefined;
         }
         const url = "uploads/" + experimentName + "/" + dataFilename;
-        const resp = await axiosToken().get(url, { responseType: "arraybuffer" });
+        const resp = await axiosSecure().get(url, { responseType: "arraybuffer" });
         const converted = new Uint8Array(resp.data).reduce((data, byte) => data + String.fromCharCode(byte), '');
         const base64 = `data:image/png;base64, ` + btoa(converted);
         return base64;
-    }, [axiosToken]);
+    }, [axiosSecure]);
 
     const downloadImageAsBlob = useCallback(async (experimentName, dataFilename) => {
-        if (!hasToken()) {
+        if (!isLoggedIn()) {
             return undefined;
         }
         const url = "uploads/" + experimentName + "/" + dataFilename;
-        const resp = await axiosToken().get(url, { responseType: "blob" });
+        const resp = await axiosSecure().get(url, { responseType: "blob" });
         return resp.data;
-    }, [axiosToken]);
+    }, [axiosSecure]);
 
     return {
         uploadImage,

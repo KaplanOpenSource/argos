@@ -6,22 +6,26 @@ const windowBaseUrl = (window.location.port === '8080' || window.location.port =
 
 interface TokenStore {
     baseUrl: string;
-    setBaseUrl: (newBaseUrl: string) => void;
     token: string | null;
-    hasToken: () => boolean;
-    axiosToken: () => AxiosInstance;
+    setBaseUrl: (newBaseUrl: string) => void;
     doLogin: (username: string, password: string) => Promise<void>;
     doLogout: () => Promise<void>;
+    isLoggedIn: () => boolean;
+    axiosSecure: () => AxiosInstance;
 }
 
 export const useTokenStore = create<TokenStore>()(
     persist(
         (set, get) => ({
             baseUrl: windowBaseUrl,
-            setBaseUrl: (newBaseUrl: string) => set({ baseUrl: newBaseUrl }),
             token: null,
-            hasToken: () => get().token !== null && get().token !== undefined && get().token !== '',
-            axiosToken: () => {
+            setBaseUrl: (newBaseUrl: string) => {
+                set({ baseUrl: newBaseUrl })
+            },
+            isLoggedIn: () => {
+                return get().token !== null && get().token !== undefined && get().token !== ''
+            },
+            axiosSecure: () => {
                 const headers: Partial<AxiosHeaders> = {
                     "Content-Type": "application/json",
                 };
@@ -45,7 +49,7 @@ export const useTokenStore = create<TokenStore>()(
             },
             doLogin: async (username: string, password: string) => {
                 try {
-                    const data = await get().axiosToken().post("login",
+                    const data = await get().axiosSecure().post("login",
                         { username, password },
                     );
                     if (!data) {
@@ -59,7 +63,7 @@ export const useTokenStore = create<TokenStore>()(
             },
             doLogout: async () => {
                 try {
-                    const data = await get().axiosToken().post("logout");
+                    const data = await get().axiosSecure().post("logout");
                 } catch (e: any) {
                     console.log(e);
                     alert(e?.response?.data?.msg || e)

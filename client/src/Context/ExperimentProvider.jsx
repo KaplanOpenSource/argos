@@ -5,7 +5,7 @@ import { ExperimentUpdatesInitialState, useExperimentUpdates } from "./Experimen
 import { useFetchExperiments } from "./FetchExperiment";
 import { assignUuids } from "./TrackUuidUtils";
 import { TrialChoosing } from "./TrialChoosing";
-    import { useTokenStore } from "./useTokenStore";
+import { useTokenStore } from "./useTokenStore";
 
 export const experimentContext = createContext();
 
@@ -25,7 +25,7 @@ export const ExperimentProvider = ({ children }) => {
         redoOperation,
     } = useExperimentUpdates(state, setState);
 
-    const { hasToken } = useTokenStore();
+    const { isLoggedIn } = useTokenStore();
     const { fetchAllExperiments } = useFetchExperiments();
 
     const trialChoosing = new TrialChoosing(state, setState);
@@ -154,7 +154,7 @@ export const ExperimentProvider = ({ children }) => {
 
     useEffect(() => {
         (async () => {
-            if (hasToken()) {
+            if (isLoggedIn()) {
                 const { experimentName, trialTypeName, trialName } = parseUrlParams();
                 const allExperiments = await fetchAllExperiments();
                 assignUuids(allExperiments);
@@ -167,7 +167,7 @@ export const ExperimentProvider = ({ children }) => {
                 }));
             }
         })()
-    }, [hasToken()])
+    }, [isLoggedIn()])
 
     useEffect(() => {
         if (currTrial?.experimentName) {
