@@ -11,7 +11,6 @@ export const ImageOnServer = ({ data, experiment, maxWidth = 500, maxHeight = 50
         (async () => {
             if (data && data.filename && experiment && experiment.name) {
                 const byte64 = await downloadImageAsUrl(experiment.name, data.filename);
-                console.log('image read ', data.filename);
                 setSrc(byte64);
             }
         })()
