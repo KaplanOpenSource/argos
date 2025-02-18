@@ -24,11 +24,6 @@ export const IconPicker = ({ data, setData }) => {
     const [anchorEl, setAnchorEl] = useState(null);
     const [filterText, setFilterText] = useState('');
 
-    const names = Object.keys(fa_all).filter(x => x.startsWith('fa') && x.length > 3).map(x => x.substring(2));
-    const shownNames = filterText.length === 0 ? names : names.filter(x => x.toLowerCase().includes(filterText));
-
-    // const shownNames = filtered.slice(page, page + PAGE_LEN);
-
     return (
         <Box sx={{ position: 'relative' }}>
             <Tooltip title="Pick Icon" placement="top">
@@ -38,7 +33,6 @@ export const IconPicker = ({ data, setData }) => {
                         e.stopPropagation();
                         setAnchorEl(anchorEl ? null : e.currentTarget);
                     }}
-                // color={Boolean(anchorEl) ? "primary" : ""}
                 >
                     <IconDeviceByName
                         iconName={data}
@@ -64,13 +58,30 @@ export const IconPicker = ({ data, setData }) => {
                     }}
                     onClick={e => e.stopPropagation()}
                 >
-                    <Stack direction='row' alignItems='center' justifyContent='center'>
-                        <TextFieldDebounceOutlined
-                            value={filterText}
-                            onChange={val => setFilterText(val)}
-                            debounceMs={100}
-                            tooltipTitle='Filter icons'
-                        />
+                    <Stack
+                        direction='row'
+                        alignItems='stretch'
+                        justifyContent='space-between'
+                    >
+                        <Typography variant="h5">Choose Icon</Typography>
+                        <Stack
+                            direction='row'
+                            alignItems='center'
+                            justifyContent='center'
+                        >
+                            <Typography>Filter:</Typography>
+                            <TextFieldDebounceOutlined
+                                style={{
+                                    width: '100px',
+                                    // height: '20px',
+                                }}
+                                size='small'
+                                value={filterText}
+                                onChange={val => setFilterText(val)}
+                                debounceMs={100}
+                                tooltipTitle='Filter icons'
+                            />
+                        </Stack>
                     </Stack>
                     <Box sx={{
                         height: 30 * 12,
@@ -78,9 +89,12 @@ export const IconPicker = ({ data, setData }) => {
                     }}>
                         {
                             Object.entries(iconsCategories).map(([cat, { icons, label }]) => {
-                                const titleIcons = icons.map(x => toTitleCase(x));
-                                const availableIcons = titleIcons.filter(x => fa_all['fa' + x]);
-                                return (
+                                icons = icons.map(x => toTitleCase(x));
+                                icons = icons.filter(x => fa_all['fa' + x]);
+                                if (filterText.length > 0) {
+                                    icons = icons.filter(x => x.toLowerCase().includes(filterText));
+                                }
+                                return icons.length === 0 ? null : (
                                     <Fragment key={cat}>
                                         <Typography>
                                             {label}
@@ -92,18 +106,22 @@ export const IconPicker = ({ data, setData }) => {
                                             }}
                                             cols={12}
                                         >
-                                            {availableIcons.map(name => (
+                                            {icons.map(name => (
                                                 <ImageListItem key={name}>
                                                     <Tooltip
                                                         title={name}
                                                     >
                                                         <Paper
                                                             sx={{ border: 1, width: 30, height: 30, alignContent: 'center', textAlign: 'center' }}
-                                                            onClick={() => setData(name)}
+                                                            onClick={() => {
+                                                                setData(name);
+                                                                setAnchorEl();
+                                                            }}
                                                         >
                                                             <FontAwesomeIcon
                                                                 key={name}
                                                                 icon={fa_all['fa' + name]}
+                                                                color={name === data ? "black" : "grey"}
                                                             />
                                                         </Paper>
                                                     </Tooltip>
