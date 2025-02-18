@@ -2,8 +2,6 @@ import { useContext, useEffect } from "react";
 import { experimentContext } from "../Context/ExperimentProvider";
 import { ExperimentRow } from "./ExperimentRow";
 import { TreeView } from '@mui/x-tree-view/TreeView';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { Paper } from "@mui/material";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
@@ -109,13 +107,11 @@ export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
             }}
         >
             <TreeView
-                defaultCollapseIcon={<ExpandMoreIcon />}
-                defaultExpandIcon={<ChevronRightIcon />}
                 expanded={expandedNodes}
-                onNodeToggle={handleNodeToggle}
+                onExpandedItemsChange={handleNodeToggle}
                 multiSelect
                 selected={selectionOnEnclosingUuids}
-                onNodeSelect={(e, ids) => setSelectionOnEnclosingUuids(ids)}
+                onSelectedItemsChange={(e, ids) => setSelectionOnEnclosingUuids(ids)}
             >
                 <SwitchCase test={currTrial.experiment ? showConfig : SHOW_ALL_EXPERIMENTS}>
                     <Case value={SHOW_ALL_EXPERIMENTS}>

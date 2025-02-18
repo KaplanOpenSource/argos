@@ -28,7 +28,7 @@ export const TreeSublist = ({
     return (
         <TreeItem
             key={key}
-            nodeId={key}
+            itemId={key}
             label={
                 <Box
                     sx={{

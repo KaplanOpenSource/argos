@@ -1,7 +1,5 @@
 import { Box, Paper, Stack, Typography } from "@mui/material"
 import { TreeView } from "@mui/x-tree-view/TreeView"
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { useContext } from "react";
 import { experimentContext } from "../Context/ExperimentProvider";
 import { DeviceItem } from "../Experiment/DeviceItem";
@@ -54,12 +52,10 @@ const DeviceTableRich = ({ shownDevices }) => {
 
     return (
         <TreeView
-            defaultCollapseIcon={<ExpandMoreIcon />}
-            defaultExpandIcon={<ChevronRightIcon />}
             defaultExpanded={shownDevices.map(({ deviceItem }) => deviceItem.trackUuid)}
             multiSelect
             selected={selectionOnEnclosingUuids}
-            onNodeSelect={(e, ids) => setSelectionOnEnclosingUuids(ids)}
+            onSelectedItemsChange={(e, ids) => setSelectionOnEnclosingUuids(ids)}
         >
             {shownDevices.map(({ deviceType, deviceItem }) => (
                 <Paper

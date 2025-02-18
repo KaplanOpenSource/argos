@@ -21,7 +21,7 @@ export const TreeRow = ({ data, setData, components, children, textProps }) => {
     return (
         <TreeItem
             key={data.trackUuid}
-            nodeId={data.trackUuid}
+            itemId={data.trackUuid}
             label={
                 <div style={{ pointerEvents: 'none' }}>
                     <div style={{ pointerEvents: 'all', display: 'inline-block' }}>

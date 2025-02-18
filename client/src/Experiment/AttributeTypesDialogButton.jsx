@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { Paper, Popover } from "@mui/material";
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { TreeSublist } from "../App/TreeSublist";
 import { AttributeType } from "./AttributeType";
 import { changeByName } from "../Utils/utils";
@@ -40,8 +38,6 @@ export const AttributeTypesDialogButton = ({ data, setData, isOfDevice }) => {
                     onClick={e => e.stopPropagation()}
                 >
                     <TreeView
-                        defaultCollapseIcon={<ExpandMoreIcon />}
-                        defaultExpandIcon={<ChevronRightIcon />}
                         disableSelection
                         defaultExpanded={[data.trackUuid + '_' + 'attributeTypes']}
                     >

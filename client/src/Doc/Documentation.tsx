@@ -54,7 +54,7 @@ export const Documentation = () => {
                         {toc.map((item, index) => (
                             <TreeItem
                                 key={index}
-                                nodeId={String(index)}
+                                itemId={String(index)}
                                 label={<a href={`#${item.id}`}>{item.text}</a>}
                                 style={{
                                     marginLeft: (item.level - 1) * 10,
