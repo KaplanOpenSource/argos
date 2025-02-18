@@ -1,12 +1,22 @@
 import React from 'react';
-import { Marker, Popup } from "react-leaflet";
+import { Marker, Popup, Tooltip } from "react-leaflet";
 import { CustomIcon } from './CustomIcon';
 
 let dragStartLoc;
 
-export const MarkedPoint = (props) => {
-    const { location, dragLocation, setLocation, locationToShow } = props;
-    let locationToShowStr;
+export const MarkedPoint = ({
+    location,
+    dragLocation,
+    setLocation,
+    locationToShow,
+    ...restProps
+}: {
+    location: [number, number],
+    dragLocation: (latlng: [number, number]) => void,
+    setLocation: (latlng: [number, number]) => void | boolean,
+    locationToShow: string,
+}) => {
+    let locationToShowStr: string;
     if (!locationToShow) {
         locationToShowStr = JSON.stringify(location.map(l => Math.round(l * 1e9) / 1e9)).replace(/,/g, ', ');
     } else {
@@ -21,12 +31,14 @@ export const MarkedPoint = (props) => {
             eventHandlers={{
                 drag: (e) => {
                     if (dragLocation) {
-                        dragLocation(Object.values(e.target.getLatLng()));
+                        const { lat, lng } = e.target.getLatLng() as { lat: number, lng: number };
+                        dragLocation([lat, lng]);
                     }
                 },
                 dragend: (e) => {
                     if (setLocation) {
-                        const res = setLocation(Object.values(e.target.getLatLng()));
+                        const { lat, lng } = e.target.getLatLng() as { lat: number, lng: number };
+                        const res = setLocation([lat, lng]);
                         if (dragStartLoc && res === false) { // when setLocation returns false - revert to last position
                             e.target.setLatLng(dragStartLoc);
                         }
@@ -38,9 +50,11 @@ export const MarkedPoint = (props) => {
                 }
             }}
             icon={CustomIcon()}
-            {...props}
+            {...restProps}
         >
-            <Popup permanent>
+            <Popup
+                // permanent
+            >
                 {locationToShowStr.split('<br/>').map((l, i) => (
                     <span key={i}>{l}<br /></span>
                 ))}
