@@ -9,7 +9,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Box } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as fa_all from "@fortawesome/free-solid-svg-icons";
-import { MARKER_DEFAULT_ICON } from "../Experiment/IconPicker";
+import { MARKER_DEFAULT_ICON } from "../Icons/IconPicker";
 import html2canvas from 'html2canvas';
 import { isEqual } from "lodash";
 
