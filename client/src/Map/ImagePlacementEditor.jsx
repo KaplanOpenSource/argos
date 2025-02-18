@@ -77,13 +77,13 @@ export const ImagePlacementEditor = ({ imageData, setImageData, startDiagonal = 
             >
                 <Stack>
                     <TextFieldDebounceOutlined
-                        InputProps={{ style: { width: '150px' } }}
+                        InputProps={{ style: { height: '30px', width: '120px' } }}
                         label="Span in meters"
                         value={roundDec(distLatLng(anchor, anotherPoint))}
                         onChange={(newDist) => changeDistMeters(newDist)}
                     />
                     <TextFieldDebounceOutlined
-                        InputProps={{ style: { width: '150px' } }}
+                        InputProps={{ style: { height: '30px', width: '120px' } }}
                         label="Span in Pixels"
                         value={roundDec(distXY(anchor, anotherPoint))}
                         onChange={(newDist) => changeDistPixels(newDist)}
