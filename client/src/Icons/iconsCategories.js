@@ -1,4 +1,4 @@
-export const icons = {
+export const iconsCategories = {
     "accessibility": {
         "icons": [
             "accessible-icon",

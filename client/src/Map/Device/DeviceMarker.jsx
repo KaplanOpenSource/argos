@@ -5,7 +5,7 @@ import { usePopupSwitch } from "../PopupSwitchContext";
 import { experimentContext } from "../../Context/ExperimentProvider";
 import { renderToStaticMarkup } from "react-dom/server";
 import { divIcon } from "leaflet";
-import { IconDeviceByName } from "../../Experiment/IconPicker";
+import { IconDeviceByName } from "../../Icons/IconPicker";
 import { locationToString } from "../../Utils/utils";
 import { useShape } from "../../EditToolBox/ShapeContext";
 import { SELECT_SHAPE } from "../../EditToolBox/utils/constants";

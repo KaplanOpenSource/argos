@@ -1,5 +1,5 @@
 import { writeFile } from 'fs/promises';
-import path, { resolve } from 'path';
+import { resolve } from 'path';
 import { parse } from 'yaml';
 
 const url = 'https://github.com/FortAwesome/Font-Awesome/raw/refs/heads/master/metadata/categories.yml';
@@ -7,7 +7,7 @@ const url = 'https://github.com/FortAwesome/Font-Awesome/raw/refs/heads/master/m
 const resp = await fetch(url);
 const text = await resp.text();
 const json = parse(text);
-const code = 'export const icons = ' + JSON.stringify(json, undefined, 4);
+const code = 'export const iconsCategories = ' + JSON.stringify(json, undefined, 4);
 
 const filename = resolve('../client/src/Icons/iconsCategories.js');
 console.log('writing icons to', filename);

@@ -1,14 +1,10 @@
 import * as fa_all from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Box, IconButton, ImageList, ImageListItem, Paper, Popover, Stack, TextField, Tooltip } from "@mui/material";
-import { useState } from "react";
-import { ButtonTooltip } from "../Utils/ButtonTooltip";
-import { SkipNext, SkipPrevious } from "@mui/icons-material";
+import { Box, ImageList, ImageListItem, Paper, Popover, Stack, Tooltip, Typography } from "@mui/material";
+import { Fragment, useState } from "react";
 import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
+import { iconsCategories } from "./iconsCategories";
 
-const PAGE_ROWS = 12;
-const PAGE_COLS = 12;
-const PAGE_LEN = PAGE_COLS * PAGE_ROWS;
 export const MARKER_DEFAULT_ICON = fa_all.faMapMarkerAlt;
 
 export const IconDeviceByName = ({ iconName, ...props }) => {
@@ -18,15 +14,20 @@ export const IconDeviceByName = ({ iconName, ...props }) => {
     />;
 }
 
+function toTitleCase(str) {
+    return str.toLowerCase().replace(/(?:^|[\s-/])\w/g, function (match) {
+        return match.toUpperCase();
+    });
+}
+
 export const IconPicker = ({ data, setData }) => {
     const [anchorEl, setAnchorEl] = useState(null);
-    const [page, setPage] = useState(0);
     const [filterText, setFilterText] = useState('');
 
     const names = Object.keys(fa_all).filter(x => x.startsWith('fa') && x.length > 3).map(x => x.substring(2));
-    const filtered = filterText.length === 0 ? names : names.filter(x => x.toLowerCase().includes(filterText));
+    const shownNames = filterText.length === 0 ? names : names.filter(x => x.toLowerCase().includes(filterText));
 
-    const shownNames = filtered.slice(page, page + PAGE_LEN);
+    // const shownNames = filtered.slice(page, page + PAGE_LEN);
 
     return (
         <Box sx={{ position: 'relative' }}>
@@ -56,7 +57,11 @@ export const IconPicker = ({ data, setData }) => {
                 sx={{ zIndex: 1000 }}
             >
                 <Paper
-                    sx={{ border: 1, padding: 0.5 }}
+                    sx={{
+                        border: 1,
+                        padding: 0.5,
+                        overflowY: 'hidden'
+                    }}
                     onClick={e => e.stopPropagation()}
                 >
                     <Stack direction='row' alignItems='center' justifyContent='center'>
@@ -66,47 +71,50 @@ export const IconPicker = ({ data, setData }) => {
                             debounceMs={100}
                             tooltipTitle='Filter icons'
                         />
-                        <ButtonTooltip
-                            tooltip='Prev icons'
-                            onClick={() => setPage(page - PAGE_LEN)}
-                            disabled={page <= 0}
-                        >
-                            <SkipPrevious />
-                        </ButtonTooltip>
-                        <ButtonTooltip
-                            tooltip='Next icons'
-                            onClick={() => setPage(page + PAGE_LEN)}
-                            disabled={page + PAGE_LEN >= names.length}
-                        >
-                            <SkipNext />
-                        </ButtonTooltip>
                     </Stack>
-                    <ImageList
-                        sx={{
-                            // width: 500,
-                            // height: 30 * 16,
-                            margin: 0
-                        }}
-                        cols={PAGE_COLS}
-                    >
-                        {shownNames.map(name => (
-                            <ImageListItem key={name}>
-                                <Tooltip
-                                    title={name}
-                                >
-                                    <Paper
-                                        sx={{ border: 1, width: 30, height: 30, alignContent: 'center', textAlign: 'center' }}
-                                        onClick={() => setData(name)}
-                                    >
-                                        <FontAwesomeIcon
-                                            key={name}
-                                            icon={fa_all['fa' + name]}
-                                        />
-                                    </Paper>
-                                </Tooltip>
-                            </ImageListItem>
-                        ))}
-                    </ImageList>
+                    <Box sx={{
+                        height: 30 * 12,
+                        overflowY: 'auto'
+                    }}>
+                        {
+                            Object.entries(iconsCategories).map(([cat, { icons, label }]) => {
+                                const titleIcons = icons.map(x => toTitleCase(x));
+                                const availableIcons = titleIcons.filter(x => fa_all['fa' + x]);
+                                return (
+                                    <Fragment key={cat}>
+                                        <Typography>
+                                            {label}
+                                        </Typography>
+                                        <ImageList
+                                            sx={{
+                                                // height: 30 * 12,
+                                                margin: 0
+                                            }}
+                                            cols={12}
+                                        >
+                                            {availableIcons.map(name => (
+                                                <ImageListItem key={name}>
+                                                    <Tooltip
+                                                        title={name}
+                                                    >
+                                                        <Paper
+                                                            sx={{ border: 1, width: 30, height: 30, alignContent: 'center', textAlign: 'center' }}
+                                                            onClick={() => setData(name)}
+                                                        >
+                                                            <FontAwesomeIcon
+                                                                key={name}
+                                                                icon={fa_all['fa' + name]}
+                                                            />
+                                                        </Paper>
+                                                    </Tooltip>
+                                                </ImageListItem>
+                                            ))}
+                                        </ImageList>
+                                    </Fragment>
+                                )
+                            })
+                        }
+                    </Box>
                 </Paper>
             </Popover>
         </Box>
