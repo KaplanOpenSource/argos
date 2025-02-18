@@ -3,42 +3,60 @@ import { Stack } from "@mui/material"
 import { TreeRow } from "../App/TreeRow"
 import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
 import { ImageOnServer } from "../IO/ImageOnServer";
-import { UploadImageIcon } from "../IO/UploadImageIcon";
+import { UploadImageButton } from "../IO/UploadImageButton";
 import DeleteIcon from '@mui/icons-material/Delete';
 import MapIcon from '@mui/icons-material/Map';
 import { experimentContext } from "../Context/ExperimentProvider";
-import { ActionsOnMapContext } from "../Map/ActionsOnMapContext";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
-import { EditLocationAlt, EditLocationOutlined, OpenInFull } from "@mui/icons-material";
+import { EditLocationAlt, EditLocationOutlined } from "@mui/icons-material";
+import { useShownMap } from "../Context/useShownMap";
 
 export const ImageStandalone = ({ data, setData, experiment }) => {
-    const { addActionOnMap } = useContext(ActionsOnMapContext);
     const {
         currTrial,
+        setExperiment,
         setShownMap,
         showImagePlacement,
         setShowImagePlacement,
     } = useContext(experimentContext);
+    const { switchToMap } = useShownMap({});
 
-    const isBeingEdit = showImagePlacement && currTrial.shownMapName === data.name && currTrial.experimentName === experiment.name;
+    const isShown = currTrial.shownMapName === data.name && currTrial.experimentName === experiment.name;
+    const isBeingEdit = showImagePlacement && isShown;
 
-    const fitBoundsToImage = () => {
-        addActionOnMap((mapObject) => {
-            mapObject.fitBounds([[data.ytop, data.xleft], [data.ybottom, data.xright]]);
-        });
-    }
-
-    const switchToMap = () => {
-        setShownMap(data.name);
-        setTimeout(() => {
-            fitBoundsToImage();
-        }, 100);
+    const setDataCheckName = (newData) => {
+        const newName = newData?.name;
+        const oldName = data?.name;
+        if (newName === oldName) {
+            setData(newData);
+        } else {
+            console.log('image name changed from', data?.name, 'to', newData?.name);
+            const exp = structuredClone(currTrial?.experiment);
+            for (const trialType of exp?.trialTypes || []) {
+                for (const trial of trialType?.trials || []) {
+                    for (const d of trial?.devicesOnTrial || []) {
+                        if (d.location.name === oldName) {
+                            d.location.name = newName;
+                        }
+                    }
+                }
+            }
+            for (const s of exp?.imageStandalone || []) {
+                if (s?.name === oldName) {
+                    s.name = newName;
+                }
+            }
+            setExperiment(exp.name, exp);
+            if (isShown) {
+                setShownMap(newName)
+            }
+        }
     }
 
     return (
         <TreeRow
             data={data}
-            setData={setData}
+            setData={setDataCheckName}
             components={
                 <>
                     <ButtonTooltip
@@ -47,7 +65,7 @@ export const ImageStandalone = ({ data, setData, experiment }) => {
                     >
                         <DeleteIcon />
                     </ButtonTooltip>
-                    <UploadImageIcon
+                    <UploadImageButton
                         imageName={data.name}
                         experimentName={experiment.name}
                         onChangeFile={(filename, height, width) => setData({
@@ -62,18 +80,11 @@ export const ImageStandalone = ({ data, setData, experiment }) => {
                         })}
                     />
                     <ButtonTooltip
-                        tooltip={currTrial.experiment ? "Switch to this image" : "First choose a trial before switching to this image"}
-                        onClick={() => switchToMap()}
-                        disabled={!currTrial.experiment}
+                        tooltip={currTrial.experiment ? "Switch to this image" : "First choose an experiment before switching to this image"}
+                        onClick={() => switchToMap(data.name)}
+                        disabled={!currTrial.experiment || (data || {}).ytop === undefined}
                     >
                         <MapIcon />
-                    </ButtonTooltip>
-                    <ButtonTooltip
-                        tooltip="Fit image to screen"
-                        onClick={() => fitBoundsToImage()}
-                        disabled={(data || {}).ytop === undefined}
-                    >
-                        <OpenInFull />
                     </ButtonTooltip>
                     <ButtonTooltip
                         tooltip="Edit image placement"
@@ -84,6 +95,13 @@ export const ImageStandalone = ({ data, setData, experiment }) => {
                             : <EditLocationOutlined />
                         }
                     </ButtonTooltip>
+                    <ImageOnServer
+                        showSize={false}
+                        maxHeight={40}
+                        data={data}
+                        experiment={experiment}
+                        style={{ borderRadius: 10 }}
+                    />
                 </>
             }
         >

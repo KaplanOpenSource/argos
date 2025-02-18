@@ -1,11 +1,11 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import {
     IconButton,
-    Tooltip,
 } from '@mui/material';
 import { DomEvent } from 'leaflet';
+import { TooltipItem } from './TooltipItem';
 
-export const ButtonTooltip = ({ onClick, tooltip, disabled, closeTooltipOnClick = undefined, children, ...restProps }) => {
+export const ButtonTooltip = ({ onClick, tooltip, disabled = false, closeTooltipOnClick = undefined, children, ...restProps }) => {
     const [open, setOpen] = React.useState(false);
 
     const button = (
@@ -29,7 +29,7 @@ export const ButtonTooltip = ({ onClick, tooltip, disabled, closeTooltipOnClick 
     );
 
     return (
-        <Tooltip
+        <TooltipItem
             open={open}
             onOpen={() => setOpen(true)}
             onClose={() => setOpen(false)}
@@ -41,7 +41,7 @@ export const ButtonTooltip = ({ onClick, tooltip, disabled, closeTooltipOnClick 
             <div style={{ display: 'inline-block' }}>{button}</div>
             {/* : button
             } */}
-        </Tooltip>
+        </TooltipItem>
     )
 }
 

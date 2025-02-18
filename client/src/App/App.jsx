@@ -1,13 +1,11 @@
-import { useContext } from 'react';
+import { useTokenStore } from '../Context/useTokenStore';
 import { DevicePlanner } from './DevicePlanner';
-import { TokenContext } from './TokenContext';
 import { LoginForm } from './LoginForm';
 
 export function App() {
-    const { token, hasToken } = useContext(TokenContext);
+    const { isLoggedIn } = useTokenStore();
 
-    // console.log(token)
-    return hasToken
+    return isLoggedIn()
         ? (
             <DevicePlanner
             />

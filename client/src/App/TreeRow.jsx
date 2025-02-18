@@ -4,7 +4,7 @@ import { TextFieldDebounce } from "../Utils/TextFieldDebounce";
 import { useEffect } from "react";
 import { assignUuids } from "../Context/TrackUuidUtils";
 
-export const TreeRow = ({ data, setData, components, children }) => {
+export const TreeRow = ({ data, setData, components, children, textProps }) => {
     const { name } = data;
 
     useEffect(() => {
@@ -47,6 +47,7 @@ export const TreeRow = ({ data, setData, components, children }) => {
                                 value={name}
                                 onChange={val => setData({ ...data, name: val })}
                                 disabled={!setData}
+                                {...textProps}
                             />
                             {components}
                         </Box>

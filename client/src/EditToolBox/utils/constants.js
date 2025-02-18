@@ -6,6 +6,7 @@ export const LOCATIONS_MODE = 'locations';
 
 // TOOLS BAR MODES
 export const CHOOSE_TITLE = 'Choose';
+export const SELECT_TITLE = 'Select';
 export const FREEPOSITIONING_TITLE = 'Free Positioning';
 export const POINT_TITLE = 'Point';
 export const CURVE_TITLE = 'Curve';
@@ -18,6 +19,7 @@ export const EDIT_ENTITY_TITLE = 'Edit Entity';
 
 // TOOLS BAR VALUES/SHAPE-MODE
 export const CHOOSE_SHAPE = 'Choose';
+export const SELECT_SHAPE = 'Select';
 export const FREEPOSITIONING_SHAPE = 'Pop'; // tmp value. Change after implementation of this tools
 export const POINT_SHAPE = 'Point';
 export const CURVE_SHAPE = 'Curve';

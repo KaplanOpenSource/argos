@@ -1,18 +1,26 @@
 import { Marker, Popup, Tooltip } from "react-leaflet";
 import { SingleDevicePropertiesView } from "./SingleDevicePropertiesView";
 import { useContext, useEffect, useRef } from "react";
-import { usePopupSwitch } from "./PopupSwitchContext";
-import { experimentContext } from "../Context/ExperimentProvider";
+import { usePopupSwitch } from "../PopupSwitchContext";
+import { experimentContext } from "../../Context/ExperimentProvider";
 import { renderToStaticMarkup } from "react-dom/server";
 import { divIcon } from "leaflet";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMapMarkerAlt } from "@fortawesome/free-solid-svg-icons";
-import { IconDeviceByName } from "../Experiment/IconPicker";
+import { IconDeviceByName } from "../../Icons/IconPicker";
+import { locationToString } from "../../Utils/utils";
+import { useShape } from "../../EditToolBox/ShapeContext";
+import { SELECT_SHAPE } from "../../EditToolBox/utils/constants";
+import { useCurrTrial } from "../../Context/useCurrTrial";
+import { useDeviceSeletion } from "../../Context/useDeviceSeletion";
 
 export const DeviceMarker = ({ deviceOnTrial, setDeviceOnTrial, showDeviceNames }) => {
-    const { selection, setLocationsToDevices, currTrial } = useContext(experimentContext);
+    const { selection, setSelection } = useDeviceSeletion();
+    const { currTrial } = useContext(experimentContext);
+    const { trial } = useCurrTrial({});
+
     const ref = useRef(null);
     const { isPopupSwitchedTo } = usePopupSwitch();
+    const { shape } = useShape();
+
     useEffect(() => {
         if (isPopupSwitchedTo(deviceOnTrial.deviceTypeName + ' : ' + deviceOnTrial.deviceItemName)) {
             ref.current.openPopup();
@@ -24,11 +32,7 @@ export const DeviceMarker = ({ deviceOnTrial, setDeviceOnTrial, showDeviceNames 
     if (!coordinates) return null;
 
     const setLocation = (latlng) => {
-        setLocationsToDevices([{ deviceTypeName, deviceItemName }], [latlng]);
-    }
-
-    const locationToString = (coords) => {
-        return coords.map(x => Math.round(x * 1e8) / 1e8).join(',')
+        trial.getDevice(deviceTypeName, deviceItemName).setLocationOnMap([latlng.lat, latlng.lng], currTrial.shownMapName);
     }
 
     const isSelected = selection.find(s => s.deviceItemName === deviceItemName && s.deviceTypeName === deviceTypeName);
@@ -70,7 +74,19 @@ export const DeviceMarker = ({ deviceOnTrial, setDeviceOnTrial, showDeviceNames 
                 },
                 drag: e => {
                     document.getElementById('tooltip-marker').textContent = locationToString([e.latlng.lat, e.latlng.lng]);
-                }
+                },
+                click: () => {
+                    if (shape === SELECT_SHAPE) {
+                        const selectedIndex = selection.findIndex(t => {
+                            return t.deviceTypeName === deviceTypeName && t.deviceItemName === deviceItemName;
+                        });
+                        if (selectedIndex !== -1) {
+                            setSelection(selection.filter((_, i) => i !== selectedIndex));
+                        } else {
+                            setSelection([...selection, { deviceTypeName, deviceItemName }]);
+                        }
+                    }
+                },
             }}
         >
             <Tooltip>
@@ -84,7 +100,9 @@ export const DeviceMarker = ({ deviceOnTrial, setDeviceOnTrial, showDeviceNames 
                     {locationToString(coordinates)}
                 </span>
             </Tooltip>
-            <Popup>
+            <Popup
+                offset={[-3, -15]}
+            >
                 <SingleDevicePropertiesView
                     deviceOnTrial={deviceOnTrial}
                     setDeviceOnTrial={setDeviceOnTrial}

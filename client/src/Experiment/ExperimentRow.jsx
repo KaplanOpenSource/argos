@@ -3,7 +3,6 @@ import { TreeRow } from "../App/TreeRow";
 import { TreeSublist } from "../App/TreeSublist";
 import { DateProperty } from "../Property/DateProperty";
 import { Stack } from "@mui/material";
-import DownloadIcon from '@mui/icons-material/Download';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PublicIcon from '@mui/icons-material/Public';
 import { changeByName } from "../Utils/utils";
@@ -14,20 +13,27 @@ import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { DeviceTypesList } from "./DeviceTypesList";
 import { TrialTypesList } from "./TrialTypesList";
-import { SCOPE_CONSTANT } from "./AttributeType";
-import { useUploadExperiment } from "../IO/UploadExperiment";
-import { ActionsOnMapContext } from "../Map/ActionsOnMapContext";
 import { ShapeList } from "./ShapeList";
-import { CoordsSpan } from "./CoordsSpan";
+import { useShownMap } from "../Context/useShownMap";
+import { DownloadExperimentButton } from "../IO/DownloadExperimentButton";
 
 export const ExperimentRow = ({ data, setData, children }) => {
-    const { deleteExperiment, setShownMap } = useContext(experimentContext);
-    const { downloadExperimentAsZip } = useUploadExperiment();
-    const { addActionOnMap } = useContext(ActionsOnMapContext);
+    const { deleteExperiment, currTrial } = useContext(experimentContext);
+    const { switchToMap } = useShownMap({});
     return (
         <TreeRow
             data={data}
             setData={setData}
+            textProps={data === currTrial.experiment
+                ? {
+                    InputProps: {
+                        style: {
+                            fontWeight: 'bold',
+                        },
+                    }
+                }
+                : {}
+            }
             components={
                 <>
                     <DateProperty
@@ -40,12 +46,9 @@ export const ExperimentRow = ({ data, setData, children }) => {
                         setData={val => setData({ ...data, endDate: val })}
                         label="End Date"
                     />
-                    <ButtonTooltip
-                        tooltip={"Download experiment"}
-                        onClick={() => downloadExperimentAsZip(data)}
-                    >
-                        <DownloadIcon />
-                    </ButtonTooltip>
+                    <DownloadExperimentButton
+                        experiment={data}
+                    />
                     <ButtonTooltip
                         tooltip={"Delete experiment"}
                         onClick={() => deleteExperiment(data.name)}
@@ -86,14 +89,7 @@ export const ExperimentRow = ({ data, setData, children }) => {
                 components={
                     <ButtonTooltip
                         tooltip={'Switch to show real geographic map'}
-                        onClick={() => {
-                            setShownMap(undefined);
-                            setTimeout(() => {
-                                addActionOnMap((mapObject) => {
-                                    new CoordsSpan().fromExperiment(data).fitBounds(mapObject);
-                                });
-                            }, 100);
-                        }}
+                        onClick={() => switchToMap(undefined)}
                     >
                         <PublicIcon />
                     </ButtonTooltip>

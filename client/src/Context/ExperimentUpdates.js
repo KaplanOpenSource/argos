@@ -1,11 +1,11 @@
 import dayjs from 'dayjs';
+import { useEffect } from 'react';
+import { jsonApplyItem, jsonCompare } from '../Utils/JsonPatch';
 import { createNewName } from "../Utils/utils";
 import { argosJsonVersion } from '../constants/constants';
-import { assignUuids, cleanUuids } from './TrackUuidUtils';
-import { useContext, useEffect } from 'react';
-import { TokenContext } from '../App/TokenContext';
 import { useFetchExperiments } from './FetchExperiment';
-import { jsonApplyItem, jsonCompare } from '../Utils/JsonPatch';
+import { assignUuids, cleanUuids } from './TrackUuidUtils';
+import { useTokenStore } from './useTokenStore';
 
 export const ExperimentUpdatesInitialState = {
     experiments: [],
@@ -15,7 +15,7 @@ export const ExperimentUpdatesInitialState = {
 }
 
 export const useExperimentUpdates = (state, setState) => {
-    const { hasToken } = useContext(TokenContext);
+    const { isLoggedIn } = useTokenStore();
     const { saveExperimentWithData } = useFetchExperiments();
 
     const sendUpdate = (experimentName, experimentNewData, experimentPrevData) => {
@@ -91,7 +91,7 @@ export const useExperimentUpdates = (state, setState) => {
         const experimentPrevData = state.experiments.find(t => t.name === name)
 
         setState(prev => {
-            const experiments = prev.experiments;
+            const experiments = [...prev.experiments];
             experiments[i] = data;
             return { ...prev, experiments };
         });
@@ -131,7 +131,7 @@ export const useExperimentUpdates = (state, setState) => {
     }
 
     useEffect(() => {
-        if (hasToken) {
+        if (isLoggedIn()) {
             if (state.serverUpdates.length > 0) {
                 (async () => {
                     const updates = state.serverUpdates;
@@ -145,7 +145,7 @@ export const useExperimentUpdates = (state, setState) => {
                 })();
             }
         }
-    }, [hasToken, state.serverUpdates]);
+    }, [isLoggedIn(), state.serverUpdates]);
 
     return {
         deleteExperiment,

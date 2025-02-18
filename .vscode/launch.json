@@ -5,6 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "command": "npm run dev",
+            "name": "Client",
+            "request": "launch",
+            "type": "node-terminal",
+            "cwd": "${workspaceFolder}/client"
+        },
+        {
             "name": "Server",
             "type": "debugpy",
             "request": "launch",
@@ -23,5 +30,14 @@
                 "--prod"
             ]
         },
+    ],
+    "compounds": [
+        {
+            "name": "Server/Client",
+            "configurations": [
+                "Client",
+                "Server",
+            ]
+        }
     ]
 }

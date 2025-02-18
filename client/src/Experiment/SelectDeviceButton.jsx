@@ -9,9 +9,11 @@ import {
     uniq,
 } from 'lodash';
 import { EnclosingListSelectionContext } from "./EnclosedSelectionProvider";
+import { useDeviceSeletion } from "../Context/useDeviceSeletion";
 
 export const SelectDeviceButton = ({ deviceType, deviceItem, devicesEnclosingList }) => {
-    const { selection, setSelection, currTrial } = useContext(experimentContext);
+    const { selection, setSelection } = useDeviceSeletion();
+    const { currTrial } = useContext(experimentContext);
     const { selectionOnEnclosingUuids } = useContext(EnclosingListSelectionContext);
     const selectedIndex = selection.findIndex(({ deviceTypeName, deviceItemName }) => {
         return deviceTypeName === deviceType.name && deviceItemName === deviceItem.name;

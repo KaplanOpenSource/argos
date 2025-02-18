@@ -1,6 +1,6 @@
-import { Tooltip } from "@mui/material";
 import { DateTimePicker } from "@mui/x-date-pickers"
 import dayjs from 'dayjs';
+import { TooltipItem } from "../Utils/TooltipItem";
 
 export const DateTimeProperty = ({ label, data, setData, tooltipTitle = "", ...restProps }) => {
     let value = null;
@@ -15,9 +15,8 @@ export const DateTimeProperty = ({ label, data, setData, tooltipTitle = "", ...r
     }
 
     return (
-        <Tooltip
+        <TooltipItem
             title={tooltipTitle}
-            placement='top'
         >
             <div
                 style={{
@@ -47,6 +46,6 @@ export const DateTimeProperty = ({ label, data, setData, tooltipTitle = "", ...r
                     {...restProps}
                 />
             </div>
-        </Tooltip>
+        </TooltipItem>
     )
 }

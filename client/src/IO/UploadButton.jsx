@@ -1,21 +1,19 @@
-import React, { Fragment, useRef, useState } from "react";
-import { ButtonTooltip } from "../Utils/ButtonTooltip";
+import React, { useState } from "react";
 import { HourglassBottom } from "@mui/icons-material";
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography } from "@mui/material";
+import { ErrorsDialog } from "./ErrorsDialog";
+import { ButtonFile } from "../Utils/ButtonFile";
 
 export const UploadButton = ({ accept, tooltip, uploadFunc, children, ...restprops }) => {
-    const inputFile = useRef(null);
     const [working, setWorking] = useState(false);
     const [errors, setErrors] = useState(undefined);
 
-    const handleChangeFile = async (event) => {
+    const handleChangeFile = async (files) => {
         try {
             setWorking(true);
-            const file = event.target.files[0];
-            if (!file) {
+            if (!files || !files.length) {
                 throw "empty file";
             }
-            const errors = await uploadFunc(file);
+            const errors = await uploadFunc(files[0]);
             if (errors) {
                 setErrors(errors);
             }
@@ -28,51 +26,26 @@ export const UploadButton = ({ accept, tooltip, uploadFunc, children, ...restpro
 
     return (
         <>
-            {errors
-                ? <>
-                    <Dialog open={true} onClose={() => setErrors(undefined)} maxWidth={false} fullWidth={true} scroll="paper">
-                        <DialogTitle >File upload with {errors.length} errors</DialogTitle>
-                        <DialogContent>
-                            <DialogContentText>
-                                {errors.sort().map((e, i) => (
-                                    <Fragment key={i + 1}>
-                                        <span>
-                                            {i + 1}: {`${e}`}
-                                        </span>
-                                        <br />
-                                    </Fragment>
-                                ))}
-                            </DialogContentText>
-                        </DialogContent>
-                        <DialogActions>
-                            <Button onClick={() => setErrors(undefined)}>Close</Button>
-                        </DialogActions>
-                    </Dialog>
-                </>
-                : <>
-                    <input
-                        type="file"
-                        ref={inputFile}
-                        style={{ display: "none" }}
-                        onChange={handleChangeFile}
-                        accept={accept}
-                    />
-                    <ButtonTooltip
-                        color="inherit"
-                        onClick={() => inputFile.current.click()}
-                        disabled={working}
-                        tooltip={tooltip}
-                        {...restprops}
-                    >
-                        {working
-                            ? <HourglassBottom />
-                            : <>
-                                {children}
-                            </>
-                        }
-                    </ButtonTooltip>
-                </>
-            }
+            <ButtonFile
+                color="inherit"
+                accept={accept}
+                tooltip={tooltip}
+                onChange={handleChangeFile}
+                disabled={working}
+                {...restprops}
+            >
+                {working
+                    ? <HourglassBottom />
+                    : <>
+                        {children}
+                    </>
+                }
+            </ButtonFile>
+            <ErrorsDialog
+                isOpen={errors && errors?.length}
+                errors={errors}
+                onClose={() => setErrors(undefined)}
+            />
         </>
     );
 };

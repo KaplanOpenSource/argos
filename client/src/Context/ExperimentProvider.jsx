@@ -1,16 +1,15 @@
-import { createContext, useContext, useEffect, useState } from "react"
-import { parseUrlParams, replaceUrlParams } from "../Utils/utils";
-import { useFetchExperiments } from "./FetchExperiment";
+import { createContext, useEffect, useState } from "react";
 import { RealMapName } from "../constants/constants";
+import { parseUrlParams, replaceUrlParams } from "../Utils/utils";
 import { ExperimentUpdatesInitialState, useExperimentUpdates } from "./ExperimentUpdates";
-import { TrialChoosing } from "./TrialChoosing";
+import { useFetchExperiments } from "./FetchExperiment";
 import { assignUuids } from "./TrackUuidUtils";
-import { TokenContext } from "../App/TokenContext";
+import { TrialChoosing } from "./TrialChoosing";
+import { useTokenStore } from "./useTokenStore";
 
 export const experimentContext = createContext();
 
 export const ExperimentProvider = ({ children }) => {
-    const [selection, setSelection] = useState([]);
     const [state, setState] = useState({
         ...ExperimentUpdatesInitialState,
         currTrial: {},
@@ -26,7 +25,7 @@ export const ExperimentProvider = ({ children }) => {
         redoOperation,
     } = useExperimentUpdates(state, setState);
 
-    const { hasToken } = useContext(TokenContext);
+    const { isLoggedIn } = useTokenStore();
     const { fetchAllExperiments } = useFetchExperiments();
 
     const trialChoosing = new TrialChoosing(state, setState);
@@ -50,7 +49,7 @@ export const ExperimentProvider = ({ children }) => {
     const setShownMap = (shownMapName) => {
         if (state.currTrial.experimentName) {
             const experiment = state.experiments[state.currTrial.experimentIndex];
-            const shownMapIndex = experiment.imageStandalone.findIndex(t => t.name === shownMapName);
+            const shownMapIndex = (experiment.imageStandalone || []).findIndex(t => t.name === shownMapName);
             if (shownMapIndex >= 0) {
                 replaceUrlParams({ shownMapName });
                 setState(prev => ({
@@ -87,18 +86,23 @@ export const ExperimentProvider = ({ children }) => {
             for (let i = 0, il = Math.min(deviceTypeItems.length, latlngs.length); i < il; ++i) {
                 const { deviceTypeName, deviceItemName } = deviceTypeItems[i];
                 let coordinates = latlngs[i];
+                const idev = devicesOnTrial.findIndex(t => {
+                    return t.deviceItemName === deviceItemName && t.deviceTypeName === deviceTypeName;
+                });
                 if (coordinates) {
                     if (coordinates.lat) {
                         coordinates = [coordinates.lat, coordinates.lng];
                     }
                     const location = { name: mapName, coordinates };
-                    const i = devicesOnTrial.findIndex(t => {
-                        return t.deviceItemName === deviceItemName && t.deviceTypeName === deviceTypeName;
-                    });
-                    if (i !== -1) {
-                        devicesOnTrial[i] = { ...devicesOnTrial[i], location }; // Done like this because location is frozen
+                    if (idev !== -1) {
+                        devicesOnTrial[idev] = { ...devicesOnTrial[idev], location }; // Done like this because location is frozen
                     } else {
                         devicesOnTrial.push({ deviceTypeName, deviceItemName, location });
+                    }
+                    count++;
+                } else {
+                    if (idev !== -1) {
+                        devicesOnTrial.splice(idev, 1);
                     }
                     count++;
                 }
@@ -109,13 +113,6 @@ export const ExperimentProvider = ({ children }) => {
             }
         }
         return count;
-    }
-
-    const setLocationsToStackDevices = (latlngs) => {
-        const count = setLocationsToDevices(selection, latlngs);
-        if (count > 0) {
-            setSelection(selection.slice(count));
-        }
     }
 
     const deleteDevice = ({ experimentName, deviceItemName, deviceTypeName }) => {
@@ -157,7 +154,7 @@ export const ExperimentProvider = ({ children }) => {
 
     useEffect(() => {
         (async () => {
-            if (hasToken) {
+            if (isLoggedIn()) {
                 const { experimentName, trialTypeName, trialName } = parseUrlParams();
                 const allExperiments = await fetchAllExperiments();
                 assignUuids(allExperiments);
@@ -170,7 +167,7 @@ export const ExperimentProvider = ({ children }) => {
                 }));
             }
         })()
-    }, [hasToken])
+    }, [isLoggedIn()])
 
     useEffect(() => {
         if (currTrial?.experimentName) {
@@ -204,10 +201,7 @@ export const ExperimentProvider = ({ children }) => {
         setTrialData,
         deleteDevice,
         deleteDeviceType,
-        selection,
-        setSelection,
         setLocationsToDevices,
-        setLocationsToStackDevices,
         setShownMap,
         showImagePlacement: state.showImagePlacement,
         setShowImagePlacement: val => setState(prev => ({ ...prev, showImagePlacement: val })),

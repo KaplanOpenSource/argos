@@ -1,29 +1,27 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import {
     Stack, Typography
 } from '@mui/material';
-import {
-    Edit,
-    LocationOff,
-} from "@mui/icons-material";
-import { ButtonTooltip } from '../Utils/ButtonTooltip';
-import { experimentContext } from '../Context/ExperimentProvider';
-import { SelectDeviceButton } from '../Experiment/SelectDeviceButton';
-import { AttributeItemList } from '../Experiment/AttributeItemList';
-import { SCOPE_TRIAL } from '../Experiment/AttributeType';
-import { AddContainedButton } from '../Experiment/Contained/AddContainedButton';
-import { ContainedDevice } from '../Experiment/Contained/ContainedDevice';
+import { experimentContext } from '../../Context/ExperimentProvider';
+import { SelectDeviceButton } from '../../Experiment/SelectDeviceButton';
+import { AttributeItemList } from '../../Experiment/AttributeItemList';
+import { SCOPE_TRIAL } from '../../Experiment/AttributeType';
+import { AddContainedButton } from '../../Experiment/Contained/AddContainedButton';
+import { ContainedDevice } from '../../Experiment/Contained/ContainedDevice';
+import { DeviceLocationEdit } from './DeviceLocationEdit';
+import { ContainedDevicesList } from './ContainedDevicesList';
+import { useCurrTrial } from '../../Context/useCurrTrial';
+import { DeviceItemLocationButton } from '../../Experiment/DeviceItemLocationButton';
 
 export const SingleDevicePropertiesView = ({ deviceOnTrial, setDeviceOnTrial, children }) => {
-    const [isEditLocation, setIsEditLocation] = useState(false);
-
-    const { currTrial, setLocationsToDevices, setTrialData } = useContext(experimentContext);
+    const { currTrial } = useContext(experimentContext);
     const experiment = currTrial.experiment || {};
     const { deviceTypeName, deviceItemName } = deviceOnTrial;
+    const { trial } = useCurrTrial({});
+    const device = trial.getDevice(deviceTypeName, deviceItemName);
+
     const deviceType = (experiment.deviceTypes || []).find(t => t.name === deviceTypeName);
     const deviceItem = ((deviceType || []).devices || []).find(t => t.name === deviceItemName);
-
-    const devLocation = deviceOnTrial.location.coordinates;
 
     const devicesOnTrial = (currTrial.trial || {}).devicesOnTrial || [];
     const containedDevicesIndices = devicesOnTrial
@@ -45,22 +43,10 @@ export const SingleDevicePropertiesView = ({ deviceOnTrial, setDeviceOnTrial, ch
                 {deviceTypeName}
             </Typography>
             <br />
-            {
-                isEditLocation
-                    ? null
-                    : <Stack direction='row'>
-                        <Typography variant='overline'>
-                            {devLocation.map(x => Math.round(x * 1e7) / 1e7).join(',')}
-                        </Typography>
-                        {/* <ButtonTooltip
-                        // tooltip={'Edit location'}
-                        // onClick={() => setIsEditLocation(true)}
-                        >
-                            <Edit />
-                        </ButtonTooltip> */}
-                    </Stack>
-            }
-            <br />
+            <DeviceLocationEdit
+                location={deviceOnTrial.location.coordinates}
+                setLocation={(loc) => device.setLocationOnMap(loc, currTrial.mapName)}
+            />
             {deviceItem
                 ? <AttributeItemList
                     attributeTypes={deviceType.attributeTypes}
@@ -80,17 +66,15 @@ export const SingleDevicePropertiesView = ({ deviceOnTrial, setDeviceOnTrial, ch
                         deviceType={deviceType}
                     />
                 }
-                <ButtonTooltip
-                    tooltip="Remove location"
-                    onClick={() => setLocationsToDevices([{ deviceTypeName, deviceItemName }], [undefined])}
-                >
-                    <LocationOff />
-                </ButtonTooltip>
+                <DeviceItemLocationButton
+                    deviceItem={deviceItem}
+                    deviceType={deviceType}
+                />
                 {deviceItem &&
                     <AddContainedButton
                         deviceItem={deviceItem}
                         deviceType={deviceType}
-                        deviceOnTrial={deviceOnTrial}
+                        hasContainedDevices={containedDevicesIndices?.length > 0}
                     />
                 }
             </Stack>
@@ -111,25 +95,18 @@ export const SingleDevicePropertiesView = ({ deviceOnTrial, setDeviceOnTrial, ch
                     />
                 </>
             )}
-            {containedDevicesIndices.length > 0 && (
-                <>
-                    <br />
-                    contained:
-                    {containedDevicesIndices.map(({ dev, index }) => (
-                        <ContainedDevice
-                            key={'contained ' + dev.deviceItemName + '_' + dev.deviceTypeName}
-                            deviceItemName={dev.deviceItemName}
-                            deviceTypeName={dev.deviceTypeName}
-                            disconnectDevice={() => {
-                                const devs = [...devicesOnTrial];
-                                devs[index] = { ...dev };
-                                delete devs[index].containedIn;
-                                setTrialData({ ...currTrial.trial, devicesOnTrial: devs });
-                            }}
+            {containedDevicesIndices?.length > 0
+                ? (
+                    <>
+                        <br />
+                        contains:
+                        <ContainedDevicesList
+                            containedDevices={containedDevicesIndices}
+                            devicesOnTrial={devicesOnTrial}
                         />
-                    ))}
-                </>
-            )}
+                    </>
+                )
+                : null}
         </>
     )
 }

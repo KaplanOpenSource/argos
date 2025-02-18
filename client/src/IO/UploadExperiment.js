@@ -1,18 +1,15 @@
 import JSZip from "jszip";
-import { useUploadImage } from "./UploadImage";
+import { useUploadImage } from "./useUploadImage";
 import { ConvertExperiment } from "./ConvertExperiment";
 import { argosJsonVersion } from "../constants/constants";
 import { createNewName } from "../Utils/utils";
 import { useCallback, useContext } from "react";
 import { experimentContext } from "../Context/ExperimentProvider";
-import { cleanUuids } from "../Context/TrackUuidUtils";
-import { shapesToGeoJSON } from "./ShapesToGeoJson";
-import { saveAs } from 'file-saver';
 import { ReadFileAsText } from "./FileIo";
 
 export const useUploadExperiment = () => {
     const { experiments, addExperiment } = useContext(experimentContext);
-    const { uploadImage, downloadImageAsBlob } = useUploadImage();
+    const { uploadImage } = useUploadImage();
 
     const uploadExperiment = useCallback(async (file) => {
         try {
@@ -97,31 +94,7 @@ export const useUploadExperiment = () => {
         }
     }
 
-    const downloadExperimentAsZip = async (experiment) => {
-        const zip = JSZip();
-        const cleaned = cleanUuids(experiment);
-        zip.file(`data.json`, JSON.stringify(cleaned));
-        const images = (experiment.imageStandalone || []).concat((experiment.imageEmbedded || []));
-        for (const img of images) {
-            if (img.filename) {
-                const image = await downloadImageAsBlob(experiment.name, img.filename);
-                const ext = img.filename.split('.').pop();
-                const filename = `images/${img.name}.${ext}`
-                zip.file(filename, image, { binary: true });
-            }
-        }
-
-        if (experiment.shapes) {
-            const shapesGeoJson = shapesToGeoJSON(experiment.shapes);
-            zip.file(`shapes.geojson`, JSON.stringify(shapesGeoJson));
-        }
-
-        const zipblob = await zip.generateAsync({ type: "blob" });
-        saveAs(zipblob, `experiment_${experiment.name}.zip`);
-    }
-
     return {
         uploadExperiment,
-        downloadExperimentAsZip,
     }
 }

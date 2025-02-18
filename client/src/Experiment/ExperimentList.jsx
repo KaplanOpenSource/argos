@@ -18,6 +18,7 @@ import { CoordsSpan } from "./CoordsSpan";
 import { TrialsTabularView } from "./Tabular/TrialsTabularView";
 import { DevicesTabularView } from "./Tabular/DevicesTabularView";
 import { ExperimentTreeNodesExpandedContext } from "./ExperimentTreeNodesExpandedProvider";
+import { sum } from "lodash";
 
 export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
     const { experiments, setExperiment, addExperiment, currTrial, setCurrTrial } = useContext(experimentContext);
@@ -41,46 +42,56 @@ export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
         }
         return undefined;
     }
-    const handleNodeToggle = (e, nodeIds) => {
+
+    const handleNodeToggle = (_e, nodeIds) => {
         const newlyExpanded = nodeIds.filter(nodeId => !expandedNodes.includes(nodeId));
+
         const foundExperiment = findExperimentByUuid(newlyExpanded[0]);
         if (foundExperiment) {
-            setCurrTrial({ experimentName: foundExperiment.name });
-            const nonExpNodeIds = nodeIds.filter(u => !findExperimentByUuid(u));
-            setExpandedNodes([newlyExpanded[0], ...nonExpNodeIds]);
-        } else {
-            setExpandedNodes(nodeIds);
+            if (experiment?.name !== foundExperiment.name) {
+                setCurrTrial({ experimentName: foundExperiment.name });
+            }
+            const newNodes = [
+                foundExperiment.trackUuid,
+                ...nodeIds.filter(u => !findExperimentByUuid(u)),
+            ];
+            if (foundExperiment?.trialTypes?.length < 10) {
+                newNodes.push(foundExperiment.trackUuid + '_trialTypes');
+            }
+            if (sum(foundExperiment?.trialTypes?.map(x => x?.trials?.length || 0)) < 10) {
+                newNodes.push(...(foundExperiment?.trialTypes?.map(tt => tt.trackUuid) || []));
+            }
+            setExpandedNodes(newNodes);
+            return;
         }
-    };
 
-    useEffect(() => {
-        if (!experiment) {
-            setShowConfig(SHOW_ALL_EXPERIMENTS);
-            // setExpanded(experiments.map(e => EXPERIMENT_NODE_ID_PREFIX + e));
-            // } else if (trialName) {
-            //     setExpanded([
-            //         experiment.trackUuid,
-            //         experimentName + "_trialTypes",
-            //         trialType.trackUuid,
-            //         experimentName + "_deviceTypes",
-            //         trial.trackUuid,
-            //     ]);
+        if (newlyExpanded[0] === experiment?.trackUuid + '_trialTypes') {
+            const trialsNum = sum(experiment?.trialTypes?.map(x => x?.trials?.length || 0));
+            if (trialsNum < 10) {
+                const trialTypesUuids = experiment?.trialTypes?.map(tt => tt.trackUuid) || [];
+                setExpandedNodes([
+                    ...nodeIds,
+                    ...trialTypesUuids,
+                ]);
+                return;
+            }
         }
-    }, [experimentName, trialTypeName, trialName]);
+
+        setExpandedNodes(nodeIds);
+    };
 
     useEffect(() => {
         if (experiment) {
             addActionOnMap((mapObject) => {
                 new CoordsSpan().fromExperiment(experiment).fitBounds(mapObject);
             });
+            if (!expandedNodes.includes(experiment.trackUuid)) {
+                handleNodeToggle(undefined, [...expandedNodes, experiment.trackUuid]);
+            }
+        } else {
+            setShowConfig(SHOW_ALL_EXPERIMENTS);
         }
     }, [experimentName]);
-
-    useEffect(() => {
-        if (experiment && showConfig === SHOW_ONLY_TRIALS) {
-            setExpandedNodes(experiment.trialTypes.map(t => t.trackUuid));
-        }
-    }, [showConfig]);
 
     return (
         <Paper

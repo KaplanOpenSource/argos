@@ -3,22 +3,24 @@ import { TreeRow } from "../App/TreeRow";
 import { experimentContext } from "../Context/ExperimentProvider";
 import { useContext, useEffect } from "react";
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Download, GridOn, ReadMore, Upload } from "@mui/icons-material";
+import { Download, Edit, ReadMore } from "@mui/icons-material";
 import { AttributeItemList } from "./AttributeItemList";
 import { SCOPE_TRIAL } from "./AttributeType";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { useTrialGeoJson } from "../IO/TrialGeoJson";
 import { ButtonMenu } from "../Utils/ButtonMenu";
-import { UploadButton } from "../IO/UploadButton";
 import { CoordsSpan } from "./CoordsSpan";
 import { ActionsOnMapContext } from "../Map/ActionsOnMapContext";
 import { RealMapName } from "../constants/constants";
 import { sum } from "lodash";
 import { Typography } from "@mui/material";
+import { UploadDevicesButton } from "../IO/UploadDevices/UploadDevicesButton";
+import { useDeviceSeletion } from "../Context/useDeviceSeletion";
 
 export const Trial = ({ data, setData, experiment, trialType, children }) => {
-    const { currTrial, setCurrTrial, selection, setShownMap } = useContext(experimentContext);
-    const { downloadGeojson, downloadZipCsv, uploadTrial } = useTrialGeoJson();
+    const { selection } = useDeviceSeletion();
+    const { currTrial, setCurrTrial, setShownMap } = useContext(experimentContext);
+    const { downloadGeojson, downloadZipCsv } = useTrialGeoJson();
     const { addActionOnMap } = useContext(ActionsOnMapContext);
 
     const cloneDevices = () => {
@@ -55,6 +57,16 @@ export const Trial = ({ data, setData, experiment, trialType, children }) => {
         <TreeRow
             data={data}
             setData={setData}
+            textProps={data === currTrial.trial
+                ? {
+                    InputProps: {
+                        style: {
+                            fontWeight: 'bold',
+                        },
+                    }
+                }
+                : {}
+            }
             components={
                 <>
                     <DateProperty
@@ -68,7 +80,7 @@ export const Trial = ({ data, setData, experiment, trialType, children }) => {
                             setCurrTrial({ experimentName: experiment.name, trialTypeName: trialType.name, trialName: data.name });
                         }}
                     >
-                        <GridOn color={data === currTrial.trial ? "primary" : ""} />
+                        <Edit color={data === currTrial.trial ? "primary" : ""} />
                     </ButtonTooltip>
                     <ButtonTooltip
                         tooltip="Delete trial"
@@ -92,13 +104,12 @@ export const Trial = ({ data, setData, experiment, trialType, children }) => {
                     >
                         <Download />
                     </ButtonMenu>
-                    <UploadButton
-                        tooltip={'Upload devices as geojson, csv, zip of csvs'}
-                        uploadFunc={file => uploadTrial(file, data, experiment, (newData) => setData(newData))}
-                        color='default'
-                    >
-                        <Upload />
-                    </UploadButton>
+                    <UploadDevicesButton
+                        trial={data}
+                        trialType={trialType}
+                        experiment={experiment}
+                        setTrialData={setData}
+                    />
                     {children}
                     <Typography>
                         {placedDevices}/{totalDevices}

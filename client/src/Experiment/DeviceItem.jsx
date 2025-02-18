@@ -3,25 +3,17 @@ import { TreeRow } from "../App/TreeRow";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { AttributeItemList } from "./AttributeItemList";
 import { SelectDeviceButton } from "./SelectDeviceButton";
-import { RealMapName } from "../constants/constants";
 import { useContext } from "react";
 import { experimentContext } from "../Context/ExperimentProvider";
 import { SCOPE_TRIAL } from "./AttributeType";
 import { DeviceItemLocationButton } from "./DeviceItemLocationButton";
+import { useCurrTrial } from "../Context/useCurrTrial";
 
 export const DeviceItem = ({ data, setData, deviceType, showAttributes, devicesEnclosingList, scope, experiment }) => {
-    const { currTrial, setTrialData, deleteDevice } = useContext(experimentContext);
-    const devicesOnTrial = (currTrial.trial || {}).devicesOnTrial || [];
-    const mapName = currTrial.shownMapName || RealMapName;
-    const index = devicesOnTrial.findIndex(d => d.location.name === mapName && d.deviceTypeName === deviceType.name && d.deviceItemName === data.name);
-    const deviceTrial = devicesOnTrial[index];
-    const hasLocation = deviceTrial && deviceTrial.location && deviceTrial.location.coordinates;
+    const { currTrial, deleteDevice } = useContext(experimentContext);
 
-    const setAttrListOnTrial = newDeviceData => {
-        const data = { ...currTrial.trial, devicesOnTrial: devicesOnTrial.slice() };
-        data.devicesOnTrial[index] = newDeviceData;
-        setTrialData(data);
-    };
+    const { trial } = useCurrTrial({});
+    const device = trial.getDevice(deviceType.name, data.name);
 
     return (
         <TreeRow
@@ -45,7 +37,8 @@ export const DeviceItem = ({ data, setData, deviceType, showAttributes, devicesE
                     <DeviceItemLocationButton
                         deviceType={deviceType}
                         deviceItem={data}
-                        hasLocation={hasLocation}
+                        // hasLocation={device.hasLocationOnMap(currTrial?.shownMapName || RealMapName)}
+                        surroundingDevices={devicesEnclosingList}
                     />
                 </>
             }
@@ -53,8 +46,8 @@ export const DeviceItem = ({ data, setData, deviceType, showAttributes, devicesE
             {currTrial.experiment && showAttributes &&
                 <AttributeItemList
                     attributeTypes={deviceType.attributeTypes}
-                    data={scope === SCOPE_TRIAL ? deviceTrial : data}
-                    setData={scope === SCOPE_TRIAL ? setAttrListOnTrial : setData}
+                    data={scope === SCOPE_TRIAL ? device.onTrial() : data}
+                    setData={scope === SCOPE_TRIAL ? device.setOnTrial : setData}
                     scope={scope}
                     deviceItem={scope === SCOPE_TRIAL ? data : null}
                 />

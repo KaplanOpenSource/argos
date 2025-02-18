@@ -1,6 +1,4 @@
 import { TableBody, TableCell, TableHead, TableRow, Tooltip } from "@mui/material"
-import { AttributeItemOne } from "../AttributeItemList";
-import { SCOPE_EXPERIMENT } from "../AttributeType";
 import { AttributeTypesDialogButton } from "../AttributeTypesDialogButton";
 import { ButtonTooltip } from "../../Utils/ButtonTooltip";
 import { createNewName } from "../../Utils/utils";
@@ -17,19 +15,15 @@ export const DevicesTabularOneType = ({ deviceType, setDeviceType }) => {
             <TableHead key={':th_' + deviceType.name}>
                 <TableRow
                     sx={{
-                        backgroundColor: 'lightgray'
+                        "& th": {
+                            backgroundColor: "whitesmoke"
+                        }
                     }}
                 >
-                    <TableCell key={':tt'}
-                        onClick={() => setOpen(!open)}
+                    <TableCell key={':tr'}
+                        sx={{ paddingRight: 0 }}
                     >
-                        <Tooltip
-                            title={open ? "Click to collapse devices" : "Click to show devices"}
-                        >
-                            <span>
-                                Device Type
-                            </span>
-                        </Tooltip>
+                        {deviceType.name}
                         <ButtonTooltip
                             tooltip={open ? "Collapse devices" : "Show devices"}
                             onClick={() => setOpen(!open)}
@@ -42,9 +36,6 @@ export const DevicesTabularOneType = ({ deviceType, setDeviceType }) => {
                             setData={val => setDeviceType(val)}
                             isOfDevice={true}
                         />
-                    </TableCell>
-                    <TableCell key={':tr'}>
-                        Device
                         <ButtonTooltip
                             tooltip="Add new device"
                             onClick={e => {
@@ -61,6 +52,12 @@ export const DevicesTabularOneType = ({ deviceType, setDeviceType }) => {
                                 setDeviceType({ ...deviceType, devices: [...(deviceType.devices || []), ...newDevices] })
                             }}
                         />
+                    </TableCell>
+                    <TableCell key={':tlat'}>
+                        Latitude
+                    </TableCell>
+                    <TableCell key={':tlng'}>
+                        Longitude
                     </TableCell>
                     {deviceType?.attributeTypes?.map(attrType => {
                         let shortName = attrType.name;

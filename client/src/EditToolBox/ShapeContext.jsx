@@ -1,5 +1,5 @@
 import React, { createContext, useContext } from 'react'
-import { FREEPOSITIONING_SHAPE, CHOOSE_SHAPE, POINT_SHAPE } from './utils/constants.js';
+import { FREEPOSITIONING_SHAPE, CHOOSE_SHAPE, POINT_SHAPE, SELECT_SHAPE } from './utils/constants.js';
 import { arcCurveFromPoints, lerpPoint, rectByAngle, resamplePolyline, splineCurve } from '../Utils/GeometryUtils';
 
 export const ShapeContext = createContext(null)
@@ -7,13 +7,19 @@ export const ShapeContext = createContext(null)
 export const useShape = () => useContext(ShapeContext);
 
 export const ShapeProvider = ({ children }) => {
-    const [shape, setShape] = React.useState(CHOOSE_SHAPE);
+    const [shape, setShape] = React.useState(SELECT_SHAPE);
     const [rectAngle, setRectAngle] = React.useState(0);
     const [rectRows, setRectRows] = React.useState(3);
 
     const shapeOptions = [
         {
             name: CHOOSE_SHAPE,
+            noControlPoints: true,
+            toLine: points => [],
+            toPositions: (points, amount) => []
+        },
+        {
+            name: SELECT_SHAPE,
             noControlPoints: true,
             toLine: points => [],
             toPositions: (points, amount) => []

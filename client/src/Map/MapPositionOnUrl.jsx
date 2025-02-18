@@ -1,6 +1,5 @@
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import { useMapEvents } from "react-leaflet";
-import { experimentContext } from "../Context/ExperimentProvider";
 import { parseUrlParams, replaceUrlParams } from "../Utils/utils";
 
 export const MapPositionOnUrl = ({ }) => {

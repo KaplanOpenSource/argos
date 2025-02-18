@@ -29,9 +29,7 @@ export const TrialTypesList = ({ data, setData }) => {
                 }
             }}
             components={<>
-                <Typography>
-                    {trialTypes.length} Types {trialsNum} Trials
-                </Typography>
+                <Typography>{trialsNum} Trials</Typography>
             </>}
         >
             {trialTypes.map(itemData => (

@@ -1,20 +1,22 @@
 import { useContext } from "react";
-import { experimentContext } from "../Context/ExperimentProvider";
-import { RealMapName } from "../constants/constants";
+import { experimentContext } from "../../Context/ExperimentProvider";
+import { RealMapName } from "../../constants/constants";
 import { DeviceMarker } from "./DeviceMarker";
-import { PopupSwitchProvider } from "./PopupSwitchContext";
-import { AreaMarkListener } from "./AreaMarkListener";
+import { PopupSwitchProvider } from "../PopupSwitchContext";
+import { AreaMarkListener } from "../AreaMarkListener";
+import { useDeviceSeletion } from "../../Context/useDeviceSeletion";
 
 export const DeviceMarkersShown = ({ showDeviceNames }) => {
-    const { currTrial, setTrialData, selection, setSelection, hiddenDeviceTypes } = useContext(experimentContext);
+    const { selection, setSelection } = useDeviceSeletion();
+    const { currTrial, setTrialData, hiddenDeviceTypes } = useContext(experimentContext);
     const devicesOnTrial = (currTrial.trial || {}).devicesOnTrial || [];
     const mapName = currTrial.shownMapName || RealMapName;
-    
+
     const devicesWithoutLocation = [];
     const shownDevices = [];
 
     for (const dev of devicesOnTrial) {
-        const {location} = dev;
+        const { location } = dev;
         if (!location || !location.coordinates) {
             devicesWithoutLocation.push(dev);
         } else if (location.name === mapName) {
@@ -24,9 +26,9 @@ export const DeviceMarkersShown = ({ showDeviceNames }) => {
         }
     }
 
-    if (devicesWithoutLocation.length) {
-        console.log('no locations on devices:', JSON.stringify(devicesWithoutLocation));
-    }
+    // if (devicesWithoutLocation.length) {
+    //     console.log('no locations on devices:', JSON.stringify(devicesWithoutLocation));
+    // }
 
     return (
         <>
@@ -46,18 +48,19 @@ export const DeviceMarkersShown = ({ showDeviceNames }) => {
             </PopupSwitchProvider>
             <AreaMarkListener
                 onAreaMarked={({ boxZoomBounds }) => {
-                    const added = [];
+                    const newSelection = [...selection];
                     for (const { deviceItemName, deviceTypeName, location } of shownDevices) {
-                        if (boxZoomBounds.contains(location.coordinates)) {
-                            const isSelected = selection.find(s => {
+                        const coordinates = location.coordinates.map(x => parseFloat(x));
+                        if (boxZoomBounds.contains(coordinates)) {
+                            const isSelected = newSelection.find(s => {
                                 return s.deviceItemName === deviceItemName && s.deviceTypeName === deviceTypeName
                             });
                             if (!isSelected) {
-                                added.push({ deviceItemName, deviceTypeName });
+                                newSelection.push({ deviceItemName, deviceTypeName });
                             }
                         }
                     }
-                    setSelection([...selection, ...added]);
+                    setSelection(newSelection);
                 }}
             />
         </>
