@@ -19,7 +19,11 @@ const IconToBlob = ({ iconName, obtainIcon }) => {
     useEffect(() => {
         (async () => {
             if (divRef?.current && iconRef?.current) {
-                const canvas = await html2canvas(divRef.current, { logging: false });
+                const canvas = await html2canvas(divRef.current, {
+                    logging: false,
+                    scale: 10,
+                    backgroundColor: 'transparent',
+                });
                 const dataURL = canvas.toDataURL('image/png')
                 const binaryData = atob(dataURL.split(',')[1])
                 const arrayBuffer = new ArrayBuffer(binaryData.length)
