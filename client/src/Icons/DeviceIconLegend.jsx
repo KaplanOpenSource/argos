@@ -16,7 +16,7 @@ export const DeviceIconLegend = ({ }) => {
             zIndex: 10000,
             padding: 1,
         }}>
-            <Typography variant="h6" sx={{ textAlign: 'center' }}>Icons</Typography>
+            <Typography variant="h6" sx={{ textAlign: 'center' }}>Devices</Typography>
             {deviceTypes.map(deviceType => (
                 <Stack
                     key={deviceType.trackUuid}
