@@ -11,6 +11,7 @@ import { MapEventer } from './MapEventer';
 import { ImagePlacementStretcher } from './ImagePlacementStretcher';
 import 'leaflet-contextmenu';
 import 'leaflet-contextmenu/dist/leaflet.contextmenu.css';
+import { DeviceIconLegend } from '../Icons/DeviceIconLegend';
 
 L.Icon.Default.imagePath = 'leaflet-images/';
 
@@ -111,6 +112,7 @@ export const MapShower = ({ children }) => {
                 </>
             }
             <ZoomControl position='bottomright' />
+            <DeviceIconLegend />
             {children}
         </MapContainer>
     );
