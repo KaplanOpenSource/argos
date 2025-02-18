@@ -46,3 +46,11 @@ python3 -m venv .venv
 ```
 sh scripts/deploy.sh
 ```
+
+## Obtain icons categories
+Font Awesome icons do not expose categories for their icons, but those exist in open source on their repo.
+The `categories.yml` file is fetched, processed and committed to this repo.
+Just in case you want to refetch it, run:
+```
+sh icons/run.sh
+```
