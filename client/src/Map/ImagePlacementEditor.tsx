@@ -4,24 +4,43 @@ import { Tooltip } from "react-leaflet";
 import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
 import { Stack } from "@mui/material";
 import { distLatLngPythagoras, distXY, round9, roundDec } from "../Utils/GeometryUtils";
+import { IImageStandalone } from "../types/types";
+import React from "react";
 
-export const ImagePlacementEditor = ({ imageData, setImageData, startDiagonal = false, distLatLng = distLatLngPythagoras }) => {
+export const ImagePlacementEditor = ({
+    imageData,
+    setImageData,
+    startDiagonal = false,
+    distLatLng = distLatLngPythagoras,
+}: {
+    imageData: IImageStandalone,
+    setImageData: (newData: IImageStandalone) => void,
+    startDiagonal: boolean,
+    distLatLng: (p0: any, p1: any) => number,
+}) => {
+    const xleft = imageData.xleft ?? 0;
+    const ybottom = imageData.ybottom ?? 0;
+    const xright = imageData.xright ?? 400;
+    const ytop = imageData.ytop ?? 300;
+    const height = imageData.height ?? 300;
+    const width = imageData.width ?? 400;
+
     const [anchor, setAnchor] = useState({
-        lat: imageData.ybottom,
-        lng: imageData.xleft,
+        lat: ybottom,
+        lng: xleft,
         x: 0,
         y: 0,
     });
     const [anotherPoint, setAnotherPoint] = useState({
-        lat: startDiagonal ? imageData.ytop : imageData.ybottom,
-        lng: imageData.xright,
-        x: imageData.width,
-        y: startDiagonal ? imageData.height : 0,
+        lat: startDiagonal ? ytop : ybottom,
+        lng: xright,
+        x: width,
+        y: startDiagonal ? height : 0,
     });
 
     const calcPointXY = ({ lat, lng }) => {
-        const x = (lng - imageData.xleft) / (imageData.xright - imageData.xleft) * imageData.width;
-        const y = (lat - imageData.ybottom) / (imageData.ytop - imageData.ybottom) * imageData.height;
+        const x = (lng - xleft) / (xright - xleft) * width;
+        const y = (lat - ybottom) / (ytop - ybottom) * height;
         return ({ lat, lng, x, y });
     }
 
@@ -41,8 +60,8 @@ export const ImagePlacementEditor = ({ imageData, setImageData, startDiagonal = 
         const factorPixelToMeter = dlnglat / dxy;
         const left = round9(anchor.lng - anchor.x * factorPixelToMeter);
         const lower = round9(anchor.lat - anchor.y * factorPixelToMeter);
-        const right = round9(left + imageData.width * factorPixelToMeter);
-        const upper = round9(lower + imageData.height * factorPixelToMeter);
+        const right = round9(left + width * factorPixelToMeter);
+        const upper = round9(lower + height * factorPixelToMeter);
         setImageData({ ...imageData, ybottom: lower, ytop: upper, xleft: left, xright: right });
 
         setAnotherPoint({ ...anotherPoint, lng, lat });
