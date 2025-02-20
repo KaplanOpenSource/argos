@@ -1,6 +1,6 @@
 import React from "react";
-import { ChosenMarker } from "./ChosenMarker.jsx";
-import { DashedPolyline } from "./DashedPolyline.jsx";
+import { ChosenMarker } from "./ChosenMarker";
+import { DashedPolyline } from "./DashedPolyline";
 import { MarkedPoint } from "./MarkedPoint";
 
 export const AnchorPointsDiagonal = ({ anchorLatLng, anotherLatLng, setAnchorLatLng, setAnotherLatLng, anchorXY, anotherXY, children, ...props }) => {
