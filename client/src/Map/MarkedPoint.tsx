@@ -11,10 +11,10 @@ export const MarkedPoint = ({
     locationToShow,
     ...restProps
 }: {
-    location: [number, number],
-    dragLocation: (latlng: [number, number]) => void,
-    setLocation: (latlng: [number, number]) => void | boolean,
-    locationToShow: string,
+    location: [number, number], // [lat, lng]
+    dragLocation?: (latlng: [number, number]) => void,
+    setLocation?: (latlng: [number, number]) => void | boolean,
+    locationToShow?: string,
 }) => {
     let locationToShowStr: string;
     if (!locationToShow) {

@@ -10,7 +10,7 @@ export const DashedPolyline = ({
     ...props
 }: {
     positions: LatLngExpression[],
-    children: ReactNode,
+    children?: ReactNode,
 }) => (
     <Polyline
         positions={positions}

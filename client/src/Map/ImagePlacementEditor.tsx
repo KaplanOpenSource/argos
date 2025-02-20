@@ -1,11 +1,12 @@
-import { useState } from "react";
-import { AnchorPointsDiagonal } from "./AnchorPointsDiagonal";
-import { Tooltip } from "react-leaflet";
-import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
+import React, { useState } from "react";
 import { Stack } from "@mui/material";
+import { Tooltip } from "react-leaflet";
 import { distLatLngPythagoras, distXY, round9, roundDec } from "../Utils/GeometryUtils";
+import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
 import { IImageStandalone } from "../types/types";
-import React from "react";
+import { ChosenMarker } from "./ChosenMarker";
+import { DashedPolyline } from "./DashedPolyline";
+import { MarkedPoint } from "./MarkedPoint";
 
 interface IAnchorPoint {
     lat: number,
@@ -87,35 +88,53 @@ export const ImagePlacementEditor = ({
     }
 
     return (
-        <AnchorPointsDiagonal
-            anchorLatLng={{ lat: anchor.lat, lng: anchor.lng }}
-            anotherLatLng={{ lat: anotherPoint.lat, lng: anotherPoint.lng }}
-            anchorXY={{ x: anchor.x, y: anchor.y }}
-            anotherXY={{ x: anotherPoint.x, y: anotherPoint.y }}
-            setAnchorLatLng={({ lat, lng }) => setAnchor(calcPointXY({ lat, lng }))}
-            setAnotherLatLng={({ lat, lng }) => setAnotherPoint(calcPointXY({ lat, lng }))}
-        >
-            <Tooltip
-                position={{ lat: (anchor.lat + anotherPoint.lat) / 2, lng: (anchor.lng + anotherPoint.lng) / 2 }}
-                permanent={true}
-                direction="top"
-                interactive={true}
+        <>
+            <MarkedPoint
+                key='anchor'
+                location={[anchor.lat, anchor.lng]}
+                locationToShow={`(${round9(anchor.lng)}, ${round9(anchor.lat)}) in meters<br/>(${round9(anchor.x)}, ${round9(anchor.y)}) in pixels`}
+                setLocation={([lat, lng]) => setAnchor(calcPointXY({ lat, lng }))}
             >
-                <Stack>
-                    <TextFieldDebounceOutlined
-                        InputProps={{ style: { height: '30px', width: '120px' } }}
-                        label="Span in meters"
-                        value={roundDec(distLatLng(anchor, anotherPoint))}
-                        onChange={(newDist) => changeDistMeters(newDist)}
-                    />
-                    <TextFieldDebounceOutlined
-                        InputProps={{ style: { height: '30px', width: '120px' } }}
-                        label="Span in Pixels"
-                        value={roundDec(distXY(anchor, anotherPoint))}
-                        onChange={(newDist) => changeDistPixels(newDist)}
-                    />
-                </Stack>
-            </Tooltip>
-        </AnchorPointsDiagonal>
+            </MarkedPoint>
+            <ChosenMarker
+                key='chosen'
+                center={[anchor.lat, anchor.lng]}
+            />
+            <MarkedPoint
+                key='another'
+                location={[anotherPoint.lat, anotherPoint.lng]}
+                locationToShow={`(${round9(anotherPoint.lng)}, ${round9(anotherPoint.lat)}) in meters<br/>(${round9(anotherPoint.x)}, ${round9(anotherPoint.y)}) in pixels`}
+                setLocation={([lat, lng]) => setAnotherPoint(calcPointXY({ lat, lng }))}
+            >
+            </MarkedPoint>
+            <DashedPolyline
+                positions={[
+                    anchor,
+                    anotherPoint
+                ]}
+            >
+                <Tooltip
+                    position={{ lat: (anchor.lat + anotherPoint.lat) / 2, lng: (anchor.lng + anotherPoint.lng) / 2 }}
+                    permanent={true}
+                    direction="top"
+                    interactive={true}
+                >
+                    <Stack>
+                        <TextFieldDebounceOutlined
+                            InputProps={{ style: { height: '30px', width: '120px' } }}
+                            label="Span in meters"
+                            value={roundDec(distLatLng(anchor, anotherPoint))}
+                            onChange={(newDist) => changeDistMeters(newDist)}
+                        />
+                        <TextFieldDebounceOutlined
+                            InputProps={{ style: { height: '30px', width: '120px' } }}
+                            label="Span in Pixels"
+                            value={roundDec(distXY(anchor, anotherPoint))}
+                            onChange={(newDist) => changeDistPixels(newDist)}
+                        />
+                    </Stack>
+                </Tooltip>
+            </DashedPolyline>
+        </>
     )
 }
