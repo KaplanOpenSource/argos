@@ -2,7 +2,7 @@ import { CRS } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useContext } from 'react';
 
-import { MapContainer, ZoomControl } from 'react-leaflet';
+import { AttributionControl, MapContainer, ZoomControl } from 'react-leaflet';
 import { experimentContext } from '../Context/ExperimentProvider';
 import { RealMap } from './RealMap';
 import { ImageMap } from './ImageMap';
@@ -80,7 +80,11 @@ export const MapShower = ({ children }) => {
             minZoom={-6}
             maxZoom={30}
             contextmenu={true}
+            attributionControl={false}
         >
+            <AttributionControl
+                prefix={'Argos | <a href="https://leafletjs.com/">Leaflet</a>'}
+            />
             <MapEventer directlyOnMap={false}
                 mapEvents={{
                     layeradd: (_, mapObject) => mapObject.options.crs = shownMap ? CRS.Simple : CRS.EPSG3857

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Marker, Popup, Tooltip } from "react-leaflet";
+import { Marker, Popup } from "react-leaflet";
 import { CustomIcon } from './CustomIcon';
 
 let dragStartLoc;
