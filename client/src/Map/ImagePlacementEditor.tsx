@@ -89,24 +89,18 @@ export const ImagePlacementEditor = ({
 
     return (
         <>
+            <ChosenMarker center={[anchor.lat, anchor.lng]}>
+                <MarkedPoint
+                    location={[anchor.lat, anchor.lng]}
+                    setLocation={([lat, lng]) => setAnchor(calcPointXY({ lat, lng }))}
+                    locationToShow={`(${round9(anchor.lng)}, ${round9(anchor.lat)}) in meters<br/>(${round9(anchor.x)}, ${round9(anchor.y)}) in pixels`}
+                />
+            </ChosenMarker>
             <MarkedPoint
-                key='anchor'
-                location={[anchor.lat, anchor.lng]}
-                locationToShow={`(${round9(anchor.lng)}, ${round9(anchor.lat)}) in meters<br/>(${round9(anchor.x)}, ${round9(anchor.y)}) in pixels`}
-                setLocation={([lat, lng]) => setAnchor(calcPointXY({ lat, lng }))}
-            >
-            </MarkedPoint>
-            <ChosenMarker
-                key='chosen'
-                center={[anchor.lat, anchor.lng]}
-            />
-            <MarkedPoint
-                key='another'
                 location={[anotherPoint.lat, anotherPoint.lng]}
-                locationToShow={`(${round9(anotherPoint.lng)}, ${round9(anotherPoint.lat)}) in meters<br/>(${round9(anotherPoint.x)}, ${round9(anotherPoint.y)}) in pixels`}
                 setLocation={([lat, lng]) => setAnotherPoint(calcPointXY({ lat, lng }))}
-            >
-            </MarkedPoint>
+                locationToShow={`(${round9(anotherPoint.lng)}, ${round9(anotherPoint.lat)}) in meters<br/>(${round9(anotherPoint.x)}, ${round9(anotherPoint.y)}) in pixels`}
+            />
             <DashedPolyline
                 positions={[
                     anchor,
