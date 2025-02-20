@@ -23,7 +23,7 @@ export const MarkedShape = ({ markedPoints, setMarkedPoints, deviceNum, distance
             dist = polylineDistance(latlngs);
         }
         if (dist > 0) {
-            leafletElement.bindTooltip(distToText(dist)).openTooltip();
+            leafletElement.bindTooltip(distToText(dist), { permanent: true }).openTooltip();
         }
     };
 

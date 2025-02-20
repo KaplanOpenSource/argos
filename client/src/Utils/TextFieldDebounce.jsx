@@ -40,6 +40,8 @@ export const TextFieldDebounce = ({ value, onChange = () => { }, debounceMs = 50
                 value={innerValue === undefined ? "" : innerValue}
                 onChange={handleChange}
                 onClick={e => e.stopPropagation()}
+                onMouseDown={e => e.stopPropagation()}
+                onDoubleClick={e => e.stopPropagation()}
             />
         </Tooltip>
     );

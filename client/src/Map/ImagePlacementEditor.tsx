@@ -33,23 +33,18 @@ export const ImagePlacementEditor = ({
     const height = imageData.height ?? 300;
     const width = imageData.width ?? 400;
 
-    const [anchor, setAnchor] = useState<IAnchorPoint>({
-        lat: ybottom,
-        lng: xleft,
-        x: 0,
-        y: 0,
-    });
-    const [anotherPoint, setAnotherPoint] = useState<IAnchorPoint>({
-        lat: startDiagonal ? ytop : ybottom,
-        lng: xright,
-        x: width,
-        y: startDiagonal ? height : 0,
-    });
-
     const calcPointXY = ({ lat, lng }: { lat: number, lng: number }): IAnchorPoint => {
         const x = (lng - xleft) / (xright - xleft) * width;
         const y = (lat - ybottom) / (ytop - ybottom) * height;
         return ({ lat, lng, x, y });
+    }
+
+    const [anchor, setAnchor] = useState<IAnchorPoint>(() => calcPointXY({ lat: ytop, lng: xleft }));
+    const [anotherPoint, setAnotherPoint] = useState<IAnchorPoint>(() => calcPointXY({ lat: ytop, lng: xright }));
+    const [zeroPoint, setZeroPoint] = useState<IAnchorPoint>(() => calcPointXY({ lat: 0, lng: 0 }));
+
+    const anchorToStr = (p: IAnchorPoint): string => {
+        return `(${roundDec(p.lng)}, ${roundDec(p.lat)}) in meters<br/>(${roundDec(p.x)}, ${roundDec(p.y)}) in pixels`;
     }
 
     const changeDistMeters = (newDist: number): void => {
@@ -87,20 +82,36 @@ export const ImagePlacementEditor = ({
         }
     }
 
+    const changeZeroPoint = (lat: number, lng: number) => {
+        const xyZero = calcPointXY({ lat, lng });
+        setImageData({
+            ...imageData,
+            ybottom: ybottom - lat,
+            ytop: ytop - lat,
+            xleft: xleft - lng,
+            xright: xright - lng,
+        });
+        setTimeout(() => {
+            setZeroPoint(calcPointXY({ lat: 0, lng: 0 }));
+        }, 100);
+    }
+
     return (
         <>
             <ChosenMarker center={[anchor.lat, anchor.lng]}>
                 <MarkedPoint
                     location={[anchor.lat, anchor.lng]}
                     setLocation={([lat, lng]) => setAnchor(calcPointXY({ lat, lng }))}
-                    locationToShow={`(${round9(anchor.lng)}, ${round9(anchor.lat)}) in meters<br/>(${round9(anchor.x)}, ${round9(anchor.y)}) in pixels`}
+                    locationToShow={"Measure anchor 0:<br/>" + anchorToStr(anchor)}
                 />
             </ChosenMarker>
-            <MarkedPoint
-                location={[anotherPoint.lat, anotherPoint.lng]}
-                setLocation={([lat, lng]) => setAnotherPoint(calcPointXY({ lat, lng }))}
-                locationToShow={`(${round9(anotherPoint.lng)}, ${round9(anotherPoint.lat)}) in meters<br/>(${round9(anotherPoint.x)}, ${round9(anotherPoint.y)}) in pixels`}
-            />
+            <ChosenMarker center={[anotherPoint.lat, anotherPoint.lng]} color="green">
+                <MarkedPoint
+                    location={[anotherPoint.lat, anotherPoint.lng]}
+                    setLocation={([lat, lng]) => setAnotherPoint(calcPointXY({ lat, lng }))}
+                    locationToShow={"Measure anchor 1:<br/>" + anchorToStr(anotherPoint)}
+                />
+            </ChosenMarker>
             <DashedPolyline
                 positions={[
                     anchor,
@@ -129,6 +140,13 @@ export const ImagePlacementEditor = ({
                     </Stack>
                 </Tooltip>
             </DashedPolyline>
+            <ChosenMarker center={[zeroPoint.lat, zeroPoint.lng]} color="blue">
+                <MarkedPoint
+                    location={[zeroPoint.lat, zeroPoint.lng]}
+                    locationToShow={"zero point:<br/>" + anchorToStr(zeroPoint)}
+                    setLocation={([lat, lng]) => changeZeroPoint(lat, lng)}
+                />
+            </ChosenMarker>
         </>
     )
 }

@@ -2,12 +2,20 @@ import React, { ReactNode } from "react";
 import { LatLngExpression } from "leaflet";
 import { CircleMarker } from "react-leaflet";
 
-export const ChosenMarker = ({ center, children }: { center: LatLngExpression, children?: ReactNode }) => (
+export const ChosenMarker = ({
+    center,
+    color = 'red',
+    children,
+}: {
+    center: LatLngExpression,
+    color?: string,
+    children?: ReactNode,
+}) => (
     <CircleMarker
         key='chosen'
         center={center}
         radius={9}
-        color={'red'}
+        color={color}
         opacity={1}
         dashArray={'4 4'}
         weight={2}

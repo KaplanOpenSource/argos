@@ -1,5 +1,5 @@
 import React from 'react';
-import { Marker, Popup } from "react-leaflet";
+import { Marker, Tooltip } from "react-leaflet";
 import { CustomIcon } from './CustomIcon';
 
 let dragStartLoc;
@@ -52,13 +52,13 @@ export const MarkedPoint = ({
             icon={CustomIcon()}
             {...restProps}
         >
-            <Popup
-                // permanent
+            <Tooltip
+            // permanent
             >
                 {locationToShowStr.split('<br/>').map((l, i) => (
                     <span key={i}>{l}<br /></span>
                 ))}
-            </Popup>
+            </Tooltip>
         </Marker >
     )
 }
