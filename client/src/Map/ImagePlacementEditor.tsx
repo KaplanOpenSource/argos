@@ -7,6 +7,13 @@ import { distLatLngPythagoras, distXY, round9, roundDec } from "../Utils/Geometr
 import { IImageStandalone } from "../types/types";
 import React from "react";
 
+interface IAnchorPoint {
+    lat: number,
+    lng: number,
+    x: number,
+    y: number,
+};
+
 export const ImagePlacementEditor = ({
     imageData,
     setImageData,
@@ -25,26 +32,26 @@ export const ImagePlacementEditor = ({
     const height = imageData.height ?? 300;
     const width = imageData.width ?? 400;
 
-    const [anchor, setAnchor] = useState({
+    const [anchor, setAnchor] = useState<IAnchorPoint>({
         lat: ybottom,
         lng: xleft,
         x: 0,
         y: 0,
     });
-    const [anotherPoint, setAnotherPoint] = useState({
+    const [anotherPoint, setAnotherPoint] = useState<IAnchorPoint>({
         lat: startDiagonal ? ytop : ybottom,
         lng: xright,
         x: width,
         y: startDiagonal ? height : 0,
     });
 
-    const calcPointXY = ({ lat, lng }) => {
+    const calcPointXY = ({ lat, lng }: { lat: number, lng: number }): IAnchorPoint => {
         const x = (lng - xleft) / (xright - xleft) * width;
         const y = (lat - ybottom) / (ytop - ybottom) * height;
         return ({ lat, lng, x, y });
     }
 
-    const changeDistMeters = (newDist) => {
+    const changeDistMeters = (newDist: number): void => {
         const dxy = distXY(anotherPoint, anchor);
         if (newDist < 1e-3 || dxy < 1e-3) {
             return;
@@ -67,7 +74,7 @@ export const ImagePlacementEditor = ({
         setAnotherPoint({ ...anotherPoint, lng, lat });
     }
 
-    const changeDistPixels = (newDist) => {
+    const changeDistPixels = (newDist: number): void => {
         const dxy = distXY(anotherPoint, anchor);
         if (newDist > 1e-3 && dxy > 1e-3) {
             const factorOldToNew = newDist / dxy;
