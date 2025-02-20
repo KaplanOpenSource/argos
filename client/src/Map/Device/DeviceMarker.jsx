@@ -6,11 +6,21 @@ import { experimentContext } from "../../Context/ExperimentProvider";
 import { renderToStaticMarkup } from "react-dom/server";
 import { divIcon } from "leaflet";
 import { IconDeviceByName } from "../../Icons/IconPicker";
-import { locationToString } from "../../Utils/utils";
 import { useShape } from "../../EditToolBox/ShapeContext";
 import { SELECT_SHAPE } from "../../EditToolBox/utils/constants";
 import { useCurrTrial } from "../../Context/useCurrTrial";
 import { useDeviceSeletion } from "../../Context/useDeviceSeletion";
+import { RealMapName } from "../../constants/constants";
+import { round9, roundDec } from "../../Utils/GeometryUtils";
+
+export const locationToStr = (location) => {
+    const { coordinates } = location || {};
+    if (location?.name === RealMapName || !location?.name) {
+        return `lat: ${round9(coordinates[0])}, lng: ${round9(coordinates[1])}`;
+    } else {
+        return `x: ${roundDec(coordinates[1])}, y: ${roundDec(coordinates[0])}`;
+    }
+}
 
 export const DeviceMarker = ({ deviceOnTrial, setDeviceOnTrial, showDeviceNames }) => {
     const { selection, setSelection } = useDeviceSeletion();
@@ -97,7 +107,7 @@ export const DeviceMarker = ({ deviceOnTrial, setDeviceOnTrial, showDeviceNames 
                     </>
                 )}
                 <span id="tooltip-marker">
-                    {locationToString(coordinates)}
+                    {locationToStr(location)}
                 </span>
             </Tooltip>
             <Popup
