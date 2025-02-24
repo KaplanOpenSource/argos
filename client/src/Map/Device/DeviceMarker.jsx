@@ -65,7 +65,7 @@ export const DeviceMarker = ({ deviceOnTrial, setDeviceOnTrial, showDeviceNames 
                     setLocation(e.target.getLatLng());
                 },
                 drag: e => {
-                    document.getElementById('tooltip-marker').textContent = locationToString([e.latlng.lat, e.latlng.lng]);
+                    document.getElementById('tooltip-marker').textContent = locationToStr({ coordinates: [e.latlng.lat, e.latlng.lng] });
                 },
                 click: () => {
                     if (shape === SELECT_SHAPE) {
