@@ -12,6 +12,7 @@ import * as fa_all from "@fortawesome/free-solid-svg-icons";
 import { MARKER_DEFAULT_ICON } from "../Icons/IconPicker";
 import html2canvas from 'html2canvas';
 import { isEqual } from "lodash";
+import { SCOPE_TRIAL } from "../Experiment/AttributeType";
 
 const IconToBlob = ({ iconName, obtainIcon }) => {
     const divRef = useRef(null);
@@ -51,6 +52,18 @@ const IconToBlob = ({ iconName, obtainIcon }) => {
     )
 }
 
+const fillDefaults = (experiment) => {
+    const ret = structuredClone(experiment);
+    for (const deviceType of ret.deviceTypes || []) {
+        for (const attrType of deviceType?.attributeTypes) {
+            if (!attrType.scope) {
+                attrType.scope = SCOPE_TRIAL;
+            }
+        }
+    }
+    return ret;
+}
+
 export const DownloadExperimentButton = ({ experiment }) => {
     const { downloadImageAsBlob } = useDownloadImage();
     const [working, setWorking] = useState(false);
@@ -61,7 +74,8 @@ export const DownloadExperimentButton = ({ experiment }) => {
     const downloadExperimentAsZip = useCallback(async (experiment) => {
         const zip = JSZip();
         const cleaned = cleanUuids(experiment);
-        zip.file(`data.json`, JSON.stringify(cleaned));
+        const filled = fillDefaults(cleaned);
+        zip.file(`data.json`, JSON.stringify(filled));
         const images = (experiment.imageStandalone || []).concat((experiment.imageEmbedded || []));
         for (const img of images) {
             if (img.filename) {
