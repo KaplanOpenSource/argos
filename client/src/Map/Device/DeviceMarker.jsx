@@ -10,6 +10,7 @@ import { useDeviceSeletion } from "../../Context/useDeviceSeletion";
 import { RealMapName } from "../../constants/constants";
 import { round9, roundDec } from "../../Utils/GeometryUtils";
 import { DeviceMarkerIcon } from "./DeviceMarkerIcon";
+import { DirectionArrow } from "./DirectionArrow";
 
 export const locationToStr = (location) => {
     const { coordinates } = location || {};
@@ -49,6 +50,8 @@ export const DeviceMarker = ({ deviceOnTrial, setDeviceOnTrial, showDeviceNames 
 
     const icon = DeviceMarkerIcon({ iconName: deviceType.icon, deviceItemName, isSelected, showDeviceNames });
 
+    const direction = deviceOnTrial.attributes?.find(a => a.name === 'direction');
+
     return (
         <Marker
             key={deviceTypeName + '_' + deviceItemName}
@@ -78,7 +81,7 @@ export const DeviceMarker = ({ deviceOnTrial, setDeviceOnTrial, showDeviceNames 
                 },
             }}
         >
-            <Tooltip permanent>
+            <Tooltip>
                 {showDeviceNames ? null : (
                     <>
                         {deviceItemName}
@@ -98,6 +101,11 @@ export const DeviceMarker = ({ deviceOnTrial, setDeviceOnTrial, showDeviceNames 
                 >
                 </SingleDevicePropertiesView>
             </Popup>
+            {direction === undefined ? null : (
+                <DirectionArrow
+                    deviceOnTrial={deviceOnTrial}
+                />
+            )}
         </Marker>
     )
 }
