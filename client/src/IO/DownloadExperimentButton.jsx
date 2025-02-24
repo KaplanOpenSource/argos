@@ -59,6 +59,9 @@ const fillDefaults = (experiment) => {
             if (!attrType.scope) {
                 attrType.scope = SCOPE_TRIAL;
             }
+            if (!attrType.required) {
+                attrType.required = false;
+            }
         }
     }
     return ret;

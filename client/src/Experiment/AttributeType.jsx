@@ -21,7 +21,7 @@ export const AttributeType = ({ data, setData, isOfDevice }) => {
                         label="Required"
                         control={
                             <Switch
-                                checked={data.required}
+                                checked={data.required || false}
                                 onChange={(e) => setData({ ...data, required: e.target.checked })}
                             />
                         }
