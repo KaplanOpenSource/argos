@@ -3,15 +3,13 @@ import { SingleDevicePropertiesView } from "./SingleDevicePropertiesView";
 import { useContext, useEffect, useRef } from "react";
 import { usePopupSwitch } from "../PopupSwitchContext";
 import { experimentContext } from "../../Context/ExperimentProvider";
-import { renderToStaticMarkup } from "react-dom/server";
-import { divIcon } from "leaflet";
-import { IconDeviceByName } from "../../Icons/IconPicker";
 import { useShape } from "../../EditToolBox/ShapeContext";
 import { SELECT_SHAPE } from "../../EditToolBox/utils/constants";
 import { useCurrTrial } from "../../Context/useCurrTrial";
 import { useDeviceSeletion } from "../../Context/useDeviceSeletion";
 import { RealMapName } from "../../constants/constants";
 import { round9, roundDec } from "../../Utils/GeometryUtils";
+import { DeviceMarkerIcon } from "./DeviceMarkerIcon";
 
 export const locationToStr = (location) => {
     const { coordinates } = location || {};
@@ -48,27 +46,8 @@ export const DeviceMarker = ({ deviceOnTrial, setDeviceOnTrial, showDeviceNames 
     const isSelected = selection.find(s => s.deviceItemName === deviceItemName && s.deviceTypeName === deviceTypeName);
 
     const deviceType = currTrial.experiment.deviceTypes.find(dt => dt.name === deviceTypeName);
-    const iconName = deviceType.icon;
 
-    const icon = divIcon({
-        className: 'argos-leaflet-div-icon',
-        iconSize: [20, 20],
-        iconAnchor: [10, 22],
-        html: renderToStaticMarkup(
-            <div>
-                <IconDeviceByName
-                    iconName={iconName}
-                    size="xl"
-                    color={isSelected ? '#297A31' : '#1B2C6F'}
-                />
-                {!showDeviceNames ? null :
-                    <span style={{ backgroundColor: "#fafa44", marginTop: 5, padding: 3, borderColor: "black", color: '#ff4466' }}>
-                        {deviceItemName.replace(/ /g, '\u00a0')}
-                    </span>
-                }
-            </div>
-        )
-    });
+    const icon = DeviceMarkerIcon({ iconName: deviceType.icon, deviceItemName, isSelected, showDeviceNames });
 
     return (
         <Marker
@@ -99,7 +78,7 @@ export const DeviceMarker = ({ deviceOnTrial, setDeviceOnTrial, showDeviceNames 
                 },
             }}
         >
-            <Tooltip>
+            <Tooltip permanent>
                 {showDeviceNames ? null : (
                     <>
                         {deviceItemName}
