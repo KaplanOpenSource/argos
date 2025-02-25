@@ -70,10 +70,18 @@ export const DrawShapeButton = ({ data, setData }) => {
 
     const addPolyline = (isPolygon) => {
         addShape(
-            (mapObj) => new L.Draw.Polyline(mapObj),
+            (mapObj) => {
+                if (isPolygon) {
+                    return new L.Draw.Polygon(mapObj);
+                } else {
+                    return new L.Draw.Polyline(mapObj);
+                }
+            },
             (e) => {
-                const coordinates = e?.layer?._latlngs?.map(({ lat, lng }) => [lat, lng]) || [];
-                return { "type": isPolygon ? "Polygon" : "Polyline", coordinates };
+                const latlngs = (isPolygon ? e?.layer?._latlngs[0] : e?.layer?._latlngs) || [];
+                const coordinates = latlngs.map(({ lat, lng }) => [lat, lng]) || [];
+                const type = isPolygon ? "Polygon" : "Polyline";
+                return { type, coordinates };
             },
             'Click on each point to finish click on the last point',
             (draw) => (draw._markers && draw._markers.length) ? `total ${draw._measurementRunningTotal} of ${draw._markers.length} points` : undefined
@@ -96,8 +104,9 @@ export const DrawShapeButton = ({ data, setData }) => {
             <Edit />
         </ButtonTooltip>
         <Snackbar
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
             open={snack !== undefined}
+            style={{ zIndex: 10000 }}
         >
             <Alert color="info">
                 {snack}
