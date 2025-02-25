@@ -13,7 +13,7 @@ import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { DeviceTypesList } from "./DeviceTypesList";
 import { TrialTypesList } from "./TrialTypesList";
-import { ShapeList } from "./ShapeList";
+import { ShapeList } from "./Shape/ShapeList";
 import { useShownMap } from "../Context/useShownMap";
 import { DownloadExperimentButton } from "../IO/DownloadExperimentButton";
 

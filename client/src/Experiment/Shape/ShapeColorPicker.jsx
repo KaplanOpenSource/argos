@@ -1,7 +1,7 @@
 import { Box, Paper, Popover, Stack, Tooltip, Typography } from "@mui/material";
 import { Path } from "leaflet";
 import { useState } from "react";
-import { DEFAULT_COLOR, DEFAULT_FILL_OPACITY, DEFAULT_LINE_OPACITY } from "../MapDraw/defaults";
+import { DEFAULT_COLOR, DEFAULT_FILL_OPACITY, DEFAULT_LINE_OPACITY } from "../../MapDraw/defaults";
 
 const Square = ({ fillColor, lineColor, fillOpacity, lineOpacity, side = 20, tooltipTitle, ...restProps }) => {
     // Combine color and opacity for border and background

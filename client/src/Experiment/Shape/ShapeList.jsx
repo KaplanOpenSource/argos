@@ -1,10 +1,9 @@
 import { useContext, useEffect } from "react";
-import { TreeSublist } from "../App/TreeSublist";
+import { TreeSublist } from "../../App/TreeSublist";
 import { ShapeItem } from "./ShapeItem";
-import { changeByName } from "../Utils/utils";
-import { Typography } from "@mui/material";
-import { AddShapeButtons } from "./AddShapeButtons";
-import { ExperimentTreeNodesExpandedContext } from "./ExperimentTreeNodesExpandedProvider";
+import { changeByName } from "../../Utils/utils";
+import { AddShapeButtons } from "../AddShapeButtons";
+import { ExperimentTreeNodesExpandedContext } from "../ExperimentTreeNodesExpandedProvider";
 
 export const ShapeList = ({ data, setData }) => {
 

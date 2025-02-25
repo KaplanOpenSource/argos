@@ -1,5 +1,5 @@
 import React from "react"
-import { SelectProperty } from "../Property/SelectProperty"
+import { SelectProperty } from "../../Property/SelectProperty"
 
 export const ShapeTypeSelect = ({ type, setType }) => {
     return (
