@@ -9,6 +9,10 @@ const refcurrToCoords = (refcurr) => {
     return refcurr.editing._verticesHandlers[0]._markers.map(x => [x._latlng.lat, x._latlng.lng]);
 }
 
+const sanitizeCoords = (coordinates) => {
+    return coordinates.filter(x => x?.length === 2 && Number.isFinite(x[0]) && Number.isFinite(x[1])) || []
+}
+
 export const PolyLineEdit = ({ data, setData }) => {
     const ref = useRef();
 
@@ -25,7 +29,7 @@ export const PolyLineEdit = ({ data, setData }) => {
     return (
         <Polyline
             ref={ref}
-            positions={data?.coordinates || []}
+            positions={sanitizeCoords(data?.coordinates)}
             fillOpacity={data?.fillOpacity ?? DEFAULT_FILL_OPACITY}
             opacity={data?.lineOpacity ?? DEFAULT_LINE_OPACITY}
             color={data?.lineColor ?? DEFAULT_COLOR}
@@ -54,7 +58,7 @@ export const PolygonEdit = ({ data, setData }) => {
     return (
         <Polygon
             ref={ref}
-            positions={data?.coordinates || []}
+            positions={sanitizeCoords(data?.coordinates)}
             fillOpacity={data?.fillOpacity ?? DEFAULT_FILL_OPACITY}
             opacity={data?.lineOpacity ?? DEFAULT_LINE_OPACITY}
             color={data?.lineColor ?? DEFAULT_COLOR}

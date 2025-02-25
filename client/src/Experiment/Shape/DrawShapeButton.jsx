@@ -68,12 +68,12 @@ export const DrawShapeButton = ({ data, setData }) => {
         );
     }
 
-    const addPolyline = () => {
+    const addPolyline = (isPolygon) => {
         addShape(
             (mapObj) => new L.Draw.Polyline(mapObj),
             (e) => {
                 const coordinates = e?.layer?._latlngs?.map(({ lat, lng }) => [lat, lng]) || [];
-                return { "type": "Polyline", coordinates };
+                return { "type": isPolygon ? "Polygon" : "Polyline", coordinates };
             },
             'Click on each point to finish click on the last point',
             (draw) => (draw._markers && draw._markers.length) ? `total ${draw._measurementRunningTotal} of ${draw._markers.length} points` : undefined
@@ -86,8 +86,10 @@ export const DrawShapeButton = ({ data, setData }) => {
             onClick={() => {
                 if (data.type === 'Circle') {
                     addCircle();
+                } else if (data.type === 'Polyline') {
+                    addPolyline(false);
                 } else {
-                    addPolyline();
+                    addPolyline(true);
                 }
             }}
         >
