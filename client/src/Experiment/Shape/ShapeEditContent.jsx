@@ -5,8 +5,10 @@ import { ButtonTooltip } from "../../Utils/ButtonTooltip";
 import { Add, Delete } from "@mui/icons-material";
 import { ShapeTypeSelect } from "./ShapeTypeSelect";
 import { ShapeColorPicker } from "./ShapeColorPicker";
+import { DrawShapeButton } from "./DrawShapeButton";
 
 export const ShapeEditContent = ({ data, setData }) => {
+
     const setCoordinates = (newCoords) => {
         setData({ ...data, coordinates: newCoords });
     }
@@ -25,6 +27,10 @@ export const ShapeEditContent = ({ data, setData }) => {
         <Stack direction='row' spacing={1} alignItems={'center'}>
             <Stack direction='column' spacing={1} alignItems={'center'}>
                 <Stack direction='row' spacing={1} alignItems={'center'} alignSelf={'start'}>
+                    <DrawShapeButton
+                        data={data}
+                        setData={setData}
+                    />
                     <ShapeTypeSelect
                         type={data.type}
                         setType={type => setData({ ...data, type })}

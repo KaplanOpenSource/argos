@@ -1,22 +1,27 @@
 import { useContext, useState } from "react";
-import { createNewName } from "../Utils/utils";
-import { ButtonTooltip } from "../Utils/ButtonTooltip";
+import { createNewName } from "../../Utils/utils";
+import { ButtonTooltip } from "../../Utils/ButtonTooltip";
 import PolylineIcon from '@mui/icons-material/Polyline';
-import { AddCircleOutline } from "@mui/icons-material";
-import { assignUuids } from "../Context/TrackUuidUtils";
-import { ActionsOnMapContext } from "../Map/ActionsOnMapContext";
+import { AddCircleOutline, Edit } from "@mui/icons-material";
+import { assignUuids } from "../../Context/TrackUuidUtils";
+import { ActionsOnMapContext } from "../../Map/ActionsOnMapContext";
 import L from 'leaflet';
 import { Alert, Snackbar, SnackbarContent } from "@mui/material";
+import { ExperimentTreeNodesExpandedContext } from "../ExperimentTreeNodesExpandedProvider";
 
-export const AddShapeButtons = ({ data, setData, onBeforeCreate = () => { } }) => {
+export const DrawShapeButton = ({ data, setData }) => {
 
     const { addActionOnMap } = useContext(ActionsOnMapContext);
+    // const { addExpandedNode } = useContext(ExperimentTreeNodesExpandedContext);
+
     const [snack, setSnack] = useState();
 
-    const shapes = (data?.shapes || []);
+    // const onBeforeCreate = () => addExpandedNode(data.trackUuid + '_shapes');
+
+    // const shapes = (data?.shapes || []);
 
     const addShape = (createDrawFromMap, shapeFromEvent, instructions, detailsOnShape) => {
-        onBeforeCreate();
+        // onBeforeCreate();
         setSnack(instructions);
         addActionOnMap((mapObj) => {
             const draw = createDrawFromMap(mapObj);
@@ -44,9 +49,8 @@ export const AddShapeButtons = ({ data, setData, onBeforeCreate = () => { } }) =
                 mapObj.off('draw:canceled');
                 mapObj.off('mousemove');
                 setSnack();
-                const name = createNewName(shapes, "New Shape");
-                const newShape = assignUuids({ name, ...shapeFromEvent(e) });
-                setData({ ...data, shapes: [...shapes, newShape] });
+                const newShape = assignUuids({ ...data, ...shapeFromEvent(e) });
+                setData(newShape);
             });
         });
     }
@@ -78,16 +82,16 @@ export const AddShapeButtons = ({ data, setData, onBeforeCreate = () => { } }) =
 
     return (<>
         <ButtonTooltip
-            tooltip='Add circle'
-            onClick={addCircle}
+            tooltip='Draw Shape'
+            onClick={() => {
+                if (data.type === 'Circle') {
+                    addCircle();
+                } else {
+                    addPolyline();
+                }
+            }}
         >
-            <AddCircleOutline />
-        </ButtonTooltip>
-        <ButtonTooltip
-            tooltip='Add Polyline'
-            onClick={addPolyline}
-        >
-            <PolylineIcon />
+            <Edit />
         </ButtonTooltip>
         <Snackbar
             anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}

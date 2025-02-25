@@ -1,15 +1,9 @@
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import { TreeSublist } from "../../App/TreeSublist";
 import { ShapeItem } from "./ShapeItem";
 import { changeByName } from "../../Utils/utils";
-import { AddShapeButtons } from "../AddShapeButtons";
-import { ExperimentTreeNodesExpandedContext } from "../ExperimentTreeNodesExpandedProvider";
 
 export const ShapeList = ({ data, setData }) => {
-
-    const {
-        addExpandedNode,
-    } = useContext(ExperimentTreeNodesExpandedContext);
 
     // Taking care of old shapes without names
     useEffect(() => {
@@ -46,14 +40,6 @@ export const ShapeList = ({ data, setData }) => {
                     type: "Polygon",
                 }
             }}
-        // noAddButton={true}
-        // components={<>
-        //     <AddShapeButtons
-        //         data={data}
-        //         setData={setData}
-        //         onBeforeCreate={() => addExpandedNode(data.trackUuid + '_shapes')}
-        //     />
-        // </>}
         >
             {
                 shapes.map((itemData, i) => {
