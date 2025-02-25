@@ -36,7 +36,7 @@ export const ShapeEditContent = ({ data, setData }) => {
                     {data.type === "Circle" ? null : <>
                         <ButtonTooltip
                             tooltip="Add coordinate"
-                            onClick={() => setData({ ...data, coordinates: [...data.coordinates, [0, 0]] })}
+                            onClick={() => setData({ ...data, coordinates: [...(data.coordinates || []), [0, 0]] })}
                         >
                             <Add />
                         </ButtonTooltip>

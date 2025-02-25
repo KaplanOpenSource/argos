@@ -41,14 +41,19 @@ export const ShapeList = ({ data, setData }) => {
             fieldName='shapes'
             nameTemplate='New Shape'
             setData={setData}
-            noAddButton={true}
-            components={<>
-                <AddShapeButtons
-                    data={data}
-                    setData={setData}
-                    onBeforeCreate={() => addExpandedNode(data.trackUuid + '_shapes')}
-                />
-            </>}
+            newDataCreator={() => {
+                return {
+                    type: "Polygon",
+                }
+            }}
+        // noAddButton={true}
+        // components={<>
+        //     <AddShapeButtons
+        //         data={data}
+        //         setData={setData}
+        //         onBeforeCreate={() => addExpandedNode(data.trackUuid + '_shapes')}
+        //     />
+        // </>}
         >
             {
                 shapes.map((itemData, i) => {
