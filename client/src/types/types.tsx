@@ -23,7 +23,7 @@ export interface IImageEmbedded extends IImage {
 
 export interface ILocation {
     name?: string;
-    coordinates?: ICoordinates
+    coordinates?: ICoordinates;
 };
 
 export interface IDeviceTypeAndItem {
