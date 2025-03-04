@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Stack } from "@mui/material";
-import { Tooltip } from "react-leaflet";
+import { Tooltip, useMap } from "react-leaflet";
 import { distLatLngPythagoras, distXY, round9, roundDec } from "../Utils/GeometryUtils";
 import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
 import { IImageStandalone } from "../types/types";
@@ -26,6 +26,8 @@ export const ImagePlacementEditor = ({
     startDiagonal: boolean,
     distLatLng: (p0: any, p1: any) => number,
 }) => {
+    const mapObj = useMap();
+
     const xleft = imageData.xleft ?? 0;
     const ybottom = imageData.ybottom ?? 0;
     const xright = imageData.xright ?? 400;
@@ -83,7 +85,7 @@ export const ImagePlacementEditor = ({
     }
 
     const changeZeroPoint = (lat: number, lng: number) => {
-        const xyZero = calcPointXY({ lat, lng });
+        const center = mapObj.getCenter();
         setImageData({
             ...imageData,
             ybottom: ybottom - lat,
@@ -91,9 +93,10 @@ export const ImagePlacementEditor = ({
             xleft: xleft - lng,
             xright: xright - lng,
         });
-        setTimeout(() => {
-            setZeroPoint(calcPointXY({ lat: 0, lng: 0 }));
-        }, 100);
+        center.lat -= lat;
+        center.lng -= lng;
+        mapObj.setView(center, undefined, { animate: false });
+        setZeroPoint(calcPointXY({ lat: 0, lng: 0 }));
     }
 
     return (
