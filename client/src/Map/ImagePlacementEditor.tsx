@@ -64,11 +64,12 @@ export const ImagePlacementEditor = ({
 
     const data = new ComputedImageData(imageData);
 
-    const experimentChangedImage = (newImageData: Partial<IImageStandalone>) => {
-        const exp = structuredClone(experiment);
-        exp.imageStandalone ||= [];
-        exp.imageStandalone[shownMapIndex] = { ...imageData, ...newImageData };
-        return exp;
+    const experimentChangedImage = (newImageData: Partial<IImageStandalone>): { newExp: IExperiment; newData: IImageStandalone; } => {
+        const newExp = structuredClone(experiment);
+        newExp.imageStandalone ||= [];
+        const newData = { ...imageData, ...newImageData };
+        newExp.imageStandalone[shownMapIndex] = newData;
+        return { newExp, newData };
     };
 
     const [anchor, setAnchor] = useState<IAnchorPoint>(() => data.calcXY({ lat: data.data.ytop, lng: data.data.xleft }));
@@ -103,7 +104,7 @@ export const ImagePlacementEditor = ({
             ytop: upper,
             xleft: left,
             xright: right,
-        }));
+        }).newExp);
 
         setAnotherPoint({ ...anotherPoint, lng, lat });
     }
@@ -125,27 +126,29 @@ export const ImagePlacementEditor = ({
 
         mapObj.setView([center.lat - lat, center.lng - lng], undefined, { animate: false });
 
-        const exp = experimentChangedImage({
+        const { newExp, newData } = experimentChangedImage({
             ybottom: data.data.ybottom - lat,
             ytop: data.data.ytop - lat,
             xleft: data.data.xleft - lng,
             xright: data.data.xright - lng,
         });
+
+        const compData = new ComputedImageData(newData);
+        setAnchor(compData.calcLatLng(anchor));
+        setAnotherPoint(compData.calcLatLng(anotherPoint));
+        setZeroPoint(compData.calcXY(zeroPoint));
         if (currTrial?.trial) {
-            const trial = exp?.trialTypes?.at(currTrial?.trialTypeIndex)?.trials?.at(currTrial?.trialIndex);
+            const trial = newExp?.trialTypes?.at(currTrial?.trialTypeIndex)?.trials?.at(currTrial?.trialIndex);
             for (const d of trial?.devicesOnTrial || []) {
                 if (d?.location?.coordinates && d?.location?.name === imageData.name) {
-                    d.location.coordinates[0] -= lat;
-                    d.location.coordinates[1] -= lng;
+                    const p = compData.calcLatLng(data.calcXY({ lat: d.location.coordinates[0], lng: d.location.coordinates[1] }));
+                    d.location.coordinates[0] = p.lat;
+                    d.location.coordinates[1] = p.lng;
                 }
             }
         }
-        setExperiment(exp);
 
-        const newData = new ComputedImageData(exp.imageStandalone![shownMapIndex]);
-        setAnchor(newData.calcLatLng(anchor));
-        setAnotherPoint(newData.calcLatLng(anotherPoint));
-        setZeroPoint(newData.calcXY(zeroPoint));
+        setExperiment(newExp);
     }
 
     return (
