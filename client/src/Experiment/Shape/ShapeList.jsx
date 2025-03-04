@@ -45,7 +45,7 @@ export const ShapeList = ({ data, setData }) => {
                 shapes.map((itemData, i) => {
                     return !itemData?.name ? null : (
                         <ShapeItem
-                            key={itemData.name}
+                            key={itemData.trackUuid}
                             data={itemData}
                             setData={newData => {
                                 setData({ ...data, shapes: changeByName(shapes, itemData.name, newData) });

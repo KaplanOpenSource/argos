@@ -1,13 +1,10 @@
 import { useContext, useState } from "react";
-import { createNewName } from "../../Utils/utils";
 import { ButtonTooltip } from "../../Utils/ButtonTooltip";
-import PolylineIcon from '@mui/icons-material/Polyline';
-import { AddCircleOutline, Edit } from "@mui/icons-material";
+import { Edit } from "@mui/icons-material";
 import { assignUuids } from "../../Context/TrackUuidUtils";
 import { ActionsOnMapContext } from "../../Map/ActionsOnMapContext";
 import L from 'leaflet';
-import { Alert, Snackbar, SnackbarContent } from "@mui/material";
-import { ExperimentTreeNodesExpandedContext } from "../ExperimentTreeNodesExpandedProvider";
+import { Alert, Snackbar } from "@mui/material";
 
 export const DrawShapeButton = ({ data, setData }) => {
 
@@ -84,7 +81,9 @@ export const DrawShapeButton = ({ data, setData }) => {
                 return { type, coordinates };
             },
             'Click on each point to finish click on the last point',
-            (draw) => (draw._markers && draw._markers.length) ? `total ${draw._measurementRunningTotal} of ${draw._markers.length} points` : undefined
+            (draw) => (draw._markers && draw._markers.length)
+                ? `total ${draw._measurementRunningTotal} of ${draw._markers.length} points`
+                : undefined
         )
     }
 

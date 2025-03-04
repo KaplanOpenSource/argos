@@ -1,7 +1,6 @@
 import { Delete } from "@mui/icons-material"
 import { TreeRow } from "../../App/TreeRow"
 import { ButtonTooltip } from "../../Utils/ButtonTooltip"
-import { Stack } from "@mui/material"
 import { ShapeEditContent } from "./ShapeEditContent"
 
 export const ShapeItem = ({ data, setData }) => {
