@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { Marker, Tooltip } from "react-leaflet";
 import { CustomIcon } from './CustomIcon';
 
@@ -9,12 +9,14 @@ export const MarkedPoint = ({
     dragLocation,
     setLocation,
     locationToShow,
+    children,
     ...restProps
 }: {
     location: [number, number], // [lat, lng]
     dragLocation?: (latlng: [number, number]) => void,
     setLocation?: (latlng: [number, number]) => void | boolean,
     locationToShow?: string,
+    children?: ReactNode
 }) => {
     let locationToShowStr: string;
     if (!locationToShow) {
@@ -59,6 +61,7 @@ export const MarkedPoint = ({
                     <span key={i}>{l}<br /></span>
                 ))}
             </Tooltip>
+            {children}
         </Marker >
     )
 }

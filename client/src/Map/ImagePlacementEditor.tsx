@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { Stack } from "@mui/material";
-import { Tooltip, useMap } from "react-leaflet";
+import { Popup, Tooltip, useMap } from "react-leaflet";
 import { distLatLngPythagoras, distXY, round9, roundDec } from "../Utils/GeometryUtils";
 import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
 import { IExperiment, IImageStandalone } from "../types/types";
@@ -180,7 +180,51 @@ export const ImagePlacementEditor = ({
                     location={[zeroPoint.lat, zeroPoint.lng]}
                     locationToShow={"zero point:<br/>" + anchorToStr(zeroPoint)}
                     setLocation={([lat, lng]) => changeZeroPoint(lat, lng)}
-                />
+                >
+                    <Popup>
+                        <Stack direction='column' spacing={1}>
+                            <span>Zeropoint:</span>
+                            <Stack direction='row' spacing={1} alignItems={'center'}>
+                                <span style={{ width: 120 }}>Location in meters:</span>
+                                <TextFieldDebounceOutlined
+                                    style={{ marginLeft: 0 }}
+                                    InputProps={{ style: { height: '30px', width: '90px' } }}
+                                    label="X"
+                                    value={roundDec(zeroPoint.lng)}
+                                    onChange={(newVal: number) => {
+                                        setZeroPoint(calcPointXY({ lat: zeroPoint.lat, lng: newVal }));
+                                    }}
+                                    disabled={true}
+                                />
+                                <TextFieldDebounceOutlined
+                                    InputProps={{ style: { height: '30px', width: '90px' } }}
+                                    label="Y"
+                                    value={roundDec(zeroPoint.lat)}
+                                    onChange={(newVal: number) => {
+                                        setZeroPoint(calcPointXY({ lat: newVal, lng: zeroPoint.lng }));
+                                    }}
+                                    disabled={true}
+                                />
+                            </Stack>
+                            <Stack direction='row' spacing={1} alignItems={'center'}>
+                                <span style={{ width: 120 }}>Location in pixels:</span>
+                                <TextFieldDebounceOutlined
+                                    style={{ marginLeft: 0 }}
+                                    InputProps={{ style: { height: '30px', width: '90px' } }}
+                                    label="X"
+                                    value={roundDec(zeroPoint.x)}
+                                    disabled={true}
+                                />
+                                <TextFieldDebounceOutlined
+                                    InputProps={{ style: { height: '30px', width: '90px' } }}
+                                    label="Y"
+                                    value={roundDec(zeroPoint.y)}
+                                    disabled={true}
+                                />
+                            </Stack>
+                        </Stack>
+                    </Popup>
+                </MarkedPoint>
             </ChosenMarker>
         </>
     )
