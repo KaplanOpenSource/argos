@@ -16,6 +16,26 @@ interface IAnchorPoint {
     y: number,
 };
 
+type IImageBounds = Required<Omit<IImageStandalone, 'name' | 'filename'>>;
+class ComputedImageData {
+    public readonly data: IImageBounds;
+    constructor(imageData: IImageStandalone) {
+        this.data = {
+            xleft: imageData.xleft ?? 0,
+            ybottom: imageData.ybottom ?? 0,
+            xright: imageData.xright ?? 400,
+            ytop: imageData.ytop ?? 300,
+            height: imageData.height ?? 300,
+            width: imageData.width ?? 400,
+        }
+    }
+    public calcXY = ({ lat, lng }: { lat: number, lng: number }): IAnchorPoint => {
+        const x = (lng - this.data.xleft) / (this.data.xright - this.data.xleft) * this.data.width;
+        const y = (lat - this.data.ybottom) / (this.data.ytop - this.data.ybottom) * this.data.height;
+        return ({ lat, lng, x, y });
+    }
+};
+
 export const ImagePlacementEditor = ({
     imageData,
     experiment,
@@ -32,12 +52,7 @@ export const ImagePlacementEditor = ({
     const mapObj = useMap();
     const { currTrial } = useContext(experimentContext)
 
-    const xleft = imageData.xleft ?? 0;
-    const ybottom = imageData.ybottom ?? 0;
-    const xright = imageData.xright ?? 400;
-    const ytop = imageData.ytop ?? 300;
-    const height = imageData.height ?? 300;
-    const width = imageData.width ?? 400;
+    const data = new ComputedImageData(imageData);
 
     const experimentChangedImage = (newImageData: Partial<IImageStandalone>) => {
         const exp = structuredClone(experiment);
@@ -46,15 +61,9 @@ export const ImagePlacementEditor = ({
         return exp;
     };
 
-    const calcPointXY = ({ lat, lng }: { lat: number, lng: number }): IAnchorPoint => {
-        const x = (lng - xleft) / (xright - xleft) * width;
-        const y = (lat - ybottom) / (ytop - ybottom) * height;
-        return ({ lat, lng, x, y });
-    }
-
-    const [anchor, setAnchor] = useState<IAnchorPoint>(() => calcPointXY({ lat: ytop, lng: xleft }));
-    const [anotherPoint, setAnotherPoint] = useState<IAnchorPoint>(() => calcPointXY({ lat: ytop, lng: xright }));
-    const [zeroPoint, setZeroPoint] = useState<IAnchorPoint>(() => calcPointXY({ lat: 0, lng: 0 }));
+    const [anchor, setAnchor] = useState<IAnchorPoint>(() => data.calcXY({ lat: data.data.ytop, lng: data.data.xleft }));
+    const [anotherPoint, setAnotherPoint] = useState<IAnchorPoint>(() => data.calcXY({ lat: data.data.ytop, lng: data.data.xright }));
+    const [zeroPoint, setZeroPoint] = useState<IAnchorPoint>(() => data.calcXY({ lat: 0, lng: 0 }));
 
     const anchorToStr = (p: IAnchorPoint): string => {
         return `(${roundDec(p.lng)}, ${roundDec(p.lat)}) in meters<br/>(${roundDec(p.x)}, ${roundDec(p.y)}) in pixels`;
@@ -76,8 +85,8 @@ export const ImagePlacementEditor = ({
         const factorPixelToMeter = dlnglat / dxy;
         const left = round9(anchor.lng - anchor.x * factorPixelToMeter);
         const lower = round9(anchor.lat - anchor.y * factorPixelToMeter);
-        const right = round9(left + width * factorPixelToMeter);
-        const upper = round9(lower + height * factorPixelToMeter);
+        const right = round9(left + data.data.width * factorPixelToMeter);
+        const upper = round9(lower + data.data.height * factorPixelToMeter);
 
         setExperiment(experimentChangedImage({
             ybottom: lower,
@@ -97,27 +106,23 @@ export const ImagePlacementEditor = ({
             const dlat = (anotherPoint.lat - anchor.lat) * factorOldToNew;
             const lng = anchor.lng + dlng;
             const lat = anchor.lat + dlat;
-            setAnotherPoint(calcPointXY({ lng, lat }));
+            setAnotherPoint(data.calcXY({ lng, lat }));
         }
     }
 
     const changeZeroPoint = (lat: number, lng: number) => {
         const center = mapObj.getCenter();
 
-        // const exp = structuredClone(experiment);
-        // exp.imageStandalone ||= [];
-        // exp.imageStandalone[shownMapIndex] = { ...imageData, ybottom: lower, ytop: upper, xleft: left, xright: right };
-
         mapObj.setView([center.lat - lat, center.lng - lng], undefined, { animate: false });
-        setZeroPoint(calcPointXY({ lat: 0, lng: 0 }));
-        setAnchor(calcPointXY({ lat: anchor.lat - lat, lng: anchor.lng - lng }));
-        setAnotherPoint(calcPointXY({ lat: anotherPoint.lat - lat, lng: anotherPoint.lng - lng }));
+        setZeroPoint(data.calcXY({ lat: 0, lng: 0 }));
+        setAnchor(data.calcXY({ lat: anchor.lat - lat, lng: anchor.lng - lng }));
+        setAnotherPoint(data.calcXY({ lat: anotherPoint.lat - lat, lng: anotherPoint.lng - lng }));
 
         const exp = experimentChangedImage({
-            ybottom: ybottom - lat,
-            ytop: ytop - lat,
-            xleft: xleft - lng,
-            xright: xright - lng,
+            ybottom: data.data.ybottom - lat,
+            ytop: data.data.ytop - lat,
+            xleft: data.data.xleft - lng,
+            xright: data.data.xright - lng,
         });
         if (currTrial?.trial) {
             const trial = exp?.trialTypes?.at(currTrial?.trialTypeIndex)?.trials?.at(currTrial?.trialIndex);
@@ -136,14 +141,14 @@ export const ImagePlacementEditor = ({
             <ChosenMarker center={[anchor.lat, anchor.lng]}>
                 <MarkedPoint
                     location={[anchor.lat, anchor.lng]}
-                    setLocation={([lat, lng]) => setAnchor(calcPointXY({ lat, lng }))}
+                    setLocation={([lat, lng]) => setAnchor(data.calcXY({ lat, lng }))}
                     locationToShow={"Measure anchor 0:<br/>" + anchorToStr(anchor)}
                 />
             </ChosenMarker>
             <ChosenMarker center={[anotherPoint.lat, anotherPoint.lng]} color="green">
                 <MarkedPoint
                     location={[anotherPoint.lat, anotherPoint.lng]}
-                    setLocation={([lat, lng]) => setAnotherPoint(calcPointXY({ lat, lng }))}
+                    setLocation={([lat, lng]) => setAnotherPoint(data.calcXY({ lat, lng }))}
                     locationToShow={"Measure anchor 1:<br/>" + anchorToStr(anotherPoint)}
                 />
             </ChosenMarker>
@@ -192,7 +197,7 @@ export const ImagePlacementEditor = ({
                                     label="X"
                                     value={roundDec(zeroPoint.lng)}
                                     onChange={(newVal: number) => {
-                                        setZeroPoint(calcPointXY({ lat: zeroPoint.lat, lng: newVal }));
+                                        setZeroPoint(data.calcXY({ lat: zeroPoint.lat, lng: newVal }));
                                     }}
                                     disabled={true}
                                 />
@@ -201,7 +206,7 @@ export const ImagePlacementEditor = ({
                                     label="Y"
                                     value={roundDec(zeroPoint.lat)}
                                     onChange={(newVal: number) => {
-                                        setZeroPoint(calcPointXY({ lat: newVal, lng: zeroPoint.lng }));
+                                        setZeroPoint(data.calcXY({ lat: newVal, lng: zeroPoint.lng }));
                                     }}
                                     disabled={true}
                                 />
