@@ -23,12 +23,10 @@ const StandaloneImageLayer = ({ experiment, setExperiment, shownMap, shownMapInd
     />
     {showImagePlacement && shownMap && shownMap.xleft !== undefined
         ? <ImagePlacementEditor
+            experiment={experiment}
+            setExperiment={newExperimentData => setExperiment(experiment.name, newExperimentData)}
+            shownMapIndex={shownMapIndex}
             imageData={shownMap}
-            setImageData={v => {
-                const exp = { ...experiment, imageStandalone: [...experiment.imageStandalone] };
-                exp.imageStandalone[shownMapIndex] = v;
-                setExperiment(experiment.name, exp);
-            }}
             key={'imagemapeditor'}
         />
         : null}

@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Stack } from "@mui/material";
 import { Tooltip, useMap } from "react-leaflet";
 import { distLatLngPythagoras, distXY, round9, roundDec } from "../Utils/GeometryUtils";
 import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
-import { IImageStandalone } from "../types/types";
+import { IExperiment, IImageStandalone } from "../types/types";
 import { ChosenMarker } from "./ChosenMarker";
 import { DashedPolyline } from "./DashedPolyline";
 import { MarkedPoint } from "./MarkedPoint";
+import { experimentContext } from "../Context/ExperimentProvider";
 
 interface IAnchorPoint {
     lat: number,
@@ -17,16 +18,19 @@ interface IAnchorPoint {
 
 export const ImagePlacementEditor = ({
     imageData,
-    setImageData,
-    startDiagonal = false,
+    experiment,
+    setExperiment,
+    shownMapIndex,
     distLatLng = distLatLngPythagoras,
 }: {
     imageData: IImageStandalone,
-    setImageData: (newData: IImageStandalone) => void,
-    startDiagonal: boolean,
+    experiment: IExperiment,
+    setExperiment: (newExperimentData: IExperiment) => void,
+    shownMapIndex: number,
     distLatLng: (p0: any, p1: any) => number,
 }) => {
     const mapObj = useMap();
+    const { currTrial } = useContext(experimentContext)
 
     const xleft = imageData.xleft ?? 0;
     const ybottom = imageData.ybottom ?? 0;
@@ -34,6 +38,13 @@ export const ImagePlacementEditor = ({
     const ytop = imageData.ytop ?? 300;
     const height = imageData.height ?? 300;
     const width = imageData.width ?? 400;
+
+    const experimentChangedImage = (newImageData: Partial<IImageStandalone>) => {
+        const exp = structuredClone(experiment);
+        exp.imageStandalone ||= [];
+        exp.imageStandalone[shownMapIndex] = { ...imageData, ...newImageData };
+        return exp;
+    };
 
     const calcPointXY = ({ lat, lng }: { lat: number, lng: number }): IAnchorPoint => {
         const x = (lng - xleft) / (xright - xleft) * width;
@@ -67,7 +78,13 @@ export const ImagePlacementEditor = ({
         const lower = round9(anchor.lat - anchor.y * factorPixelToMeter);
         const right = round9(left + width * factorPixelToMeter);
         const upper = round9(lower + height * factorPixelToMeter);
-        setImageData({ ...imageData, ybottom: lower, ytop: upper, xleft: left, xright: right });
+
+        setExperiment(experimentChangedImage({
+            ybottom: lower,
+            ytop: upper,
+            xleft: left,
+            xright: right,
+        }));
 
         setAnotherPoint({ ...anotherPoint, lng, lat });
     }
@@ -86,17 +103,32 @@ export const ImagePlacementEditor = ({
 
     const changeZeroPoint = (lat: number, lng: number) => {
         const center = mapObj.getCenter();
-        setImageData({
-            ...imageData,
+
+        // const exp = structuredClone(experiment);
+        // exp.imageStandalone ||= [];
+        // exp.imageStandalone[shownMapIndex] = { ...imageData, ybottom: lower, ytop: upper, xleft: left, xright: right };
+
+        mapObj.setView([center.lat - lat, center.lng - lng], undefined, { animate: false });
+        setZeroPoint(calcPointXY({ lat: 0, lng: 0 }));
+        setAnchor(calcPointXY({ lat: anchor.lat - lat, lng: anchor.lng - lng }));
+        setAnotherPoint(calcPointXY({ lat: anotherPoint.lat - lat, lng: anotherPoint.lng - lng }));
+
+        const exp = experimentChangedImage({
             ybottom: ybottom - lat,
             ytop: ytop - lat,
             xleft: xleft - lng,
             xright: xright - lng,
         });
-        center.lat -= lat;
-        center.lng -= lng;
-        mapObj.setView(center, undefined, { animate: false });
-        setZeroPoint(calcPointXY({ lat: 0, lng: 0 }));
+        if (currTrial?.trial) {
+            const trial = exp?.trialTypes?.at(currTrial?.trialTypeIndex)?.trials?.at(currTrial?.trialIndex);
+            for (const d of trial?.devicesOnTrial || []) {
+                if (d?.location?.coordinates && d?.location?.name === imageData.name) {
+                    d.location.coordinates[0] -= lat;
+                    d.location.coordinates[1] -= lng;
+                }
+            }
+        }
+        setExperiment(exp);
     }
 
     return (
