@@ -35,14 +35,22 @@ class ComputedImageData {
         this.yspan = this.data.ytop - this.data.ybottom;
     }
     public calcXY = ({ lat, lng }: { lat: number, lng: number }): IAnchorPoint => {
-        const x = (lng - this.data.xleft) / this.xspan * this.data.width;
-        const y = (lat - this.data.ybottom) / this.yspan * this.data.height;
-        return ({ lat, lng, x, y });
+        return ({ lat, lng, x: this.calcX(lng), y: this.calcY(lat) });
     }
     public calcLatLng = ({ x, y }: { x: number, y: number }): IAnchorPoint => {
-        const lng = x * this.xspan / this.data.width + this.data.xleft;
-        const lat = y * this.yspan / this.data.height + this.data.ybottom;
-        return { x, y, lat, lng };
+        return { x, y, lat: this.calcLat(y), lng: this.calcLng(x) };
+    }
+    public calcLat(y: number) {
+        return y * this.yspan / this.data.height + this.data.ybottom;
+    }
+    public calcLng(x: number) {
+        return x * this.xspan / this.data.width + this.data.xleft;
+    }
+    public calcY(lat: number) {
+        return (lat - this.data.ybottom) / this.yspan * this.data.height;
+    }
+    public calcX(lng: number) {
+        return (lng - this.data.xleft) / this.xspan * this.data.width;
     }
 };
 
@@ -140,10 +148,10 @@ export const ImagePlacementEditor = ({
         if (currTrial?.trial) {
             const trial = newExp?.trialTypes?.at(currTrial?.trialTypeIndex)?.trials?.at(currTrial?.trialIndex);
             for (const d of trial?.devicesOnTrial || []) {
-                if (d?.location?.coordinates && d?.location?.name === imageData.name) {
-                    const p = compData.calcLatLng(data.calcXY({ lat: d.location.coordinates[0], lng: d.location.coordinates[1] }));
-                    d.location.coordinates[0] = p.lat;
-                    d.location.coordinates[1] = p.lng;
+                const coordinates = d?.location?.coordinates;
+                if (coordinates && d?.location?.name === imageData.name) {
+                    coordinates[0] = compData.calcLat(data.calcY(coordinates[0]));
+                    coordinates[1] = compData.calcLng(data.calcX(coordinates[1]));
                 }
             }
         }
