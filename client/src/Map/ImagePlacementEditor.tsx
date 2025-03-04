@@ -19,6 +19,9 @@ interface IAnchorPoint {
 type IImageBounds = Required<Omit<IImageStandalone, 'name' | 'filename'>>;
 class ComputedImageData {
     public readonly data: IImageBounds;
+    private readonly xspan: number;
+    private readonly yspan: number;
+
     constructor(imageData: IImageStandalone) {
         this.data = {
             xleft: imageData.xleft ?? 0,
@@ -28,11 +31,18 @@ class ComputedImageData {
             height: imageData.height ?? 300,
             width: imageData.width ?? 400,
         }
+        this.xspan = this.data.xright - this.data.xleft;
+        this.yspan = this.data.ytop - this.data.ybottom;
     }
     public calcXY = ({ lat, lng }: { lat: number, lng: number }): IAnchorPoint => {
-        const x = (lng - this.data.xleft) / (this.data.xright - this.data.xleft) * this.data.width;
-        const y = (lat - this.data.ybottom) / (this.data.ytop - this.data.ybottom) * this.data.height;
+        const x = (lng - this.data.xleft) / this.xspan * this.data.width;
+        const y = (lat - this.data.ybottom) / this.yspan * this.data.height;
         return ({ lat, lng, x, y });
+    }
+    public calcLatLng = ({ x, y }: { x: number, y: number }): IAnchorPoint => {
+        const lng = x * this.xspan / this.data.width + this.data.xleft;
+        const lat = y * this.yspan / this.data.height + this.data.ybottom;
+        return { x, y, lat, lng };
     }
 };
 
@@ -114,9 +124,6 @@ export const ImagePlacementEditor = ({
         const center = mapObj.getCenter();
 
         mapObj.setView([center.lat - lat, center.lng - lng], undefined, { animate: false });
-        setZeroPoint(data.calcXY({ lat: 0, lng: 0 }));
-        setAnchor(data.calcXY({ lat: anchor.lat - lat, lng: anchor.lng - lng }));
-        setAnotherPoint(data.calcXY({ lat: anotherPoint.lat - lat, lng: anotherPoint.lng - lng }));
 
         const exp = experimentChangedImage({
             ybottom: data.data.ybottom - lat,
@@ -134,6 +141,11 @@ export const ImagePlacementEditor = ({
             }
         }
         setExperiment(exp);
+
+        const newData = new ComputedImageData(exp.imageStandalone![shownMapIndex]);
+        setAnchor(newData.calcLatLng(anchor));
+        setAnotherPoint(newData.calcLatLng(anotherPoint));
+        setZeroPoint(newData.calcXY(zeroPoint));
     }
 
     return (
