@@ -13,7 +13,7 @@ type ISelectedIndexedItem = IDeviceTypeAndItem & {
 
 export const DeviceTableSmall = ({ }) => {
 
-    const { selection } = useDeviceSeletion();
+    const { selection, setSelection } = useDeviceSeletion();
     const { currTrial } = useContext(experimentContext);
 
     const shownDevices: ISelectedIndexedItem[] = [];
@@ -31,35 +31,54 @@ export const DeviceTableSmall = ({ }) => {
             alignItems="flex-end"
         >
             {shownDevices.map(({ deviceType, deviceItem }) => (
-                <Paper
+                < DeviceSmallClip
                     key={deviceItem.trackUuid}
-                    sx={{
-                        paddingLeft: '5px',
-                        maxWidth: 'fit-content'
-                    }}
-                >
-                    <Stack
-                        direction='row'
-                        alignItems='center'
-                        justifyContent="end"
-                    >
-                        <Typography>
-                            {deviceItem.name}
-                        </Typography>
-                        <SelectDeviceButton
-                            deviceItem={deviceItem}
-                            deviceType={deviceType}
-                            devicesEnclosingList={shownDevices}
-                        />
-                        <DeviceItemLocationButton
-                            deviceType={deviceType}
-                            deviceItem={deviceItem}
-                            surroundingDevices={shownDevices}
-                        />
-                    </Stack>
-                </Paper>
+                    deviceItem={deviceItem}
+                    deviceType={deviceType}
+                    shownDevices={shownDevices}
+                />
             ))}
         </Stack>
+    )
+}
+
+const DeviceSmallClip = ({
+    deviceItem,
+    deviceType,
+    shownDevices,
+}: {
+    deviceItem: IDevice & ITrackUuid,
+    deviceType: IDeviceType & ITrackUuid,
+    shownDevices: ISelectedIndexedItem[],
+}) => {
+    return (
+        <Paper
+            key={deviceItem.trackUuid}
+            sx={{
+                paddingLeft: '5px',
+                maxWidth: 'fit-content'
+            }}
+        >
+            <Stack
+                direction='row'
+                alignItems='center'
+                justifyContent="end"
+            >
+                <Typography>
+                    {deviceItem.name}
+                </Typography>
+                <SelectDeviceButton
+                    deviceItem={deviceItem}
+                    deviceType={deviceType}
+                    devicesEnclosingList={shownDevices}
+                />
+                <DeviceItemLocationButton
+                    deviceType={deviceType}
+                    deviceItem={deviceItem}
+                    surroundingDevices={shownDevices}
+                />
+            </Stack>
+        </Paper>
     )
 }
 
