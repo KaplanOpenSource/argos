@@ -12,27 +12,35 @@ export const DeviceTableSmall = ({ }) => {
     const { selection, setSelection } = useDeviceSeletion();
     const { currTrial } = useContext(experimentContext);
 
-    const shownDevices: ISelectedIndexedItem[] = [];
-    let i = 0;
-    for (const { deviceTypeName, deviceItemName } of (selection as IDeviceTypeAndItem[] || [])) {
+    function findDeviceInExperiment(deviceTypeName: string, deviceItemName: string) {
         const deviceType = ((currTrial.experiment as IExperiment || {}).deviceTypes || []).find(x => x.name === deviceTypeName);
         const deviceItem = ((deviceType || {}).devices || []).find(x => x.name === deviceItemName);
+        return { deviceType, deviceItem };
+    }
+
+    const shownDevices: ISelectedIndexedItem[] = [];
+    for (const { deviceTypeName, deviceItemName } of (selection || [])) {
+        const { deviceType, deviceItem } = findDeviceInExperiment(deviceTypeName, deviceItemName);
         if (deviceType && deviceItem) {
-            const id = (deviceItem as (IDevice & ITrackUuid)).trackUuid || (++i).toString();
+            const id = (deviceItem as (IDevice & ITrackUuid)).trackUuid!;
             shownDevices.push({ deviceType, deviceItem, deviceTypeName, deviceItemName, id });
         }
     };
 
+    function handleChangeSelection(items: ISelectedIndexedItem[]): void {
+        setSelection(items);
+    }
+
     return (
         <SortableList
             items={shownDevices}
-            onChange={() => { }}
+            onChange={handleChangeSelection}
             renderItem={({ deviceItem, deviceType, id }) => (
                 <SortableList.Item id={id}>
                     <Stack
-                    direction='row'
-                    alignItems='right'
-                    justifyContent='right'
+                        direction='row'
+                        alignItems='right'
+                        justifyContent='right'
                     >
                         <DeviceSmallClip
                             key={id}
