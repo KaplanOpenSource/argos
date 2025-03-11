@@ -1,4 +1,4 @@
-import { PlaylistAdd } from "@mui/icons-material";
+import { PlaylistAdd, PlaylistRemove } from "@mui/icons-material";
 import { useContext } from "react";
 import { experimentContext } from "../Context/ExperimentProvider";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
@@ -77,7 +77,10 @@ export const SelectDeviceButton = ({ deviceType, deviceItem, devicesEnclosingLis
                 }}
                 disabled={!hasTrial}
             >
-                <PlaylistAdd color={hasTrial && isSelected ? "primary" : "inherit"} />
+                {hasTrial && isSelected
+                    ? <PlaylistRemove color={"primary"} />
+                    : <PlaylistAdd color={"inherit"} />
+                }
             </ButtonTooltip>
         </ContextMenu>
     )
