@@ -8,13 +8,8 @@ import { ChosenMarker } from "../ChosenMarker";
 import { DashedPolyline } from "../DashedPolyline";
 import { MarkedPoint } from "../MarkedPoint";
 import { experimentContext } from "../../Context/ExperimentProvider";
-
-interface IAnchorPoint {
-    lat: number,
-    lng: number,
-    x: number,
-    y: number,
-};
+import { IAnchorPoint } from "./IAnchorPoint";
+import { ImagePointEdit } from "./ImagePointEdit";
 
 type IImageBounds = Required<Omit<IImageStandalone, 'name' | 'filename'>>;
 class ComputedImageData {
@@ -210,47 +205,12 @@ export const ImagePlacementEditor = ({
                     setLocation={([lat, lng]) => changeZeroPoint(lat, lng)}
                 >
                     <Popup>
-                        <Stack direction='column' spacing={1}>
-                            <span>Zeropoint:</span>
-                            <Stack direction='row' spacing={1} alignItems={'center'}>
-                                <span style={{ width: 120 }}>Location in meters:</span>
-                                <TextFieldDebounceOutlined
-                                    style={{ marginLeft: 0 }}
-                                    InputProps={{ style: { height: '30px', width: '90px' } }}
-                                    label="X"
-                                    value={roundDec(zeroPoint.lng)}
-                                    onChange={(newVal: number) => {
-                                        setZeroPoint(data.calcXY({ lat: zeroPoint.lat, lng: newVal }));
-                                    }}
-                                    disabled={true}
-                                />
-                                <TextFieldDebounceOutlined
-                                    InputProps={{ style: { height: '30px', width: '90px' } }}
-                                    label="Y"
-                                    value={roundDec(zeroPoint.lat)}
-                                    onChange={(newVal: number) => {
-                                        setZeroPoint(data.calcXY({ lat: newVal, lng: zeroPoint.lng }));
-                                    }}
-                                    disabled={true}
-                                />
-                            </Stack>
-                            <Stack direction='row' spacing={1} alignItems={'center'}>
-                                <span style={{ width: 120 }}>Location in pixels:</span>
-                                <TextFieldDebounceOutlined
-                                    style={{ marginLeft: 0 }}
-                                    InputProps={{ style: { height: '30px', width: '90px' } }}
-                                    label="X"
-                                    value={roundDec(zeroPoint.x)}
-                                    disabled={true}
-                                />
-                                <TextFieldDebounceOutlined
-                                    InputProps={{ style: { height: '30px', width: '90px' } }}
-                                    label="Y"
-                                    value={roundDec(zeroPoint.y)}
-                                    disabled={true}
-                                />
-                            </Stack>
-                        </Stack>
+                        <ImagePointEdit
+                            label="Zero Point"
+                            point={zeroPoint}
+                            disabledXy={true}
+                            setLatLng={({lat, lng}) => setZeroPoint(data.calcXY({ lat, lng }))}
+                        />
                     </Popup>
                 </MarkedPoint>
             </ChosenMarker>
