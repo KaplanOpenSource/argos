@@ -25,14 +25,36 @@ from py.constants import DATA_FOLDER
 parser = argparse.ArgumentParser()
 parser.add_argument("--port", default=8080, help="needs to be synced with client port, look at client/src/constants.js")
 parser.add_argument("--prod", action="store_true", help="Flag this on production deployment, disallows cors")
+# parser.add_argument(
+#     "--config", default="config.json", help="Server configuration file, see config.example.json for format"
+# )
 args = parser.parse_args()
 print(args)
+
+default_config = {
+    "data_folder": "data",
+    "tileserver": {
+        "url": "https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}.png",
+        "attribution": '&copy; <a href="https://carto.com">Carto</a> contributors',
+    },
+}
+
+config = {}
+try:
+    with open("config.json") as fconfig:
+        config: dict = json.load(fconfig)
+except:
+    print("no config file found")
+
+for k, v in default_config.items():
+    if k not in config:
+        config[k] = v
 
 app = Flask(__name__, static_url_path="/", static_folder="client/dist")
 # template_folder='web/templates')
 app.config["JWT_SECRET_KEY"] = "fa65674f-3afd-45cd-8873-d2180cf3836c"  # TODO: move to file?
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=10)
-app.config['MAX_CONTENT_LENGTH'] = 100 * 1000 * 1000
+app.config["MAX_CONTENT_LENGTH"] = 100 * 1000 * 1000
 
 jwt = JWTManager(app)
 
@@ -113,6 +135,13 @@ def refresh_expiring_jwts(response):
 @cross_origin()
 def static_file(path):
     return app.send_static_file(path)
+
+
+@app.route("/tileserver")
+@jwt_required()
+@cross_origin()
+def tileserver():
+    return config["tileserver"]
 
 
 @app.route("/experiment_list")

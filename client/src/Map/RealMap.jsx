@@ -1,22 +1,19 @@
 import { useEffect, useState } from "react"
 import { TileLayer } from "react-leaflet"
+import { useTokenStore } from "../Context/useTokenStore";
 
 export const RealMap = ({ }) => {
+    const { axiosSecure } = useTokenStore();
     const [tileServerInfo, setTileServerInfo] = useState();
 
     useEffect(() => {
         (async () => {
             try {
-                const resp = await fetch("/config.json");
-                if (resp.ok) {
-                    const com = await resp.json();
-                    if (!com || !com.tileserver || !com.tileserver.url) {
-                        throw "bad config json";
-                    }
-                    setTileServerInfo(com.tileserver);
-                } else {
-                    throw "no config json";
+                const json = await axiosSecure().get("tileserver");
+                if (!json?.data?.url) {
+                    throw "bad config json";
                 }
+                setTileServerInfo(json?.data);
             } catch (e) {
                 alert(e);
             }
@@ -25,7 +22,7 @@ export const RealMap = ({ }) => {
 
     return (
         <>
-            {tileServerInfo 
+            {tileServerInfo
                 ? (
                     <TileLayer
                         attribution={tileServerInfo.attribution || ""}
