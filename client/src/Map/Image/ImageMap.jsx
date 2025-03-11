@@ -1,6 +1,6 @@
 import { ImageOverlay } from "react-leaflet"
 import { useEffect, useState } from "react";
-import { useDownloadImage } from "../IO/useDownloadImage";
+import { useDownloadImage } from "../../IO/useDownloadImage";
 
 export const ImageMap = ({ experiment, image }) => {
     const { downloadImageAsUrl } = useDownloadImage();

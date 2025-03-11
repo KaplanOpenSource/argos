@@ -5,52 +5,14 @@ import { useContext } from 'react';
 import { AttributionControl, MapContainer, ZoomControl } from 'react-leaflet';
 import { experimentContext } from '../Context/ExperimentProvider';
 import { RealMap } from './RealMap';
-import { ImageMap } from './ImageMap';
-import { ImagePlacementEditor } from './ImagePlacementEditor';
 import { MapEventer } from './MapEventer';
-import { ImagePlacementStretcher } from './ImagePlacementStretcher';
 import 'leaflet-contextmenu';
 import 'leaflet-contextmenu/dist/leaflet.contextmenu.css';
 import { DeviceIconLegend } from '../Icons/DeviceIconLegend';
+import { StandaloneImageLayer } from './Image/StandaloneImageLayer';
+import { EmbeddedImageLayer } from './Image/EmbeddedImageLayer';
 
 L.Icon.Default.imagePath = 'leaflet-images/';
-
-const StandaloneImageLayer = ({ experiment, setExperiment, shownMap, shownMapIndex, showImagePlacement }) => (<>
-    <ImageMap
-        experiment={experiment}
-        image={shownMap}
-        key={'imagemap'}
-    />
-    {showImagePlacement && shownMap && shownMap.xleft !== undefined
-        ? <ImagePlacementEditor
-            experiment={experiment}
-            setExperiment={newExperimentData => setExperiment(experiment.name, newExperimentData)}
-            shownMapIndex={shownMapIndex}
-            imageData={shownMap}
-            key={'imagemapeditor'}
-        />
-        : null}
-</>)
-
-const EmbeddedImageLayer = ({ experiment, setExperiment, shownMap, shownMapIndex, showImagePlacement }) => {
-    return (<>
-        <ImageMap
-            experiment={experiment}
-            image={shownMap}
-            key={'embeddedmap_' + shownMapIndex}
-        />
-        {showImagePlacement && shownMap && shownMap.latnorth !== undefined
-            ? <ImagePlacementStretcher
-                imageData={shownMap}
-                setImageData={v => {
-                    const exp = { ...experiment, imageEmbedded: [...experiment.imageEmbedded] };
-                    exp.imageEmbedded[shownMapIndex] = v;
-                    setExperiment(experiment.name, exp);
-                }}
-            />
-            : null}
-    </>)
-}
 
 export const MapShower = ({ children }) => {
     const {

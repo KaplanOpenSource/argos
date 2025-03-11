@@ -1,13 +1,13 @@
 import React, { useContext, useState } from "react";
 import { Stack } from "@mui/material";
 import { Popup, Tooltip, useMap } from "react-leaflet";
-import { distLatLngPythagoras, distXY, round9, roundDec } from "../Utils/GeometryUtils";
-import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
-import { IExperiment, IImageStandalone } from "../types/types";
-import { ChosenMarker } from "./ChosenMarker";
-import { DashedPolyline } from "./DashedPolyline";
-import { MarkedPoint } from "./MarkedPoint";
-import { experimentContext } from "../Context/ExperimentProvider";
+import { distLatLngPythagoras, distXY, round9, roundDec } from "../../Utils/GeometryUtils";
+import { TextFieldDebounceOutlined } from "../../Utils/TextFieldDebounce";
+import { IExperiment, IImageStandalone } from "../../types/types";
+import { ChosenMarker } from "../ChosenMarker";
+import { DashedPolyline } from "../DashedPolyline";
+import { MarkedPoint } from "../MarkedPoint";
+import { experimentContext } from "../../Context/ExperimentProvider";
 
 interface IAnchorPoint {
     lat: number,

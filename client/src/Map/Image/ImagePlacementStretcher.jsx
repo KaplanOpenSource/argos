@@ -1,8 +1,8 @@
 import { Rectangle } from "react-leaflet";
 import { useEffect, useRef } from "react";
 import "leaflet-draw";
-import "../lib/Edit.SimpleShape";
-import "../lib/Edit.Rectangle";
+import "../../lib/Edit.SimpleShape";
+import "../../lib/Edit.Rectangle";
 
 export const ImagePlacementStretcher = ({ imageData, setImageData }) => {
     const rectref = useRef();
