@@ -1,84 +1,58 @@
 import React, { useContext } from "react";
-import { Paper, Stack, Typography } from "@mui/material"
-import { SelectDeviceButton } from "../Experiment/SelectDeviceButton";
-import { DeviceItemLocationButton } from "../Experiment/DeviceItemLocationButton";
-import { IDevice, IDeviceType, IDeviceTypeAndItem, ITrackUuid } from "../types/types";
+import { Stack } from "@mui/material"
+import { IDevice, IDeviceTypeAndItem, IExperiment, ITrackUuid } from "../types/types";
 import { useDeviceSeletion } from "../Context/useDeviceSeletion";
 import { experimentContext } from "../Context/ExperimentProvider";
 
-type ISelectedIndexedItem = IDeviceTypeAndItem & {
-    deviceItem: IDevice & ITrackUuid,
-    deviceType: IDeviceType & ITrackUuid
-};
+import { SortableList } from "../lib/SortableList/SortableList";
+import { DeviceSmallClip, ISelectedIndexedItem } from "./DeviceSmallClip";
 
 export const DeviceTableSmall = ({ }) => {
 
     const { selection, setSelection } = useDeviceSeletion();
     const { currTrial } = useContext(experimentContext);
 
-    const shownDevices: ISelectedIndexedItem[] = [];
-    for (const { deviceTypeName, deviceItemName } of selection || []) {
-        const deviceType = ((currTrial.experiment || {}).deviceTypes || []).find(x => x.name === deviceTypeName);
+    function findDeviceInExperiment(deviceTypeName: string, deviceItemName: string) {
+        const deviceType = ((currTrial.experiment as IExperiment || {}).deviceTypes || []).find(x => x.name === deviceTypeName);
         const deviceItem = ((deviceType || {}).devices || []).find(x => x.name === deviceItemName);
+        return { deviceType, deviceItem };
+    }
+
+    const shownDevices: ISelectedIndexedItem[] = [];
+    for (const { deviceTypeName, deviceItemName } of (selection || [])) {
+        const { deviceType, deviceItem } = findDeviceInExperiment(deviceTypeName, deviceItemName);
         if (deviceType && deviceItem) {
-            shownDevices.push({ deviceType, deviceItem, deviceTypeName, deviceItemName });
+            const id = (deviceItem as (IDevice & ITrackUuid)).trackUuid!;
+            shownDevices.push({ deviceType, deviceItem, deviceTypeName, deviceItemName, id });
         }
     };
 
-    return (
-        <Stack
-            direction='column'
-            alignItems="flex-end"
-        >
-            {shownDevices.map(({ deviceType, deviceItem }) => (
-                < DeviceSmallClip
-                    key={deviceItem.trackUuid}
-                    deviceItem={deviceItem}
-                    deviceType={deviceType}
-                    shownDevices={shownDevices}
-                />
-            ))}
-        </Stack>
-    )
-}
+    function handleChangeSelection(items: ISelectedIndexedItem[]): void {
+        setSelection(items);
+    }
 
-const DeviceSmallClip = ({
-    deviceItem,
-    deviceType,
-    shownDevices,
-}: {
-    deviceItem: IDevice & ITrackUuid,
-    deviceType: IDeviceType & ITrackUuid,
-    shownDevices: ISelectedIndexedItem[],
-}) => {
     return (
-        <Paper
-            key={deviceItem.trackUuid}
-            sx={{
-                paddingLeft: '5px',
-                maxWidth: 'fit-content'
-            }}
-        >
-            <Stack
-                direction='row'
-                alignItems='center'
-                justifyContent="end"
-            >
-                <Typography>
-                    {deviceItem.name}
-                </Typography>
-                <SelectDeviceButton
-                    deviceItem={deviceItem}
-                    deviceType={deviceType}
-                    devicesEnclosingList={shownDevices}
-                />
-                <DeviceItemLocationButton
-                    deviceType={deviceType}
-                    deviceItem={deviceItem}
-                    surroundingDevices={shownDevices}
-                />
-            </Stack>
-        </Paper>
-    )
+        <SortableList
+            items={shownDevices}
+            onChange={handleChangeSelection}
+            renderItem={({ deviceItem, deviceType, id }) => (
+                <SortableList.Item id={id}>
+                    <Stack
+                        direction='row'
+                        alignItems='right'
+                        justifyContent='right'
+                    >
+                        <DeviceSmallClip
+                            key={id}
+                            deviceItem={deviceItem}
+                            deviceType={deviceType}
+                            shownDevices={shownDevices}
+                        />
+                        <SortableList.DragHandle />
+                    </Stack>
+                </SortableList.Item>
+            )}
+        />
+    );
 }
 
