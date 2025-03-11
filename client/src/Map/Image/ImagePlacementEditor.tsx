@@ -30,7 +30,7 @@ export const ImagePlacementEditor = ({
 
     const placement = new ComputedImageData(imageData);
 
-    const experimentChangedImage = (newImageData: Partial<IImageStandalone>): { newExp: IExperiment; newData: IImageStandalone; } => {
+    const experimentWithPlacement = (newImageData: Partial<IImageStandalone>): { newExp: IExperiment; newData: IImageStandalone; } => {
         const newExp = structuredClone(experiment);
         newExp.imageStandalone ||= [];
         const newData = { ...imageData, ...newImageData };
@@ -65,7 +65,7 @@ export const ImagePlacementEditor = ({
         const right = round9(left + placement.data.width * factorPixelToMeter);
         const upper = round9(lower + placement.data.height * factorPixelToMeter);
 
-        setExperiment(experimentChangedImage({
+        setExperiment(experimentWithPlacement({
             ybottom: lower,
             ytop: upper,
             xleft: left,
@@ -88,21 +88,25 @@ export const ImagePlacementEditor = ({
     }
 
     const changeZeroPoint = (lat: number, lng: number) => {
+        const dlat = lat - zeroPoint.lat;
+        const dlng = lng - zeroPoint.lng;
+
         const center = mapObj.getCenter();
 
-        mapObj.setView([center.lat - lat, center.lng - lng], undefined, { animate: false });
+        mapObj.setView([center.lat - dlat, center.lng - dlng], undefined, { animate: false });
 
-        const { newExp, newData } = experimentChangedImage({
-            ybottom: placement.data.ybottom - lat,
-            ytop: placement.data.ytop - lat,
-            xleft: placement.data.xleft - lng,
-            xright: placement.data.xright - lng,
+        const { newExp, newData } = experimentWithPlacement({
+            ybottom: placement.data.ybottom - dlat,
+            ytop: placement.data.ytop - dlat,
+            xleft: placement.data.xleft - dlng,
+            xright: placement.data.xright - dlng,
         });
 
         const compData = new ComputedImageData(newData);
         setMeasureOne(compData.calcLatLng(measureOne));
         setMeasureTwo(compData.calcLatLng(measureTwo));
         setZeroPoint(compData.calcXY(zeroPoint));
+
         if (currTrial?.trial) {
             const trial = newExp?.trialTypes?.at(currTrial?.trialTypeIndex)?.trials?.at(currTrial?.trialIndex);
             for (const d of trial?.devicesOnTrial || []) {
@@ -172,7 +176,7 @@ export const ImagePlacementEditor = ({
                             label="Zero Point"
                             point={zeroPoint}
                             disabledXy={true}
-                            setLatLng={({lat, lng}) => setZeroPoint(placement.calcXY({ lat, lng }))}
+                            setLatLng={({ lat, lng }) => setZeroPoint(placement.calcXY({ lat, lng }))}
                         />
                     </Popup>
                 </MarkedPoint>
