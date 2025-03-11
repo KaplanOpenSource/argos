@@ -17,7 +17,8 @@ import logging
 
 logging.basicConfig(level=logging.DEBUG)
 
-from py.config import DATA_FOLDER, read_config, argos_config
+
+from py.config import data_folder, read_config, argos_config
 from py.Images import Images
 from py.Experiments import Experiments
 
@@ -61,7 +62,7 @@ def check_user(username, password):
         return True
 
     try:
-        with open(os.path.join(DATA_FOLDER(), "users.json")) as file:
+        with open(os.path.join(data_folder(), "users.json")) as file:
             all_users = json.load(file)["users"]
             curr_user = [a for a in all_users if a["username"] == username]
             if len(curr_user) != 1 or curr_user[0]["password"] != password:

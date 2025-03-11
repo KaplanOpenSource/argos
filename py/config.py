@@ -30,13 +30,13 @@ def read_config():
     print("argos_config:", argos_config)
 
 
-def DATA_FOLDER():
+def data_folder():
     return argos_config["data_folder"]
 
 
-def EXPERIMENTS_PATH():
-    return os.path.join(DATA_FOLDER(), "experiments")
+def experiments_path():
+    return os.path.join(data_folder(), "experiments")
 
 
-def UPLOAD_FOLDER():
-    return os.path.join(DATA_FOLDER(), "uploads")
+def upload_folder():
+    return os.path.join(data_folder(), "uploads")

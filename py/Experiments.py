@@ -2,16 +2,16 @@ import json
 import os
 import shutil
 
-from py.config import EXPERIMENTS_PATH, UPLOAD_FOLDER
+from py.config import experiments_path, upload_folder
 from py.utils import sort_experiments, validate_name
 
 
 class Experiments:
     def get_list(self):
-        if not os.path.exists(EXPERIMENTS_PATH()):
+        if not os.path.exists(experiments_path()):
             return []
 
-        names = sort_experiments(os.listdir(EXPERIMENTS_PATH()))
+        names = sort_experiments(os.listdir(experiments_path()))
         for n in names:
             print(n)
         names = [os.path.splitext(n)[0] for n in names]
@@ -20,7 +20,7 @@ class Experiments:
     def get_exp(self, name: str):
         if not validate_name(name):
             return {"error": "unknown experiment name"}
-        filepath = os.path.join(EXPERIMENTS_PATH(), name + ".json")
+        filepath = os.path.join(experiments_path(), name + ".json")
         if not os.path.exists(filepath):
             return {"error": "unknown experiment name"}
         return {"filepath": filepath}
@@ -29,12 +29,12 @@ class Experiments:
         if not validate_name(name):
             return {"error": "invalid experiment name"}
 
-        oldpath = os.path.join(EXPERIMENTS_PATH(), name + ".json")
+        oldpath = os.path.join(experiments_path(), name + ".json")
         if json_str == b"":  # undefined was received
             if os.path.exists(oldpath):
                 os.remove(oldpath)
-            if os.path.exists(os.path.join(UPLOAD_FOLDER(), name)):
-                shutil.rmtree(os.path.join(UPLOAD_FOLDER(), name))
+            if os.path.exists(os.path.join(upload_folder(), name)):
+                shutil.rmtree(os.path.join(upload_folder(), name))
             return {"ok": True}
 
         json_data = json.loads(json_str)
@@ -46,18 +46,18 @@ class Experiments:
         if not validate_name(new_name):
             return {"error": "invalid new experiment name"}
 
-        os.makedirs(EXPERIMENTS_PATH(), exist_ok=True)
+        os.makedirs(experiments_path(), exist_ok=True)
         if new_name != name:
             if os.path.exists(oldpath):
                 os.remove(oldpath)
-            if os.path.exists(os.path.join(UPLOAD_FOLDER(), name)):
-                os.rename(os.path.join(UPLOAD_FOLDER(), name), os.path.join(UPLOAD_FOLDER(), new_name))
-        with open(os.path.join(EXPERIMENTS_PATH(), new_name + ".json"), "w") as file:
+            if os.path.exists(os.path.join(upload_folder(), name)):
+                os.rename(os.path.join(upload_folder(), name), os.path.join(upload_folder(), new_name))
+        with open(os.path.join(experiments_path(), new_name + ".json"), "w") as file:
             file.write(str)
 
         images_data = json_data.get("imageStandalone", []) + json_data.get("imageEmbedded", [])
         images = [os.path.basename(im["filename"]) for im in images_data if "filename" in im]
-        exp_img_folder = os.path.join(UPLOAD_FOLDER(), new_name)
+        exp_img_folder = os.path.join(upload_folder(), new_name)
         if os.path.exists(exp_img_folder):
             for f in os.listdir(exp_img_folder):
                 if f not in images:
