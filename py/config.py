@@ -1,4 +1,5 @@
 import json
+import os
 
 
 default_config = {
@@ -27,3 +28,15 @@ def read_config():
             argos_config[k] = v
 
     print("argos_config:", argos_config)
+
+
+def DATA_FOLDER():
+    return argos_config["data_folder"]
+
+
+def EXPERIMENTS_PATH():
+    return os.path.join(DATA_FOLDER(), "experiments")
+
+
+def UPLOAD_FOLDER():
+    return os.path.join(DATA_FOLDER(), "uploads")

@@ -5,7 +5,8 @@ import io
 import base64
 from PIL import Image
 
-from py.constants import ALLOWED_EXTENSIONS, UPLOAD_FOLDER
+from py.constants import ALLOWED_EXTENSIONS
+from py.config import UPLOAD_FOLDER
 from py.utils import validate_name
 
 
@@ -21,7 +22,7 @@ class Images:
 
         ts = datetime.now().isoformat().replace("-", "").replace(".", "_")
         filename_generated = secure_filename(imageName + "_" + ts + ext)
-        exp_folder = os.path.join(UPLOAD_FOLDER, experimentName)
+        exp_folder = os.path.join(UPLOAD_FOLDER(), experimentName)
         filepath = os.path.join(exp_folder, filename_generated)
         print("saving: " + filename_generated + " on " + exp_folder)
         os.makedirs(exp_folder, exist_ok=True)
@@ -40,7 +41,7 @@ class Images:
             return {"error": "invalid experiment name"}
         if filename != secure_filename(filename):
             return {"error": "unable to find image"}
-        filepath = os.path.join(UPLOAD_FOLDER, experimentName, filename)
+        filepath = os.path.join(UPLOAD_FOLDER(), experimentName, filename)
         if not os.path.exists(filepath):
             return {"error": "invalid image name"}
         return {"filepath": filepath}
