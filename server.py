@@ -17,6 +17,7 @@ import logging
 
 logging.basicConfig(level=logging.DEBUG)
 
+from py.config import read_config, argos_config
 from py.Images import Images
 from py.Experiments import Experiments
 from py.constants import DATA_FOLDER
@@ -31,24 +32,7 @@ parser.add_argument("--prod", action="store_true", help="Flag this on production
 args = parser.parse_args()
 print(args)
 
-default_config = {
-    "data_folder": "data",
-    "tileserver": {
-        "url": "https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}.png",
-        "attribution": '&copy; <a href="https://carto.com">Carto</a> contributors',
-    },
-}
-
-config = {}
-try:
-    with open("config.json") as fconfig:
-        config: dict = json.load(fconfig)
-except:
-    print("no config file found")
-
-for k, v in default_config.items():
-    if k not in config:
-        config[k] = v
+read_config()
 
 app = Flask(__name__, static_url_path="/", static_folder="client/dist")
 # template_folder='web/templates')
@@ -141,7 +125,7 @@ def static_file(path):
 @jwt_required()
 @cross_origin()
 def tileserver():
-    return config["tileserver"]
+    return argos_config["tileserver"]
 
 
 @app.route("/experiment_list")
