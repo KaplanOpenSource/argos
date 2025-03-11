@@ -1,8 +1,30 @@
+import React, { useContext } from "react";
 import { Paper, Stack, Typography } from "@mui/material"
 import { SelectDeviceButton } from "../Experiment/SelectDeviceButton";
 import { DeviceItemLocationButton } from "../Experiment/DeviceItemLocationButton";
+import { IDevice, IDeviceType, IDeviceTypeAndItem, ITrackUuid } from "../types/types";
+import { useDeviceSeletion } from "../Context/useDeviceSeletion";
+import { experimentContext } from "../Context/ExperimentProvider";
 
-export const DeviceTableSmall = ({ shownDevices }) => {
+type ISelectedIndexedItem = IDeviceTypeAndItem & {
+    deviceItem: IDevice & ITrackUuid,
+    deviceType: IDeviceType & ITrackUuid
+};
+
+export const DeviceTableSmall = ({ }) => {
+
+    const { selection } = useDeviceSeletion();
+    const { currTrial } = useContext(experimentContext);
+
+    const shownDevices: ISelectedIndexedItem[] = [];
+    for (const { deviceTypeName, deviceItemName } of selection || []) {
+        const deviceType = ((currTrial.experiment || {}).deviceTypes || []).find(x => x.name === deviceTypeName);
+        const deviceItem = ((deviceType || {}).devices || []).find(x => x.name === deviceItemName);
+        if (deviceType && deviceItem) {
+            shownDevices.push({ deviceType, deviceItem, deviceTypeName, deviceItemName });
+        }
+    };
+
     return (
         <Stack
             direction='column'

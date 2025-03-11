@@ -6,12 +6,26 @@ import { useContext } from "react";
 import { DeviceItem } from "../Experiment/DeviceItem";
 import { SCOPE_TRIAL } from "../Experiment/AttributeType";
 import { EnclosingListSelectionContext } from "../Experiment/EnclosedSelectionProvider";
+import { useDeviceSeletion } from "../Context/useDeviceSeletion";
+import { experimentContext } from "../Context/ExperimentProvider";
 
-export const DeviceTableRich = ({ shownDevices }) => {
+export const DeviceTableRich = ({  }) => {
     const {
         selectionOnEnclosingUuids,
         setSelectionOnEnclosingUuids,
     } = useContext(EnclosingListSelectionContext);
+
+    const { selection } = useDeviceSeletion();
+    const { currTrial } = useContext(experimentContext);
+
+    const shownDevices = [];
+    for (const { deviceTypeName, deviceItemName } of selection || []) {
+        const deviceType = ((currTrial.experiment || {}).deviceTypes || []).find(x => x.name === deviceTypeName);
+        const deviceItem = ((deviceType || {}).devices || []).find(x => x.name === deviceItemName);
+        if (deviceType && deviceItem) {
+            shownDevices.push({ deviceType, deviceItem, deviceTypeName, deviceItemName });
+        }
+    };
 
     return (
         <TreeView

@@ -1,4 +1,5 @@
 export type ICoordinates = [number, number];
+export type ITrackUuid = { trackUuid?: string };
 
 export interface IImage {
     name?: string;
