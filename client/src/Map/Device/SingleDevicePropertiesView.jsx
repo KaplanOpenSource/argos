@@ -1,5 +1,7 @@
 import React, { useContext } from 'react';
 import {
+    Box,
+    Paper,
     Stack, Typography
 } from '@mui/material';
 import { experimentContext } from '../../Context/ExperimentProvider';
@@ -48,13 +50,15 @@ export const SingleDevicePropertiesView = ({ deviceOnTrial, setDeviceOnTrial, ch
                 setLocation={(loc) => device.setLocationOnMap(loc, currTrial.mapName)}
             />
             {deviceItem
-                ? <AttributeItemList
-                    attributeTypes={deviceType.attributeTypes}
-                    data={deviceOnTrial}
-                    setData={setDeviceOnTrial}
-                    scope={SCOPE_TRIAL}
-                    deviceItem={deviceItem}
-                />
+                ? <Box sx={{ overflowY: 'auto', maxHeight: 300 }}>
+                    <AttributeItemList
+                        attributeTypes={deviceType.attributeTypes}
+                        data={deviceOnTrial}
+                        setData={setDeviceOnTrial}
+                        scope={SCOPE_TRIAL}
+                        deviceItem={deviceItem}
+                    />
+                </Box>
                 : <Typography variant='body2'>
                     This device exists on trial but not on experiment, please remove.
                 </Typography>
