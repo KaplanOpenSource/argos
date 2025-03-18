@@ -7,7 +7,7 @@ import {
     useSensor,
     useSensors
 } from "@dnd-kit/core";
-import type { Active, UniqueIdentifier } from "@dnd-kit/core";
+import type { Active, Over, UniqueIdentifier } from "@dnd-kit/core";
 import {
     SortableContext,
     arrayMove,
@@ -55,6 +55,40 @@ export function SortableList<T extends BaseItem>({
         return items.slice(Math.min(i0, i1), Math.max(i0, i1) + 1).map(x => x.id);
     }
 
+    const moveItems = (over: Over | null, active: Active) => {
+        if (over && (active?.id !== over?.id || selectedItems.length > 0)) {
+            const next = [...items];
+            const overIndex = next.findIndex(({ id }) => id === over.id);
+            const activeIndexBefore = next.findIndex(({ id }) => id === active.id);
+            next.splice(overIndex, 0, ...next.splice(activeIndexBefore, 1));
+            const idms = selectedItems.filter(x => x !== active.id);
+            const moved = next.filter(x => idms.includes(x.id));
+            const stay = next.filter(x => !idms.includes(x.id));
+            const activeIndexAfter = stay.findIndex(({ id }) => id === active.id);
+            stay.splice(activeIndexAfter + 1, 0, ...moved);
+            onChange(stay);
+        }
+    }
+
+    const handleSelectClick = (itemId: UniqueIdentifier, shiftKey: boolean = false) => {
+        if (shiftKey && lastSelectedClick) {
+            const range = betweenIds(lastSelectedClick, itemId);
+            const selectedWithout = selectedItems.filter(x => !range.includes(x));
+            if (selectedItems.includes(lastSelectedClick)) {
+                setSelectedItems([...selectedWithout, ...range]);
+            } else {
+                setSelectedItems(selectedWithout);
+            }
+        } else {
+            if (selectedItems.includes(itemId)) {
+                setSelectedItems(selectedItems.filter(x => x !== itemId));
+            } else {
+                setSelectedItems([...selectedItems, itemId]);
+            }
+        }
+        setLastSelectedClick(itemId);
+    }
+
     return (
         <DndContext
             sensors={sensors}
@@ -62,18 +96,7 @@ export function SortableList<T extends BaseItem>({
                 setActive(active);
             }}
             onDragEnd={({ active, over }) => {
-                if (over && (active?.id !== over?.id || selectedItems.length > 0)) {
-                    const next = [...items];
-                    const overIndex = next.findIndex(({ id }) => id === over.id);
-                    const activeIndexBefore = next.findIndex(({ id }) => id === active.id);
-                    next.splice(overIndex, 0, ...next.splice(activeIndexBefore, 1));
-                    const idms = selectedItems.filter(x => x !== active.id);
-                    const moved = next.filter(x => idms.includes(x.id));
-                    const stay = next.filter(x => !idms.includes(x.id));
-                    const activeIndexAfter = stay.findIndex(({ id }) => id === active.id);
-                    stay.splice(activeIndexAfter + 1, 0, ...moved);
-                    onChange(stay);
-                }
+                moveItems(over, active);
                 setActive(null);
             }}
             onDragCancel={() => {
@@ -86,25 +109,7 @@ export function SortableList<T extends BaseItem>({
                         const isSelected = selectedItems.includes(item.id);
                         return (
                             <Box key={item.id}
-                                onClick={e => {
-                                    if (e.shiftKey && lastSelectedClick) {
-                                        e.stopPropagation();
-                                        const range = betweenIds(lastSelectedClick, item.id);
-                                        const selectedWithout = selectedItems.filter(x => !range.includes(x));
-                                        if (selectedItems.includes(lastSelectedClick)) {
-                                            setSelectedItems([...selectedWithout, ...range]);
-                                        } else {
-                                            setSelectedItems(selectedWithout);
-                                        }
-                                    } else {
-                                        if (selectedItems.includes(item.id)) {
-                                            setSelectedItems(selectedItems.filter(x => x !== item.id));
-                                        } else {
-                                            setSelectedItems([...selectedItems, item.id]);
-                                        }
-                                    }
-                                    setLastSelectedClick(item.id);
-                                }}
+                                onClick={e => handleSelectClick(item.id, e.shiftKey)}
                             >
                                 {renderItem(item, isSelected)}
                             </Box>
