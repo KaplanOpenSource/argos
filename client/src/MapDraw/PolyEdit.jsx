@@ -10,7 +10,7 @@ const refcurrToCoords = (refcurr) => {
 }
 
 const sanitizeCoords = (coordinates) => {
-    return coordinates.filter(x => x?.length === 2 && Number.isFinite(x[0]) && Number.isFinite(x[1])) || []
+    return coordinates?.filter(x => x?.length === 2 && Number.isFinite(x[0]) && Number.isFinite(x[1])) || []
 }
 
 export const PolyLineEdit = ({ data, setData }) => {
