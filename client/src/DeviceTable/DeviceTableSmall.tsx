@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Stack } from "@mui/material"
-import { IDevice, IDeviceTypeAndItem, IExperiment, ITrackUuid } from "../types/types";
+import { IDevice, IExperiment, ITrackUuid } from "../types/types";
 import { useDeviceSeletion } from "../Context/useDeviceSeletion";
 import { experimentContext } from "../Context/ExperimentProvider";
 
@@ -27,7 +27,7 @@ export const DeviceTableSmall = ({ }) => {
         }
     };
 
-    function handleChangeSelection(items: ISelectedIndexedItem[]): void {
+    const handleChangeSelection = (items: ISelectedIndexedItem[]): void => {
         setSelection(items);
     }
 
@@ -35,7 +35,7 @@ export const DeviceTableSmall = ({ }) => {
         <SortableList
             items={shownDevices}
             onChange={handleChangeSelection}
-            renderItem={({ deviceItem, deviceType, id }) => (
+            renderItem={({ deviceItem, deviceType, id }, isSelected) => (
                 <SortableList.Item id={id}>
                     <Stack
                         direction='row'
@@ -47,6 +47,7 @@ export const DeviceTableSmall = ({ }) => {
                             deviceItem={deviceItem}
                             deviceType={deviceType}
                             shownDevices={shownDevices}
+                            showAsSelected={isSelected}
                         />
                         <SortableList.DragHandle />
                     </Stack>

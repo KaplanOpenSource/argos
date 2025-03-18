@@ -14,9 +14,9 @@ import {
   sortableKeyboardCoordinates
 } from "@dnd-kit/sortable";
 
-import "./SortableList.css";
 import { SortableOverlay } from "./SortableOverlay";
 import { DragHandle, SortableItem } from "./SortableItem";
+import { Box } from "@mui/material";
 
 interface BaseItem {
   id: UniqueIdentifier;
@@ -25,7 +25,7 @@ interface BaseItem {
 interface Props<T extends BaseItem> {
   items: T[];
   onChange(items: T[]): void;
-  renderItem(item: T): ReactNode;
+  renderItem(item: T, isSelected: boolean): ReactNode;
 }
 
 export function SortableList<T extends BaseItem>({
@@ -45,6 +45,8 @@ export function SortableList<T extends BaseItem>({
     })
   );
 
+  const [selectedItems, setSelectedItems] = useState<UniqueIdentifier[]>([]);
+
   return (
     <DndContext
       sensors={sensors}
@@ -52,11 +54,18 @@ export function SortableList<T extends BaseItem>({
         setActive(active);
       }}
       onDragEnd={({ active, over }) => {
-        if (over && active.id !== over?.id) {
-          const activeIndex = items.findIndex(({ id }) => id === active.id);
-          const overIndex = items.findIndex(({ id }) => id === over.id);
-
-          onChange(arrayMove(items, activeIndex, overIndex));
+          if (over && (active?.id !== over?.id || selectedItems.length > 0)) {
+            const next = [...items];
+            next.splice(
+                next.findIndex(({ id }) => id === over.id),
+                0,
+                ...next.splice(next.findIndex(({ id }) => id === active.id), 1)
+            );
+            const idms = selectedItems.filter(x => x !== active.id);
+            const moved = next.filter(x => idms.includes(x.id));
+            const stay = next.filter(x => !idms.includes(x.id));
+            stay.splice(stay.findIndex(({ id }) => id === active.id) + 1, 0, ...moved);
+            onChange(stay);
         }
         setActive(null);
       }}
@@ -65,14 +74,30 @@ export function SortableList<T extends BaseItem>({
       }}
     >
       <SortableContext items={items}>
-        <ul className="SortableList" role="application">
+        <Box 
+            role="application"
+        >
           {items.map((item) => (
-            <React.Fragment key={item.id}>{renderItem(item)}</React.Fragment>
+            <Box key={item.id} 
+                onClick={e => {
+                    if (selectedItems.includes(item.id)) {
+                        setSelectedItems(selectedItems.filter(x => x !== item.id));
+                    } else {
+                        setSelectedItems([...selectedItems, item.id]);
+                    }
+                }}
+            >
+                {renderItem(item, selectedItems.includes(item.id))}
+            </Box>
           ))}
-        </ul>
+        </Box>
       </SortableContext>
       <SortableOverlay>
-        {activeItem ? renderItem(activeItem) : null}
+        {activeItem
+            ? (
+                renderItem(activeItem, selectedItems.includes(activeItem.id))
+            )
+            : null}
       </SortableOverlay>
     </DndContext>
   );

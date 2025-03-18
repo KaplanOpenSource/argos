@@ -14,17 +14,20 @@ export const DeviceSmallClip = ({
     deviceItem,
     deviceType,
     shownDevices,
+    showAsSelected,
 }: {
     deviceItem: IDevice & ITrackUuid,
     deviceType: IDeviceType & ITrackUuid,
     shownDevices: ISelectedIndexedItem[],
+    showAsSelected?: boolean,
 }) => {
     return (
         <Paper
             key={deviceItem.trackUuid}
             sx={{
                 paddingLeft: '5px',
-                maxWidth: 'fit-content'
+                maxWidth: 'fit-content',
+                backgroundColor: showAsSelected ? '#d1e4f6' : '',
             }}
         >
             <Stack
