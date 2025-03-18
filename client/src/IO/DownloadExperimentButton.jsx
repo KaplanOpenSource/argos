@@ -100,7 +100,7 @@ export const DownloadExperimentButton = ({ experiment }) => {
         }
 
         const zipblob = await zip.generateAsync({ type: "blob" });
-        saveAs(zipblob, `experiment_${experiment.name}.zip`);
+        saveAs(zipblob, `${experiment.name}.zip`);
     }, [iconBlobs]);
 
     useEffect(() => {
