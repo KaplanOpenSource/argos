@@ -56,15 +56,14 @@ export function SortableList<T extends BaseItem>({
       onDragEnd={({ active, over }) => {
           if (over && (active?.id !== over?.id || selectedItems.length > 0)) {
             const next = [...items];
-            next.splice(
-                next.findIndex(({ id }) => id === over.id),
-                0,
-                ...next.splice(next.findIndex(({ id }) => id === active.id), 1)
-            );
+            const overIndex = next.findIndex(({ id }) => id === over.id);
+            const activeIndexBefore = next.findIndex(({ id }) => id === active.id);
+            next.splice(overIndex, 0, ...next.splice(activeIndexBefore, 1));
             const idms = selectedItems.filter(x => x !== active.id);
             const moved = next.filter(x => idms.includes(x.id));
             const stay = next.filter(x => !idms.includes(x.id));
-            stay.splice(stay.findIndex(({ id }) => id === active.id) + 1, 0, ...moved);
+            const activeIndexAfter = stay.findIndex(({ id }) => id === active.id);
+            stay.splice(activeIndexAfter + 1, 0, ...moved);
             onChange(stay);
         }
         setActive(null);
