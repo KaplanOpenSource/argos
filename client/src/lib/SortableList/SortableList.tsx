@@ -15,8 +15,8 @@ import {
 } from "@dnd-kit/sortable";
 
 import "./SortableList.css";
-
-import { DragHandle, SortableItem, SortableOverlay } from "./components";
+import { SortableOverlay } from "./SortableOverlay";
+import { DragHandle, SortableItem } from "./SortableItem";
 
 interface BaseItem {
   id: UniqueIdentifier;
