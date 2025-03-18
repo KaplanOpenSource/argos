@@ -122,7 +122,7 @@ def static_file(path):
 
 
 @app.route("/tileserver")
-@jwt_required()
+# @jwt_required()
 @cross_origin()
 def tileserver():
     return argos_config["tileserver"]
