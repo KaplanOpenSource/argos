@@ -14,12 +14,14 @@ export const TreeRow = ({
     components,
     children,
     boldName = false,
+    validateName = (_val) => '',
 }: {
     data: IData,
     setData: (newData: IData) => any,
     components: any,
     children: any,
     boldName?: boolean,
+    validateName?: (val: string) => string,
 }) => {
     const { name } = data;
 
@@ -63,6 +65,7 @@ export const TreeRow = ({
                                 onChange={val => setData({ ...data, name: val })}
                                 disabled={!setData}
                                 {...(boldName ? BOLD_PROPS : {})}
+                                validate={validateName}
                             />
                             {components}
                         </Box>

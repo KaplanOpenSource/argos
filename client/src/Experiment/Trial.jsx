@@ -58,6 +58,7 @@ export const Trial = ({ data, setData, experiment, trialType, children }) => {
             data={data}
             setData={setData}
             boldName={data === currTrial.trial}
+            validateName={(name) => !trialType?.trials?.find(tt => tt.name === name) ? '' : 'Duplicate name'}
             components={
                 <>
                     <DateProperty

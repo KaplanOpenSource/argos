@@ -3,8 +3,16 @@ import TextField from '@mui/material/TextField';
 import debounce from 'lodash.debounce';
 import { Tooltip } from '@mui/material';
 
-export const TextFieldDebounce = ({ value, onChange = (_val) => { }, debounceMs = 500, tooltipTitle = "", ...props }) => {
+export const TextFieldDebounce = ({
+    value,
+    onChange = (_val) => { },
+    debounceMs = 500,
+    tooltipTitle = "",
+    validate = (_val) => '',
+    ...props
+}) => {
     const [innerValue, setInnerValue] = useState(value);
+    const [validationError, setValidationError] = useState('');
 
     // Update inner value when external value changes
     // This ensures the component stays controlled but still debounceable
@@ -19,8 +27,13 @@ export const TextFieldDebounce = ({ value, onChange = (_val) => { }, debounceMs 
 
     const handleChange = (event) => {
         event.stopPropagation();
-        setInnerValue(event.target.value); // Update local state for immediate feedback
-        debouncedOnChange(event.target.value); // Pass the value to the debounced onChange
+        const val = event.target.value;
+        setInnerValue(val); // Update local state for immediate feedback
+        const error = validate(val);
+        setValidationError(error);
+        if (error === '') {
+            debouncedOnChange(val); // Pass the value to the debounced onChange
+        }
     };
 
     // Cleanup the debounced function on component unmount
@@ -42,6 +55,8 @@ export const TextFieldDebounce = ({ value, onChange = (_val) => { }, debounceMs 
                 onClick={e => e.stopPropagation()}
                 onMouseDown={e => e.stopPropagation()}
                 onDoubleClick={e => e.stopPropagation()}
+                error={validationError !== ''}
+                helperText={validationError}
             />
         </Tooltip>
     );
