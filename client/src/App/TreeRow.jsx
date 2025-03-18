@@ -4,7 +4,7 @@ import { TextFieldDebounce } from "../Utils/TextFieldDebounce";
 import { useEffect } from "react";
 import { assignUuids } from "../Context/TrackUuidUtils";
 
-export const TreeRow = ({ data, setData, components, children, textProps }) => {
+export const TreeRow = ({ data, setData, components, children, boldName = false }) => {
     const { name } = data;
 
     useEffect(() => {
@@ -18,6 +18,14 @@ export const TreeRow = ({ data, setData, components, children, textProps }) => {
         return null;
     }
 
+    const BOLD_PROPS = {
+        InputProps: {
+            style: {
+                fontWeight: 'bold',
+            },
+        }
+    };
+
     return (
         <TreeItem
             key={data.trackUuid}
@@ -25,19 +33,10 @@ export const TreeRow = ({ data, setData, components, children, textProps }) => {
             label={
                 <div style={{ pointerEvents: 'none' }}>
                     <div style={{ pointerEvents: 'all', display: 'inline-block' }}>
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                // p: 0.5,
-                                // pr: 0,
-                            }}
-                        >
-                            {/* <Typography variant="body2"
-                        sx={{ fontWeight: 'inherit', flexGrow: 1 }}
-                    >
-                        {name}
-                    </Typography> */}
+                        <Box sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                        }}>
                             <TextFieldDebounce
                                 sx={{ padding: '5px' }}
                                 variant="outlined"
@@ -47,7 +46,7 @@ export const TreeRow = ({ data, setData, components, children, textProps }) => {
                                 value={name}
                                 onChange={val => setData({ ...data, name: val })}
                                 disabled={!setData}
-                                {...textProps}
+                                {...(boldName ? BOLD_PROPS : {})}
                             />
                             {components}
                         </Box>

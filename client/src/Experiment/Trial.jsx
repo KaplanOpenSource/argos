@@ -57,16 +57,7 @@ export const Trial = ({ data, setData, experiment, trialType, children }) => {
         <TreeRow
             data={data}
             setData={setData}
-            textProps={data === currTrial.trial
-                ? {
-                    InputProps: {
-                        style: {
-                            fontWeight: 'bold',
-                        },
-                    }
-                }
-                : {}
-            }
+            boldName={data === currTrial.trial}
             components={
                 <>
                     <DateProperty

@@ -24,16 +24,7 @@ export const ExperimentRow = ({ data, setData, children }) => {
         <TreeRow
             data={data}
             setData={setData}
-            textProps={data === currTrial.experiment
-                ? {
-                    InputProps: {
-                        style: {
-                            fontWeight: 'bold',
-                        },
-                    }
-                }
-                : {}
-            }
+            boldName={data === currTrial.experiment}
             components={
                 <>
                     <DateProperty
