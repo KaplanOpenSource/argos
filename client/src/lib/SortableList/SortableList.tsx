@@ -87,8 +87,8 @@ export function SortableList<T extends BaseItem>({
                         return (
                             <Box key={item.id}
                                 onClick={e => {
-                                    console.log(e.shiftKey, lastSelectedClick, item.id)
                                     if (e.shiftKey && lastSelectedClick) {
+                                        e.stopPropagation();
                                         const range = betweenIds(lastSelectedClick, item.id);
                                         const selectedWithout = selectedItems.filter(x => !range.includes(x));
                                         if (selectedItems.includes(lastSelectedClick)) {

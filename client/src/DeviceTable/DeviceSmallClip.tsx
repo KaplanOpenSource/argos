@@ -35,7 +35,7 @@ export const DeviceSmallClip = ({
                 alignItems='center'
                 justifyContent="end"
             >
-                <Typography>
+                <Typography style={{ userSelect: 'none' }}>
                     {deviceItem.name}
                 </Typography>
                 <SelectDeviceButton
