@@ -1,10 +1,26 @@
+import React from "react";
 import { Box } from "@mui/material";
 import { TreeItem } from "@mui/x-tree-view/TreeItem";
 import { TextFieldDebounce } from "../Utils/TextFieldDebounce";
 import { useEffect } from "react";
 import { assignUuids } from "../Context/TrackUuidUtils";
+import { ITrackUuid } from "../types/types";
 
-export const TreeRow = ({ data, setData, components, children, boldName = false }) => {
+type IData = { name?: string; } & ITrackUuid;
+
+export const TreeRow = ({
+    data,
+    setData,
+    components,
+    children,
+    boldName = false,
+}: {
+    data: IData,
+    setData: (newData: IData) => any,
+    components: any,
+    children: any,
+    boldName?: boolean,
+}) => {
     const { name } = data;
 
     useEffect(() => {
@@ -28,8 +44,8 @@ export const TreeRow = ({ data, setData, components, children, boldName = false 
 
     return (
         <TreeItem
-            key={data.trackUuid}
-            nodeId={data.trackUuid}
+            key={data.trackUuid!}
+            nodeId={data.trackUuid!}
             label={
                 <div style={{ pointerEvents: 'none' }}>
                     <div style={{ pointerEvents: 'all', display: 'inline-block' }}>
@@ -53,7 +69,6 @@ export const TreeRow = ({ data, setData, components, children, boldName = false 
                     </div>
                 </div>
             }
-        // sx={{ padding: '5px' }}
         >
             {children}
         </TreeItem>
