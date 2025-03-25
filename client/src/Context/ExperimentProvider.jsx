@@ -156,6 +156,11 @@ export const ExperimentProvider = ({ children }) => {
         (async () => {
             if (isLoggedIn()) {
                 const { experimentName, trialTypeName, trialName } = parseUrlParams();
+
+                // $$$$ TODO: 
+                // 1. read experiment list, show it from the info
+                // 2. read just the chosen experiment
+                // 3. switch experiment and read from backend
                 // const experimentsNames = await fetchExperimentListInfo();
                 const allExperiments = await fetchAllExperiments();
                 assignUuids(allExperiments);
