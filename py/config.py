@@ -10,7 +10,7 @@ default_config = {
     },
 }
 
-argos_config = {}
+argos_config = dict(default_config)
 
 
 def read_config():

@@ -12,10 +12,30 @@ class Experiments:
             return []
 
         names = sort_experiments(os.listdir(experiments_path()))
-        for n in names:
-            print(n)
+        print(names)
         names = [os.path.splitext(n)[0] for n in names]
         return names
+
+    def get_list_with_info(self):
+        data: list[dict] = []
+        if os.path.exists(experiments_path()):
+            names = os.listdir(experiments_path())
+            names = sort_experiments(names)
+            for name in names:
+                one = {
+                    "name": os.path.splitext(name)[0],
+                }
+                try:
+                    filepath = os.path.join(experiments_path(), name)
+                    with open(filepath, "r") as fexp:
+                        exp = json.load(fexp)
+                        one["startDate"] = exp["startDate"]
+                        one["endDate"] = exp["endDate"]
+                except:
+                    pass
+                data.append(one)
+        print(data)
+        return data
 
     def get_exp(self, name: str):
         if not validate_name(name):
@@ -66,3 +86,8 @@ class Experiments:
                     os.remove(image_file_name)
 
         return {"ok": True}
+
+
+if __name__ == "__main__":  # pragma: no cover
+    exps = Experiments()
+    print(exps.get_list_with_info())
