@@ -26,7 +26,7 @@ export const ExperimentProvider = ({ children }) => {
     } = useExperimentUpdates(state, setState);
 
     const { isLoggedIn } = useTokenStore();
-    const { fetchAllExperiments } = useFetchExperiments();
+    const { fetchAllExperiments, fetchExperimentListInfo, fetchExperiment } = useFetchExperiments();
 
     const trialChoosing = new TrialChoosing(state, setState);
 
@@ -156,6 +156,7 @@ export const ExperimentProvider = ({ children }) => {
         (async () => {
             if (isLoggedIn()) {
                 const { experimentName, trialTypeName, trialName } = parseUrlParams();
+                // const experimentsNames = await fetchExperimentListInfo();
                 const allExperiments = await fetchAllExperiments();
                 assignUuids(allExperiments);
                 const t = TrialChoosing.FindTrialByName({ experimentName, trialTypeName, trialName }, allExperiments);
