@@ -7,7 +7,7 @@ import { useEffect } from "react";
 interface ServerUpdatesStore {
     serverUpdates: { name: string, exp: IExperiment }[];
     addUpdate: (name: string, exp: IExperiment) => void;
-    upsync: () => Promise<void>;
+    clearUpdates: () => void;
 }
 
 export const useServerUpdates = create<ServerUpdatesStore>()((set, get) => ({
@@ -15,30 +15,28 @@ export const useServerUpdates = create<ServerUpdatesStore>()((set, get) => ({
     addUpdate: (name: string, exp: IExperiment) => {
         set(prev => ({ ...prev, serverUpdates: [...prev.serverUpdates, { name, exp }] }))
     },
-    upsync: async () => {
-        const serverUpdates = get().serverUpdates;
-        if (serverUpdates.length && useTokenStore.getState().isLoggedIn()) {
-            for (const { name, exp } of serverUpdates) {
-
-                // TODO: convert useFetchExperiments to zustand to do the following in saveExperimentWithData there
-                try {
-                    await useTokenStore.getState().axiosSecure().post("experiment_set/" + name, exp);
-                } catch (e) {
-                    alert('save error: ' + e);
-                    console.error(e);
-                }
-                ////
-                
-            }
-            set({ serverUpdates: [] })
-        }
+    clearUpdates: () => {
+        set({ serverUpdates: [] })
     }
 }))
 
 export const ServerUpdatesHandler = () => {
-    const { upsync, serverUpdates } = useServerUpdates();
+    const { clearUpdates, serverUpdates } = useServerUpdates();
+    const { isLoggedIn } = useTokenStore();
+    const { saveExperimentWithData } = useFetchExperiments();
+
     useEffect(() => {
-        upsync();
-    }, [serverUpdates])
+        (async () => {
+            if (serverUpdates.length && isLoggedIn()) {
+                for (const { name, exp } of serverUpdates) {
+                    const ok = await saveExperimentWithData(name, exp);
+                    if (!ok) {
+                        return;
+                    }
+                }
+                clearUpdates();
+            }
+        })();
+    }, [serverUpdates, isLoggedIn()])
     return null;
 }
