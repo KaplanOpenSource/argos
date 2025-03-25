@@ -17,6 +17,7 @@ import { AppHeaderButtons } from './AppHeaderButtons';
 import { MapDrawExperiment } from '../MapDraw/MapDrawExperiment';
 import { UndoInterceptor } from './UndoInterceptor';
 import { CurrMouseLocation } from '../Context/useCurrMouseLocation';
+import { ServerUpdatesHandler } from '../Context/useServerUpdates';
 
 export function DevicePlanner() {
     const [showEditBox, setShowEditBox] = useState(false);
@@ -29,6 +30,7 @@ export function DevicePlanner() {
 
     return (
         <>
+            <ServerUpdatesHandler />
             <UndoInterceptor />
             <AppHeader>
                 <AppHeaderButtons

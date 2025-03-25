@@ -1,22 +1,18 @@
 import dayjs from 'dayjs';
-import { useEffect } from 'react';
 import { jsonApplyItem, jsonCompare } from '../Utils/JsonPatch';
 import { createNewName } from "../Utils/utils";
 import { argosJsonVersion } from '../constants/constants';
-import { useFetchExperiments } from './FetchExperiment';
 import { assignUuids, cleanUuids } from './TrackUuidUtils';
-import { useTokenStore } from './useTokenStore';
+import { useServerUpdates } from './useServerUpdates';
 
 export const ExperimentUpdatesInitialState = {
     experiments: [],
     undoStack: [],
     redoStack: [],
-    serverUpdates: [],
 }
 
 export const useExperimentUpdates = (state, setState) => {
-    const { isLoggedIn } = useTokenStore();
-    const { saveExperimentWithData } = useFetchExperiments();
+    const { addUpdate } = useServerUpdates();
 
     const sendUpdate = (experimentName, experimentNewData, experimentPrevData) => {
         const redoPatch = jsonCompare(experimentPrevData, experimentNewData);
@@ -25,13 +21,12 @@ export const useExperimentUpdates = (state, setState) => {
         if (redoPatch.length === 0) {
             return; // nothing was changed
         }
-        // }
+        addUpdate(experimentName, experimentNewData);
+
         setState(prev => {
-            const newUpdate = { name: experimentName, exp: experimentNewData };
             const newUndoItem = { name: experimentName, undoPatch, redoPatch };
             return {
                 ...prev,
-                serverUpdates: [...prev.serverUpdates, newUpdate],
                 undoStack: [...prev.undoStack, newUndoItem],
                 redoStack: [],
             };
@@ -102,50 +97,33 @@ export const useExperimentUpdates = (state, setState) => {
 
     const undoOperation = () => {
         setState(prev => {
-            const { undoStack, experiments, redoStack, serverUpdates } = prev;
+            const { undoStack, experiments, redoStack } = prev;
             const item = undoStack.pop();
             if (item) {
                 const { name, undoPatch } = item;
                 const i = experiments.findIndex(t => t.name === name)
                 const exp = jsonApplyItem(experiments, i, experiments[i], undoPatch);
                 redoStack.push(item);
-                serverUpdates.push({ name, exp });
+                addUpdate(name, exp);
             }
-            return { ...prev, undoStack, experiments, redoStack, serverUpdates };
+            return { ...prev, undoStack, experiments, redoStack };
         });
     }
 
     const redoOperation = () => {
         setState(prev => {
-            const { undoStack, experiments, redoStack, serverUpdates } = prev;
+            const { undoStack, experiments, redoStack } = prev;
             const item = redoStack.pop();
             if (item) {
                 const { name, redoPatch } = item;
                 const i = experiments.findIndex(t => t.name === name)
                 const exp = jsonApplyItem(experiments, i, experiments[i], redoPatch);
                 undoStack.push(item);
-                serverUpdates.push({ name, exp });
+                addUpdate(name, exp);
             }
-            return { ...prev, undoStack, experiments, redoStack, serverUpdates };
+            return { ...prev, undoStack, experiments, redoStack };
         });
     }
-
-    useEffect(() => {
-        if (isLoggedIn()) {
-            if (state.serverUpdates.length > 0) {
-                (async () => {
-                    const updates = state.serverUpdates;
-                    setState(prev => ({
-                        ...prev,
-                        serverUpdates: [],
-                    }));
-                    for (const { name, exp } of updates) {
-                        await saveExperimentWithData(name, exp);
-                    }
-                })();
-            }
-        }
-    }, [isLoggedIn(), state.serverUpdates]);
 
     return {
         deleteExperiment,
