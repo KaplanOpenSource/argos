@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { AppHeader } from './AppHeader';
 import { ExperimentList } from '../Experiment/ExperimentList';
 import { MapShower } from '../Map/MapShower';
@@ -15,7 +15,7 @@ import { SHOW_ALL_EXPERIMENTS } from './ShowConfigToggles';
 import { EnclosingListSelectionProvider } from '../Experiment/EnclosedSelectionProvider';
 import { AppHeaderButtons } from './AppHeaderButtons';
 import { MapDrawExperiment } from '../MapDraw/MapDrawExperiment';
-import { UndoInterceptor } from './UndoInterceptor';
+import { UndoKeyInterceptor } from './UndoKeyInterceptor';
 import { CurrMouseLocation } from '../Context/useCurrMouseLocation';
 import { ServerUpdatesHandler } from '../Context/useServerUpdates';
 
@@ -31,7 +31,7 @@ export function DevicePlanner() {
     return (
         <>
             <ServerUpdatesHandler />
-            <UndoInterceptor />
+            <UndoKeyInterceptor />
             <AppHeader>
                 <AppHeaderButtons
                     fullscreen={fullscreen} setFullscreen={setFullscreen}

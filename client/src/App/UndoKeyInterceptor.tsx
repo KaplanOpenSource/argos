@@ -1,7 +1,7 @@
-import React, { useContext, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useExperimentProvider } from '../Context/ExperimentProvider';
 
-export const UndoInterceptor = () => {
+export const UndoKeyInterceptor = () => {
     const { undoOperation, redoOperation } = useExperimentProvider();
 
     useEffect(() => {
