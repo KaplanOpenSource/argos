@@ -26,6 +26,7 @@ import { UploadButton } from '../IO/UploadButton';
 import { useUploadExperiment } from '../IO/UploadExperiment';
 import { DocumentationButton } from '../Doc/DocumentationButton';
 import { AppHeaderShownMap } from './AppHeaderShownMap';
+import { UndoRedoButtons } from '../Context/useUndoRedo';
 
 export const AppHeaderButtons = ({
     fullscreen, setFullscreen,
@@ -103,24 +104,8 @@ export const AppHeaderButtons = ({
                 justifyContent="flex-end"
                 alignItems="center"
             >
-                <ButtonTooltip
-                    color="inherit"
-                    // sx={{ mr: 2 }}
-                    onClick={() => undoOperation()}
-                    tooltip={"Undo"}
-                    disabled={!undoPossible}
-                >
-                    <Undo />
-                </ButtonTooltip>
-                <ButtonTooltip
-                    color="inherit"
-                    // sx={{ mr: 2 }}
-                    onClick={() => redoOperation()}
-                    tooltip={"Redo"}
-                    disabled={!redoPossible}
-                >
-                    <Redo />
-                </ButtonTooltip>
+                <UndoRedoButtons
+                />
                 {experimentName
                     ? <>
                         <ButtonTooltip

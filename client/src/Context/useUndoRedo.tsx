@@ -4,6 +4,9 @@ import { useEffect } from "react";
 import { useExperimentProvider } from "./ExperimentProvider";
 import { usePrevious } from '@radix-ui/react-use-previous';
 import { jsonApplyItem, jsonCompare, JsonOperationPack } from "../Utils/JsonPatch";
+import { ButtonTooltip } from "../Utils/ButtonTooltip";
+import { Redo, Undo } from "@mui/icons-material";
+import React from "react";
 
 type JsonUndoRedoChange = {
     name: string,
@@ -117,4 +120,53 @@ export const UndoRedoHandler = () => {
     }, [experiments, prevExperiments]);
 
     return null;
+}
+
+export const UndoRedoButtons = () => {
+    const { trackChanges, obtainUndo, obtainRedo, undoStack, redoStack } = useUndoRedo();
+    const { experiments, setExperiments } = useExperimentProvider() as {
+        experiments: IExperiment[],
+        setExperiments: (applyer: (prev: IExperiment[]) => IExperiment[]) => void,
+    };
+
+    const doOperation = (experimentName: string | undefined, patch: JsonOperationPack | undefined) => {
+        if (experimentName && patch) {
+            setExperiments((prev: IExperiment[]) => {
+                const i = prev.findIndex(t => t.name === experimentName);
+                const draft = structuredClone(prev);
+                jsonApplyItem(draft, i, draft[i], patch);
+                return draft;
+            });
+        }
+    }
+
+    return (
+        <>
+            <ButtonTooltip
+                color="inherit"
+                // sx={{ mr: 2 }}
+                onClick={() => {
+                    const { name, undoPatch } = obtainUndo() || {};
+                    console.log(name)
+                    doOperation(name, undoPatch);
+                }}
+                tooltip={"Undo"}
+                disabled={undoStack.length === 0}
+            >
+                <Undo />
+            </ButtonTooltip>
+            <ButtonTooltip
+                color="inherit"
+                // sx={{ mr: 2 }}
+                onClick={() => {
+                    const { name, redoPatch } = obtainRedo() || {};
+                    doOperation(name, redoPatch);
+                }}
+                tooltip={"Redo"}
+                disabled={redoStack.length === 0}
+            >
+                <Redo />
+            </ButtonTooltip>
+        </>
+    )
 }

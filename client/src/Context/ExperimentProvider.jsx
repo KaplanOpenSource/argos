@@ -207,6 +207,7 @@ export const ExperimentProvider = ({ children }) => {
 
     const store = {
         experiments: state.experiments,
+        setExperiments: applyer => setState(prev => ({ ...prev, experiments: applyer(prev.experiments) })),
         deleteExperiment: deleteExperiment,
         addExperiment: addExperiment,
         setExperiment: setExperiment,
