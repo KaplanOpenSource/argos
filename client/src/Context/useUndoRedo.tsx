@@ -1,12 +1,11 @@
+import React, { useEffect, useState } from "react";
 import { create } from "zustand";
 import { IExperiment } from "../types/types";
-import { useEffect } from "react";
 import { useExperimentProvider } from "./ExperimentProvider";
 import { usePrevious } from '@radix-ui/react-use-previous';
 import { jsonApplyItem, jsonCompare, JsonOperationPack } from "../Utils/JsonPatch";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { Redo, Undo } from "@mui/icons-material";
-import React from "react";
 
 type JsonUndoRedoChange = {
     name: string,
@@ -123,14 +122,18 @@ export const UndoRedoHandler = () => {
 }
 
 export const UndoRedoButtons = () => {
-    const { trackChanges, obtainUndo, obtainRedo, undoStack, redoStack } = useUndoRedo();
+    const { trackChanges, setTrackChanges, obtainUndo, obtainRedo, undoStack, redoStack } = useUndoRedo();
     const { experiments, setExperiments } = useExperimentProvider() as {
         experiments: IExperiment[],
         setExperiments: (applyer: (prev: IExperiment[]) => IExperiment[]) => void,
     };
+    const [waitForOperation, setWaitForOperation] = useState(false);
+    const prevExperiments: IExperiment[] = usePrevious(experiments);
 
     const doOperation = (experimentName: string | undefined, patch: JsonOperationPack | undefined) => {
         if (experimentName && patch) {
+            setWaitForOperation(true);
+            setTrackChanges(false);
             setExperiments((prev: IExperiment[]) => {
                 const i = prev.findIndex(t => t.name === experimentName);
                 const draft = structuredClone(prev);
@@ -139,6 +142,19 @@ export const UndoRedoButtons = () => {
             });
         }
     }
+
+    // this is needed because (at the moment):
+    // 1. experiments is in useContext which waits for the next render
+    // 2. undo/redo is zustand which happens immmidiately
+    // When experiments are moved to zustand, this can be removed
+    useEffect(() => {
+        if (waitForOperation && !trackChanges) {
+            if (JSON.stringify(prevExperiments) !== JSON.stringify(experiments)) {
+                setWaitForOperation(false);
+                setTrackChanges(true);
+            }
+        }
+    }, [experiments, trackChanges, waitForOperation]);
 
     return (
         <>
