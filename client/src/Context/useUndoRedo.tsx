@@ -1,15 +1,13 @@
 import { create } from "zustand";
 import { IExperiment } from "../types/types";
 import { useEffect } from "react";
-import { Operation } from "fast-json-patch";
 import { useExperimentProvider } from "./ExperimentProvider";
 import { usePrevious } from '@radix-ui/react-use-previous';
-
-type UndoRedoPacket = Operation[];
+import { jsonCompare, JsonOperationPack } from "../Utils/JsonPatch";
 
 interface UndoRedoStore {
-    undoStack: UndoRedoPacket[],
-    redoStack: UndoRedoPacket[],
+    undoStack: JsonOperationPack[],
+    redoStack: JsonOperationPack[],
     trackChanges: boolean,
     setTrackChanges: (v: boolean) => void,
 
@@ -28,19 +26,50 @@ export const useUndoRedo = create<UndoRedoStore>()((set, get) => ({
     // },
 }))
 
+/** comparing experiment before and after change and returns an undo redo patches
+ * since jsonCompare cannot identify removal correctly, there's an exhaustive search
+ * TODO: get a better changes detection package */
+const compareExperiments = (
+    prevExperiments: IExperiment[],
+    nextExperiments: IExperiment[],
+): { name: string, undoPatch: JsonOperationPack, redoPatch: JsonOperationPack } | undefined => {
+    if (nextExperiments.length === prevExperiments.length) {
+        for (let i = 0; i < nextExperiments.length; i++) {
+            const redoPatch = jsonCompare(prevExperiments[i], nextExperiments[i]);
+            if (redoPatch.length) {
+                return {
+                    name: prevExperiments[i].name!,
+                    redoPatch,
+                    undoPatch: jsonCompare(nextExperiments[i], prevExperiments[i]),
+                }
+            }
+        }
+    } else {
+        const missOnNext = nextExperiments.find(e => !prevExperiments.find(p => p.name === e.name));
+        const missOnPrev = prevExperiments.find(p => !nextExperiments.find(e => p.name === e.name));
+        if (missOnNext || missOnPrev) {
+            const name = (missOnNext || missOnPrev)?.name!;
+            return {
+                name,
+                redoPatch: jsonCompare(missOnPrev, missOnNext),
+                undoPatch: jsonCompare(missOnNext, missOnPrev),
+            }
+        }
+    }
+    return undefined;
+}
 
 export const UndoRedoHandler = () => {
-    // const { clearUpdates, serverUpdates } = useServerUpdates();
-    // const { isLoggedIn } = useTokenStore();
-    // const { saveExperimentWithData } = useFetchExperiments();
-
     const { experiments } = useExperimentProvider() as { experiments: IExperiment[] };
     const prevExperiments: IExperiment[] = usePrevious(experiments);
     const { trackChanges } = useUndoRedo();
 
     useEffect(() => {
         if (trackChanges) {
-            console.log('before:', prevExperiments, 'after:', experiments);
+            const op = compareExperiments(prevExperiments, experiments);
+            if (op) {
+                console.log(op);
+            }
         }
     }, [experiments, prevExperiments]);
 
