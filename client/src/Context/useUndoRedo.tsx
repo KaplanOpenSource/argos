@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { create } from "zustand";
 import { IExperiment } from "../types/types";
 import { useExperimentProvider } from "./ExperimentProvider";
 import { usePrevious } from '@radix-ui/react-use-previous';
-import { jsonApplyItem, jsonCompare, JsonOperationPack } from "../Utils/JsonPatch";
-import { ButtonTooltip } from "../Utils/ButtonTooltip";
-import { Redo, Undo } from "@mui/icons-material";
+import { jsonCompare, JsonOperationPack } from "../Utils/JsonPatch";
 
 type JsonUndoRedoChange = {
     name: string,
@@ -40,34 +38,17 @@ export const useUndoRedo = create<UndoRedoStore>()((set, get) => ({
     obtainUndo: () => {
         const { undoStack: [item, ...rest], redoStack } = get();
         if (item) {
-            set({ undoStack: rest, redoStack: [...redoStack, item] });
+            set({ undoStack: rest, redoStack: [item, ...redoStack] });
         }
         return item;
     },
     obtainRedo: () => {
         const { redoStack: [item, ...rest], undoStack } = get();
         if (item) {
-            set({ redoStack: rest, undoStack: [...undoStack, item] });
+            set({ redoStack: rest, undoStack: [item, ...undoStack] });
         }
         return item;
     },
-    // applyUndo: (setExperiments: (applyer: (prev: IExperiment[]) => IExperiment[]) => void) => {
-    //     set(({ undoStack, redoStack }) => {
-    //         if (undoStack.length) {
-    //             const item = undoStack[0];
-    //             setExperiments((prev: IExperiment[]) => {
-    //                 const i = prev.findIndex(t => t.name === item.name);
-    //                 jsonApplyItem(prev, i, prev[i], item.undoPatch);
-    //                 return prev;
-    //             });
-    //             redoStack.push(item);
-    //         }
-    //         return { undoStack, redoStack };
-    //     });
-    // },
-    // applyRedo: (setExperiments: (prev: IExperiment[]) => IExperiment[]) => {
-
-    // },
 }))
 
 /** comparing experiment before and after change and returns an undo redo patches
@@ -119,70 +100,4 @@ export const UndoRedoHandler = () => {
     }, [experiments, prevExperiments]);
 
     return null;
-}
-
-export const UndoRedoButtons = () => {
-    const { trackChanges, setTrackChanges, obtainUndo, obtainRedo, undoStack, redoStack } = useUndoRedo();
-    const { experiments, setExperiments } = useExperimentProvider() as {
-        experiments: IExperiment[],
-        setExperiments: (applyer: (prev: IExperiment[]) => IExperiment[]) => void,
-    };
-    const [waitForOperation, setWaitForOperation] = useState(false);
-    const prevExperiments: IExperiment[] = usePrevious(experiments);
-
-    const doOperation = (experimentName: string | undefined, patch: JsonOperationPack | undefined) => {
-        if (experimentName && patch) {
-            setWaitForOperation(true);
-            setTrackChanges(false);
-            setExperiments((prev: IExperiment[]) => {
-                const i = prev.findIndex(t => t.name === experimentName);
-                const draft = structuredClone(prev);
-                jsonApplyItem(draft, i, draft[i], patch);
-                return draft;
-            });
-        }
-    }
-
-    // this is needed because (at the moment):
-    // 1. experiments is in useContext which waits for the next render
-    // 2. undo/redo is zustand which happens immmidiately
-    // When experiments are moved to zustand, this can be removed
-    useEffect(() => {
-        if (waitForOperation && !trackChanges) {
-            if (JSON.stringify(prevExperiments) !== JSON.stringify(experiments)) {
-                setWaitForOperation(false);
-                setTrackChanges(true);
-            }
-        }
-    }, [experiments, trackChanges, waitForOperation]);
-
-    return (
-        <>
-            <ButtonTooltip
-                color="inherit"
-                // sx={{ mr: 2 }}
-                onClick={() => {
-                    const { name, undoPatch } = obtainUndo() || {};
-                    console.log(name)
-                    doOperation(name, undoPatch);
-                }}
-                tooltip={"Undo"}
-                disabled={undoStack.length === 0}
-            >
-                <Undo />
-            </ButtonTooltip>
-            <ButtonTooltip
-                color="inherit"
-                // sx={{ mr: 2 }}
-                onClick={() => {
-                    const { name, redoPatch } = obtainRedo() || {};
-                    doOperation(name, redoPatch);
-                }}
-                tooltip={"Redo"}
-                disabled={redoStack.length === 0}
-            >
-                <Redo />
-            </ButtonTooltip>
-        </>
-    )
 }
