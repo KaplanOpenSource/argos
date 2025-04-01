@@ -5,14 +5,18 @@ import { useExperimentProvider } from "./ExperimentProvider";
 import { usePrevious } from '@radix-ui/react-use-previous';
 import { jsonCompare, JsonOperationPack } from "../Utils/JsonPatch";
 
+type JsonUndoRedoChange = {
+    name: string,
+    undoPatch: JsonOperationPack,
+    redoPatch: JsonOperationPack,
+};
+
 interface UndoRedoStore {
-    undoStack: JsonOperationPack[],
-    redoStack: JsonOperationPack[],
+    undoStack: JsonUndoRedoChange[],
+    redoStack: JsonUndoRedoChange[],
     trackChanges: boolean,
     setTrackChanges: (v: boolean) => void,
-
-    // serverUpdates: { name: string, exp: IExperiment }[];
-    // addUpdate: (name: string, exp: IExperiment) => void;
+    setStacks: (newUndoStack: JsonUndoRedoChange[], newRedoStack: JsonUndoRedoChange[]) => void,
 }
 
 export const useUndoRedo = create<UndoRedoStore>()((set, get) => ({
@@ -20,10 +24,13 @@ export const useUndoRedo = create<UndoRedoStore>()((set, get) => ({
     redoStack: [],
     trackChanges: false,
     setTrackChanges: (v: boolean) => set({ trackChanges: v }),
-    // serverUpdates: [],
-    // addUpdate: (name: string, exp: IExperiment) => {
-    //     set(prev => ({ ...prev, serverUpdates: [...prev.serverUpdates, { name, exp }] }))
-    // },
+    setStacks: (
+        newUndoStack: JsonUndoRedoChange[],
+        newRedoStack: JsonUndoRedoChange[],
+    ) => set({
+        redoStack: newRedoStack,
+        undoStack: newUndoStack,
+    }),
 }))
 
 /** comparing experiment before and after change and returns an undo redo patches
@@ -32,7 +39,7 @@ export const useUndoRedo = create<UndoRedoStore>()((set, get) => ({
 const compareExperiments = (
     prevExperiments: IExperiment[],
     nextExperiments: IExperiment[],
-): { name: string, undoPatch: JsonOperationPack, redoPatch: JsonOperationPack } | undefined => {
+): JsonUndoRedoChange | undefined => {
     if (nextExperiments.length === prevExperiments.length) {
         for (let i = 0; i < nextExperiments.length; i++) {
             const redoPatch = jsonCompare(prevExperiments[i], nextExperiments[i]);
@@ -62,31 +69,17 @@ const compareExperiments = (
 export const UndoRedoHandler = () => {
     const { experiments } = useExperimentProvider() as { experiments: IExperiment[] };
     const prevExperiments: IExperiment[] = usePrevious(experiments);
-    const { trackChanges } = useUndoRedo();
+    const { trackChanges, setStacks, undoStack } = useUndoRedo();
 
     useEffect(() => {
         if (trackChanges) {
             const op = compareExperiments(prevExperiments, experiments);
             if (op) {
                 console.log(op);
+                setStacks([...undoStack, op], [])
             }
         }
     }, [experiments, prevExperiments]);
 
-
-
-    // useEffect(() => {
-    //     (async () => {
-    //         if (serverUpdates.length && isLoggedIn()) {
-    //             for (const { name, exp } of serverUpdates) {
-    //                 const ok = await saveExperimentWithData(name, exp);
-    //                 if (!ok) {
-    //                     return;
-    //                 }
-    //             }
-    //             clearUpdates();
-    //         }
-    //     })();
-    // }, [serverUpdates, isLoggedIn()])
     return null;
 }
