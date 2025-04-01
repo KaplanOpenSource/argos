@@ -3,7 +3,7 @@ import { IExperiment } from "../types/types";
 import { useEffect } from "react";
 import { useExperimentProvider } from "./ExperimentProvider";
 import { usePrevious } from '@radix-ui/react-use-previous';
-import { jsonCompare, JsonOperationPack } from "../Utils/JsonPatch";
+import { jsonApplyItem, jsonCompare, JsonOperationPack } from "../Utils/JsonPatch";
 
 type JsonUndoRedoChange = {
     name: string,
@@ -17,13 +17,17 @@ interface UndoRedoStore {
     trackChanges: boolean,
     setTrackChanges: (v: boolean) => void,
     setStacks: (newUndoStack: JsonUndoRedoChange[], newRedoStack: JsonUndoRedoChange[]) => void,
+    obtainUndo: () => JsonUndoRedoChange | undefined,
+    obtainRedo: () => JsonUndoRedoChange | undefined,
 }
 
 export const useUndoRedo = create<UndoRedoStore>()((set, get) => ({
     undoStack: [],
     redoStack: [],
     trackChanges: false,
-    setTrackChanges: (v: boolean) => set({ trackChanges: v }),
+    setTrackChanges: (v: boolean) => {
+        set({ trackChanges: v })
+    },
     setStacks: (
         newUndoStack: JsonUndoRedoChange[],
         newRedoStack: JsonUndoRedoChange[],
@@ -31,6 +35,37 @@ export const useUndoRedo = create<UndoRedoStore>()((set, get) => ({
         redoStack: newRedoStack,
         undoStack: newUndoStack,
     }),
+    obtainUndo: () => {
+        const { undoStack: [item, ...rest], redoStack } = get();
+        if (item) {
+            set({ undoStack: rest, redoStack: [...redoStack, item] });
+        }
+        return item;
+    },
+    obtainRedo: () => {
+        const { redoStack: [item, ...rest], undoStack } = get();
+        if (item) {
+            set({ redoStack: rest, undoStack: [...undoStack, item] });
+        }
+        return item;
+    },
+    // applyUndo: (setExperiments: (applyer: (prev: IExperiment[]) => IExperiment[]) => void) => {
+    //     set(({ undoStack, redoStack }) => {
+    //         if (undoStack.length) {
+    //             const item = undoStack[0];
+    //             setExperiments((prev: IExperiment[]) => {
+    //                 const i = prev.findIndex(t => t.name === item.name);
+    //                 jsonApplyItem(prev, i, prev[i], item.undoPatch);
+    //                 return prev;
+    //             });
+    //             redoStack.push(item);
+    //         }
+    //         return { undoStack, redoStack };
+    //     });
+    // },
+    // applyRedo: (setExperiments: (prev: IExperiment[]) => IExperiment[]) => {
+
+    // },
 }))
 
 /** comparing experiment before and after change and returns an undo redo patches
@@ -55,7 +90,7 @@ const compareExperiments = (
         const missOnNext = nextExperiments.find(e => !prevExperiments.find(p => p.name === e.name));
         const missOnPrev = prevExperiments.find(p => !nextExperiments.find(e => p.name === e.name));
         if (missOnNext || missOnPrev) {
-            const name = (missOnNext || missOnPrev)?.name!;
+            const name = (missOnPrev || missOnNext)?.name!;
             return {
                 name,
                 redoPatch: jsonCompare(missOnPrev, missOnNext),
