@@ -135,6 +135,13 @@ def experimentListReq():
     return exps.get_list()
 
 
+@app.route("/experiment_list_info")
+@jwt_required()
+@cross_origin()
+def experimentListInfoReq():
+    return exps.get_list_with_info()
+
+
 @app.route("/experiment/<name>")
 @jwt_required()
 @cross_origin()

@@ -1,0 +1,42 @@
+import { create } from "zustand";
+import { IExperiment } from "../types/types";
+import { useTokenStore } from "./useTokenStore";
+import { useFetchExperiments } from "./FetchExperiment";
+import { useEffect } from "react";
+
+interface ServerUpdatesStore {
+    serverUpdates: { name: string, exp: IExperiment }[];
+    addUpdate: (name: string, exp: IExperiment) => void;
+    clearUpdates: () => void;
+}
+
+export const useServerUpdates = create<ServerUpdatesStore>()((set, get) => ({
+    serverUpdates: [],
+    addUpdate: (name: string, exp: IExperiment) => {
+        set(prev => ({ ...prev, serverUpdates: [...prev.serverUpdates, { name, exp }] }))
+    },
+    clearUpdates: () => {
+        set({ serverUpdates: [] })
+    }
+}))
+
+export const ServerUpdatesHandler = () => {
+    const { clearUpdates, serverUpdates } = useServerUpdates();
+    const { isLoggedIn } = useTokenStore();
+    const { saveExperimentWithData } = useFetchExperiments();
+
+    useEffect(() => {
+        (async () => {
+            if (serverUpdates.length && isLoggedIn()) {
+                for (const { name, exp } of serverUpdates) {
+                    const ok = await saveExperimentWithData(name, exp);
+                    if (!ok) {
+                        return;
+                    }
+                }
+                clearUpdates();
+            }
+        })();
+    }, [serverUpdates, isLoggedIn()])
+    return null;
+}
