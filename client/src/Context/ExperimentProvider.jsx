@@ -6,6 +6,7 @@ import { useFetchExperiments } from "./FetchExperiment";
 import { assignUuids } from "./TrackUuidUtils";
 import { TrialChoosing } from "./TrialChoosing";
 import { useTokenStore } from "./useTokenStore";
+import { useUndoRedo } from "./useUndoRedo";
 
 const experimentContext = createContext();
 
@@ -179,6 +180,9 @@ export const ExperimentProvider = ({ children }) => {
                     experiments: allExperiments,
                     currTrial: t,
                 }));
+                setTimeout(() => {
+                    useUndoRedo.getState().setTrackChanges(true);
+                }, 100);
             }
         })()
     }, [isLoggedIn()])

@@ -18,6 +18,7 @@ import { MapDrawExperiment } from '../MapDraw/MapDrawExperiment';
 import { UndoKeyInterceptor } from './UndoKeyInterceptor';
 import { CurrMouseLocation } from '../Context/useCurrMouseLocation';
 import { ServerUpdatesHandler } from '../Context/useServerUpdates';
+import { UndoRedoHandler } from '../Context/useUndoRedo';
 
 export function DevicePlanner() {
     const [showEditBox, setShowEditBox] = useState(false);
@@ -32,6 +33,7 @@ export function DevicePlanner() {
         <>
             <ServerUpdatesHandler />
             <UndoKeyInterceptor />
+            <UndoRedoHandler />
             <AppHeader>
                 <AppHeaderButtons
                     fullscreen={fullscreen} setFullscreen={setFullscreen}
