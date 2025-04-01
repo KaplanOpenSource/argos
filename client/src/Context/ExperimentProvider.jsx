@@ -7,17 +7,17 @@ import { assignUuids } from "./TrackUuidUtils";
 import { TrialChoosing } from "./TrialChoosing";
 import { useTokenStore } from "./useTokenStore";
 
-const experimentContext = createContext(null);
+const experimentContext = createContext();
 
-export const useExperimentProvider = () => (useContext(experimentContext) || {});
+const ExperimentProviderInitialState = {
+    ...ExperimentUpdatesInitialState,
+    currTrial: {},
+    showImagePlacement: false,
+    hiddenDeviceTypes: {},
+};
 
 export const ExperimentProvider = ({ children }) => {
-    const [state, setState] = useState({
-        ...ExperimentUpdatesInitialState,
-        currTrial: {},
-        showImagePlacement: false,
-        hiddenDeviceTypes: {},
-    });
+    const [state, setState] = useState(ExperimentProviderInitialState);
 
     const {
         deleteExperiment,
@@ -229,3 +229,6 @@ export const ExperimentProvider = ({ children }) => {
         </experimentContext.Provider>
     )
 }
+
+// useExperimentProvider should be at the end to avoid reload problems
+export const useExperimentProvider = () => useContext(experimentContext);
