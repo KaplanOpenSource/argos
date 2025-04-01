@@ -6,7 +6,7 @@ import { Stack } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import PublicIcon from '@mui/icons-material/Public';
 import { changeByName } from "../Utils/utils";
-import { experimentContext } from "../Context/ExperimentProvider";
+import { useExperimentProvider } from "../Context/ExperimentProvider";
 import { ImageStandalone } from "./ImageStandalone";
 import { ImageEmbedded } from "./ImageEmbedded";
 import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
@@ -18,7 +18,7 @@ import { useShownMap } from "../Context/useShownMap";
 import { DownloadExperimentButton } from "../IO/DownloadExperimentButton";
 
 export const ExperimentRow = ({ data, setData, children }) => {
-    const { deleteExperiment, currTrial } = useContext(experimentContext);
+    const { deleteExperiment, currTrial } = useExperimentProvider();
     const { switchToMap } = useShownMap({});
     return (
         <TreeRow

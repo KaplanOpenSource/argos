@@ -3,7 +3,7 @@ import 'leaflet/dist/leaflet.css';
 import { useContext } from 'react';
 
 import { AttributionControl, MapContainer, ZoomControl } from 'react-leaflet';
-import { experimentContext } from '../Context/ExperimentProvider';
+import { useExperimentProvider } from '../Context/ExperimentProvider';
 import { RealMap } from './RealMap';
 import { MapEventer } from './MapEventer';
 import 'leaflet-contextmenu';
@@ -19,7 +19,7 @@ export const MapShower = ({ children }) => {
         currTrial,
         showImagePlacement,
         setExperiment
-    } = useContext(experimentContext);
+    } = useExperimentProvider();
 
     const shownMap = ((currTrial.experiment || {}).imageStandalone || [])[currTrial.shownMapIndex];
     const embeddedMaps = (currTrial.experiment || {}).imageEmbedded || [];

@@ -1,6 +1,6 @@
 import { PlaylistAdd, PlaylistRemove } from "@mui/icons-material";
 import { useContext } from "react";
-import { experimentContext } from "../Context/ExperimentProvider";
+import { useExperimentProvider } from "../Context/ExperimentProvider";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { ContextMenu } from "../Utils/ContextMenu";
 import React from "react";
@@ -13,7 +13,7 @@ import { useDeviceSeletion } from "../Context/useDeviceSeletion";
 
 export const SelectDeviceButton = ({ deviceType, deviceItem, devicesEnclosingList }) => {
     const { selection, setSelection } = useDeviceSeletion();
-    const { currTrial } = useContext(experimentContext);
+    const { currTrial } = useExperimentProvider();
     const { selectionOnEnclosingUuids } = useContext(EnclosingListSelectionContext);
     const selectedIndex = selection.findIndex(({ deviceTypeName, deviceItemName }) => {
         return deviceTypeName === deviceType.name && deviceItemName === deviceItem.name;

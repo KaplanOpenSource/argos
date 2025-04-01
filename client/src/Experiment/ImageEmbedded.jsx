@@ -4,7 +4,7 @@ import { UploadImageButton } from "../IO/UploadImageButton";
 import { ImageOnServer } from "../IO/ImageOnServer";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { EditLocationAlt, EditLocationOutlined, OpenInFull } from "@mui/icons-material";
-import { experimentContext } from "../Context/ExperimentProvider";
+import { useExperimentProvider } from "../Context/ExperimentProvider";
 import { useContext } from "react";
 import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
 import { Stack } from "@mui/material";
@@ -16,7 +16,7 @@ export const ImageEmbedded = ({ data, setData, experiment }) => {
         currTrial,
         showImagePlacement,
         setShowImagePlacement,
-    } = useContext(experimentContext);
+    } = useExperimentProvider();
 
     return (
         <TreeRow

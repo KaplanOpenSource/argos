@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { Stack } from "@mui/material"
 import { IDevice, IExperiment, ITrackUuid } from "../types/types";
 import { useDeviceSeletion } from "../Context/useDeviceSeletion";
-import { experimentContext } from "../Context/ExperimentProvider";
+import { useExperimentProvider } from "../Context/ExperimentProvider";
 
 import { SortableList } from "../lib/SortableList/SortableList";
 import { DeviceSmallClip, ISelectedIndexedItem } from "./DeviceSmallClip";
@@ -10,7 +10,7 @@ import { DeviceSmallClip, ISelectedIndexedItem } from "./DeviceSmallClip";
 export const DeviceTableSmall = ({ }) => {
 
     const { selection, setSelection } = useDeviceSeletion();
-    const { currTrial } = useContext(experimentContext);
+    const { currTrial } = useExperimentProvider();
 
     function findDeviceInExperiment(deviceTypeName: string, deviceItemName: string) {
         const deviceType = ((currTrial.experiment as IExperiment || {}).deviceTypes || []).find(x => x.name === deviceTypeName);

@@ -7,7 +7,7 @@ import { AddMultipleDevices } from "./AddMultipleDevices";
 import { AttributeTypesDialogButton } from "./AttributeTypesDialogButton";
 import { SCOPE_EXPERIMENT } from "./AttributeType";
 import { useContext } from "react";
-import { experimentContext } from "../Context/ExperimentProvider";
+import { useExperimentProvider } from "../Context/ExperimentProvider";
 import { assignUuids } from "../Context/TrackUuidUtils";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
@@ -15,7 +15,7 @@ import { Typography } from "@mui/material";
 import { IconPicker } from "../Icons/IconPicker";
 
 export const DeviceType = ({ data, setData, experiment }) => {
-    const { deleteDeviceType, hiddenDeviceTypes, setHiddenDeviceTypes, currTrial } = useContext(experimentContext);
+    const { deleteDeviceType, hiddenDeviceTypes, setHiddenDeviceTypes, currTrial } = useExperimentProvider();
 
     const devicesEnclosingList = (data.devices || []).map(item => {
         return { deviceTypeName: data.name, deviceItemName: item.name, deviceType: data, deviceItem: item };

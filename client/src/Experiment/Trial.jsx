@@ -1,6 +1,6 @@
 import { DateProperty } from "../Property/DateProperty";
 import { TreeRow } from "../App/TreeRow";
-import { experimentContext } from "../Context/ExperimentProvider";
+import { useExperimentProvider } from "../Context/ExperimentProvider";
 import { useContext, useEffect } from "react";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Download, Edit, ReadMore } from "@mui/icons-material";
@@ -19,7 +19,7 @@ import { useDeviceSeletion } from "../Context/useDeviceSeletion";
 
 export const Trial = ({ data, setData, experiment, trialType, children }) => {
     const { selection } = useDeviceSeletion();
-    const { currTrial, setCurrTrial, setShownMap } = useContext(experimentContext);
+    const { currTrial, setCurrTrial, setShownMap } = useExperimentProvider();
     const { downloadGeojson, downloadZipCsv } = useTrialGeoJson();
     const { addActionOnMap } = useContext(ActionsOnMapContext);
 

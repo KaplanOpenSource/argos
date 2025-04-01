@@ -1,8 +1,8 @@
 import React, { useContext, useEffect } from 'react';
-import { experimentContext } from '../Context/ExperimentProvider';
+import { useExperimentProvider } from '../Context/ExperimentProvider';
 
 export const UndoInterceptor = () => {
-    const { undoOperation, redoOperation } = useContext(experimentContext);
+    const { undoOperation, redoOperation } = useExperimentProvider();
 
     useEffect(() => {
         const handleKeyDown = (event) => {

@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { experimentContext } from "../../Context/ExperimentProvider";
+import { useExperimentProvider } from "../../Context/ExperimentProvider";
 import { RealMapName } from "../../constants/constants";
 import { DeviceMarker } from "./DeviceMarker";
 import { PopupSwitchProvider } from "../PopupSwitchContext";
@@ -8,7 +8,7 @@ import { useDeviceSeletion } from "../../Context/useDeviceSeletion";
 
 export const DeviceMarkersShown = ({ showDeviceNames }) => {
     const { selection, setSelection } = useDeviceSeletion();
-    const { currTrial, setTrialData, hiddenDeviceTypes } = useContext(experimentContext);
+    const { currTrial, setTrialData, hiddenDeviceTypes } = useExperimentProvider();
     const devicesOnTrial = (currTrial.trial || {}).devicesOnTrial || [];
     const mapName = currTrial.shownMapName || RealMapName;
 

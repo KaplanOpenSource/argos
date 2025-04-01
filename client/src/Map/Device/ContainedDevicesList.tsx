@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { ContainedDevice } from "../../Experiment/Contained/ContainedDevice";
-import { experimentContext } from "../../Context/ExperimentProvider";
+import { useExperimentProvider } from "../../Context/ExperimentProvider";
 import { Box } from "@mui/material";
 
 export const ContainedDevicesList = ({
@@ -10,7 +10,7 @@ export const ContainedDevicesList = ({
     containedDevices: any[],
     devicesOnTrial: any[],
 }) => {
-    const { currTrial, setTrialData } = useContext(experimentContext);
+    const { currTrial, setTrialData } = useExperimentProvider();
 
     return (
         <Box sx={{ maxHeight: '300px', overflowY: 'auto' }}>

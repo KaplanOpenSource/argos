@@ -1,9 +1,9 @@
 import { useContext } from "react";
-import { experimentContext } from "./ExperimentProvider";
+import { useExperimentProvider } from "./ExperimentProvider";
 import { TrialObject } from "./TrialObject";
 
 export const useCurrTrial = ({ }) => {
-    const { currTrial, setTrialData } = useContext(experimentContext);
+    const { currTrial, setTrialData } = useExperimentProvider();
 
     const trial = new TrialObject(() => currTrial?.trial, setTrialData);
 

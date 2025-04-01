@@ -1,5 +1,5 @@
 import { useContext, useEffect } from "react";
-import { experimentContext } from "../Context/ExperimentProvider";
+import { useExperimentProvider } from "../Context/ExperimentProvider";
 import { ExperimentRow } from "./ExperimentRow";
 import { TreeView } from '@mui/x-tree-view/TreeView';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -21,7 +21,7 @@ import { ExperimentTreeNodesExpandedContext } from "./ExperimentTreeNodesExpande
 import { sum } from "lodash";
 
 export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
-    const { experiments, setExperiment, addExperiment, currTrial, setCurrTrial } = useContext(experimentContext);
+    const { experiments, setExperiment, addExperiment, currTrial, setCurrTrial } = useExperimentProvider();
     const { experiment, experimentName, trialType, trialTypeName, trial, trialName } = currTrial;
     const { cloneExperiment } = useCloneExperiment();
     const { addActionOnMap } = useContext(ActionsOnMapContext);

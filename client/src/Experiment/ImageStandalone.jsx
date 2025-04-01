@@ -6,7 +6,7 @@ import { ImageOnServer } from "../IO/ImageOnServer";
 import { UploadImageButton } from "../IO/UploadImageButton";
 import DeleteIcon from '@mui/icons-material/Delete';
 import MapIcon from '@mui/icons-material/Map';
-import { experimentContext } from "../Context/ExperimentProvider";
+import { useExperimentProvider } from "../Context/ExperimentProvider";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { EditLocationAlt, EditLocationOutlined } from "@mui/icons-material";
 import { useShownMap } from "../Context/useShownMap";
@@ -18,7 +18,7 @@ export const ImageStandalone = ({ data, setData, experiment }) => {
         setShownMap,
         showImagePlacement,
         setShowImagePlacement,
-    } = useContext(experimentContext);
+    } = useExperimentProvider();
     const { switchToMap } = useShownMap({});
 
     const isShown = currTrial.shownMapName === data.name && currTrial.experimentName === experiment.name;

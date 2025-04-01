@@ -1,7 +1,7 @@
 import { Stack, TableCell, TableRow, Typography } from "@mui/material";
 import { DevicesTabularOneAttr } from "./DevicesTabularOneAttr";
 import { useContext } from "react";
-import { experimentContext } from "../../Context/ExperimentProvider";
+import { useExperimentProvider } from "../../Context/ExperimentProvider";
 import { TextFieldDebounceOutlined } from "../../Utils/TextFieldDebounce";
 import { useCurrTrial } from "../../Context/useCurrTrial";
 import { SelectDeviceButton } from "../SelectDeviceButton";
@@ -23,7 +23,7 @@ const NumberCoordField = ({ value, setValue, label }) => {
 }
 
 export const DevicesTabularOneDevice = ({ deviceType, setDeviceType }) => {
-    const { currTrial } = useContext(experimentContext);
+    const { currTrial } = useExperimentProvider();
     const { trial } = useCurrTrial({});
 
     const devices = deviceType?.devices || [];

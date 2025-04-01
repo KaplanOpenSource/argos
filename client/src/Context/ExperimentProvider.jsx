@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { RealMapName } from "../constants/constants";
 import { parseUrlParams, replaceUrlParams } from "../Utils/utils";
 import { ExperimentUpdatesInitialState, useExperimentUpdates } from "./ExperimentUpdates";
@@ -7,7 +7,9 @@ import { assignUuids } from "./TrackUuidUtils";
 import { TrialChoosing } from "./TrialChoosing";
 import { useTokenStore } from "./useTokenStore";
 
-export const experimentContext = createContext();
+const experimentContext = createContext(null);
+
+export const useExperimentProvider = () => (useContext(experimentContext) || {});
 
 export const ExperimentProvider = ({ children }) => {
     const [state, setState] = useState({

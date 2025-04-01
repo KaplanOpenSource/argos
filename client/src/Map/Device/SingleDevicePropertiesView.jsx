@@ -4,7 +4,7 @@ import {
     Paper,
     Stack, Typography
 } from '@mui/material';
-import { experimentContext } from '../../Context/ExperimentProvider';
+import { useExperimentProvider } from '../../Context/ExperimentProvider';
 import { SelectDeviceButton } from '../../Experiment/SelectDeviceButton';
 import { AttributeItemList } from '../../Experiment/AttributeItemList';
 import { SCOPE_TRIAL } from '../../Experiment/AttributeType';
@@ -16,7 +16,7 @@ import { useCurrTrial } from '../../Context/useCurrTrial';
 import { DeviceItemLocationButton } from '../../Experiment/DeviceItemLocationButton';
 
 export const SingleDevicePropertiesView = ({ deviceOnTrial, setDeviceOnTrial, children }) => {
-    const { currTrial } = useContext(experimentContext);
+    const { currTrial } = useExperimentProvider();
     const experiment = currTrial.experiment || {};
     const { deviceTypeName, deviceItemName } = deviceOnTrial;
     const { trial } = useCurrTrial({});

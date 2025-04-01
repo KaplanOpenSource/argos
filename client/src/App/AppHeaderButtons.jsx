@@ -4,7 +4,7 @@ import {
     Tooltip,
     Typography
 } from '@mui/material';
-import { experimentContext } from '../Context/ExperimentProvider';
+import { useExperimentProvider } from '../Context/ExperimentProvider';
 import { useContext } from 'react';
 import {
     AccountTree,
@@ -43,7 +43,7 @@ export const AppHeaderButtons = ({
         showImagePlacement,
         setShowImagePlacement,
         addExperiment,
-    } = useContext(experimentContext);
+    } = useExperimentProvider();
     const { uploadExperiment } = useUploadExperiment();
     const { experimentName, trialTypeName, trialName } = currTrial;
     return (

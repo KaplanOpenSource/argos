@@ -1,10 +1,10 @@
 import { AttributeItemOne } from "../AttributeItemList";
 import { SCOPE_EXPERIMENT, SCOPE_TRIAL } from "../AttributeType";
 import { useContext } from "react";
-import { experimentContext } from "../../Context/ExperimentProvider";
+import { useExperimentProvider } from "../../Context/ExperimentProvider";
 
 export const DevicesTabularOneAttr = ({ attrType, deviceItem, deviceType, setDeviceItem }) => {
-    const { currTrial, setTrialData } = useContext(experimentContext);
+    const { currTrial, setTrialData } = useExperimentProvider();
 
     if ((!attrType?.scope) || attrType.scope === SCOPE_TRIAL) {
         const devicesOnTrial = currTrial?.trial?.devicesOnTrial;

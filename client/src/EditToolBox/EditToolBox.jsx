@@ -37,7 +37,7 @@ import FreePositioning from './ToolsBar/FreePositioning.jsx';
 import DistributeAlongLine from './ToolsBar/DistributeAlongLine.jsx';
 import DistributeAlongArc from './ToolsBar/DistributeAlongArc.jsx';
 import Rectangle from './ToolsBar/Rectangle.jsx';
-import { experimentContext } from '../Context/ExperimentProvider.jsx';
+import { useExperimentProvider } from '../Context/ExperimentProvider.jsx';
 import { PlaylistAdd } from '@mui/icons-material';
 import { useCurrTrial } from '../Context/useCurrTrial';
 import { useDeviceSeletion } from '../Context/useDeviceSeletion';
@@ -54,7 +54,7 @@ export const EditToolBox = ({
     const { shape, setShape, shapeData, } = useShape();
 
     const { selection, setSelection } = useDeviceSeletion();
-    const { currTrial } = useContext(experimentContext);
+    const { currTrial } = useExperimentProvider();
     const { trial } = useCurrTrial({});
 
     const onClickIcon = (id) => {

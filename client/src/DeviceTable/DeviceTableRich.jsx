@@ -7,7 +7,7 @@ import { DeviceItem } from "../Experiment/DeviceItem";
 import { SCOPE_TRIAL } from "../Experiment/AttributeType";
 import { EnclosingListSelectionContext } from "../Experiment/EnclosedSelectionProvider";
 import { useDeviceSeletion } from "../Context/useDeviceSeletion";
-import { experimentContext } from "../Context/ExperimentProvider";
+import { useExperimentProvider } from "../Context/ExperimentProvider";
 
 export const DeviceTableRich = ({  }) => {
     const {
@@ -16,7 +16,7 @@ export const DeviceTableRich = ({  }) => {
     } = useContext(EnclosingListSelectionContext);
 
     const { selection } = useDeviceSeletion();
-    const { currTrial } = useContext(experimentContext);
+    const { currTrial } = useExperimentProvider();
 
     const shownDevices = [];
     for (const { deviceTypeName, deviceItemName } of selection || []) {

@@ -2,7 +2,7 @@ import { Marker, Popup, Tooltip } from "react-leaflet";
 import { SingleDevicePropertiesView } from "./SingleDevicePropertiesView";
 import { useContext, useEffect, useRef } from "react";
 import { usePopupSwitch } from "../PopupSwitchContext";
-import { experimentContext } from "../../Context/ExperimentProvider";
+import { useExperimentProvider } from "../../Context/ExperimentProvider";
 import { useShape } from "../../EditToolBox/ShapeContext";
 import { SELECT_SHAPE } from "../../EditToolBox/utils/constants";
 import { useCurrTrial } from "../../Context/useCurrTrial";
@@ -23,7 +23,7 @@ export const locationToStr = (location) => {
 
 export const DeviceMarker = ({ deviceOnTrial, setDeviceOnTrial, showDeviceNames }) => {
     const { selection, setSelection } = useDeviceSeletion();
-    const { currTrial } = useContext(experimentContext);
+    const { currTrial } = useExperimentProvider();
     const { trial } = useCurrTrial({});
 
     const ref = useRef(null);

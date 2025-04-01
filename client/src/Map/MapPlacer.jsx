@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { experimentContext } from "../Context/ExperimentProvider";
+import { useExperimentProvider } from "../Context/ExperimentProvider";
 import { MapEventer } from "./MapEventer";
 import { MarkedShape } from "./MarkedShape";
 import { useShape } from "../EditToolBox/ShapeContext";
@@ -13,7 +13,7 @@ export const MapPlacer = ({
     setMarkedPoints,
 }) => {
     const { selection, setSelection } = useDeviceSeletion();
-    const { currTrial } = useContext(experimentContext);
+    const { currTrial } = useExperimentProvider();
     const { shape, shapeData } = useShape();
     const { trial } = useCurrTrial({});
 

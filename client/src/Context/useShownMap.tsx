@@ -1,12 +1,12 @@
 import { useContext } from "react";
-import { experimentContext } from "./ExperimentProvider";
+import { useExperimentProvider } from "./ExperimentProvider";
 import { ActionsOnMapContext } from "../Map/ActionsOnMapContext";
 import type { LatLngTuple, Map as LeafletMap } from 'leaflet';
 import { IExperiment, IImageStandalone } from "../types/types";
 import { CoordsSpan } from "../Experiment/CoordsSpan";
 
 export const useShownMap = ({ }) => {
-    const { setShownMap, currTrial } = useContext(experimentContext);
+    const { setShownMap, currTrial } = useExperimentProvider();
     const { addActionOnMap } = useContext(ActionsOnMapContext);
     const experiment: IExperiment | undefined = currTrial?.experiment;
 

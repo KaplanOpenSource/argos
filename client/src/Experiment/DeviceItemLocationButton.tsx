@@ -2,7 +2,7 @@ import React, { ReactNode } from "react";
 import { NotListedLocation, NotListedLocationTwoTone, PersonPinCircle, PersonPinCircleTwoTone, Place, PlaceOutlined, PlaceTwoTone } from "@mui/icons-material"
 import { ButtonTooltip } from "../Utils/ButtonTooltip"
 import { useContext } from "react";
-import { experimentContext } from "../Context/ExperimentProvider";
+import { useExperimentProvider } from "../Context/ExperimentProvider";
 import { RealMapName } from "../constants/constants";
 import { ContextMenu } from "../Utils/ContextMenu";
 import { useCurrTrial } from "../Context/useCurrTrial";
@@ -41,7 +41,7 @@ export const DeviceItemLocationButton = ({
     deviceItem,
     surroundingDevices,
 }) => {
-    const { currTrial } = useContext(experimentContext);
+    const { currTrial } = useExperimentProvider();
 
     const { trial } = useCurrTrial({});
     const device = trial.getDevice(deviceType.name, deviceItem.name);

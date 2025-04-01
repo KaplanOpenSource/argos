@@ -1,3 +1,4 @@
+import React, { useContext, useState } from 'react';
 import { AppHeader } from './AppHeader';
 import { ExperimentList } from '../Experiment/ExperimentList';
 import { MapShower } from '../Map/MapShower';
@@ -7,10 +8,9 @@ import { MapPlacer } from '../Map/MapPlacer';
 import { DeviceMarkersShown } from '../Map/Device/DeviceMarkersShown';
 import { MapPositionOnUrl } from '../Map/MapPositionOnUrl';
 import { EditToolBox } from '../EditToolBox/EditToolBox';
-import { useContext, useState } from 'react';
 import { ActionsOnMapDoer } from '../Map/ActionsOnMapContext';
 import { MapCoordinates } from '../Map/MapCoordinates';
-import { experimentContext } from '../Context/ExperimentProvider';
+import { useExperimentProvider } from '../Context/ExperimentProvider';
 import { SHOW_ALL_EXPERIMENTS } from './ShowConfigToggles';
 import { EnclosingListSelectionProvider } from '../Experiment/EnclosedSelectionProvider';
 import { AppHeaderButtons } from './AppHeaderButtons';
@@ -26,7 +26,7 @@ export function DevicePlanner() {
     const [showConfig, setShowConfig] = useState(SHOW_ALL_EXPERIMENTS);
     const [showAttributes, setShowAttributes] = useState(false);
     const [showDeviceNames, setShowDeviceNames] = useState(true);
-    const { currTrial } = useContext(experimentContext);
+    const { currTrial } = useExperimentProvider();
 
     return (
         <>
@@ -95,7 +95,7 @@ export function DevicePlanner() {
                 showEditBox={showEditBox}
                 setShowEditBox={setShowEditBox}
             >
-                <MapCoordinates showAsLatLong={!currTrial.shownMapName} />
+                <MapCoordinates showAsLatLong={!currTrial?.shownMapName} />
             </EditToolBox>
         </>
     )

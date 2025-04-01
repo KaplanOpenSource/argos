@@ -1,6 +1,6 @@
 import React from "react";
 import { useContext } from "react";
-import { experimentContext } from "../Context/ExperimentProvider";
+import { useExperimentProvider } from "../Context/ExperimentProvider";
 import { Tooltip, Stack, Typography } from "@mui/material";
 import MapIcon from '@mui/icons-material/Map';
 import PublicIcon from '@mui/icons-material/Public';
@@ -9,7 +9,7 @@ import { IImageStandalone } from "../types/types";
 import { useShownMap } from "../Context/useShownMap";
 
 export const AppHeaderShownMap = ({ }) => {
-    const { currTrial } = useContext(experimentContext);
+    const { currTrial } = useExperimentProvider();
     const { shownMapName, experiment } = currTrial;
     const { switchToMap } = useShownMap({});
 

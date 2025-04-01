@@ -4,13 +4,13 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { AttributeItemList } from "./AttributeItemList";
 import { SelectDeviceButton } from "./SelectDeviceButton";
 import { useContext } from "react";
-import { experimentContext } from "../Context/ExperimentProvider";
+import { useExperimentProvider } from "../Context/ExperimentProvider";
 import { SCOPE_TRIAL } from "./AttributeType";
 import { DeviceItemLocationButton } from "./DeviceItemLocationButton";
 import { useCurrTrial } from "../Context/useCurrTrial";
 
 export const DeviceItem = ({ data, setData, deviceType, showAttributes, devicesEnclosingList, scope, experiment }) => {
-    const { currTrial, deleteDevice } = useContext(experimentContext);
+    const { currTrial, deleteDevice } = useExperimentProvider();
 
     const { trial } = useCurrTrial({});
     const device = trial.getDevice(deviceType.name, data.name);

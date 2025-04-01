@@ -1,10 +1,10 @@
 import { Paper, Stack, Typography } from "@mui/material"
-import { experimentContext } from "../Context/ExperimentProvider";
+import { useExperimentProvider } from "../Context/ExperimentProvider";
 import { useContext } from "react";
 import { IconDeviceByName } from "./IconPicker";
 
 export const DeviceIconLegend = ({ }) => {
-    const { currTrial, hiddenDeviceTypes } = useContext(experimentContext);
+    const { currTrial, hiddenDeviceTypes } = useExperimentProvider();
 
     const deviceTypes = currTrial?.experiment?.deviceTypes || [];
 

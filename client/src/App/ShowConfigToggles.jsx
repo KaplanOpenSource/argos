@@ -1,6 +1,6 @@
 import { CellTower, GridOn, Podcasts, TableView, Terrain } from "@mui/icons-material";
 import { useContext } from "react";
-import { experimentContext } from "../Context/ExperimentProvider";
+import { useExperimentProvider } from "../Context/ExperimentProvider";
 import { ThemeProvider, ToggleButton, ToggleButtonGroup, Tooltip, createTheme } from "@mui/material";
 
 export const SHOW_ALL_EXPERIMENTS = 'SHOW_ALL_EXPERIMENTS';
@@ -18,7 +18,7 @@ const theme = createTheme({
 export const ShowConfigToggles = ({ showConfig, setShowConfig }) => {
     const {
         currTrial,
-    } = useContext(experimentContext);
+    } = useExperimentProvider();
 
     return (
         <ThemeProvider theme={theme}>

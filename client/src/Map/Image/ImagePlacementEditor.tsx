@@ -7,7 +7,7 @@ import { IExperiment, IImageStandalone } from "../../types/types";
 import { ChosenMarker } from "../ChosenMarker";
 import { DashedPolyline } from "../DashedPolyline";
 import { MarkedPoint } from "../MarkedPoint";
-import { experimentContext } from "../../Context/ExperimentProvider";
+import { useExperimentProvider } from "../../Context/ExperimentProvider";
 import { IAnchorPoint } from "./IAnchorPoint";
 import { ImagePointEdit } from "./ImagePointEdit";
 import { ComputedImageData } from "./ComputedImageData";
@@ -26,7 +26,7 @@ export const ImagePlacementEditor = ({
     distLatLng: (p0: any, p1: any) => number,
 }) => {
     const mapObj = useMap();
-    const { currTrial } = useContext(experimentContext)
+    const { currTrial } = useExperimentProvider()
 
     const placement = new ComputedImageData(imageData);
 

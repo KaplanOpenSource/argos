@@ -4,11 +4,11 @@ import { ConvertExperiment } from "./ConvertExperiment";
 import { argosJsonVersion } from "../constants/constants";
 import { createNewName } from "../Utils/utils";
 import { useCallback, useContext } from "react";
-import { experimentContext } from "../Context/ExperimentProvider";
+import { useExperimentProvider } from "../Context/ExperimentProvider";
 import { ReadFileAsText } from "./FileIo";
 
 export const useUploadExperiment = () => {
-    const { experiments, addExperiment } = useContext(experimentContext);
+    const { experiments, addExperiment } = useExperimentProvider();
     const { uploadImage } = useUploadImage();
 
     const uploadExperiment = useCallback(async (file) => {

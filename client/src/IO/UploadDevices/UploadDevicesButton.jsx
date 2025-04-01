@@ -4,7 +4,7 @@ import { ButtonFile } from "../../Utils/ButtonFile";
 import { ErrorsDialog } from "../ErrorsDialog";
 import { obtainDevicesFromFile } from "./obtainDevicesFromFile";
 import { UploadDevicesFieldsDialog } from "./UploadDevicesFieldsDialog";
-import { experimentContext } from "../../Context/ExperimentProvider";
+import { useExperimentProvider } from "../../Context/ExperimentProvider";
 
 export const UploadDevicesButton = ({
     trial,
@@ -15,7 +15,7 @@ export const UploadDevicesButton = ({
     const [working, setWorking] = useState(false);
     const [errors, setErrors] = useState(undefined);
     const [devicesToUpload, setDevicesToUpload] = useState([]);
-    const { setCurrTrial } = useContext(experimentContext);
+    const { setCurrTrial } = useExperimentProvider();
 
     const handleChangeFile = async (files) => {
         setWorking(true);
