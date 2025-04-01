@@ -26,7 +26,11 @@ export const ExperimentProvider = ({ children }) => {
     } = useExperimentUpdates(state, setState);
 
     const { isLoggedIn } = useTokenStore();
-    const { fetchAllExperiments, fetchExperimentListInfo, fetchExperiment } = useFetchExperiments();
+    const {
+        fetchAllExperiments,
+        // fetchExperimentListInfo,
+        // fetchExperiment,
+    } = useFetchExperiments();
 
     const trialChoosing = new TrialChoosing(state, setState);
 
@@ -163,6 +167,8 @@ export const ExperimentProvider = ({ children }) => {
                 // 3. switch experiment and read from backend
                 // const experimentsNames = await fetchExperimentListInfo();
                 const allExperiments = await fetchAllExperiments();
+                // console.log("experimentsNames", experimentsNames)
+                // console.log("allExperiments", allExperiments)
                 assignUuids(allExperiments);
                 const t = TrialChoosing.FindTrialByName({ experimentName, trialTypeName, trialName }, allExperiments);
                 TrialChoosing.ReplaceUrlByTrial(t);

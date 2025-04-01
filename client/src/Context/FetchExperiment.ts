@@ -17,19 +17,19 @@ export const useFetchExperiments = () => {
     }, [axiosSecure]);
 
     const fetchExperimentList = useCallback(async (): Promise<{ names: string[], error?: string }> => {
-        // try {
-        console.log('fetching experiment list')
-        const json = await axiosSecure().get("experiment_list");
-        if (!json) {
-            alert('You are logged out');
-            return { names: [] };
+        try {
+            console.log('fetching experiment list')
+            const json = await axiosSecure().get("experiment_list");
+            if (!json) {
+                alert('You are logged out');
+                return { names: [] };
+            }
+            // console.log('got experiment list', json.data)
+            return { names: json.data || [] };
+        } catch (e) {
+            console.error(e);
+            return { names: [], error: 'fetch list error: ' + e };
         }
-        console.log('got experiment list', json.data)
-        return { names: json.data || [] };
-        // } catch (e) {
-        //     console.error(e);
-        //     return { names: [], error: 'fetch list error: ' + e };
-        // }
     }, [axiosSecure]);
 
     const fetchExperimentListInfo = useCallback(async (): Promise<{ names: { name: string, startDate: string, endDate: string }[], error?: string }> => {
@@ -54,7 +54,7 @@ export const useFetchExperiments = () => {
             const url = "experiment/" + name.replaceAll(' ', '%20');
             const json = await axiosSecure().get(url);
             const experiment = json.data;
-            console.log('got experiment', experiment)
+            // console.log('got experiment', experiment)
             if ((experiment || {}).name !== name) {
                 return { error: `corrupted experiment ${name}` };
             }

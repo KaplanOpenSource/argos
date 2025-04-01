@@ -138,7 +138,7 @@ def experimentListReq():
 @app.route("/experiment_list_info")
 @jwt_required()
 @cross_origin()
-def experimentListReq():
+def experimentListInfoReq():
     return exps.get_list_with_info()
 
 
