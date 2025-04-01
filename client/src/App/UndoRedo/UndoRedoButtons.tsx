@@ -16,6 +16,14 @@ export const UndoRedoButtons = () => {
     const [waitForOperation, setWaitForOperation] = useState(false);
     const prevExperiments: IExperiment[] = usePrevious(experiments);
 
+    // TODO:
+    // 1. undos are done fifo, not lifo - fix
+    // 2. on init there's a one additional undo - find why
+    // 3. check all, merge, deploy (!)
+    // 4. move experiments to a zustand state control (next phase)
+
+
+
     const doOperation = (experimentName: string | undefined, patch: JsonOperationPack | undefined) => {
         if (experimentName && patch) {
             setWaitForOperation(true);
