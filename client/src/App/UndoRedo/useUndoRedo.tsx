@@ -91,10 +91,9 @@ export const UndoRedoHandler = () => {
 
     useEffect(() => {
         if (trackChanges) {
-            const op = compareExperiments(prevExperiments, experiments);
-            if (op) {
-                console.log(op);
-                setStacks([...undoStack, op], [])
+            const item = compareExperiments(prevExperiments, experiments);
+            if (item) {
+                setStacks([item, ...undoStack], [])
             }
         }
     }, [experiments, prevExperiments]);
