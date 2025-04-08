@@ -6,8 +6,10 @@ export const assignUuids = (data) => { //, prevPath = "") => {
             data.forEach(item => assignUuids(item));//, prevPath));
         } else {
             if (data.name) {
-                data.trackUuid = uuidv4();
-                // data.trackPath = (prevPath && (prevPath + '/')) + data.name;
+                if (!data.trackUuid) {
+                    data.trackUuid = uuidv4();
+                    // data.trackPath = (prevPath && (prevPath + '/')) + data.name;
+                }
                 for (const [key, value] of Object.entries(data)) {
                     assignUuids(value);//, data.path);
                 }

@@ -1,12 +1,16 @@
 import * as jsonpatch from 'fast-json-patch';
 
+export type JsonOperationPack = jsonpatch.Operation[];
+
 export const jsonCompare = (
     prevData: any,
     newData: any,
-): jsonpatch.Operation[] => {
+): JsonOperationPack => {
     const prevDataArr = [prevData].filter(x => x);
     const newDataArr = [newData].filter(x => x);
-    return jsonpatch.compare(prevDataArr, newDataArr);
+    const patch = jsonpatch.compare(prevDataArr, newDataArr);
+    patch.sort((a, b) => a.op !== b.op ? a.op.localeCompare(b.op) : a.path.localeCompare(b.path));
+    return patch;
 }
 
 export const jsonApplyItem = (

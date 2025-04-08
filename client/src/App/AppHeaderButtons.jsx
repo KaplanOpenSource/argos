@@ -5,7 +5,6 @@ import {
     Typography
 } from '@mui/material';
 import { useExperimentProvider } from '../Context/ExperimentProvider';
-import { useContext } from 'react';
 import {
     AccountTree,
     AccountTreeOutlined,
@@ -14,8 +13,6 @@ import {
     ClosedCaption,
     ClosedCaptionOff,
     OpenInFull,
-    Redo,
-    Undo,
     Upload
 } from '@mui/icons-material';
 import EditLocationAltIcon from '@mui/icons-material/EditLocationAlt';
@@ -26,6 +23,7 @@ import { UploadButton } from '../IO/UploadButton';
 import { useUploadExperiment } from '../IO/UploadExperiment';
 import { DocumentationButton } from '../Doc/DocumentationButton';
 import { AppHeaderShownMap } from './AppHeaderShownMap';
+import { UndoRedoButtons } from './UndoRedo/UndoRedoButtons';
 
 export const AppHeaderButtons = ({
     fullscreen, setFullscreen,
@@ -34,10 +32,6 @@ export const AppHeaderButtons = ({
     showDeviceNames, setShowDeviceNames
 }) => {
     const {
-        undoOperation,
-        redoOperation,
-        undoPossible,
-        redoPossible,
         currTrial,
         setCurrTrial,
         showImagePlacement,
@@ -103,24 +97,8 @@ export const AppHeaderButtons = ({
                 justifyContent="flex-end"
                 alignItems="center"
             >
-                <ButtonTooltip
-                    color="inherit"
-                    // sx={{ mr: 2 }}
-                    onClick={() => undoOperation()}
-                    tooltip={"Undo"}
-                    disabled={!undoPossible}
-                >
-                    <Undo />
-                </ButtonTooltip>
-                <ButtonTooltip
-                    color="inherit"
-                    // sx={{ mr: 2 }}
-                    onClick={() => redoOperation()}
-                    tooltip={"Redo"}
-                    disabled={!redoPossible}
-                >
-                    <Redo />
-                </ButtonTooltip>
+                <UndoRedoButtons
+                />
                 {experimentName
                     ? <>
                         <ButtonTooltip

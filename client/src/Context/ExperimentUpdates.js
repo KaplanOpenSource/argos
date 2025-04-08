@@ -1,5 +1,4 @@
 import dayjs from 'dayjs';
-import { jsonApplyItem, jsonCompare } from '../Utils/JsonPatch';
 import { createNewName } from "../Utils/utils";
 import { argosJsonVersion } from '../constants/constants';
 import { assignUuids, cleanUuids } from './TrackUuidUtils';
@@ -7,41 +6,18 @@ import { useServerUpdates } from './useServerUpdates';
 
 export const ExperimentUpdatesInitialState = {
     experiments: [],
-    undoStack: [],
-    redoStack: [],
 }
 
 export const useExperimentUpdates = (state, setState) => {
-    const { addUpdate } = useServerUpdates();
-
-    const sendUpdate = (experimentName, experimentNewData, experimentPrevData) => {
-        const redoPatch = jsonCompare(experimentPrevData, experimentNewData);
-        // TODO: do inverse patch instead? 
-        const undoPatch = jsonCompare(experimentNewData, experimentPrevData);
-        if (redoPatch.length === 0) {
-            return; // nothing was changed
-        }
-        addUpdate(experimentName, experimentNewData);
-
-        setState(prev => {
-            const newUndoItem = { name: experimentName, undoPatch, redoPatch };
-            return {
-                ...prev,
-                undoStack: [...prev.undoStack, newUndoItem],
-                redoStack: [],
-            };
-        });
-    }
+    const { sendUpdate } = useServerUpdates();
 
     const deleteExperiment = (name) => {
-        const experimentPrevData = state.experiments.find(t => t.name === name)
-
         setState(prev => {
             const experiments = prev.experiments.filter(t => t.name !== name);
             return { ...prev, experiments };
         });
 
-        sendUpdate(name, undefined, experimentPrevData);
+        sendUpdate(name, undefined);
     }
 
     const addExperiment = (newExp = undefined) => {
@@ -65,7 +41,7 @@ export const useExperimentUpdates = (state, setState) => {
             return { ...prev, experiments };
         });
 
-        sendUpdate(name, exp, undefined);
+        sendUpdate(name, exp);
     }
 
     const setExperiment = (name, data) => {
@@ -83,53 +59,18 @@ export const useExperimentUpdates = (state, setState) => {
             return;
         }
 
-        const experimentPrevData = state.experiments.find(t => t.name === name)
-
         setState(prev => {
             const experiments = [...prev.experiments];
             experiments[i] = data;
             return { ...prev, experiments };
         });
 
-        sendUpdate(name, data, experimentPrevData);
-    }
-
-
-    const undoOperation = () => {
-        setState(prev => {
-            const { undoStack, experiments, redoStack } = prev;
-            const item = undoStack.pop();
-            if (item) {
-                const { name, undoPatch } = item;
-                const i = experiments.findIndex(t => t.name === name)
-                const exp = jsonApplyItem(experiments, i, experiments[i], undoPatch);
-                redoStack.push(item);
-                addUpdate(name, exp);
-            }
-            return { ...prev, undoStack, experiments, redoStack };
-        });
-    }
-
-    const redoOperation = () => {
-        setState(prev => {
-            const { undoStack, experiments, redoStack } = prev;
-            const item = redoStack.pop();
-            if (item) {
-                const { name, redoPatch } = item;
-                const i = experiments.findIndex(t => t.name === name)
-                const exp = jsonApplyItem(experiments, i, experiments[i], redoPatch);
-                undoStack.push(item);
-                addUpdate(name, exp);
-            }
-            return { ...prev, undoStack, experiments, redoStack };
-        });
+        sendUpdate(name, data);
     }
 
     return {
         deleteExperiment,
         addExperiment,
         setExperiment,
-        undoOperation,
-        redoOperation,
     }
 }

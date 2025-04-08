@@ -6,6 +6,7 @@ import { useFetchExperiments } from "./FetchExperiment";
 import { assignUuids } from "./TrackUuidUtils";
 import { TrialChoosing } from "./TrialChoosing";
 import { useTokenStore } from "./useTokenStore";
+import { useUndoRedo } from "../App/UndoRedo/useUndoRedo";
 
 const experimentContext = createContext();
 
@@ -23,8 +24,6 @@ export const ExperimentProvider = ({ children }) => {
         deleteExperiment,
         addExperiment,
         setExperiment,
-        undoOperation,
-        redoOperation,
     } = useExperimentUpdates(state, setState);
 
     const { isLoggedIn } = useTokenStore();
@@ -179,6 +178,9 @@ export const ExperimentProvider = ({ children }) => {
                     experiments: allExperiments,
                     currTrial: t,
                 }));
+                setTimeout(() => {
+                    useUndoRedo.getState().setTrackChanges(true);
+                }, 100);
             }
         })()
     }, [isLoggedIn()])
@@ -203,13 +205,10 @@ export const ExperimentProvider = ({ children }) => {
 
     const store = {
         experiments: state.experiments,
+        setExperiments: applyer => setState(prev => ({ ...prev, experiments: applyer(prev.experiments) })),
         deleteExperiment: deleteExperiment,
         addExperiment: addExperiment,
         setExperiment: setExperiment,
-        undoOperation: undoOperation,
-        redoOperation: redoOperation,
-        undoPossible: state.undoStack.length > 0,
-        redoPossible: state.redoStack.length > 0,
         setCurrTrial,
         currTrial,
         setTrialData,
