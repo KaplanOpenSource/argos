@@ -1,5 +1,4 @@
 import dayjs from 'dayjs';
-import { jsonApplyItem, jsonCompare } from '../Utils/JsonPatch';
 import { createNewName } from "../Utils/utils";
 import { argosJsonVersion } from '../constants/constants';
 import { assignUuids, cleanUuids } from './TrackUuidUtils';
@@ -7,30 +6,13 @@ import { useServerUpdates } from './useServerUpdates';
 
 export const ExperimentUpdatesInitialState = {
     experiments: [],
-    undoStack: [],
-    redoStack: [],
 }
 
 export const useExperimentUpdates = (state, setState) => {
     const { addUpdate } = useServerUpdates();
 
     const sendUpdate = (experimentName, experimentNewData, experimentPrevData) => {
-        const redoPatch = jsonCompare(experimentPrevData, experimentNewData);
-        // TODO: do inverse patch instead? 
-        const undoPatch = jsonCompare(experimentNewData, experimentPrevData);
-        if (redoPatch.length === 0) {
-            return; // nothing was changed
-        }
         addUpdate(experimentName, experimentNewData);
-
-        setState(prev => {
-            const newUndoItem = { name: experimentName, undoPatch, redoPatch };
-            return {
-                ...prev,
-                undoStack: [...prev.undoStack, newUndoItem],
-                redoStack: [],
-            };
-        });
     }
 
     const deleteExperiment = (name) => {
