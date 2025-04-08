@@ -8,31 +8,34 @@ import { argosJsonVersion } from "../constants/constants";
 
 interface ExperimentsStore {
     experiments: IExperiment[],
-    setExperiments: (allExps: IExperiment[]) => void,
+    getExperiment: (experimentName: string) => IExperiment | undefined,
+    setAllExperiments: (allExps: IExperiment[]) => void,
     deleteExperiment: (name: string) => void,
     addExperiment: (newExp: IExperiment) => void,
-    setExperiment: (name: string, data: IExperiment) => void,
+    setExperiment: (name: string, exp: IExperiment) => void,
 }
 
 export const useExperiments = create<ExperimentsStore>()((set, get) => ({
     experiments: [],
 
-    setExperiments: (allExps: IExperiment[]) => {
+    getExperiment: (experimentName: string) => {
+        return get().experiments?.find(t => t.name === experimentName);
+    },
+
+    setAllExperiments: (allExps: IExperiment[]) => {
         set({ experiments: allExps });
     },
 
     deleteExperiment: (name: string) => {
-        const { sendUpdate } = useServerUpdates.getState();
         set(prev => {
             const experiments = prev.experiments.filter(t => t.name !== name);
             return { ...prev, experiments };
         });
 
-        sendUpdate(name, undefined);
+        useServerUpdates.getState().sendUpdate(name, undefined);
     },
 
     addExperiment: (newExp: IExperiment | undefined = undefined) => {
-        const { sendUpdate } = useServerUpdates.getState();
         const name = createNewName(get().experiments, newExp ? newExp.name : 'New Experiment');
         let exp;
         if (newExp) {
@@ -53,31 +56,30 @@ export const useExperiments = create<ExperimentsStore>()((set, get) => ({
             return { ...prev, experiments };
         });
 
-        sendUpdate(name, exp);
+        useServerUpdates.getState().sendUpdate(name, exp);
     },
 
-    setExperiment: (name: string, data: IExperiment) => {
-        const { sendUpdate } = useServerUpdates.getState();
+    setExperiment: (name: string, exp: IExperiment) => {
         const i = get().experiments.findIndex(t => t.name === name)
-        if (i === -1 || !data.name) {
+        if (i === -1 || !exp.name) {
             alert("Unknown experiment name " + name);// + "\n" + state.experiments.map(e => e.name).join(', '));
             return;
         }
-        if (data.name !== data.name.trim()) {
-            alert("Invalid experiment name, has trailing or leading spaces " + data.name);
+        if (exp.name !== exp.name.trim()) {
+            alert("Invalid experiment name, has trailing or leading spaces " + exp.name);
             return;
         }
-        if (get().experiments.find((e, ei) => e.name === data.name && ei !== i)) {
-            alert("Duplicate experiment name " + data.name);// + "\n" + state.experiments.map(e => e.name).join(', '));
+        if (get().experiments.find((e, ei) => e.name === exp.name && ei !== i)) {
+            alert("Duplicate experiment name " + exp.name);// + "\n" + state.experiments.map(e => e.name).join(', '));
             return;
         }
 
         set(prev => {
             const experiments = [...prev.experiments];
-            experiments[i] = data;
+            experiments[i] = exp;
             return { ...prev, experiments };
         });
 
-        sendUpdate(name, data);
+        useServerUpdates.getState().sendUpdate(name, exp);
     },
 }))
