@@ -12,8 +12,6 @@ export const useExperimentUpdates = (state, setState) => {
     const { sendUpdate } = useServerUpdates();
 
     const deleteExperiment = (name) => {
-        const experimentPrevData = state.experiments.find(t => t.name === name)
-
         setState(prev => {
             const experiments = prev.experiments.filter(t => t.name !== name);
             return { ...prev, experiments };
@@ -60,8 +58,6 @@ export const useExperimentUpdates = (state, setState) => {
             alert("Duplicate experiment name " + data.name);// + "\n" + state.experiments.map(e => e.name).join(', '));
             return;
         }
-
-        const experimentPrevData = state.experiments.find(t => t.name === name)
 
         setState(prev => {
             const experiments = [...prev.experiments];
