@@ -6,7 +6,7 @@ import {
     differenceWith,
 } from 'lodash';
 import { useDeviceSeletion } from "../Context/useDeviceSeletion";
-import { IDeviceType, IDeviceTypeAndItem } from "../types/types";
+import { IDeviceType, IDeviceTypeAndItem, ITrial } from "../types/types";
 import { ContextMenu } from "../Utils/ContextMenu";
 import { isSameDevice } from "../Utils/isSameDevice";
 
@@ -17,7 +17,7 @@ export const SelectDeviceTypeButton = ({
 }) => {
     const { selection, setSelection } = useDeviceSeletion();
     const { currTrial } = useExperimentProvider();
-    const hasTrial = currTrial.trial;
+    const trial = currTrial.trial as ITrial;
 
     const devicesForSelection = (): IDeviceTypeAndItem[] => {
         return (deviceType.devices || []).map(item => {
@@ -30,6 +30,12 @@ export const SelectDeviceTypeButton = ({
         setSelection([...selection, ...added]);
     }
 
+    const selectAllPlaced = () => {
+        const added = differenceWith(devicesForSelection(), selection, isSameDevice);
+        const filtered = added.filter(a => trial.devicesOnTrial?.find(d => isSameDevice(a, d)));
+        setSelection([...selection, ...filtered]);
+    }
+
     const deselectAll = () => {
         const added = differenceWith(selection, devicesForSelection(), isSameDevice);
         setSelection(added);
@@ -37,17 +43,18 @@ export const SelectDeviceTypeButton = ({
 
     const menuItems = [
         { label: 'Select all devices of this type', callback: selectAll },
+        { label: 'Select devices of this type that are placed', callback: selectAllPlaced },
         { label: 'Deselect all devices of this type', callback: deselectAll }
     ];
 
     return (
         <ContextMenu menuItems={menuItems}>
             <ButtonTooltip
-                tooltip={hasTrial
+                tooltip={trial
                     ? "Select all devices of this type"
                     : "Selecting devices is possible only when a trial is edited"}
                 onClick={() => selectAll()}
-                disabled={!hasTrial}
+                disabled={!trial}
             >
                 {<PlaylistAdd color={"inherit"} />}
             </ButtonTooltip>
