@@ -9,11 +9,7 @@ export const ExperimentUpdatesInitialState = {
 }
 
 export const useExperimentUpdates = (state, setState) => {
-    const { addUpdate } = useServerUpdates();
-
-    const sendUpdate = (experimentName, experimentNewData, experimentPrevData) => {
-        addUpdate(experimentName, experimentNewData);
-    }
+    const { sendUpdate } = useServerUpdates();
 
     const deleteExperiment = (name) => {
         const experimentPrevData = state.experiments.find(t => t.name === name)
@@ -23,7 +19,7 @@ export const useExperimentUpdates = (state, setState) => {
             return { ...prev, experiments };
         });
 
-        sendUpdate(name, undefined, experimentPrevData);
+        sendUpdate(name, undefined);
     }
 
     const addExperiment = (newExp = undefined) => {
@@ -47,7 +43,7 @@ export const useExperimentUpdates = (state, setState) => {
             return { ...prev, experiments };
         });
 
-        sendUpdate(name, exp, undefined);
+        sendUpdate(name, exp);
     }
 
     const setExperiment = (name, data) => {
@@ -73,7 +69,7 @@ export const useExperimentUpdates = (state, setState) => {
             return { ...prev, experiments };
         });
 
-        sendUpdate(name, data, experimentPrevData);
+        sendUpdate(name, data);
     }
 
     return {

@@ -20,8 +20,6 @@ export const UndoRedoButtons = () => {
     // 3. check all, merge, deploy (!)
     // 4. move experiments to a zustand state control (next phase)
 
-
-
     const doOperation = (experimentName: string | undefined, patch: JsonOperationPack | undefined) => {
         if (experimentName && patch) {
             setWaitForOperation(true);
@@ -48,7 +46,6 @@ export const UndoRedoButtons = () => {
         }
     }, [experiments, trackChanges, waitForOperation]);
 
-    console.log(undoStack, redoStack)
     return (
         <>
             <ButtonTooltip

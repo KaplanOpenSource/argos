@@ -6,13 +6,13 @@ import { useEffect } from "react";
 
 interface ServerUpdatesStore {
     serverUpdates: { name: string, exp: IExperiment }[];
-    addUpdate: (name: string, exp: IExperiment) => void;
+    sendUpdate: (name: string, exp: IExperiment) => void;
     clearUpdates: () => void;
 }
 
 export const useServerUpdates = create<ServerUpdatesStore>()((set, get) => ({
     serverUpdates: [],
-    addUpdate: (name: string, exp: IExperiment) => {
+    sendUpdate: (name: string, exp: IExperiment) => {
         set(prev => ({ ...prev, serverUpdates: [...prev.serverUpdates, { name, exp }] }))
     },
     clearUpdates: () => {
