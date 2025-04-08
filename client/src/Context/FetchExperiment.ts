@@ -5,7 +5,7 @@ import { useTokenStore } from "./useTokenStore";
 export const useFetchExperiments = () => {
     const { axiosSecure } = useTokenStore();
 
-    const saveExperimentWithData = useCallback(async (name: string, data: IExperiment): Promise<boolean> => {
+    const saveExperimentWithData = useCallback(async (name: string, data: IExperiment | undefined): Promise<boolean> => {
         try {
             await axiosSecure().post("experiment_set/" + name, data);
         } catch (e) {

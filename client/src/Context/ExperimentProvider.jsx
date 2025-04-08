@@ -1,30 +1,23 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { RealMapName } from "../constants/constants";
 import { parseUrlParams, replaceUrlParams } from "../Utils/utils";
-import { ExperimentUpdatesInitialState, useExperimentUpdates } from "./ExperimentUpdates";
 import { useFetchExperiments } from "./FetchExperiment";
 import { assignUuids } from "./TrackUuidUtils";
 import { TrialChoosing } from "./TrialChoosing";
 import { useTokenStore } from "./useTokenStore";
 import { useUndoRedo } from "../App/UndoRedo/useUndoRedo";
+import { useExperiments } from "./useExperiments";
 
 const experimentContext = createContext();
 
-const ExperimentProviderInitialState = {
-    ...ExperimentUpdatesInitialState,
-    currTrial: {},
-    showImagePlacement: false,
-    hiddenDeviceTypes: {},
-};
-
 export const ExperimentProvider = ({ children }) => {
-    const [state, setState] = useState(ExperimentProviderInitialState);
+    const [state, setState] = useState({
+        currTrial: {},
+        showImagePlacement: false,
+        hiddenDeviceTypes: {},
+    });
 
-    const {
-        deleteExperiment,
-        addExperiment,
-        setExperiment,
-    } = useExperimentUpdates(state, setState);
+    const { setExperiment } = useExperiments();
 
     const { isLoggedIn } = useTokenStore();
     const {
@@ -204,11 +197,6 @@ export const ExperimentProvider = ({ children }) => {
     }, [state]);
 
     const store = {
-        experiments: state.experiments,
-        setExperiments: applyer => setState(prev => ({ ...prev, experiments: applyer(prev.experiments) })),
-        deleteExperiment: deleteExperiment,
-        addExperiment: addExperiment,
-        setExperiment: setExperiment,
         setCurrTrial,
         currTrial,
         setTrialData,
