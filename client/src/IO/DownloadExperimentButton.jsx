@@ -34,7 +34,7 @@ const IconToBlob = ({ iconName, obtainIcon }) => {
                 }
                 const imageBlob = new Blob([uint8Array], { type: 'image/png' });
 
-                const svgString = iconRef.current.outerHTML;
+                const svgString = iconRef?.current?.outerHTML;
                 obtainIcon({ imageBlob, svgString });
             }
         })();
