@@ -94,42 +94,9 @@ export const useExperimentUpdates = (state, setState) => {
         sendUpdate(name, data, experimentPrevData);
     }
 
-
-    const undoOperation = () => {
-        setState(prev => {
-            const { undoStack, experiments, redoStack } = prev;
-            const item = undoStack.pop();
-            if (item) {
-                const { name, undoPatch } = item;
-                const i = experiments.findIndex(t => t.name === name)
-                const exp = jsonApplyItem(experiments, i, experiments[i], undoPatch);
-                redoStack.push(item);
-                addUpdate(name, exp);
-            }
-            return { ...prev, undoStack, experiments, redoStack };
-        });
-    }
-
-    const redoOperation = () => {
-        setState(prev => {
-            const { undoStack, experiments, redoStack } = prev;
-            const item = redoStack.pop();
-            if (item) {
-                const { name, redoPatch } = item;
-                const i = experiments.findIndex(t => t.name === name)
-                const exp = jsonApplyItem(experiments, i, experiments[i], redoPatch);
-                undoStack.push(item);
-                addUpdate(name, exp);
-            }
-            return { ...prev, undoStack, experiments, redoStack };
-        });
-    }
-
     return {
         deleteExperiment,
         addExperiment,
         setExperiment,
-        undoOperation,
-        redoOperation,
     }
 }

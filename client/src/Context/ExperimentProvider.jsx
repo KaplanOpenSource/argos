@@ -24,8 +24,6 @@ export const ExperimentProvider = ({ children }) => {
         deleteExperiment,
         addExperiment,
         setExperiment,
-        undoOperation,
-        redoOperation,
     } = useExperimentUpdates(state, setState);
 
     const { isLoggedIn } = useTokenStore();
@@ -211,10 +209,6 @@ export const ExperimentProvider = ({ children }) => {
         deleteExperiment: deleteExperiment,
         addExperiment: addExperiment,
         setExperiment: setExperiment,
-        undoOperation: undoOperation,
-        redoOperation: redoOperation,
-        undoPossible: state.undoStack.length > 0,
-        redoPossible: state.redoStack.length > 0,
         setCurrTrial,
         currTrial,
         setTrialData,
