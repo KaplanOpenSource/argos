@@ -3,12 +3,12 @@ import { useUploadImage } from "./useUploadImage";
 import { ConvertExperiment } from "./ConvertExperiment";
 import { argosJsonVersion } from "../constants/constants";
 import { createNewName } from "../Utils/utils";
-import { useCallback, useContext } from "react";
-import { useExperimentProvider } from "../Context/ExperimentProvider";
+import { useCallback } from "react";
 import { ReadFileAsText } from "./FileIo";
+import { useExperiments } from "../Context/useExperiments";
 
 export const useUploadExperiment = () => {
-    const { experiments, addExperiment } = useExperimentProvider();
+    const { experiments, addExperiment } = useExperiments();
     const { uploadImage } = useUploadImage();
 
     const uploadExperiment = useCallback(async (file) => {

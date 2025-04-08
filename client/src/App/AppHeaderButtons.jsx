@@ -24,6 +24,7 @@ import { useUploadExperiment } from '../IO/UploadExperiment';
 import { DocumentationButton } from '../Doc/DocumentationButton';
 import { AppHeaderShownMap } from './AppHeaderShownMap';
 import { UndoRedoButtons } from './UndoRedo/UndoRedoButtons';
+import { useExperiments } from '../Context/useExperiments';
 
 export const AppHeaderButtons = ({
     fullscreen, setFullscreen,
@@ -36,8 +37,10 @@ export const AppHeaderButtons = ({
         setCurrTrial,
         showImagePlacement,
         setShowImagePlacement,
-        addExperiment,
     } = useExperimentProvider();
+
+    const { addExperiment } = useExperiments();
+
     const { uploadExperiment } = useUploadExperiment();
     const { experimentName, trialTypeName, trialName } = currTrial;
     return (

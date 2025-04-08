@@ -1,12 +1,13 @@
 import { Fragment, useContext } from "react";
 import { useExperimentProvider } from "../Context/ExperimentProvider";
 import { MapDrawShape } from "./MapDrawShape";
+import { useExperiments } from "../Context/useExperiments";
 
 export const MapDrawExperiment = ({ }) => {
     const {
         currTrial,
-        setExperiment,
     } = useExperimentProvider();
+    const { setExperiment } = useExperiments();
 
     const { experiment } = currTrial || {};
     const shapes = experiment?.shapes || [];
