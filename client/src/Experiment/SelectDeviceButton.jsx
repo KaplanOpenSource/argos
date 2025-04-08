@@ -10,6 +10,7 @@ import {
 } from 'lodash';
 import { EnclosingListSelectionContext } from "./EnclosedSelectionProvider";
 import { useDeviceSeletion } from "../Context/useDeviceSeletion";
+import { isSameDevice } from "../Utils/isSameDevice";
 
 export const SelectDeviceButton = ({ deviceType, deviceItem, devicesEnclosingList }) => {
     const { selection, setSelection } = useDeviceSeletion();
@@ -20,10 +21,6 @@ export const SelectDeviceButton = ({ deviceType, deviceItem, devicesEnclosingLis
     });
     const isSelected = selectedIndex !== -1;
     const hasTrial = currTrial.trial;
-
-    const isSameDevice = (one, two) => {
-        return one.deviceItemName === two.deviceItemName && one.deviceTypeName === two.deviceTypeName
-    }
 
     const selectAll = () => {
         const added = differenceWith(devicesEnclosingList || [], selection, isSameDevice);
@@ -71,10 +68,7 @@ export const SelectDeviceButton = ({ deviceType, deviceItem, devicesEnclosingLis
                 tooltip={hasTrial
                     ? (isSelected ? "Remove from selected devices" : "Select device")
                     : "Selecting devices is possible only when a trial is edited"}
-                onClick={(e) => {
-                    e.stopPropagation();
-                    handleClick();
-                }}
+                onClick={() => handleClick()}
                 disabled={!hasTrial}
             >
                 {hasTrial && isSelected
