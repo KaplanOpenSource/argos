@@ -8,16 +8,20 @@ import { argosJsonVersion } from "../constants/constants";
 
 interface ExperimentsStore {
     experiments: IExperiment[],
-    // setExperiments: (allExps: IExperiment[]) => void,
+    setExperiments: (allExps: IExperiment[]) => void,
     deleteExperiment: (name: string) => void,
     addExperiment: (newExp: IExperiment) => void,
     setExperiment: (name: string, data: IExperiment) => void,
 }
 
-export const useExperiments = create<ExperimentsStore>()((set, get) => {
+export const useExperiments = create<ExperimentsStore>()((set, get) => ({
+    experiments: [],
 
-    const experiments = [];
-    const deleteExperiment = (name: string) => {
+    setExperiments: (allExps: IExperiment[]) => {
+        set({ experiments: allExps });
+    },
+
+    deleteExperiment: (name: string) => {
         const { sendUpdate } = useServerUpdates.getState();
         set(prev => {
             const experiments = prev.experiments.filter(t => t.name !== name);
@@ -25,9 +29,9 @@ export const useExperiments = create<ExperimentsStore>()((set, get) => {
         });
 
         sendUpdate(name, undefined);
-    }
+    },
 
-    const addExperiment = (newExp: IExperiment | undefined = undefined) => {
+    addExperiment: (newExp: IExperiment | undefined = undefined) => {
         const { sendUpdate } = useServerUpdates.getState();
         const name = createNewName(get().experiments, newExp ? newExp.name : 'New Experiment');
         let exp;
@@ -50,9 +54,9 @@ export const useExperiments = create<ExperimentsStore>()((set, get) => {
         });
 
         sendUpdate(name, exp);
-    }
+    },
 
-    const setExperiment = (name: string, data: IExperiment) => {
+    setExperiment: (name: string, data: IExperiment) => {
         const { sendUpdate } = useServerUpdates.getState();
         const i = get().experiments.findIndex(t => t.name === name)
         if (i === -1 || !data.name) {
@@ -75,11 +79,5 @@ export const useExperiments = create<ExperimentsStore>()((set, get) => {
         });
 
         sendUpdate(name, data);
-    }
-    return {
-        experiments,
-        deleteExperiment,
-        addExperiment,
-        setExperiment,
-    };
-})
+    },
+}))

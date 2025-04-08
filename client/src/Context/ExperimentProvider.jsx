@@ -17,7 +17,7 @@ export const ExperimentProvider = ({ children }) => {
         hiddenDeviceTypes: {},
     });
 
-    const { setExperiment } = useExperiments();
+    const { setExperiment, setExperiments } = useExperiments();
 
     const { isLoggedIn } = useTokenStore();
     const {
@@ -154,21 +154,22 @@ export const ExperimentProvider = ({ children }) => {
         (async () => {
             if (isLoggedIn()) {
                 const { experimentName, trialTypeName, trialName } = parseUrlParams();
-
+                
                 // $$$$ TODO: 
                 // 1. read experiment list, show it from the info
                 // 2. read just the chosen experiment
                 // 3. switch experiment and read from backend
                 // const experimentsNames = await fetchExperimentListInfo();
-                const allExperiments = await fetchAllExperiments();
+                const allExperiments = await fetchAllExperiments(); // TODO: move this to a separate component
+
                 // console.log("experimentsNames", experimentsNames)
                 // console.log("allExperiments", allExperiments)
                 assignUuids(allExperiments);
+                setExperiments(allExperiments);
                 const t = TrialChoosing.FindTrialByName({ experimentName, trialTypeName, trialName }, allExperiments);
                 TrialChoosing.ReplaceUrlByTrial(t);
                 setState(prev => ({
                     ...prev,
-                    experiments: allExperiments,
                     currTrial: t,
                 }));
                 setTimeout(() => {
