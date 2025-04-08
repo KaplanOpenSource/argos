@@ -71,10 +71,7 @@ export const SelectDeviceButton = ({ deviceType, deviceItem, devicesEnclosingLis
                 tooltip={hasTrial
                     ? (isSelected ? "Remove from selected devices" : "Select device")
                     : "Selecting devices is possible only when a trial is edited"}
-                onClick={(e) => {
-                    e.stopPropagation();
-                    handleClick();
-                }}
+                onClick={() => handleClick()}
                 disabled={!hasTrial}
             >
                 {hasTrial && isSelected

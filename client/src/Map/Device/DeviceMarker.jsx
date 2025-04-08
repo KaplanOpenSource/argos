@@ -48,7 +48,7 @@ export const DeviceMarker = ({ deviceOnTrial, setDeviceOnTrial, showDeviceNames 
 
     const deviceType = currTrial.experiment.deviceTypes.find(dt => dt.name === deviceTypeName);
 
-    const icon = DeviceMarkerIcon({ iconName: deviceType.icon, deviceItemName, isSelected, showDeviceNames });
+    const icon = DeviceMarkerIcon({ iconName: deviceType?.icon, deviceItemName, isSelected, showDeviceNames });
 
     const direction = deviceOnTrial.attributes?.find(a => a.name === 'direction');
 

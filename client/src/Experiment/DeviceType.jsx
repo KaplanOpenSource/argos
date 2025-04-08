@@ -6,13 +6,13 @@ import { changeByName, createNewName } from "../Utils/utils";
 import { AddMultipleDevices } from "./AddMultipleDevices";
 import { AttributeTypesDialogButton } from "./AttributeTypesDialogButton";
 import { SCOPE_EXPERIMENT } from "./AttributeType";
-import { useContext } from "react";
 import { useExperimentProvider } from "../Context/ExperimentProvider";
 import { assignUuids } from "../Context/TrackUuidUtils";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { Typography } from "@mui/material";
 import { IconPicker } from "../Icons/IconPicker";
+import { SelectDeviceTypeButton } from "./SelectDeviceTypeButton";
 
 export const DeviceType = ({ data, setData, experiment }) => {
     const { deleteDeviceType, hiddenDeviceTypes, setHiddenDeviceTypes, currTrial } = useExperimentProvider();
@@ -72,6 +72,9 @@ export const DeviceType = ({ data, setData, experiment }) => {
                         addDevices={newDevices => {
                             setData({ ...data, devices: [...(data.devices || []), ...newDevices] })
                         }}
+                    />
+                    <SelectDeviceTypeButton
+                        deviceType={data}
                     />
                     <AttributeTypesDialogButton
                         data={data}
