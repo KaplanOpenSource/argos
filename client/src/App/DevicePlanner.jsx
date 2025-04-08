@@ -15,10 +15,10 @@ import { SHOW_ALL_EXPERIMENTS } from './ShowConfigToggles';
 import { EnclosingListSelectionProvider } from '../Experiment/EnclosedSelectionProvider';
 import { AppHeaderButtons } from './AppHeaderButtons';
 import { MapDrawExperiment } from '../MapDraw/MapDrawExperiment';
-import { UndoKeyInterceptor } from './UndoKeyInterceptor';
 import { CurrMouseLocation } from '../Context/useCurrMouseLocation';
 import { ServerUpdatesHandler } from '../Context/useServerUpdates';
-import { UndoRedoHandler } from '../Context/useUndoRedo';
+import { UndoKeyInterceptor } from './UndoRedo/UndoKeyInterceptor';
+import { UndoRedoHandler } from './UndoRedo/useUndoRedo';
 
 export function DevicePlanner() {
     const [showEditBox, setShowEditBox] = useState(false);

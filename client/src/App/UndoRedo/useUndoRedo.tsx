@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { create } from "zustand";
-import { IExperiment } from "../types/types";
-import { useExperimentProvider } from "./ExperimentProvider";
+import { IExperiment } from "../../types/types";
+import { useExperimentProvider } from "../../Context/ExperimentProvider";
 import { usePrevious } from '@radix-ui/react-use-previous';
-import { jsonCompare, JsonOperationPack } from "../Utils/JsonPatch";
+import { jsonCompare, JsonOperationPack } from "../../Utils/JsonPatch";
 
 type JsonUndoRedoChange = {
     name: string,

@@ -6,7 +6,7 @@ import { useFetchExperiments } from "./FetchExperiment";
 import { assignUuids } from "./TrackUuidUtils";
 import { TrialChoosing } from "./TrialChoosing";
 import { useTokenStore } from "./useTokenStore";
-import { useUndoRedo } from "./useUndoRedo";
+import { useUndoRedo } from "../App/UndoRedo/useUndoRedo";
 
 const experimentContext = createContext();
 
