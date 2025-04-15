@@ -88,11 +88,11 @@ export const ExperimentProvider = ({ children }) => {
     // }
 
     const ReplaceUrlByTrial = (currTrial) => {
-        replaceUrlParams({
-            experimentName: currTrial?.experiment?.name,
-            trialTypeName: currTrial?.trialType?.name,
-            trialName: currTrial?.trial?.name,
-        });
+        // replaceUrlParams({
+        //     experimentName: experiment?.name,
+        //     trialTypeName: trialType?.name,
+        //     trialName: trial?.name,
+        // });
     }
 
     // const GetCurrTrial = () => {
@@ -112,7 +112,7 @@ export const ExperimentProvider = ({ children }) => {
     const setCurrTrial = ({ experimentName, trialTypeName, trialName }) => {
         const sameExperiment = experimentName === experiment?.name;
         chooseTrial({ experimentName, trialTypeName, trialName });
-        ReplaceUrlByTrial(currTrial); // this is has side-effects, should be outside of setState func
+        // ReplaceUrlByTrial(currTrial); // this is has side-effects, should be outside of setState func
         if (!sameExperiment) {
             setState(prev => ({ ...prev, hiddenDeviceTypes: {} }));
         }
@@ -123,7 +123,7 @@ export const ExperimentProvider = ({ children }) => {
             const experiment = experiments[state.currTrial.experimentIndex];
             const shownMapIndex = (experiment.imageStandalone || []).findIndex(t => t.name === shownMapName);
             if (shownMapIndex >= 0) {
-                replaceUrlParams({ shownMapName });
+                // replaceUrlParams({ shownMapName });
                 setState(prev => ({
                     ...prev,
                     currTrial: { ...prev.currTrial, shownMapName, shownMapIndex },
@@ -131,7 +131,7 @@ export const ExperimentProvider = ({ children }) => {
                 return;
             }
         }
-        replaceUrlParams({ shownMapName: undefined });
+        // replaceUrlParams({ shownMapName: undefined });
         setState(prev => ({
             ...prev,
             currTrial: { ...prev.currTrial, shownMapName: undefined, shownMapIndex: undefined },
@@ -240,7 +240,7 @@ export const ExperimentProvider = ({ children }) => {
                 assignUuids(allExperiments);
                 setAllExperiments(allExperiments);
                 const t = FindTrialByName({ experimentName, trialTypeName, trialName }, allExperiments);
-                ReplaceUrlByTrial(t);
+                // ReplaceUrlByTrial(t);
                 setState(prev => ({
                     ...prev,
                     currTrial: t,
