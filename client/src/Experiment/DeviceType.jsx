@@ -13,18 +13,20 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { Typography } from "@mui/material";
 import { IconPicker } from "../Icons/IconPicker";
 import { SelectDeviceTypeButton } from "./SelectDeviceTypeButton";
+import { useHiddenDeviceTypes } from "../Context/useHiddenDeviceTypes";
 
 export const DeviceType = ({ data, setData, experiment }) => {
-    const { deleteDeviceType, hiddenDeviceTypes, setHiddenDeviceTypes, currTrial } = useExperimentProvider();
+    const { deleteDeviceType, currTrial } = useExperimentProvider();
+    const { setDeviceTypeHidden, isDeviceTypeHidden } = useHiddenDeviceTypes();
 
     const devicesEnclosingList = (data.devices || []).map(item => {
         return { deviceTypeName: data.name, deviceItemName: item.name, deviceType: data, deviceItem: item };
     });
 
-    const isHidden = hiddenDeviceTypes[data.name];
+    const isHidden = isDeviceTypeHidden(data.name);
 
     const toggleHidden = () => {
-        setHiddenDeviceTypes({ ...hiddenDeviceTypes, [data.name]: !isHidden });
+        setDeviceTypeHidden(data.name, !isHidden);
     }
 
     const devicesNum = data?.devices?.length || 0;

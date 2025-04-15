@@ -20,13 +20,15 @@ import { DevicesTabularView } from "./Tabular/DevicesTabularView";
 import { ExperimentTreeNodesExpandedContext } from "./ExperimentTreeNodesExpandedProvider";
 import { sum } from "lodash";
 import { useExperiments } from "../Context/useExperiments";
+import { useHiddenDeviceTypes } from "../Context/useHiddenDeviceTypes";
 
 export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
     const { experiments, setExperiment } = useExperiments();
     const { currTrial, setCurrTrial } = useExperimentProvider();
-    const { experiment, experimentName, trialType, trialTypeName, trial, trialName } = currTrial;
+    const { experiment, experimentName } = currTrial;
     const { cloneExperiment } = useCloneExperiment();
     const { addActionOnMap } = useContext(ActionsOnMapContext);
+    const { resetHiddenDeviceTypes } = useHiddenDeviceTypes();
 
     const {
         selectionOnEnclosingUuids,
@@ -64,6 +66,7 @@ export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
                 newNodes.push(...(foundExperiment?.trialTypes?.map(tt => tt.trackUuid) || []));
             }
             setExpandedNodes(newNodes);
+            resetHiddenDeviceTypes();
             return;
         }
 

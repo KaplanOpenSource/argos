@@ -8,7 +8,6 @@ const experimentContext = createContext();
 export const ExperimentProvider = ({ children }) => {
     const [state, setState] = useState({
         showImagePlacement: false,
-        hiddenDeviceTypes: {},
     });
 
     const { setExperiment, experiments } = useExperiments();
@@ -25,11 +24,7 @@ export const ExperimentProvider = ({ children }) => {
     };
 
     const setCurrTrial = ({ experimentName, trialTypeName, trialName }) => {
-        const sameExperiment = experimentName === experiment?.name;
         chooseTrial({ experimentName, trialTypeName, trialName });
-        if (!sameExperiment) {
-            setState(prev => ({ ...prev, hiddenDeviceTypes: {} }));
-        }
     }
 
     const setTrialData = (newTrialData) => {
@@ -127,8 +122,6 @@ export const ExperimentProvider = ({ children }) => {
         setLocationsToDevices,
         showImagePlacement: state.showImagePlacement,
         setShowImagePlacement: val => setState(prev => ({ ...prev, showImagePlacement: val })),
-        hiddenDeviceTypes: state.hiddenDeviceTypes,
-        setHiddenDeviceTypes: val => setState(prev => ({ ...prev, hiddenDeviceTypes: val })),
     };
 
     return (

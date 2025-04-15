@@ -1,14 +1,16 @@
-import { useContext } from "react";
 import { useExperimentProvider } from "../../Context/ExperimentProvider";
 import { RealMapName } from "../../constants/constants";
 import { DeviceMarker } from "./DeviceMarker";
 import { PopupSwitchProvider } from "../PopupSwitchContext";
 import { AreaMarkListener } from "../AreaMarkListener";
 import { useDeviceSeletion } from "../../Context/useDeviceSeletion";
+import { useHiddenDeviceTypes } from "../../Context/useHiddenDeviceTypes";
 
 export const DeviceMarkersShown = ({ showDeviceNames }) => {
     const { selection, setSelection } = useDeviceSeletion();
-    const { currTrial, setTrialData, hiddenDeviceTypes } = useExperimentProvider();
+    const { currTrial, setTrialData } = useExperimentProvider();
+    const { isDeviceTypeHidden } = useHiddenDeviceTypes();
+
     const devicesOnTrial = (currTrial.trial || {}).devicesOnTrial || [];
     const mapName = currTrial.shownMapName || RealMapName;
 
@@ -20,7 +22,7 @@ export const DeviceMarkersShown = ({ showDeviceNames }) => {
         if (!location || !location.coordinates) {
             devicesWithoutLocation.push(dev);
         } else if (location.name === mapName) {
-            if (!hiddenDeviceTypes[dev.deviceTypeName]) {
+            if (!isDeviceTypeHidden(dev.deviceTypeName)) {
                 shownDevices.push(dev);
             }
         }
