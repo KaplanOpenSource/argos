@@ -16,9 +16,11 @@ import { TrialTypesList } from "./TrialTypesList";
 import { ShapeList } from "./Shape/ShapeList";
 import { useShownMap } from "../Context/useShownMap";
 import { DownloadExperimentButton } from "../IO/DownloadExperimentButton";
+import { useExperiments } from "../Context/useExperiments";
 
 export const ExperimentRow = ({ data, setData, children }) => {
-    const { deleteExperiment, currTrial } = useExperimentProvider();
+    const { currTrial } = useExperimentProvider();
+    const { deleteExperiment} = useExperiments();
     const { switchToMap } = useShownMap({});
     return (
         <TreeRow

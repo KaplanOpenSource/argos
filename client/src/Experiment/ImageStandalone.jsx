@@ -10,15 +10,16 @@ import { useExperimentProvider } from "../Context/ExperimentProvider";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { EditLocationAlt, EditLocationOutlined } from "@mui/icons-material";
 import { useShownMap } from "../Context/useShownMap";
+import { useExperiments } from "../Context/useExperiments";
 
 export const ImageStandalone = ({ data, setData, experiment }) => {
     const {
         currTrial,
-        setExperiment,
         setShownMap,
         showImagePlacement,
         setShowImagePlacement,
     } = useExperimentProvider();
+    const { setExperiment } = useExperiments();
     const { switchToMap } = useShownMap({});
 
     const isShown = currTrial.shownMapName === data.name && currTrial.experimentName === experiment.name;

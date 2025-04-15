@@ -19,9 +19,11 @@ import { TrialsTabularView } from "./Tabular/TrialsTabularView";
 import { DevicesTabularView } from "./Tabular/DevicesTabularView";
 import { ExperimentTreeNodesExpandedContext } from "./ExperimentTreeNodesExpandedProvider";
 import { sum } from "lodash";
+import { useExperiments } from "../Context/useExperiments";
 
 export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
-    const { experiments, setExperiment, addExperiment, currTrial, setCurrTrial } = useExperimentProvider();
+    const { experiments, setExperiment } = useExperiments();
+    const { currTrial, setCurrTrial } = useExperimentProvider();
     const { experiment, experimentName, trialType, trialTypeName, trial, trialName } = currTrial;
     const { cloneExperiment } = useCloneExperiment();
     const { addActionOnMap } = useContext(ActionsOnMapContext);

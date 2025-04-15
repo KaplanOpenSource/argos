@@ -50,7 +50,11 @@ export const useUploadImage = () => {
             return { filename: ret.data.filename, height, width };
         } catch (e) {
             console.error(e);
-            alert('Image upload error: ' + e);
+            if (e?.response?.statusText) {
+                alert('Image upload error: ' + (e?.response?.statusText as string).toLowerCase());
+            } else {
+                alert('Image upload error: ' + e);
+            }
             return undefined;
         }
     }, [axiosSecure]);

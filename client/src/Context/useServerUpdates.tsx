@@ -5,14 +5,14 @@ import { useFetchExperiments } from "./FetchExperiment";
 import { useEffect } from "react";
 
 interface ServerUpdatesStore {
-    serverUpdates: { name: string, exp: IExperiment }[];
-    sendUpdate: (name: string, exp: IExperiment) => void;
+    serverUpdates: { name: string, exp: IExperiment | undefined }[];
+    sendUpdate: (name: string, exp: IExperiment | undefined) => void;
     clearUpdates: () => void;
 }
 
 export const useServerUpdates = create<ServerUpdatesStore>()((set, get) => ({
     serverUpdates: [],
-    sendUpdate: (name: string, exp: IExperiment) => {
+    sendUpdate: (name: string, exp: IExperiment | undefined) => {
         set(prev => ({ ...prev, serverUpdates: [...prev.serverUpdates, { name, exp }] }))
     },
     clearUpdates: () => {

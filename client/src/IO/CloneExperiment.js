@@ -1,11 +1,11 @@
-import { useCallback, useContext } from "react";
-import { useExperimentProvider } from "../Context/ExperimentProvider";
+import { useCallback } from "react";
 import { useUploadImage } from "./useUploadImage";
 import { createNewName } from "../Utils/utils";
 import { useDownloadImage } from "./useDownloadImage";
+import { useExperiments } from "../Context/useExperiments";
 
 export const useCloneExperiment = () => {
-    const { experiments, addExperiment } = useExperimentProvider();
+    const { experiments, addExperiment } = useExperiments();
     const { uploadImage } = useUploadImage();
     const { downloadImageAsBlob } = useDownloadImage();
 
