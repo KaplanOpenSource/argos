@@ -26,45 +26,45 @@ export const ExperimentProvider = ({ children }) => {
         // fetchExperiment,
     } = useFetchExperiments();
 
-    const FindTrialByName = ({ experimentName, trialTypeName, trialName }, allExperiments) => {
-        if (allExperiments) {
-            const experimentIndex = allExperiments.findIndex(t => t.name === experimentName);
-            if (experimentIndex >= 0) {
-                const experiment = allExperiments[experimentIndex];
-                const trialTypes = (experiment || {}).trialTypes || [];
+    // const FindTrialByName = ({ experimentName, trialTypeName, trialName }, allExperiments) => {
+    //     if (allExperiments) {
+    //         const experimentIndex = allExperiments.findIndex(t => t.name === experimentName);
+    //         if (experimentIndex >= 0) {
+    //             const experiment = allExperiments[experimentIndex];
+    //             const trialTypes = (experiment || {}).trialTypes || [];
 
-                if (!trialTypeName && trialTypes.length > 0) {
-                    const trialType = experiment.trialTypes[0];
-                    const trials = (trialType || {}).trials || [];
-                    if (trials.length > 0) {
-                        return {
-                            experimentName, experimentIndex,
-                            trialTypeName: trialType.name, trialTypeIndex: 0,
-                            trialName: trials[0].name, trialIndex: 0,
-                        };
-                    }
-                }
+    //             if (!trialTypeName && trialTypes.length > 0) {
+    //                 const trialType = experiment.trialTypes[0];
+    //                 const trials = (trialType || {}).trials || [];
+    //                 if (trials.length > 0) {
+    //                     return {
+    //                         experimentName, experimentIndex,
+    //                         trialTypeName: trialType.name, trialTypeIndex: 0,
+    //                         trialName: trials[0].name, trialIndex: 0,
+    //                     };
+    //                 }
+    //             }
 
-                const trialTypeIndex = trialTypes.findIndex(t => t.name === trialTypeName);
-                if (trialTypeIndex >= 0) {
-                    const trialType = experiment.trialTypes[trialTypeIndex];
-                    const trialIndex = ((trialType || {}).trials || []).findIndex(t => t.name === trialName);
-                    if (trialIndex >= 0) {
-                        return {
-                            experimentName, experimentIndex,
-                            trialTypeName, trialTypeIndex,
-                            trialName, trialIndex,
-                        };
-                    }
-                }
+    //             const trialTypeIndex = trialTypes.findIndex(t => t.name === trialTypeName);
+    //             if (trialTypeIndex >= 0) {
+    //                 const trialType = experiment.trialTypes[trialTypeIndex];
+    //                 const trialIndex = ((trialType || {}).trials || []).findIndex(t => t.name === trialName);
+    //                 if (trialIndex >= 0) {
+    //                     return {
+    //                         experimentName, experimentIndex,
+    //                         trialTypeName, trialTypeIndex,
+    //                         trialName, trialIndex,
+    //                     };
+    //                 }
+    //             }
 
-                return {
-                    experimentName, experimentIndex,
-                };
-            }
-        }
-        return {};
-    }
+    //             return {
+    //                 experimentName, experimentIndex,
+    //             };
+    //         }
+    //     }
+    //     return {};
+    // }
 
     // const FindTrialByIndices = (currTrial, allExperiments) => {
     //     if (currTrial.experimentIndex === undefined) {
@@ -238,11 +238,11 @@ export const ExperimentProvider = ({ children }) => {
                 // console.log("allExperiments", allExperiments)
                 assignUuids(allExperiments);
                 setAllExperiments(allExperiments);
-                const t = FindTrialByName({ experimentName, trialTypeName, trialName }, allExperiments);
-                setState(prev => ({
-                    ...prev,
-                    currTrial: t,
-                }));
+                // const t = FindTrialByName({ experimentName, trialTypeName, trialName }, allExperiments);
+                // setState(prev => ({
+                //     ...prev,
+                //     currTrial: t,
+                // }));
                 setTimeout(() => {
                     useUndoRedo.getState().setTrackChanges(true);
                 }, 100);
