@@ -20,6 +20,8 @@ interface ChosenTrialStore {
         trialName?: string | undefined,
     }) => void,
     chooseShownMap: (shownMapName: string | undefined) => void,
+    isTrialChosen: () => boolean,
+    isExperimentChosen: () => boolean,
 }
 
 export const useChosenTrial = create<ChosenTrialStore>()((set, get) => {
@@ -69,5 +71,7 @@ export const useChosenTrial = create<ChosenTrialStore>()((set, get) => {
                 return { shownMap };
             })
         },
+        isTrialChosen: () => get().chosenNames.trial !== undefined, // TODO: check if zustand has computed
+        isExperimentChosen: () => get().chosenNames.experiment !== undefined,
     })
 })

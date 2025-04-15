@@ -17,7 +17,7 @@ export const ExperimentProvider = ({ children }) => {
     });
 
     const { setExperiment, setAllExperiments, experiments, getExperiment } = useExperiments();
-    const { experiment, trialType, trial, shownMap, chooseTrial, chooseShownMap } = useChosenTrial();
+    const { experiment, trialType, trial, shownMap, chooseTrial, chooseShownMap, isTrialChosen, chosenNames } = useChosenTrial();
 
     const { isLoggedIn } = useTokenStore();
     const {
@@ -137,13 +137,13 @@ export const ExperimentProvider = ({ children }) => {
         // }));
     }
 
-    const setTrialData = (data) => {
-        if (state.currTrial.trialName === undefined) {
-            console.log(`trying to set trial data without current trial\n`, data);
+    const setTrialData = (newTrialData) => {
+        if (!isTrialChosen()) {
+            console.log(`trying to set trial data without current trial\n`, newTrialData);
             return;
         }
-        const e = structuredClone(currTrial.experiment);
-        e.trialTypes[currTrial.trialTypeIndex].trials[currTrial.trialIndex] = data;
+        const e = structuredClone(experiment());
+        e.trialTypes[chosenNames.trialType.index].trials[chosenNames.trial.index] = newTrialData;
         setExperiment(currTrial.experimentName, e)
     }
 
