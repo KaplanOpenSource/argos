@@ -21,13 +21,13 @@ export const ChosenTrialOnUrl = ({ }) => {
     useEffect(() => {
         if (parsedOnce) {
             replaceUrlParams({
-                experimentName: experiment?.name,
-                trialTypeName: trialType?.name,
-                trialName: trial?.name,
+                experimentName: experiment()?.name,
+                trialTypeName: trialType()?.name,
+                trialName: trial()?.name,
                 shownMapName: shownMap?.name,
             });
         }
-    }, [parsedOnce, experiment?.name, trialType?.name, trial?.name, shownMap?.name]);
+    }, [parsedOnce, experiment()?.name, trialType()?.name, trial()?.name, shownMap?.name]);
 
     return null;
 }

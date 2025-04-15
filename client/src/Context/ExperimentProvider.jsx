@@ -100,13 +100,13 @@ export const ExperimentProvider = ({ children }) => {
     // }
 
     const currTrial = {
-        experiment,
-        trialType,
-        trial,
+        experiment: experiment(),
+        trialType: trialType(),
+        trial: trial(),
         shownMap,
-        experimentName: experiment?.name, // this field is for legacy
-        trialTypeName: trialType?.name, // this field is for legacy
-        trialName: trial?.name, // this field is for legacy
+        experimentName: experiment()?.name, // this field is for legacy
+        trialTypeName: trialType()?.name, // this field is for legacy
+        trialName: trial()?.name, // this field is for legacy
     };
 
     const setCurrTrial = ({ experimentName, trialTypeName, trialName }) => {
@@ -131,10 +131,10 @@ export const ExperimentProvider = ({ children }) => {
             }
         }
         // replaceUrlParams({ shownMapName: undefined });
-        setState(prev => ({
-            ...prev,
-            currTrial: { ...prev.currTrial, shownMapName: undefined, shownMapIndex: undefined },
-        }));
+        // setState(prev => ({
+        //     ...prev,
+        //     currTrial: { ...prev.currTrial, shownMapName: undefined, shownMapIndex: undefined },
+        // }));
     }
 
     const setTrialData = (data) => {
@@ -250,23 +250,23 @@ export const ExperimentProvider = ({ children }) => {
         })()
     }, [isLoggedIn()])
 
-    useEffect(() => {
-        if (currTrial?.experimentName) {
-            const experiment = experiments.find(t => t.name === currTrial?.experimentName);
-            if (!experiment) {
-                setCurrTrial({});
-            } else {
-                if (currTrial?.trialName) {
-                    const trialType = experiment?.trialTypes?.find(t => t.name === currTrial?.trialTypeName);
-                    const trial = trialType?.trials?.find(t => t.name === currTrial?.trialName);
-                    if (!trial) {
-                        // TODO: handle selected standalone map
-                        setCurrTrial({ experimentName: experiment.name });
-                    }
-                }
-            }
-        }
-    }, [state]);
+    // useEffect(() => {
+    //     if (currTrial?.experimentName) {
+    //         const experiment = experiments.find(t => t.name === currTrial?.experimentName);
+    //         if (!experiment) {
+    //             setCurrTrial({});
+    //         } else {
+    //             if (currTrial?.trialName) {
+    //                 const trialType = experiment?.trialTypes?.find(t => t.name === currTrial?.trialTypeName);
+    //                 const trial = trialType?.trials?.find(t => t.name === currTrial?.trialName);
+    //                 if (!trial) {
+    //                     // TODO: handle selected standalone map
+    //                     setCurrTrial({ experimentName: experiment.name });
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }, [state]);
 
     const store = {
         experiments,
