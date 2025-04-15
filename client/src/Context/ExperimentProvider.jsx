@@ -1,10 +1,5 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 import { RealMapName } from "../constants/constants";
-import { parseUrlParams, replaceUrlParams } from "../Utils/utils";
-import { useFetchExperiments } from "./FetchExperiment";
-import { assignUuids } from "./TrackUuidUtils";
-import { useTokenStore } from "./useTokenStore";
-import { useUndoRedo } from "../App/UndoRedo/useUndoRedo";
 import { useExperiments } from "./useExperiments";
 import { useChosenTrial } from "./useChosenTrial";
 
@@ -16,81 +11,8 @@ export const ExperimentProvider = ({ children }) => {
         hiddenDeviceTypes: {},
     });
 
-    const { setExperiment, setAllExperiments, experiments, getExperiment } = useExperiments();
-    const { experiment, trialType, trial, shownMap, chooseTrial, chooseShownMap, isTrialChosen, chosenNames } = useChosenTrial();
-
-    // const FindTrialByName = ({ experimentName, trialTypeName, trialName }, allExperiments) => {
-    //     if (allExperiments) {
-    //         const experimentIndex = allExperiments.findIndex(t => t.name === experimentName);
-    //         if (experimentIndex >= 0) {
-    //             const experiment = allExperiments[experimentIndex];
-    //             const trialTypes = (experiment || {}).trialTypes || [];
-
-    //             if (!trialTypeName && trialTypes.length > 0) {
-    //                 const trialType = experiment.trialTypes[0];
-    //                 const trials = (trialType || {}).trials || [];
-    //                 if (trials.length > 0) {
-    //                     return {
-    //                         experimentName, experimentIndex,
-    //                         trialTypeName: trialType.name, trialTypeIndex: 0,
-    //                         trialName: trials[0].name, trialIndex: 0,
-    //                     };
-    //                 }
-    //             }
-
-    //             const trialTypeIndex = trialTypes.findIndex(t => t.name === trialTypeName);
-    //             if (trialTypeIndex >= 0) {
-    //                 const trialType = experiment.trialTypes[trialTypeIndex];
-    //                 const trialIndex = ((trialType || {}).trials || []).findIndex(t => t.name === trialName);
-    //                 if (trialIndex >= 0) {
-    //                     return {
-    //                         experimentName, experimentIndex,
-    //                         trialTypeName, trialTypeIndex,
-    //                         trialName, trialIndex,
-    //                     };
-    //                 }
-    //             }
-
-    //             return {
-    //                 experimentName, experimentIndex,
-    //             };
-    //         }
-    //     }
-    //     return {};
-    // }
-
-    // const FindTrialByIndices = (currTrial, allExperiments) => {
-    //     if (currTrial.experimentIndex === undefined) {
-    //         return {};
-    //     }
-    //     const experiment = allExperiments[currTrial.experimentIndex];
-    //     if (currTrial.trialIndex === undefined) {
-    //         return {
-    //             ...currTrial,
-    //             experiment
-    //         }
-    //     }
-    //     const trialType = ((experiment || {}).trialTypes || [])[currTrial.trialTypeIndex];
-    //     const trial = ((trialType || {}).trials || [])[currTrial.trialIndex];
-    //     return {
-    //         ...currTrial,
-    //         experiment,
-    //         trialType,
-    //         trial,
-    //     }
-    // }
-
-    // const ReplaceUrlByTrial = (currTrial) => {
-    //     replaceUrlParams({
-    //         experimentName: experiment?.name,
-    //         trialTypeName: trialType?.name,
-    //         trialName: trial?.name,
-    //     });
-    // }
-
-    // const GetCurrTrial = () => {
-    //     return FindTrialByIndices(state.currTrial, experiments);
-    // }
+    const { setExperiment, experiments } = useExperiments();
+    const { experiment, trialType, trial, shownMap, chooseTrial, isTrialChosen, chosenNames } = useChosenTrial();
 
     const currTrial = {
         experiment: experiment(),
@@ -109,26 +31,6 @@ export const ExperimentProvider = ({ children }) => {
             setState(prev => ({ ...prev, hiddenDeviceTypes: {} }));
         }
     }
-
-    // const setShownMap = (shownMapName) => {
-    //     if (state.currTrial.experimentName) {
-    //         const experiment = experiments[state.currTrial.experimentIndex];
-    //         const shownMapIndex = (experiment.imageStandalone || []).findIndex(t => t.name === shownMapName);
-    //         if (shownMapIndex >= 0) {
-    //             // replaceUrlParams({ shownMapName });
-    //             setState(prev => ({
-    //                 ...prev,
-    //                 currTrial: { ...prev.currTrial, shownMapName, shownMapIndex },
-    //             }));
-    //             return;
-    //         }
-    //     }
-    //     // replaceUrlParams({ shownMapName: undefined });
-    //     // setState(prev => ({
-    //     //     ...prev,
-    //     //     currTrial: { ...prev.currTrial, shownMapName: undefined, shownMapIndex: undefined },
-    //     // }));
-    // }
 
     const setTrialData = (newTrialData) => {
         if (!isTrialChosen()) {
@@ -215,24 +117,6 @@ export const ExperimentProvider = ({ children }) => {
         setExperiment(currTrial.experimentName, e)
     }
 
-    // useEffect(() => {
-    //     if (currTrial?.experimentName) {
-    //         const experiment = experiments.find(t => t.name === currTrial?.experimentName);
-    //         if (!experiment) {
-    //             setCurrTrial({});
-    //         } else {
-    //             if (currTrial?.trialName) {
-    //                 const trialType = experiment?.trialTypes?.find(t => t.name === currTrial?.trialTypeName);
-    //                 const trial = trialType?.trials?.find(t => t.name === currTrial?.trialName);
-    //                 if (!trial) {
-    //                     // TODO: handle selected standalone map
-    //                     setCurrTrial({ experimentName: experiment.name });
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }, [state]);
-
     const store = {
         experiments,
         setCurrTrial,
@@ -241,7 +125,6 @@ export const ExperimentProvider = ({ children }) => {
         deleteDevice,
         deleteDeviceType,
         setLocationsToDevices,
-        // setShownMap,
         showImagePlacement: state.showImagePlacement,
         setShowImagePlacement: val => setState(prev => ({ ...prev, showImagePlacement: val })),
         hiddenDeviceTypes: state.hiddenDeviceTypes,
