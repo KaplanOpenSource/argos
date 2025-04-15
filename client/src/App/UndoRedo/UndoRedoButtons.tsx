@@ -1,18 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Undo, Redo } from "@mui/icons-material";
 import { usePrevious } from "@radix-ui/react-use-previous";
-import { useExperimentProvider } from "../../Context/ExperimentProvider";
 import { useUndoRedo } from "./useUndoRedo";
 import { IExperiment } from "../../types/types";
 import { ButtonTooltip } from "../../Utils/ButtonTooltip";
 import { JsonOperationPack, jsonApplyItem } from "../../Utils/JsonPatch";
+import { useExperiments } from "../../Context/useExperiments";
 
 export const UndoRedoButtons = () => {
     const { trackChanges, setTrackChanges, obtainUndo, obtainRedo, undoStack, redoStack } = useUndoRedo();
-    const { experiments, setExperiments } = useExperimentProvider() as {
-        experiments: IExperiment[],
-        setExperiments: (applyer: (prev: IExperiment[]) => IExperiment[]) => void,
-    };
+    const { experiments, setAllExperiments } = useExperiments();
     const [waitForOperation, setWaitForOperation] = useState(false);
     const prevExperiments: IExperiment[] = usePrevious(experiments);
 
@@ -24,7 +21,7 @@ export const UndoRedoButtons = () => {
         if (experimentName && patch) {
             setWaitForOperation(true);
             setTrackChanges(false);
-            setExperiments((prev: IExperiment[]) => {
+            setAllExperiments((prev: IExperiment[]) => {
                 const i = prev.findIndex(t => t.name === experimentName);
                 const draft = structuredClone(prev);
                 jsonApplyItem(draft, i, draft[i], patch);

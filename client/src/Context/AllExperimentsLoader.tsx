@@ -26,7 +26,7 @@ export const AllExperimentsLoader = ({ }) => {
                 // console.log("experimentsNames", experimentsNames)
                 // console.log("allExperiments", allExperiments)
                 assignUuids(allExperiments);
-                setAllExperiments(allExperiments);
+                setAllExperiments(() => allExperiments);
                 // const t = FindTrialByName({ experimentName, trialTypeName, trialName }, allExperiments);
                 // setState(prev => ({
                 //     ...prev,
