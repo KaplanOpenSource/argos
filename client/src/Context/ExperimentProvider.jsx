@@ -87,13 +87,13 @@ export const ExperimentProvider = ({ children }) => {
     //     }
     // }
 
-    const ReplaceUrlByTrial = (currTrial) => {
-        // replaceUrlParams({
-        //     experimentName: experiment?.name,
-        //     trialTypeName: trialType?.name,
-        //     trialName: trial?.name,
-        // });
-    }
+    // const ReplaceUrlByTrial = (currTrial) => {
+    //     replaceUrlParams({
+    //         experimentName: experiment?.name,
+    //         trialTypeName: trialType?.name,
+    //         trialName: trial?.name,
+    //     });
+    // }
 
     // const GetCurrTrial = () => {
     //     return FindTrialByIndices(state.currTrial, experiments);
@@ -112,7 +112,6 @@ export const ExperimentProvider = ({ children }) => {
     const setCurrTrial = ({ experimentName, trialTypeName, trialName }) => {
         const sameExperiment = experimentName === experiment?.name;
         chooseTrial({ experimentName, trialTypeName, trialName });
-        // ReplaceUrlByTrial(currTrial); // this is has side-effects, should be outside of setState func
         if (!sameExperiment) {
             setState(prev => ({ ...prev, hiddenDeviceTypes: {} }));
         }
@@ -240,7 +239,6 @@ export const ExperimentProvider = ({ children }) => {
                 assignUuids(allExperiments);
                 setAllExperiments(allExperiments);
                 const t = FindTrialByName({ experimentName, trialTypeName, trialName }, allExperiments);
-                // ReplaceUrlByTrial(t);
                 setState(prev => ({
                     ...prev,
                     currTrial: t,

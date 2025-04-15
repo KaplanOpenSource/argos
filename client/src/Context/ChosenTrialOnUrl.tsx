@@ -1,9 +1,12 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { parseUrlParams, replaceUrlParams } from "../Utils/utils";
 import { useChosenTrial } from "./useChosenTrial";
+import { useExperiments } from "./useExperiments";
 
 export const ChosenTrialOnUrl = ({ }) => {
     const { experiment, trialType, trial, shownMap, chooseTrial, chooseShownMap } = useChosenTrial();
+    const { experiments } = useExperiments();
+    const [parsedOnce, setParsedOnce] = useState(false);
     // const mapObj = useMapEvents({
     //     move: () => {
     //         replaceUrlParams({
@@ -14,20 +17,25 @@ export const ChosenTrialOnUrl = ({ }) => {
     //     },
     // });
 
-    // useEffect(() => {
-    //     const { lat, lng, z } = parseUrlParams();
-    //     if (isFinite(lat) && isFinite(lng) && isFinite(z)) {
-    //         mapObj.setView([lat, lng], z);
-    //     }
-    // }, []);
+    useEffect(() => {
+        if (!parsedOnce && experiments.length > 0) {
+            const { experimentName, trialTypeName, trialName, shownMapName } = parseUrlParams();
+            if (experimentName) {
+                chooseTrial({ experimentName, trialTypeName, trialName });
+            }
+            setParsedOnce(true);
+        }
+    }, [parsedOnce, experiments.length]);
 
     useEffect(() => {
-        replaceUrlParams({
-            experimentName: experiment?.name,
-            trialTypeName: trialType?.name,
-            trialName: trial?.name,
-            shownMapName: shownMap?.name,
-        });
-    }, [experiment?.name, trialType?.name, trial?.name, shownMap?.name])
+        if (parsedOnce) {
+            replaceUrlParams({
+                experimentName: experiment?.name,
+                trialTypeName: trialType?.name,
+                trialName: trial?.name,
+                shownMapName: shownMap?.name,
+            });
+        }
+    }, [parsedOnce, experiment?.name, trialType?.name, trial?.name, shownMap?.name])
     return null
 }

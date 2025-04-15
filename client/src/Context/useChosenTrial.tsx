@@ -8,9 +8,9 @@ interface ChosenTrialStore {
     trial: ITrial | undefined,
     shownMap: IImageStandalone | undefined,
     chooseTrial: (params: {
-        experimentName: string | undefined,
-        trialTypeName: string | undefined,
-        trialName: string | undefined,
+        experimentName?: string | undefined,
+        trialTypeName?: string | undefined,
+        trialName?: string | undefined,
     }) => void,
     chooseShownMap: (shownMapName: string | undefined) => void,
 }

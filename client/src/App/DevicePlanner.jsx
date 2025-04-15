@@ -19,6 +19,7 @@ import { CurrMouseLocation } from '../Context/useCurrMouseLocation';
 import { ServerUpdatesHandler } from '../Context/useServerUpdates';
 import { UndoKeyInterceptor } from './UndoRedo/UndoKeyInterceptor';
 import { UndoRedoHandler } from './UndoRedo/useUndoRedo';
+import { ChosenTrialOnUrl } from '../Context/ChosenTrialOnUrl';
 
 export function DevicePlanner() {
     const [showEditBox, setShowEditBox] = useState(false);
@@ -34,6 +35,7 @@ export function DevicePlanner() {
             <ServerUpdatesHandler />
             <UndoKeyInterceptor />
             <UndoRedoHandler />
+            <ChosenTrialOnUrl />
             <AppHeader>
                 <AppHeaderButtons
                     fullscreen={fullscreen} setFullscreen={setFullscreen}
