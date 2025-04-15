@@ -36,20 +36,15 @@ export const useExperiments = create<ExperimentsStore>()((set, get) => ({
     },
 
     addExperiment: (newExp: IExperiment | undefined = undefined) => {
-        const name = createNewName(get().experiments, newExp ? newExp.name : 'New Experiment');
-        let exp;
-        if (newExp) {
-            exp = assignUuids(cleanUuids(newExp));
-            exp.name = name;
-        } else {
-            exp = assignUuids({
-                version: argosJsonVersion,
-                name,
-                startDate: dayjs().startOf('day').toISOString(),
-                endDate: dayjs().startOf('day').add(7, 'day').toISOString(),
-                description: '',
-            });
-        }
+        newExp ||= {
+            version: argosJsonVersion,
+            startDate: dayjs().startOf('day').toISOString(),
+            endDate: dayjs().startOf('day').add(7, 'day').toISOString(),
+            description: '',
+        };
+
+        const name = createNewName(get().experiments, newExp?.name ?? 'New Experiment');
+        const exp: IExperiment = assignUuids(cleanUuids({ ...newExp, name }));
 
         set(prev => {
             const experiments = [...prev.experiments, exp];
