@@ -52,7 +52,7 @@ export const Trial = ({ data, setData, experiment, trialType, children }) => {
 
     const totalDevices = sum((experiment?.deviceTypes || []).map(x => (x?.devices || []).length));
     const placedDevices = (data.devicesOnTrial || []).length;
-    const isTrialChosen = data.trackUuid === currTrial.trial.trackUuid;
+    const isTrialChosen = data?.trackUuid === currTrial?.trial?.trackUuid;
 
     return (
         <TreeRow

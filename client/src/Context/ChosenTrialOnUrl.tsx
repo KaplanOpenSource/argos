@@ -7,15 +7,6 @@ export const ChosenTrialOnUrl = ({ }) => {
     const { experiment, trialType, trial, shownMap, chooseTrial, chooseShownMap } = useChosenTrial();
     const { experiments } = useExperiments();
     const [parsedOnce, setParsedOnce] = useState(false);
-    // const mapObj = useMapEvents({
-    //     move: () => {
-    //         replaceUrlParams({
-    //             lat: mapObj.getCenter().lat,
-    //             lng: mapObj.getCenter().lng,
-    //             z: mapObj.getZoom(),
-    //         });
-    //     },
-    // });
 
     useEffect(() => {
         if (!parsedOnce && experiments.length > 0) {
@@ -36,6 +27,7 @@ export const ChosenTrialOnUrl = ({ }) => {
                 shownMapName: shownMap?.name,
             });
         }
-    }, [parsedOnce, experiment?.name, trialType?.name, trial?.name, shownMap?.name])
-    return null
+    }, [parsedOnce, experiment?.name, trialType?.name, trial?.name, shownMap?.name]);
+
+    return null;
 }
