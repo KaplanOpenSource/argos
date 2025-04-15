@@ -19,13 +19,6 @@ export const ExperimentProvider = ({ children }) => {
     const { setExperiment, setAllExperiments, experiments, getExperiment } = useExperiments();
     const { experiment, trialType, trial, shownMap, chooseTrial, chooseShownMap, isTrialChosen, chosenNames } = useChosenTrial();
 
-    const { isLoggedIn } = useTokenStore();
-    const {
-        fetchAllExperiments,
-        // fetchExperimentListInfo,
-        // fetchExperiment,
-    } = useFetchExperiments();
-
     // const FindTrialByName = ({ experimentName, trialTypeName, trialName }, allExperiments) => {
     //     if (allExperiments) {
     //         const experimentIndex = allExperiments.findIndex(t => t.name === experimentName);
@@ -221,34 +214,6 @@ export const ExperimentProvider = ({ children }) => {
         }
         setExperiment(currTrial.experimentName, e)
     }
-
-    useEffect(() => {
-        (async () => {
-            if (isLoggedIn()) {
-                const { experimentName, trialTypeName, trialName } = parseUrlParams();
-
-                // $$$$ TODO: 
-                // 1. read experiment list, show it from the info
-                // 2. read just the chosen experiment
-                // 3. switch experiment and read from backend
-                // const experimentsNames = await fetchExperimentListInfo();
-                const allExperiments = await fetchAllExperiments(); // TODO: move this to a separate component
-
-                // console.log("experimentsNames", experimentsNames)
-                // console.log("allExperiments", allExperiments)
-                assignUuids(allExperiments);
-                setAllExperiments(allExperiments);
-                // const t = FindTrialByName({ experimentName, trialTypeName, trialName }, allExperiments);
-                // setState(prev => ({
-                //     ...prev,
-                //     currTrial: t,
-                // }));
-                setTimeout(() => {
-                    useUndoRedo.getState().setTrackChanges(true);
-                }, 100);
-            }
-        })()
-    }, [isLoggedIn()])
 
     // useEffect(() => {
     //     if (currTrial?.experimentName) {

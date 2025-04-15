@@ -20,6 +20,7 @@ import { ServerUpdatesHandler } from '../Context/useServerUpdates';
 import { UndoKeyInterceptor } from './UndoRedo/UndoKeyInterceptor';
 import { UndoRedoHandler } from './UndoRedo/useUndoRedo';
 import { ChosenTrialOnUrl } from '../Context/ChosenTrialOnUrl';
+import { AllExperimentsLoader } from '../Context/AllExperimentsLoader';
 
 export function DevicePlanner() {
     const [showEditBox, setShowEditBox] = useState(false);
@@ -32,6 +33,7 @@ export function DevicePlanner() {
 
     return (
         <>
+            <AllExperimentsLoader />
             <ServerUpdatesHandler />
             <UndoKeyInterceptor />
             <UndoRedoHandler />
