@@ -16,10 +16,12 @@ import { sum } from "lodash";
 import { Typography } from "@mui/material";
 import { UploadDevicesButton } from "../IO/UploadDevices/UploadDevicesButton";
 import { useDeviceSeletion } from "../Context/useDeviceSeletion";
+import { useChosenTrial } from "../Context/useChosenTrial";
 
 export const Trial = ({ data, setData, experiment, trialType, children }) => {
     const { selection } = useDeviceSeletion();
-    const { currTrial, setCurrTrial, setShownMap } = useExperimentProvider();
+    const { currTrial, setCurrTrial } = useExperimentProvider();
+    const { chooseShownMap } = useChosenTrial();
     const { downloadGeojson, downloadZipCsv } = useTrialGeoJson();
     const { addActionOnMap } = useContext(ActionsOnMapContext);
 
@@ -42,7 +44,7 @@ export const Trial = ({ data, setData, experiment, trialType, children }) => {
             const span = new CoordsSpan().fromTrial(currTrial.trial);
             const standalone = span.getFirstStandalone()
             if (currTrial.shownMapName !== standalone) {
-                setShownMap(standalone);
+                chooseShownMap(standalone);
             }
             addActionOnMap((mapObject) => {
                 span.fitBounds(mapObject, standalone ? standalone : RealMapName);

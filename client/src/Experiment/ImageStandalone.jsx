@@ -11,16 +11,17 @@ import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { EditLocationAlt, EditLocationOutlined } from "@mui/icons-material";
 import { useShownMap } from "../Context/useShownMap";
 import { useExperiments } from "../Context/useExperiments";
+import { useChosenTrial } from "../Context/useChosenTrial";
 
 export const ImageStandalone = ({ data, setData, experiment }) => {
     const {
         currTrial,
-        setShownMap,
         showImagePlacement,
         setShowImagePlacement,
     } = useExperimentProvider();
     const { setExperiment } = useExperiments();
     const { switchToMap } = useShownMap({});
+    const { chooseShownMap } = useChosenTrial();
 
     const isShown = currTrial.shownMapName === data.name && currTrial.experimentName === experiment.name;
     const isBeingEdit = showImagePlacement && isShown;
@@ -49,7 +50,7 @@ export const ImageStandalone = ({ data, setData, experiment }) => {
             }
             setExperiment(exp.name, exp);
             if (isShown) {
-                setShownMap(newName)
+                chooseShownMap(newName)
             }
         }
     }

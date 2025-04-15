@@ -71,12 +71,9 @@ export function DevicePlanner() {
                 }
             </Stack>
 
-            <MapShower
-            >
-                <MapDrawExperiment
-                />
-                <MapPositionOnUrl
-                />
+            <MapShower>
+                <MapDrawExperiment />
+                <MapPositionOnUrl />
                 <MapPlacer
                     markedPoints={markedPoints}
                     setMarkedPoints={setMarkedPoints}
@@ -86,11 +83,8 @@ export function DevicePlanner() {
                         showDeviceNames={showDeviceNames}
                     />
                 </EnclosingListSelectionProvider>
-                <ActionsOnMapDoer
-                />
-                <CurrMouseLocation
-                />
-
+                <ActionsOnMapDoer />
+                <CurrMouseLocation />
             </MapShower>
 
             <EditToolBox

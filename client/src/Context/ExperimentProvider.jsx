@@ -110,25 +110,25 @@ export const ExperimentProvider = ({ children }) => {
         }
     }
 
-    const setShownMap = (shownMapName) => {
-        if (state.currTrial.experimentName) {
-            const experiment = experiments[state.currTrial.experimentIndex];
-            const shownMapIndex = (experiment.imageStandalone || []).findIndex(t => t.name === shownMapName);
-            if (shownMapIndex >= 0) {
-                // replaceUrlParams({ shownMapName });
-                setState(prev => ({
-                    ...prev,
-                    currTrial: { ...prev.currTrial, shownMapName, shownMapIndex },
-                }));
-                return;
-            }
-        }
-        // replaceUrlParams({ shownMapName: undefined });
-        // setState(prev => ({
-        //     ...prev,
-        //     currTrial: { ...prev.currTrial, shownMapName: undefined, shownMapIndex: undefined },
-        // }));
-    }
+    // const setShownMap = (shownMapName) => {
+    //     if (state.currTrial.experimentName) {
+    //         const experiment = experiments[state.currTrial.experimentIndex];
+    //         const shownMapIndex = (experiment.imageStandalone || []).findIndex(t => t.name === shownMapName);
+    //         if (shownMapIndex >= 0) {
+    //             // replaceUrlParams({ shownMapName });
+    //             setState(prev => ({
+    //                 ...prev,
+    //                 currTrial: { ...prev.currTrial, shownMapName, shownMapIndex },
+    //             }));
+    //             return;
+    //         }
+    //     }
+    //     // replaceUrlParams({ shownMapName: undefined });
+    //     // setState(prev => ({
+    //     //     ...prev,
+    //     //     currTrial: { ...prev.currTrial, shownMapName: undefined, shownMapIndex: undefined },
+    //     // }));
+    // }
 
     const setTrialData = (newTrialData) => {
         if (!isTrialChosen()) {
@@ -241,7 +241,7 @@ export const ExperimentProvider = ({ children }) => {
         deleteDevice,
         deleteDeviceType,
         setLocationsToDevices,
-        setShownMap,
+        // setShownMap,
         showImagePlacement: state.showImagePlacement,
         setShowImagePlacement: val => setState(prev => ({ ...prev, showImagePlacement: val })),
         hiddenDeviceTypes: state.hiddenDeviceTypes,

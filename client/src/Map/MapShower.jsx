@@ -12,6 +12,7 @@ import { DeviceIconLegend } from '../Icons/DeviceIconLegend';
 import { StandaloneImageLayer } from './Image/StandaloneImageLayer';
 import { EmbeddedImageLayer } from './Image/EmbeddedImageLayer';
 import { useExperiments } from '../Context/useExperiments';
+import { useChosenTrial } from '../Context/useChosenTrial';
 
 L.Icon.Default.imagePath = 'leaflet-images/';
 
@@ -21,8 +22,8 @@ export const MapShower = ({ children }) => {
         showImagePlacement,
     } = useExperimentProvider();
     const { setExperiment } = useExperiments();
+    const { shownMap } = useChosenTrial();
 
-    const shownMap = ((currTrial.experiment || {}).imageStandalone || [])[currTrial.shownMapIndex];
     const embeddedMaps = (currTrial.experiment || {}).imageEmbedded || [];
 
     return (
