@@ -17,7 +17,6 @@ import { AppHeaderButtons } from './AppHeaderButtons';
 import { MapDrawExperiment } from '../MapDraw/MapDrawExperiment';
 import { CurrMouseLocation } from '../Context/useCurrMouseLocation';
 import { ServerUpdatesHandler } from '../Context/useServerUpdates';
-import { UndoKeyInterceptor } from './UndoRedo/UndoKeyInterceptor';
 import { UndoRedoHandler } from './UndoRedo/useUndoRedo';
 import { ChosenTrialOnUrl } from '../Context/ChosenTrialOnUrl';
 import { AllExperimentsLoader } from '../Context/AllExperimentsLoader';
@@ -35,7 +34,6 @@ export function DevicePlanner() {
         <>
             <AllExperimentsLoader />
             <ServerUpdatesHandler />
-            <UndoKeyInterceptor />
             <UndoRedoHandler />
             <ChosenTrialOnUrl />
             <AppHeader>

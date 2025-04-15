@@ -26,6 +26,16 @@ export const UndoRedoButtons = () => {
         }
     }
 
+    const undoOperation = () => {
+        const { name, undoPatch } = obtainUndo() || {};
+        doOperation(name, undoPatch);
+    };
+
+    const redoOperation = () => {
+        const { name, redoPatch } = obtainRedo() || {};
+        doOperation(name, redoPatch);
+    };
+
     // Starting to track again the changes in experiments only after the undo operation has been done
     // This is to avoid adding the undo operation into the undo stack itself
     useEffect(() => {
@@ -37,14 +47,31 @@ export const UndoRedoButtons = () => {
         }
     }, [experiments, trackChanges, waitForOperation]);
 
+    useEffect(() => {
+        const handleKeyDown = (event) => {
+            if (event.ctrlKey && event.key.toLowerCase() === 'z') {
+                event.preventDefault();
+                event.stopPropagation();
+                if (event.shiftKey) {
+                    redoOperation();
+                } else {
+                    undoOperation();
+                }
+            }
+        };
+
+        document.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, []);
+
     return (
         <>
             <ButtonTooltip
                 color="inherit"
-                onClick={() => {
-                    const { name, undoPatch } = obtainUndo() || {};
-                    doOperation(name, undoPatch);
-                }}
+                onClick={undoOperation}
                 tooltip={"Undo"}
                 disabled={undoStack.length === 0}
             >
@@ -52,10 +79,7 @@ export const UndoRedoButtons = () => {
             </ButtonTooltip>
             <ButtonTooltip
                 color="inherit"
-                onClick={() => {
-                    const { name, redoPatch } = obtainRedo() || {};
-                    doOperation(name, redoPatch);
-                }}
+                onClick={redoOperation}
                 tooltip={"Redo"}
                 disabled={redoStack.length === 0}
             >
