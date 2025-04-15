@@ -13,10 +13,6 @@ export const UndoRedoButtons = () => {
     const [waitForOperation, setWaitForOperation] = useState(false);
     const prevExperiments: IExperiment[] = usePrevious(experiments);
 
-    // TODO:
-    // 3. check all, merge, deploy (!)
-    // 4. move experiments to a zustand state control (next phase)
-
     const doOperation = (experimentName: string | undefined, patch: JsonOperationPack | undefined) => {
         if (experimentName && patch) {
             setWaitForOperation(true);
@@ -30,10 +26,8 @@ export const UndoRedoButtons = () => {
         }
     }
 
-    // this is needed because (at the moment):
-    // 1. experiments is in useContext which waits for the next render
-    // 2. undo/redo is zustand which happens immmidiately
-    // When experiments are moved to zustand, this can be removed
+    // Starting to track again the changes in experiments only after the undo operation has been done
+    // This is to avoid adding the undo operation into the undo stack itself
     useEffect(() => {
         if (waitForOperation && !trackChanges) {
             if (JSON.stringify(prevExperiments) !== JSON.stringify(experiments)) {
@@ -49,7 +43,6 @@ export const UndoRedoButtons = () => {
                 color="inherit"
                 onClick={() => {
                     const { name, undoPatch } = obtainUndo() || {};
-                    console.log(name)
                     doOperation(name, undoPatch);
                 }}
                 tooltip={"Undo"}
