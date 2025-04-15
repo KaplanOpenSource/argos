@@ -17,8 +17,9 @@ import { AppHeaderButtons } from './AppHeaderButtons';
 import { MapDrawExperiment } from '../MapDraw/MapDrawExperiment';
 import { CurrMouseLocation } from '../Context/useCurrMouseLocation';
 import { ServerUpdatesHandler } from '../Context/useServerUpdates';
-import { UndoKeyInterceptor } from './UndoRedo/UndoKeyInterceptor';
 import { UndoRedoHandler } from './UndoRedo/useUndoRedo';
+import { ChosenTrialOnUrl } from '../Context/ChosenTrialOnUrl';
+import { AllExperimentsLoader } from '../Context/AllExperimentsLoader';
 
 export function DevicePlanner() {
     const [showEditBox, setShowEditBox] = useState(false);
@@ -31,9 +32,10 @@ export function DevicePlanner() {
 
     return (
         <>
+            <AllExperimentsLoader />
             <ServerUpdatesHandler />
-            <UndoKeyInterceptor />
             <UndoRedoHandler />
+            <ChosenTrialOnUrl />
             <AppHeader>
                 <AppHeaderButtons
                     fullscreen={fullscreen} setFullscreen={setFullscreen}
@@ -67,12 +69,9 @@ export function DevicePlanner() {
                 }
             </Stack>
 
-            <MapShower
-            >
-                <MapDrawExperiment
-                />
-                <MapPositionOnUrl
-                />
+            <MapShower>
+                <MapDrawExperiment />
+                <MapPositionOnUrl />
                 <MapPlacer
                     markedPoints={markedPoints}
                     setMarkedPoints={setMarkedPoints}
@@ -82,11 +81,8 @@ export function DevicePlanner() {
                         showDeviceNames={showDeviceNames}
                     />
                 </EnclosingListSelectionProvider>
-                <ActionsOnMapDoer
-                />
-                <CurrMouseLocation
-                />
-
+                <ActionsOnMapDoer />
+                <CurrMouseLocation />
             </MapShower>
 
             <EditToolBox

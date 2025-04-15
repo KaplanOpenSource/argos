@@ -9,7 +9,7 @@ import { argosJsonVersion } from "../constants/constants";
 interface ExperimentsStore {
     experiments: IExperiment[],
     getExperiment: (experimentName: string) => IExperiment | undefined,
-    setAllExperiments: (allExps: IExperiment[]) => void,
+    setAllExperiments: (applyer: (prev: IExperiment[]) => IExperiment[]) => void,
     deleteExperiment: (name: string) => void,
     addExperiment: (newExp: IExperiment) => void,
     setExperiment: (name: string, exp: IExperiment) => void,
@@ -22,8 +22,10 @@ export const useExperiments = create<ExperimentsStore>()((set, get) => ({
         return get().experiments?.find(t => t.name === experimentName);
     },
 
-    setAllExperiments: (allExps: IExperiment[]) => {
-        set({ experiments: allExps });
+    setAllExperiments: (applyer: (prev: IExperiment[]) => IExperiment[]) => {
+        set(prev => {
+            return { experiments: applyer(prev.experiments) }
+        });
     },
 
     deleteExperiment: (name: string) => {

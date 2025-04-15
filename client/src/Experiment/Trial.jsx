@@ -16,10 +16,12 @@ import { sum } from "lodash";
 import { Typography } from "@mui/material";
 import { UploadDevicesButton } from "../IO/UploadDevices/UploadDevicesButton";
 import { useDeviceSeletion } from "../Context/useDeviceSeletion";
+import { useChosenTrial } from "../Context/useChosenTrial";
 
 export const Trial = ({ data, setData, experiment, trialType, children }) => {
     const { selection } = useDeviceSeletion();
-    const { currTrial, setCurrTrial, setShownMap } = useExperimentProvider();
+    const { currTrial, setCurrTrial } = useExperimentProvider();
+    const { chooseShownMap } = useChosenTrial();
     const { downloadGeojson, downloadZipCsv } = useTrialGeoJson();
     const { addActionOnMap } = useContext(ActionsOnMapContext);
 
@@ -42,7 +44,7 @@ export const Trial = ({ data, setData, experiment, trialType, children }) => {
             const span = new CoordsSpan().fromTrial(currTrial.trial);
             const standalone = span.getFirstStandalone()
             if (currTrial.shownMapName !== standalone) {
-                setShownMap(standalone);
+                chooseShownMap(standalone);
             }
             addActionOnMap((mapObject) => {
                 span.fitBounds(mapObject, standalone ? standalone : RealMapName);
@@ -57,7 +59,7 @@ export const Trial = ({ data, setData, experiment, trialType, children }) => {
         <TreeRow
             data={data}
             setData={setData}
-            boldName={data === currTrial.trial}
+            boldName={data === currTrial?.trial}
             validateName={(name) => !trialType?.trials?.find(tt => tt.name === name) ? '' : 'Duplicate name'}
             components={
                 <>
@@ -72,7 +74,7 @@ export const Trial = ({ data, setData, experiment, trialType, children }) => {
                             setCurrTrial({ experimentName: experiment.name, trialTypeName: trialType.name, trialName: data.name });
                         }}
                     >
-                        <Edit color={data === currTrial.trial ? "primary" : ""} />
+                        <Edit color={data === currTrial?.trial ? "primary" : ""} />
                     </ButtonTooltip>
                     <ButtonTooltip
                         tooltip="Delete trial"

@@ -1,143 +1,39 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 import { RealMapName } from "../constants/constants";
-import { parseUrlParams, replaceUrlParams } from "../Utils/utils";
-import { useFetchExperiments } from "./FetchExperiment";
-import { assignUuids } from "./TrackUuidUtils";
-import { useTokenStore } from "./useTokenStore";
-import { useUndoRedo } from "../App/UndoRedo/useUndoRedo";
 import { useExperiments } from "./useExperiments";
+import { useChosenTrial } from "./useChosenTrial";
 
 const experimentContext = createContext();
 
 export const ExperimentProvider = ({ children }) => {
     const [state, setState] = useState({
-        currTrial: {},
         showImagePlacement: false,
-        hiddenDeviceTypes: {},
     });
 
-    const { setExperiment, setAllExperiments, experiments, getExperiment } = useExperiments();
+    const { setExperiment, experiments } = useExperiments();
+    const { experiment, trialType, trial, shownMap, chooseTrial, isTrialChosen, chosenNames } = useChosenTrial();
 
-    const { isLoggedIn } = useTokenStore();
-    const {
-        fetchAllExperiments,
-        // fetchExperimentListInfo,
-        // fetchExperiment,
-    } = useFetchExperiments();
-
-    const FindTrialByName = ({ experimentName, trialTypeName, trialName }, allExperiments) => {
-        if (allExperiments) {
-            const experimentIndex = allExperiments.findIndex(t => t.name === experimentName);
-            if (experimentIndex >= 0) {
-                const experiment = allExperiments[experimentIndex];
-                const trialTypes = (experiment || {}).trialTypes || [];
-
-                if (!trialTypeName && trialTypes.length > 0) {
-                    const trialType = experiment.trialTypes[0];
-                    const trials = (trialType || {}).trials || [];
-                    if (trials.length > 0) {
-                        return {
-                            experimentName, experimentIndex,
-                            trialTypeName: trialType.name, trialTypeIndex: 0,
-                            trialName: trials[0].name, trialIndex: 0,
-                        };
-                    }
-                }
-
-                const trialTypeIndex = trialTypes.findIndex(t => t.name === trialTypeName);
-                if (trialTypeIndex >= 0) {
-                    const trialType = experiment.trialTypes[trialTypeIndex];
-                    const trialIndex = ((trialType || {}).trials || []).findIndex(t => t.name === trialName);
-                    if (trialIndex >= 0) {
-                        return {
-                            experimentName, experimentIndex,
-                            trialTypeName, trialTypeIndex,
-                            trialName, trialIndex,
-                        };
-                    }
-                }
-
-                return {
-                    experimentName, experimentIndex,
-                };
-            }
-        }
-        return {};
-    }
-
-    const FindTrialByIndices = (currTrial, allExperiments) => {
-        if (currTrial.experimentIndex === undefined) {
-            return {};
-        }
-        const experiment = allExperiments[currTrial.experimentIndex];
-        if (currTrial.trialIndex === undefined) {
-            return {
-                ...currTrial,
-                experiment
-            }
-        }
-        const trialType = ((experiment || {}).trialTypes || [])[currTrial.trialTypeIndex];
-        const trial = ((trialType || {}).trials || [])[currTrial.trialIndex];
-        return {
-            ...currTrial,
-            experiment,
-            trialType,
-            trial,
-        }
-    }
-
-    const ReplaceUrlByTrial = (currTrial) => {
-        const { experimentName, trialTypeName, trialName } = currTrial;
-        replaceUrlParams({ experimentName, trialTypeName, trialName, });
-    }
-
-    const GetCurrTrial = () => {
-        return FindTrialByIndices(state.currTrial, experiments);
-    }
-
-    const currTrial = GetCurrTrial();
+    const currTrial = {
+        experiment: experiment(),
+        trialType: trialType(),
+        trial: trial(),
+        shownMap,
+        experimentName: experiment()?.name, // this field is for legacy
+        trialTypeName: trialType()?.name, // this field is for legacy
+        trialName: trial()?.name, // this field is for legacy
+    };
 
     const setCurrTrial = ({ experimentName, trialTypeName, trialName }) => {
-        const t = FindTrialByName({ experimentName, trialTypeName, trialName }, experiments);
-        ReplaceUrlByTrial(t); // this is has side-effects, should be outside of setState func
-        setState(prev => {
-            const sameExperiment = prev.currTrial.experimentName === t?.experimentName;
-            const hiddenDeviceTypes = sameExperiment ? prev.hiddenDeviceTypes : {};
-            return {
-                ...prev,
-                hiddenDeviceTypes,
-                currTrial: t,
-            };
-        });
+        chooseTrial({ experimentName, trialTypeName, trialName });
     }
 
-    const setShownMap = (shownMapName) => {
-        if (state.currTrial.experimentName) {
-            const experiment = experiments[state.currTrial.experimentIndex];
-            const shownMapIndex = (experiment.imageStandalone || []).findIndex(t => t.name === shownMapName);
-            if (shownMapIndex >= 0) {
-                replaceUrlParams({ shownMapName });
-                setState(prev => ({
-                    ...prev,
-                    currTrial: { ...prev.currTrial, shownMapName, shownMapIndex },
-                }));
-                return;
-            }
-        }
-        replaceUrlParams({ shownMapName: undefined });
-        setState(prev => ({
-            ...prev,
-            currTrial: { ...prev.currTrial, shownMapName: undefined, shownMapIndex: undefined },
-        }));
-    }
-
-    const setTrialData = (data) => {
-        if (state.currTrial.trialName === undefined) {
-            console.log(`trying to set trial data without current trial\n`, data);
+    const setTrialData = (newTrialData) => {
+        if (!isTrialChosen()) {
+            console.log(`trying to set trial data without current trial\n`, newTrialData);
             return;
         }
-        const e = structuredClone(currTrial.experiment);
-        e.trialTypes[currTrial.trialTypeIndex].trials[currTrial.trialIndex] = data;
+        const e = structuredClone(experiment());
+        e.trialTypes[chosenNames.trialType.index].trials[chosenNames.trial.index] = newTrialData;
         setExperiment(currTrial.experimentName, e)
     }
 
@@ -216,53 +112,6 @@ export const ExperimentProvider = ({ children }) => {
         setExperiment(currTrial.experimentName, e)
     }
 
-    useEffect(() => {
-        (async () => {
-            if (isLoggedIn()) {
-                const { experimentName, trialTypeName, trialName } = parseUrlParams();
-
-                // $$$$ TODO: 
-                // 1. read experiment list, show it from the info
-                // 2. read just the chosen experiment
-                // 3. switch experiment and read from backend
-                // const experimentsNames = await fetchExperimentListInfo();
-                const allExperiments = await fetchAllExperiments(); // TODO: move this to a separate component
-
-                // console.log("experimentsNames", experimentsNames)
-                // console.log("allExperiments", allExperiments)
-                assignUuids(allExperiments);
-                setAllExperiments(allExperiments);
-                const t = FindTrialByName({ experimentName, trialTypeName, trialName }, allExperiments);
-                ReplaceUrlByTrial(t);
-                setState(prev => ({
-                    ...prev,
-                    currTrial: t,
-                }));
-                setTimeout(() => {
-                    useUndoRedo.getState().setTrackChanges(true);
-                }, 100);
-            }
-        })()
-    }, [isLoggedIn()])
-
-    useEffect(() => {
-        if (currTrial?.experimentName) {
-            const experiment = experiments.find(t => t.name === currTrial?.experimentName);
-            if (!experiment) {
-                setCurrTrial({});
-            } else {
-                if (currTrial?.trialName) {
-                    const trialType = experiment?.trialTypes?.find(t => t.name === currTrial?.trialTypeName);
-                    const trial = trialType?.trials?.find(t => t.name === currTrial?.trialName);
-                    if (!trial) {
-                        // TODO: handle selected standalone map
-                        setCurrTrial({ experimentName: experiment.name });
-                    }
-                }
-            }
-        }
-    }, [state]);
-
     const store = {
         experiments,
         setCurrTrial,
@@ -271,11 +120,8 @@ export const ExperimentProvider = ({ children }) => {
         deleteDevice,
         deleteDeviceType,
         setLocationsToDevices,
-        setShownMap,
         showImagePlacement: state.showImagePlacement,
         setShowImagePlacement: val => setState(prev => ({ ...prev, showImagePlacement: val })),
-        hiddenDeviceTypes: state.hiddenDeviceTypes,
-        setHiddenDeviceTypes: val => setState(prev => ({ ...prev, hiddenDeviceTypes: val })),
     };
 
     return (

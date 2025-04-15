@@ -26,7 +26,7 @@ export const ExperimentRow = ({ data, setData, children }) => {
         <TreeRow
             data={data}
             setData={setData}
-            boldName={data === currTrial.experiment}
+            boldName={data === currTrial?.experiment}
             components={
                 <>
                     <DateProperty

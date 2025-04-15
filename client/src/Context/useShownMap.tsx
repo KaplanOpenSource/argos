@@ -1,14 +1,13 @@
 import { useContext } from "react";
-import { useExperimentProvider } from "./ExperimentProvider";
 import { ActionsOnMapContext } from "../Map/ActionsOnMapContext";
 import type { LatLngTuple, Map as LeafletMap } from 'leaflet';
 import { IExperiment, IImageStandalone } from "../types/types";
 import { CoordsSpan } from "../Experiment/CoordsSpan";
+import { useChosenTrial } from "./useChosenTrial";
 
 export const useShownMap = ({ }) => {
-    const { setShownMap, currTrial } = useExperimentProvider();
     const { addActionOnMap } = useContext(ActionsOnMapContext);
-    const experiment: IExperiment | undefined = currTrial?.experiment;
+    const { experiment, chooseShownMap } = useChosenTrial();
 
     const imageHasDimensions = (stand: IImageStandalone) => {
         return (stand.ytop !== undefined &&
@@ -36,17 +35,18 @@ export const useShownMap = ({ }) => {
     }
 
     const switchToMap = (mapName: string | undefined) => {
-        if (experiment) {
-            const s = experiment.imageStandalone?.find(s => s.name === mapName);
+        const exp = experiment();
+        if (exp) {
+            const s = exp.imageStandalone?.find(s => s.name === mapName);
             if (s) {
-                setShownMap(s.name);
+                chooseShownMap(s.name);
                 setTimeout(() => {
                     fitBoundsToImage(s);
                 }, 200);
             } else {
-                setShownMap(undefined);
+                chooseShownMap(undefined);
                 setTimeout(() => {
-                    fitBoundsToExperiment(experiment);
+                    fitBoundsToExperiment(exp);
                 }, 200);
             }
         }
