@@ -6,17 +6,18 @@ import { assignUuids } from "./TrackUuidUtils";
 import { useTokenStore } from "./useTokenStore";
 import { useUndoRedo } from "../App/UndoRedo/useUndoRedo";
 import { useExperiments } from "./useExperiments";
+import { useChosenTrial } from "./useChosenTrial";
 
 const experimentContext = createContext();
 
 export const ExperimentProvider = ({ children }) => {
     const [state, setState] = useState({
-        currTrial: {},
         showImagePlacement: false,
         hiddenDeviceTypes: {},
     });
 
     const { setExperiment, setAllExperiments, experiments, getExperiment } = useExperiments();
+    const { experiment, trialType, trial, shownMap, chooseTrial, chooseShownMap } = useChosenTrial();
 
     const { isLoggedIn } = useTokenStore();
     const {
@@ -65,50 +66,56 @@ export const ExperimentProvider = ({ children }) => {
         return {};
     }
 
-    const FindTrialByIndices = (currTrial, allExperiments) => {
-        if (currTrial.experimentIndex === undefined) {
-            return {};
-        }
-        const experiment = allExperiments[currTrial.experimentIndex];
-        if (currTrial.trialIndex === undefined) {
-            return {
-                ...currTrial,
-                experiment
-            }
-        }
-        const trialType = ((experiment || {}).trialTypes || [])[currTrial.trialTypeIndex];
-        const trial = ((trialType || {}).trials || [])[currTrial.trialIndex];
-        return {
-            ...currTrial,
-            experiment,
-            trialType,
-            trial,
-        }
-    }
+    // const FindTrialByIndices = (currTrial, allExperiments) => {
+    //     if (currTrial.experimentIndex === undefined) {
+    //         return {};
+    //     }
+    //     const experiment = allExperiments[currTrial.experimentIndex];
+    //     if (currTrial.trialIndex === undefined) {
+    //         return {
+    //             ...currTrial,
+    //             experiment
+    //         }
+    //     }
+    //     const trialType = ((experiment || {}).trialTypes || [])[currTrial.trialTypeIndex];
+    //     const trial = ((trialType || {}).trials || [])[currTrial.trialIndex];
+    //     return {
+    //         ...currTrial,
+    //         experiment,
+    //         trialType,
+    //         trial,
+    //     }
+    // }
 
     const ReplaceUrlByTrial = (currTrial) => {
-        const { experimentName, trialTypeName, trialName } = currTrial;
-        replaceUrlParams({ experimentName, trialTypeName, trialName, });
+        replaceUrlParams({
+            experimentName: currTrial?.experiment?.name,
+            trialTypeName: currTrial?.trialType?.name,
+            trialName: currTrial?.trial?.name,
+        });
     }
 
-    const GetCurrTrial = () => {
-        return FindTrialByIndices(state.currTrial, experiments);
-    }
+    // const GetCurrTrial = () => {
+    //     return FindTrialByIndices(state.currTrial, experiments);
+    // }
 
-    const currTrial = GetCurrTrial();
+    const currTrial = {
+        experiment,
+        trialType,
+        trial,
+        shownMap,
+        experimentName: experiment?.name, // this field is for legacy
+        trialTypeName: trialType?.name, // this field is for legacy
+        trialName: trial?.name, // this field is for legacy
+    };
 
     const setCurrTrial = ({ experimentName, trialTypeName, trialName }) => {
-        const t = FindTrialByName({ experimentName, trialTypeName, trialName }, experiments);
-        ReplaceUrlByTrial(t); // this is has side-effects, should be outside of setState func
-        setState(prev => {
-            const sameExperiment = prev.currTrial.experimentName === t?.experimentName;
-            const hiddenDeviceTypes = sameExperiment ? prev.hiddenDeviceTypes : {};
-            return {
-                ...prev,
-                hiddenDeviceTypes,
-                currTrial: t,
-            };
-        });
+        const sameExperiment = experimentName === experiment?.name;
+        chooseTrial({ experimentName, trialTypeName, trialName });
+        ReplaceUrlByTrial(currTrial); // this is has side-effects, should be outside of setState func
+        if (!sameExperiment) {
+            setState(prev => ({ ...prev, hiddenDeviceTypes: {} }));
+        }
     }
 
     const setShownMap = (shownMapName) => {
