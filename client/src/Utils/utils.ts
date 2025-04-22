@@ -15,8 +15,8 @@ export function createNewName(currentNamedItems, nameTemplate, separator = ' ') 
     }
 }
 
-export function replaceUrlParams(params) {
-    const u = new URL(window.location);
+export function replaceUrlParams(params: { [s: string]: any; }) {
+    const u = new URL(window.location.href);
     for (const [k, v] of Object.entries(params)) {
         if (v !== undefined) {
             u.searchParams.set(k, v);
@@ -24,11 +24,11 @@ export function replaceUrlParams(params) {
             u.searchParams.delete(k);
         }
     }
-    window.history.replaceState(null, null, u.href);
+    window.history.replaceState(null, '', u.href);
 }
 
-export function parseUrlParams() {
-    const u = new URL(window.location);
+export function parseUrlParams(): { [s: string]: any; } {
+    const u = new URL(window.location.href);
     const ret = {};
     for (const k of u.searchParams.keys()) {
         ret[k] = u.searchParams.get(k);
