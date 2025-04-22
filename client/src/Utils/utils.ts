@@ -1,9 +1,11 @@
-export function camelCaseToWords(s) {
+import { INamed } from "../types/types";
+
+export function camelCaseToWords(s: string): string {
     const result = s.replace(/([A-Z])/g, ' $1');
     return result.charAt(0).toUpperCase() + result.slice(1);
 }
 
-export function createNewName(currentNamedItems, nameTemplate, separator = ' ') {
+export function createNewName(currentNamedItems: INamed[], nameTemplate: string, separator = ' '): string {
     if (!(currentNamedItems || []).find(t => t.name === nameTemplate)) {
         return nameTemplate;
     }
@@ -36,7 +38,7 @@ export function parseUrlParams(): { [s: string]: any; } {
     return ret;
 }
 
-export function changeByName(arr, name, newData) {
+export function changeByName(arr: INamed[] | undefined, name: any, newData: undefined) {
     if (arr === undefined) {
         return [newData];
     }
@@ -52,19 +54,6 @@ export function changeByName(arr, name, newData) {
     return theItems;
 }
 
-export function splitLast(arr) {
-    if (!arr || !arr.length) {
-        return [arr, undefined];
-    }
-    return [arr.slice(0, -1), arr.at(-1)];
-}
-
-export function change(thing, func) {
-    const draft = structuredClone(thing);
-    func(draft);
-    return draft;
-}
-
-export const locationToString = (coords) => {
+export const locationToString = (coords: number[]): string => {
     return coords.map(x => Math.round(x * 1e8) / 1e8).join(',')
 }

@@ -1,8 +1,11 @@
 export type ICoordinates = [number, number];
 export type ITrackUuid = { trackUuid?: string };
 
-export interface IImage {
+export interface INamed {
     name?: string;
+};
+
+export interface IImage extends INamed {
     filename?: string;
     height?: number;
     width?: number;
@@ -38,43 +41,36 @@ export interface IDeviceOnTrial extends IDeviceTypeAndItem {
     attributes?: Array<IAttribute>;
 };
 
-export interface ITrial {
-    name?: string;
+export interface ITrial extends INamed {
     createdDate?: string;
     devicesOnTrial?: Array<IDeviceOnTrial>
     attributes?: Array<IAttribute>;
     description?: string;
 }
 
-export interface IAttribute {
-    name?: string;
+export interface IAttribute extends INamed {
     value?: any;
 }
 
-export interface IDevice {
-    name?: string;
+export interface IDevice extends INamed {
     attributes?: Array<IAttribute>;
 }
 
-export interface IShape {
-    name?: string;
+export interface IShape extends INamed {
     coordinates?: Array<ICoordinates>;
     center?: ICoordinates;
     radius?: number;
 };
 
-export interface ITrialType {
-    name?: string;
+export interface ITrialType extends INamed {
     trials?: Array<ITrial>;
     attributeTypes?: Array<IAttributeType>;
 };
 
-export interface ISelectOption {
-    name?: string;
+export interface ISelectOption extends INamed {
 };
 
-export interface IAttributeType {
-    name?: string;
+export interface IAttributeType extends INamed {
     type?: string;
     scope?: string;
     multiple?: boolean;
@@ -83,15 +79,13 @@ export interface IAttributeType {
     options?: Array<ISelectOption>;
 };
 
-export interface IDeviceType {
-    name?: string;
+export interface IDeviceType extends INamed {
     devices?: Array<IDevice>;
     attributeTypes?: Array<IAttributeType>;
 };
 
-export interface IExperiment {
+export interface IExperiment extends INamed {
     version?: string;
-    name?: string;
     startDate?: string;
     endDate?: string;
     description?: string;
