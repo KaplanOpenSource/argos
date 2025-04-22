@@ -32,27 +32,44 @@ export const AttributeType = ({
                 console.log(v)
                 const { experiment: exp, deviceType, trialType } = containers;
                 const experiment = structuredClone(exp as IExperiment);
-                if (experiment && deviceType) {
-                    const dt = experiment.deviceTypes?.find(dt => dt.name === deviceType.name);
-                    for (const at of dt?.attributeTypes || []) {
-                        if (at.name === data.name) {
-                            at.name = v.name;
-                        }
-                    }
-                    for (const dv of dt?.devices || []) {
-                        for (const at of dv?.attributes || []) {
+                if (experiment) {
+                    if (deviceType) {
+                        const dt = experiment.deviceTypes?.find(x => x.name === deviceType.name);
+                        for (const at of dt?.attributeTypes || []) {
                             if (at.name === data.name) {
                                 at.name = v.name;
                             }
                         }
-                    }
-                    for (const tt of experiment.trialTypes || []) {
-                        for (const tr of tt?.trials || []) {
-                            for (const dv of tr?.devicesOnTrial || []) {
-                                for (const at of dv?.attributes || []) {
-                                    if (at.name === data.name) {
-                                        at.name = v.name;
+                        for (const dv of dt?.devices || []) {
+                            for (const at of dv?.attributes || []) {
+                                if (at.name === data.name) {
+                                    at.name = v.name;
+                                }
+                            }
+                        }
+                        for (const tt of experiment.trialTypes || []) {
+                            for (const tr of tt?.trials || []) {
+                                for (const dv of tr?.devicesOnTrial || []) {
+                                    for (const at of dv?.attributes || []) {
+                                        if (at.name === data.name) {
+                                            at.name = v.name;
+                                        }
                                     }
+                                }
+                            }
+                        }
+                    }
+                    if (trialType) {
+                        const tt = experiment.trialTypes?.find(x => x.name === trialType.name);
+                        for (const at of tt?.attributeTypes || []) {
+                            if (at.name === data.name) {
+                                at.name = v.name;
+                            }
+                        }
+                        for (const tr of tt?.trials || []) {
+                            for (const at of tr?.attributes || []) {
+                                if (at.name === data.name) {
+                                    at.name = v.name;
                                 }
                             }
                         }
