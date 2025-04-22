@@ -29,7 +29,6 @@ export const AttributeType = ({
         <TreeRow
             data={data}
             setData={v => {
-                console.log(v)
                 const { experiment: exp, deviceType, trialType } = containers;
                 const experiment = structuredClone(exp as IExperiment);
                 if (experiment) {
@@ -50,9 +49,11 @@ export const AttributeType = ({
                         for (const tt of experiment.trialTypes || []) {
                             for (const tr of tt?.trials || []) {
                                 for (const dv of tr?.devicesOnTrial || []) {
-                                    for (const at of dv?.attributes || []) {
-                                        if (at.name === data.name) {
-                                            at.name = v.name;
+                                    if (dv?.deviceTypeName === deviceType.name) {
+                                        for (const at of dv?.attributes || []) {
+                                            if (at.name === data.name) {
+                                                at.name = v.name;
+                                            }
                                         }
                                     }
                                 }
