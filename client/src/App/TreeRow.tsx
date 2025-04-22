@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import { Box } from "@mui/material";
 import { TreeItem } from "@mui/x-tree-view/TreeItem";
 import { TextFieldDebounce } from "../Utils/TextFieldDebounce";
@@ -18,8 +18,8 @@ export const TreeRow = ({
 }: {
     data: IData,
     setData: (newData: IData) => any,
-    components: any,
-    children: any,
+    components: ReactNode,
+    children?: ReactNode,
     boldName?: boolean,
     validateName?: (val: string) => string,
 }) => {

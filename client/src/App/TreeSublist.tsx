@@ -25,7 +25,7 @@ export const TreeSublist = ({
     setData: (newData: INamed) => void,
     newDataCreator?: () => any,
     parentKey: string,
-    noAddButton: boolean,
+    noAddButton?: boolean,
     components: ReactNode,
     children: ReactNode,
 }) => {

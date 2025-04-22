@@ -2,9 +2,8 @@ import { FormControlLabel, IconButton, Switch } from "@mui/material";
 import { TreeRow } from "../App/TreeRow";
 import { AttributeValue, VALUE_TYPE_SELECT, VALUE_TYPE_DEFAULT, valueTypes } from "./AttributeValue";
 import DeleteIcon from '@mui/icons-material/Delete';
-import { TreeSublist } from "../App/TreeSublist";
-import { BooleanProperty } from "../Property/BooleanProperty";
 import { SelectProperty } from "../Property/SelectProperty";
+import { AttributeTypeOptions } from "./AttributeTypeOptions";
 
 export const SCOPE_TRIAL = "Trial";
 export const SCOPE_EXPERIMENT = "Device definition";
@@ -57,44 +56,10 @@ export const AttributeType = ({ data, setData, isOfDevice }) => {
             }
         >
             {data.type === VALUE_TYPE_SELECT &&
-                <TreeSublist
-                    parentKey={data.trackUuid}
+                <AttributeTypeOptions
                     data={data}
-                    fieldName='options'
-                    nameTemplate='New Option'
                     setData={setData}
-                    components={
-                        <>
-                            <BooleanProperty
-                                label={'multiple'}
-                                data={data.multiple}
-                                setData={v => setData({ ...data, multiple: v })}
-                            />
-                        </>
-                    }
-                >
-                    {
-                        (data.options || []).map(itemData => (
-                            <TreeRow
-                                key={itemData.trackUuid}
-                                data={itemData}
-                                setData={newData => {
-                                    setData({ ...data, options: changeByName(data.options, itemData.name, newData) });
-                                }}
-                                components={
-                                    <>
-                                        <IconButton
-                                            onClick={() => setData({ ...data, options: data.options.filter(t => t.name !== itemData.name) })}
-                                        >
-                                            <DeleteIcon />
-                                        </IconButton>
-                                    </>
-                                }
-                            >
-                            </TreeRow>
-                        ))
-                    }
-                </TreeSublist>
+                />
             }
             <AttributeValue
                 label='Default'
