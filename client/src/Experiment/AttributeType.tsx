@@ -5,7 +5,7 @@ import { AttributeValue, VALUE_TYPE_SELECT, VALUE_TYPE_DEFAULT, valueTypes } fro
 import DeleteIcon from '@mui/icons-material/Delete';
 import { SelectProperty } from "../Property/SelectProperty";
 import { AttributeTypeOptions } from "./AttributeTypeOptions";
-import { IAttributeType, IDeviceType, IExperiment, INamed, ITrialType } from "../types/types";
+import { IAttribute, IAttributeType, IDeviceType, IExperiment, INamed, ITrialType } from "../types/types";
 import { useExperiments } from "../Context/useExperiments";
 
 export const SCOPE_TRIAL = "Trial";
@@ -25,59 +25,59 @@ export const AttributeType = ({
     containers: { [obj: string]: INamed | undefined },
 }) => {
     const { setExperiment } = useExperiments();
+
+    const getAttributeContainers = (clonedExp: IExperiment) => {
+        const { deviceType, trialType } = containers;
+        let attributeTypes: IAttributeType[] = [];
+        let attributes: IAttribute[] = [];
+        if (deviceType) {
+            const dt = clonedExp.deviceTypes?.find(x => x.name === deviceType.name);
+            attributeTypes = dt?.attributeTypes || [];
+            for (const dv of dt?.devices || []) {
+                attributes.push(...(dv?.attributes || []));
+            }
+            for (const tt of clonedExp.trialTypes || []) {
+                for (const tr of tt?.trials || []) {
+                    for (const dv of tr?.devicesOnTrial || []) {
+                        if (dv?.deviceTypeName === deviceType.name) {
+                            attributes.push(...(dv?.attributes || []));
+                        }
+                    }
+                }
+            }
+        }
+        if (trialType) {
+            const tt = clonedExp.trialTypes?.find(x => x.name === trialType.name);
+            attributeTypes = tt?.attributeTypes || [];
+            for (const tr of tt?.trials || []) {
+                attributes.push(...(tr?.attributes || []));
+            }
+        }
+        return { attributeTypes, attributes };
+    }
+    
+    const handleRename = (v: INamed) => {
+        const experiment = structuredClone(containers.experiment as IExperiment);
+        if (experiment) {
+            const { attributeTypes, attributes } = getAttributeContainers(experiment);
+            for (const at of attributeTypes) {
+                if (at.name === data.name) {
+                    at.name = v.name;
+                }
+            }
+            for (const at of attributes) {
+                if (at.name === data.name) {
+                    at.name = v.name;
+                }
+            }
+            setExperiment(experiment?.name!, experiment);
+        }
+    };
+
     return (
         <TreeRow
             data={data}
-            setData={v => {
-                const { experiment: exp, deviceType, trialType } = containers;
-                const experiment = structuredClone(exp as IExperiment);
-                if (experiment) {
-                    if (deviceType) {
-                        const dt = experiment.deviceTypes?.find(x => x.name === deviceType.name);
-                        for (const at of dt?.attributeTypes || []) {
-                            if (at.name === data.name) {
-                                at.name = v.name;
-                            }
-                        }
-                        for (const dv of dt?.devices || []) {
-                            for (const at of dv?.attributes || []) {
-                                if (at.name === data.name) {
-                                    at.name = v.name;
-                                }
-                            }
-                        }
-                        for (const tt of experiment.trialTypes || []) {
-                            for (const tr of tt?.trials || []) {
-                                for (const dv of tr?.devicesOnTrial || []) {
-                                    if (dv?.deviceTypeName === deviceType.name) {
-                                        for (const at of dv?.attributes || []) {
-                                            if (at.name === data.name) {
-                                                at.name = v.name;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    if (trialType) {
-                        const tt = experiment.trialTypes?.find(x => x.name === trialType.name);
-                        for (const at of tt?.attributeTypes || []) {
-                            if (at.name === data.name) {
-                                at.name = v.name;
-                            }
-                        }
-                        for (const tr of tt?.trials || []) {
-                            for (const at of tr?.attributes || []) {
-                                if (at.name === data.name) {
-                                    at.name = v.name;
-                                }
-                            }
-                        }
-                    }
-                    setExperiment(experiment?.name!, experiment);
-                }
-            }}
+            setData={handleRename}
             components={
                 <>
                     <FormControlLabel
