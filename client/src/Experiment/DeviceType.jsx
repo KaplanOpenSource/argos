@@ -62,7 +62,7 @@ export const DeviceType = ({ data, setData, experiment }) => {
                     <ButtonTooltip
                         tooltip="Add new device"
                         onClick={() => {
-                            const name = createNewName(data.devices, 'New Device');
+                            const name = createNewName(data.devices, 'Device');
                             setData({ ...data, devices: [...(data.devices || []), assignUuids({ name })] });
                         }}
                     >

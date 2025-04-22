@@ -18,7 +18,7 @@ export const AttributeTypesDialog = ({ data, setData, isOfDevice, containers }) 
                 parentKey={data.trackUuid}
                 data={data}
                 fieldName='attributeTypes'
-                nameTemplate='New Attribute Type'
+                nameTemplate='Attribute Type'
                 setData={setData}
                 newDataCreator={() => {
                     return {

@@ -13,7 +13,7 @@ export const DeviceTypesList = ({ data, setData }) => {
             parentKey={data.trackUuid}
             data={data}
             fieldName='deviceTypes'
-            nameTemplate='New Device Type'
+            nameTemplate='Device Type'
             setData={setData}
             newDataCreator={() => {
                 return {

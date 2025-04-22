@@ -5,8 +5,9 @@ import { AttributeValue, VALUE_TYPE_SELECT, VALUE_TYPE_DEFAULT, valueTypes } fro
 import DeleteIcon from '@mui/icons-material/Delete';
 import { SelectProperty } from "../Property/SelectProperty";
 import { AttributeTypeOptions } from "./AttributeTypeOptions";
-import { IAttribute, IAttributeType, IDeviceType, IExperiment, INamed, ITrialType } from "../types/types";
+import { IAttribute, IAttributeType, IExperiment, INamed } from "../types/types";
 import { useExperiments } from "../Context/useExperiments";
+import { remove } from "lodash";
 
 export const SCOPE_TRIAL = "Trial";
 export const SCOPE_EXPERIMENT = "Device definition";
@@ -26,21 +27,23 @@ export const AttributeType = ({
 }) => {
     const { setExperiment } = useExperiments();
 
-    const getAttributeContainers = (clonedExp: IExperiment) => {
+    const getAttributeContainers = (
+        clonedExp: IExperiment,
+        onTypesArr: (arr: IAttributeType[]) => void,
+        onAttrsArr: (arr: IAttribute[]) => void,
+    ) => {
         const { deviceType, trialType } = containers;
-        let attributeTypes: IAttributeType[] = [];
-        let attributes: IAttribute[] = [];
         if (deviceType) {
             const dt = clonedExp.deviceTypes?.find(x => x.name === deviceType.name);
-            attributeTypes = dt?.attributeTypes || [];
+            onTypesArr(dt?.attributeTypes || []);
             for (const dv of dt?.devices || []) {
-                attributes.push(...(dv?.attributes || []));
+                onAttrsArr(dv?.attributes || []);
             }
             for (const tt of clonedExp.trialTypes || []) {
                 for (const tr of tt?.trials || []) {
                     for (const dv of tr?.devicesOnTrial || []) {
                         if (dv?.deviceTypeName === deviceType.name) {
-                            attributes.push(...(dv?.attributes || []));
+                            onAttrsArr(dv?.attributes || []);
                         }
                     }
                 }
@@ -48,28 +51,43 @@ export const AttributeType = ({
         }
         if (trialType) {
             const tt = clonedExp.trialTypes?.find(x => x.name === trialType.name);
-            attributeTypes = tt?.attributeTypes || [];
+            onTypesArr(tt?.attributeTypes || []);
             for (const tr of tt?.trials || []) {
-                attributes.push(...(tr?.attributes || []));
+                onAttrsArr(tr?.attributes || []);
             }
         }
-        return { attributeTypes, attributes };
     }
-    
+
     const handleRename = (v: INamed) => {
         const experiment = structuredClone(containers.experiment as IExperiment);
         if (experiment) {
-            const { attributeTypes, attributes } = getAttributeContainers(experiment);
-            for (const at of attributeTypes) {
-                if (at.name === data.name) {
-                    at.name = v.name;
+            getAttributeContainers(experiment,
+                (types) => {
+                    for (const at of types) {
+                        if (at.name === data.name) {
+                            at.name = v.name;
+                        }
+                    }
+                },
+                (attrs) => {
+                    for (const at of attrs) {
+                        if (at.name === data.name) {
+                            at.name = v.name;
+                        }
+                    }
                 }
-            }
-            for (const at of attributes) {
-                if (at.name === data.name) {
-                    at.name = v.name;
-                }
-            }
+            );
+            setExperiment(experiment?.name!, experiment);
+        }
+    };
+
+    const handleDelete = () => {
+        const experiment = structuredClone(containers.experiment as IExperiment);
+        if (experiment) {
+            getAttributeContainers(experiment,
+                (types) => remove(types, (at) => at.name === data.name),
+                (attrs) => remove(attrs, (at) => at.name === data.name),
+            );
             setExperiment(experiment?.name!, experiment);
         }
     };
@@ -112,7 +130,7 @@ export const AttributeType = ({
                         tooltipTitle="Where can this attribute's value be changed"
                     />
                     <IconButton
-                        onClick={() => setData(undefined)}
+                        onClick={handleDelete}
                     >
                         <DeleteIcon />
                     </IconButton>
