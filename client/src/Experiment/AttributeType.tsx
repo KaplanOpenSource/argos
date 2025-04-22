@@ -5,7 +5,8 @@ import { AttributeValue, VALUE_TYPE_SELECT, VALUE_TYPE_DEFAULT, valueTypes } fro
 import DeleteIcon from '@mui/icons-material/Delete';
 import { SelectProperty } from "../Property/SelectProperty";
 import { AttributeTypeOptions } from "./AttributeTypeOptions";
-import { IAttributeType } from "../types/types";
+import { IAttributeType, IDeviceType, IExperiment, INamed, ITrialType } from "../types/types";
+import { useExperiments } from "../Context/useExperiments";
 
 export const SCOPE_TRIAL = "Trial";
 export const SCOPE_EXPERIMENT = "Device definition";
@@ -16,16 +17,48 @@ export const AttributeType = ({
     data,
     setData,
     isOfDevice,
+    containers,
 }: {
     data: IAttributeType,
     setData: (newData: IAttributeType | undefined) => void,
     isOfDevice: boolean,
+    containers: { [obj: string]: INamed | undefined },
 }) => {
+    const { setExperiment } = useExperiments();
     return (
         <TreeRow
             data={data}
             setData={v => {
-                setData(v);
+                console.log(v)
+                const { experiment: exp, deviceType, trialType } = containers;
+                const experiment = structuredClone(exp as IExperiment);
+                if (experiment && deviceType) {
+                    const dt = experiment.deviceTypes?.find(dt => dt.name === deviceType.name);
+                    for (const at of dt?.attributeTypes || []) {
+                        if (at.name === data.name) {
+                            at.name = v.name;
+                        }
+                    }
+                    for (const dv of dt?.devices || []) {
+                        for (const at of dv?.attributes || []) {
+                            if (at.name === data.name) {
+                                at.name = v.name;
+                            }
+                        }
+                    }
+                    for (const tt of experiment.trialTypes || []) {
+                        for (const tr of tt?.trials || []) {
+                            for (const dv of tr?.devicesOnTrial || []) {
+                                for (const at of dv?.attributes || []) {
+                                    if (at.name === data.name) {
+                                        at.name = v.name;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    setExperiment(experiment?.name!, experiment);
+                }
             }}
             components={
                 <>

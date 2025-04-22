@@ -33,6 +33,7 @@ export const TrialType = ({ data, setData, experiment }) => {
                         data={data}
                         setData={setData}
                         isOfDevice={false}
+                        containers={{ experiment, trialType: data }}
                     />
                     <Typography>
                         {trials.length} Trials

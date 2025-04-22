@@ -6,7 +6,7 @@ import { changeByName } from "../Utils/utils";
 import { TreeView } from "@mui/x-tree-view/TreeView";
 import { VALUE_TYPE_DEFAULT } from "./AttributeValue";
 
-export const AttributeTypesDialog = ({ data, setData, isOfDevice }) => {
+export const AttributeTypesDialog = ({ data, setData, isOfDevice, containers }) => {
     return (
         <TreeView
             defaultCollapseIcon={<ExpandMoreIcon />}
@@ -38,6 +38,7 @@ export const AttributeTypesDialog = ({ data, setData, isOfDevice }) => {
                                 });
                             }}
                             isOfDevice={isOfDevice}
+                            containers={containers}
                         />
                     ))
                 }

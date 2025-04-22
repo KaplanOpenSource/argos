@@ -81,6 +81,7 @@ export const DeviceType = ({ data, setData, experiment }) => {
                         data={data}
                         setData={setData}
                         isOfDevice={true}
+                        containers={{ experiment, deviceType: data }}
                     />
                     <ButtonTooltip
                         tooltip={isHidden ? "Show device type" : "Hide device type"}

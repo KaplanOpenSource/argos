@@ -4,7 +4,7 @@ import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { AttributeTypesDialog } from "./AttributeTypesDialog";
 
-export const AttributeTypesDialogButton = ({ data, setData, isOfDevice }) => {
+export const AttributeTypesDialogButton = ({ data, setData, isOfDevice, containers }) => {
     const [anchorEl, setAnchorEl] = useState(null);
     return (
         // ClickAwayListener onClickAway={() => setAnchorEl(null)}>
@@ -37,6 +37,7 @@ export const AttributeTypesDialogButton = ({ data, setData, isOfDevice }) => {
                         data={data}
                         setData={setData}
                         isOfDevice={isOfDevice}
+                        containers={containers}
                     />
                 </Paper>
             </Popover>
