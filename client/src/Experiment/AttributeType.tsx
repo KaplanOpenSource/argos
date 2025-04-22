@@ -1,19 +1,32 @@
+import React from "react";
 import { FormControlLabel, IconButton, Switch } from "@mui/material";
 import { TreeRow } from "../App/TreeRow";
 import { AttributeValue, VALUE_TYPE_SELECT, VALUE_TYPE_DEFAULT, valueTypes } from "./AttributeValue";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { SelectProperty } from "../Property/SelectProperty";
 import { AttributeTypeOptions } from "./AttributeTypeOptions";
+import { IAttributeType } from "../types/types";
 
 export const SCOPE_TRIAL = "Trial";
 export const SCOPE_EXPERIMENT = "Device definition";
 export const SCOPE_EXPERIMENT_ALT = "Experiment" // legacy;
 export const SCOPE_CONSTANT = "Constant";
-export const AttributeType = ({ data, setData, isOfDevice }) => {
+
+export const AttributeType = ({
+    data,
+    setData,
+    isOfDevice,
+}: {
+    data: IAttributeType,
+    setData: (newData: IAttributeType | undefined) => void,
+    isOfDevice: boolean,
+}) => {
     return (
         <TreeRow
             data={data}
-            setData={setData}
+            setData={v => {
+                setData(v);
+            }}
             components={
                 <>
                     <FormControlLabel

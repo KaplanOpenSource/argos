@@ -35,25 +35,26 @@ export interface IDeviceTypeAndItem {
     deviceItemName: string;
 }
 
-export interface IDeviceOnTrial extends IDeviceTypeAndItem {
-    location?: ILocation;
-    containedIn?: IDeviceTypeAndItem
-    attributes?: Array<IAttribute>;
-};
-
-export interface ITrial extends INamed {
-    createdDate?: string;
-    devicesOnTrial?: Array<IDeviceOnTrial>
-    attributes?: Array<IAttribute>;
-    description?: string;
-}
-
 export interface IAttribute extends INamed {
     value?: any;
 }
 
-export interface IDevice extends INamed {
+export interface IHasAttributes {
     attributes?: Array<IAttribute>;
+}
+
+export interface IDeviceOnTrial extends IDeviceTypeAndItem, IHasAttributes {
+    location?: ILocation;
+    containedIn?: IDeviceTypeAndItem
+};
+
+export interface ITrial extends INamed, IHasAttributes {
+    createdDate?: string;
+    devicesOnTrial?: Array<IDeviceOnTrial>
+    description?: string;
+}
+
+export interface IDevice extends INamed, IHasAttributes {
 }
 
 export interface IShape extends INamed {
