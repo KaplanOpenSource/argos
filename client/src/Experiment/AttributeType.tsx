@@ -62,20 +62,8 @@ export const AttributeType = ({
         const experiment = structuredClone(containers.experiment as IExperiment);
         if (experiment) {
             getAttributeContainers(experiment,
-                (types) => {
-                    for (const at of types) {
-                        if (at.name === data.name) {
-                            at.name = v.name;
-                        }
-                    }
-                },
-                (attrs) => {
-                    for (const at of attrs) {
-                        if (at.name === data.name) {
-                            at.name = v.name;
-                        }
-                    }
-                }
+                (types) => types.filter(at => at.name === data.name).forEach(at => at.name = v.name),
+                (attrs) => attrs.filter(at => at.name === data.name).forEach(at => at.name = v.name),
             );
             setExperiment(experiment?.name!, experiment);
         }
