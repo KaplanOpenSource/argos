@@ -9,6 +9,10 @@ echo $'\nbuild client\n====='
 cd client/
 npm install
 npm run build
+if [ $? -ne 0 ]; then
+  echo "Build failed, stopping script"
+  exit 1
+fi
 cd -
 git rev-parse HEAD > client/dist/commit.txt
 
