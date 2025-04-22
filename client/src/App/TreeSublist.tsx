@@ -1,3 +1,4 @@
+import React, { ReactNode } from "react";
 import { Box, IconButton, Tooltip, Typography } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import { camelCaseToWords, createNewName } from "../Utils/utils";
@@ -5,6 +6,7 @@ import { TreeItem } from "@mui/x-tree-view/TreeItem";
 import { assignUuids } from "../Context/TrackUuidUtils";
 import { ExperimentTreeNodesExpandedContext } from "../Experiment/ExperimentTreeNodesExpandedProvider";
 import { useContext } from "react";
+import { INamed } from "../types/types";
 
 export const TreeSublist = ({
     nameTemplate,
@@ -16,6 +18,16 @@ export const TreeSublist = ({
     components,
     children,
     noAddButton,
+}: {
+    nameTemplate: string,
+    fieldName: string,
+    data: INamed,
+    setData: (newData: INamed) => void,
+    newDataCreator?: () => any,
+    parentKey: string,
+    noAddButton: boolean,
+    components: ReactNode,
+    children: ReactNode,
 }) => {
     const {
         addExpandedNode,
@@ -59,7 +71,7 @@ export const TreeSublist = ({
                                     e.stopPropagation();
                                     const name = createNewName(items, nameTemplate);
                                     const noNameData = newDataCreator ? newDataCreator() : {};
-                                    const theData = assignUuids({ name, ...noNameData });
+                                    const theData: INamed = assignUuids({ name, ...noNameData });
                                     setData({ ...data, [fieldName]: [...items, theData] });
                                     addExpandedNode(key);
                                 }}

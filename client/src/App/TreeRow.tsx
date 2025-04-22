@@ -4,9 +4,9 @@ import { TreeItem } from "@mui/x-tree-view/TreeItem";
 import { TextFieldDebounce } from "../Utils/TextFieldDebounce";
 import { useEffect } from "react";
 import { assignUuids } from "../Context/TrackUuidUtils";
-import { ITrackUuid } from "../types/types";
+import { INamed, ITrackUuid } from "../types/types";
 
-type IData = { name?: string; } & ITrackUuid;
+type IData = INamed & ITrackUuid;
 
 export const TreeRow = ({
     data,
