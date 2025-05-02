@@ -3,7 +3,7 @@ import { TreeRow } from "../App/TreeRow";
 import { useExperimentProvider } from "../Context/ExperimentProvider";
 import { useContext, useEffect } from "react";
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Download, Edit, ReadMore } from "@mui/icons-material";
+import { ArrowDropDown, ArrowDropUp, Download, Edit, ReadMore } from "@mui/icons-material";
 import { AttributeItemList } from "./AttributeItemList";
 import { ScopeEnum } from "../types/types";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
@@ -13,10 +13,12 @@ import { CoordsSpan } from "./CoordsSpan";
 import { ActionsOnMapContext } from "../Map/ActionsOnMapContext";
 import { RealMapName } from "../constants/constants";
 import { sum } from "lodash";
-import { Typography } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 import { UploadDevicesButton } from "../IO/UploadDevices/UploadDevicesButton";
 import { useDeviceSeletion } from "../Context/useDeviceSeletion";
 import { useChosenTrial } from "../Context/useChosenTrial";
+import { useExperiments } from "../Context/useExperiments";
+import { arraySwapItems } from "../Utils/utils";
 
 export const Trial = ({ data, setData, experiment, trialType, children }) => {
     const { selection } = useDeviceSeletion();
@@ -24,6 +26,7 @@ export const Trial = ({ data, setData, experiment, trialType, children }) => {
     const { chooseShownMap } = useChosenTrial();
     const { downloadGeojson, downloadZipCsv } = useTrialGeoJson();
     const { addActionOnMap } = useContext(ActionsOnMapContext);
+    const { setExperiment } = useExperiments();
 
     const cloneDevices = () => {
         const devicesOnTrial = [...(data.devicesOnTrial || [])];
@@ -104,6 +107,34 @@ export const Trial = ({ data, setData, experiment, trialType, children }) => {
                         experiment={experiment}
                         setTrialData={setData}
                     />
+                    <Stack direction='column' spacing={-1.5}>
+                        <ButtonTooltip sx={{ paddingBottom: 0 }}
+                            onClick={() => {
+                                const exp = structuredClone(experiment);
+                                const tt = exp.trialTypes.find(x => x.name === trialType.name);
+                                const i = tt.trials.findIndex(x => x.name === data.name);
+                                if (i > 0) {
+                                    arraySwapItems(tt.trials, i - 1, i);
+                                    setExperiment(exp.name, exp);
+                                }
+                            }}
+                        >
+                            <ArrowDropUp />
+                        </ButtonTooltip>
+                        <ButtonTooltip sx={{ paddingTop: 0 }}
+                            onClick={() => {
+                                const exp = structuredClone(experiment);
+                                const tt = exp.trialTypes.find(x => x.name === trialType.name);
+                                const i = tt.trials.findIndex(x => x.name === data.name);
+                                if (i < tt.trials.length - 1) {
+                                    arraySwapItems(tt.trials, i, i + 1);
+                                    setExperiment(exp.name, exp);
+                                }
+                            }}
+                        >
+                            <ArrowDropDown />
+                        </ButtonTooltip>
+                    </Stack>
                     {children}
                     <Typography>
                         {placedDevices}/{totalDevices}

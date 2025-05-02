@@ -57,3 +57,8 @@ export function changeByName(arr: INamed[] | undefined, name: string, newData: I
 export const locationToString = (coords: number[]): string => {
     return coords.map(x => Math.round(x * 1e8) / 1e8).join(',')
 }
+
+export const arraySwapItems = (arr: any[], i0: number, i1: number): any[] => {
+    arr[i0] = arr.splice(i1, 1, arr[i0])[0];
+    return arr;
+}
