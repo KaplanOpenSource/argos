@@ -35,6 +35,10 @@ export const ActionsOnMapDoer = ({ }) => {
         }
     }, [mapObject, actionsOnMap]);
 
+    useEffect(() => {
+        setMapBounds(mapObject.getBounds());
+    }, [mapObject]);
+
     return (
         <MapEventer
             directlyOnMap={false}
