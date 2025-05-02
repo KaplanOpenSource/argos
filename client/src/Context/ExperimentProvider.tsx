@@ -3,9 +3,30 @@ import { createContext, useContext, useState } from "react";
 import { RealMapName } from "../constants/constants";
 import { useExperiments } from "./useExperiments";
 import { useChosenTrial } from "./useChosenTrial";
-import { ICoordinates, IDeviceTypeAndItem, ITrial } from "../types/types";
+import { ICoordinates, IDeviceTypeAndItem, IExperiment, IImageStandalone, ITrial, ITrialType } from "../types/types";
 
-const experimentContext = createContext(null);
+interface IExperimentProviderStore {
+    experiments: any[]; // the experiments data
+    setCurrTrial: (params: { experimentName?: string; trialTypeName?: string; trialName?: string; }) => void; // a function to set the current trial
+    currTrial: {
+        experiment: IExperiment | undefined; // the current experiment
+        trialType: ITrialType | undefined; // the current trial type
+        trial: ITrial | undefined; // the current trial
+        shownMap: IImageStandalone | undefined; // the current shown map
+        shownMapName: string | undefined; // the name of the current shown map
+        experimentName: string | undefined; // the name of the current experiment (for legacy)
+        trialTypeName: string | undefined; // the name of the current trial type (for legacy)
+        trialName: string | undefined; // the name of the current trial (for legacy)
+    }; // the current trial information
+    setTrialData: (newTrialData: ITrial) => void; // a function to set the trial data
+    deleteDevice: (params: { experimentName: string; deviceItemName: string; deviceTypeName: string; }) => void; // a function to delete a device
+    deleteDeviceType: (params: { experimentName: string; deviceTypeName: string; }) => void; // a function to delete a device type
+    setLocationsToDevices: (deviceTypeItems: IDeviceTypeAndItem[], latlngs: (ICoordinates | { lat: number; lng: number; })[]) => number; // a function to set the locations of devices
+    showImagePlacement: boolean; // a state variable to control the visibility of the image placement
+    setShowImagePlacement: (val: boolean) => void; // a function to set the showImagePlacement state
+};
+
+const experimentContext = createContext<IExperimentProviderStore | null>(null);
 
 export const ExperimentProvider = ({ children }) => {
     const [state, setState] = useState({
@@ -13,7 +34,8 @@ export const ExperimentProvider = ({ children }) => {
     });
 
     const { setExperiment, experiments } = useExperiments();
-    const { experiment,
+    const {
+        experiment,
         trialType,
         trial,
         shownMap,
@@ -148,4 +170,4 @@ export const ExperimentProvider = ({ children }) => {
 }
 
 // useExperimentProvider should be at the end to avoid reload problems
-export const useExperimentProvider = () => useContext(experimentContext);
+export const useExperimentProvider = () => useContext(experimentContext)!;
