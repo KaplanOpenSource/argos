@@ -1,6 +1,6 @@
 import { DynamicFeed, PlayArrow } from "@mui/icons-material"
 import { Box, Popover, Stack } from "@mui/material"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { TextFieldDebounce } from "../Utils/TextFieldDebounce";
 import { AttributeItemList } from "./AttributeItemList";
 import { assignUuids } from "../Context/TrackUuidUtils";
@@ -25,6 +25,10 @@ export const AddMultipleDevices = ({ deviceType, addDevices }) => {
         addDevices(assignUuids(newDevices));
         setAnchorEl(null);
     }
+
+    useEffect(() => {
+        setPrefix(deviceType.name + "_");
+    }, [deviceType]);
 
     return (
         <>
