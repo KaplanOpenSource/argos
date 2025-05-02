@@ -33,7 +33,10 @@ export const AttributeValueGet = ({
 
     const setValue = (val) => {
         if (setData) {
-            const attrValue = { name: attrType.name, value: val };
+            let attrValue = undefined;
+            if(val !== undefined) {
+                attrValue = { name: attrType.name, value: val };
+            }
             setData({ ...data, attributes: changeByName(attributes, attrType.name, attrValue) });
         }
     };

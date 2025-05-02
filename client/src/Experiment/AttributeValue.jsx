@@ -28,7 +28,7 @@ export const AttributeValue = ({ type, label, data, setData, attrType, reduceNam
                 <TextFieldDebounceOutlined
                     label={label}
                     type="number"
-                    onChange={val => setData(val)}
+                    onChange={val => setData(val === '' ? undefined : val)}
                     value={data}
                     {...restProps}
                 />
