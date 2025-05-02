@@ -108,7 +108,9 @@ export const Trial = ({ data, setData, experiment, trialType, children }) => {
                         setTrialData={setData}
                     />
                     <Stack direction='column' spacing={-1.5}>
-                        <ButtonTooltip sx={{ paddingBottom: 0 }}
+                        <ButtonTooltip
+                            tooltip='Swap places with higher trial'
+                            sx={{ paddingBottom: 0 }}
                             onClick={() => {
                                 const exp = structuredClone(experiment);
                                 const tt = exp.trialTypes.find(x => x.name === trialType.name);
@@ -121,7 +123,9 @@ export const Trial = ({ data, setData, experiment, trialType, children }) => {
                         >
                             <ArrowDropUp />
                         </ButtonTooltip>
-                        <ButtonTooltip sx={{ paddingTop: 0 }}
+                        <ButtonTooltip
+                            tooltip='Swap places with lower trial'
+                            sx={{ paddingTop: 0 }}
                             onClick={() => {
                                 const exp = structuredClone(experiment);
                                 const tt = exp.trialTypes.find(x => x.name === trialType.name);
