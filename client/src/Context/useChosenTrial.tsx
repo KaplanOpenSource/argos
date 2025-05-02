@@ -22,6 +22,8 @@ interface ChosenTrialStore {
     chooseShownMap: (shownMapName: string | undefined) => void,
     isTrialChosen: () => boolean,
     isExperimentChosen: () => boolean,
+    obtainTrial: (experiment: IExperiment | undefined) => { trialType: ITrialType | undefined, trial: ITrial | undefined },
+    setTrialIntoExp: (newTrialData: ITrial, experiment: IExperiment | undefined) => boolean,
 }
 
 export const useChosenTrial = create<ChosenTrialStore>()((set, get) => {
@@ -43,10 +45,10 @@ export const useChosenTrial = create<ChosenTrialStore>()((set, get) => {
             return useExperiments.getState().experiments[get().chosenNames.experiment?.index ?? 1e6];
         },
         trialType: () => {
-            return (get().experiment()?.trialTypes || [])[get().chosenNames.trialType?.index ?? 1e6];
+            return get().obtainTrial(get().experiment()).trialType;
         },
         trial: () => {
-            return (get().trialType()?.trials || [])[get().chosenNames.trial?.index ?? 1e6];
+            return get().obtainTrial(get().experiment()).trial;
         },
         shownMap: undefined,
         chosenNames: {},
@@ -73,5 +75,22 @@ export const useChosenTrial = create<ChosenTrialStore>()((set, get) => {
         },
         isTrialChosen: () => get().chosenNames.trial !== undefined, // TODO: check if zustand has computed
         isExperimentChosen: () => get().chosenNames.experiment !== undefined,
+        obtainTrial: (experiment: IExperiment | undefined) => {
+            const trialType = (experiment?.trialTypes || [])[get().chosenNames.trialType?.index ?? 1e6];
+            const trial = (trialType?.trials || [])[get().chosenNames.trial?.index ?? 1e6];
+            return { trialType, trial };
+        },
+        setTrialIntoExp: (newTrialData: ITrial, intoExperiment: IExperiment | undefined) => {
+            const tti = get().chosenNames.trialType?.index;
+            const tri = get().chosenNames.trial?.index;
+            const trialType = (intoExperiment?.trialTypes || [])[tti ?? 1e6];
+            const trial = (trialType?.trials || [])[tri ?? 1e6];
+            if (!trial) {
+                console.log(`trying to set trial data without current trial\n`, newTrialData);
+                return false;
+            }
+            trialType!.trials![tri!] = newTrialData;
+            return true;
+        },
     })
 })

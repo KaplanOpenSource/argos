@@ -1,9 +1,11 @@
+import React from "react";
 import { createContext, useContext, useState } from "react";
 import { RealMapName } from "../constants/constants";
 import { useExperiments } from "./useExperiments";
 import { useChosenTrial } from "./useChosenTrial";
+import { ICoordinates, IDeviceTypeAndItem, ITrial } from "../types/types";
 
-const experimentContext = createContext();
+const experimentContext = createContext(null);
 
 export const ExperimentProvider = ({ children }) => {
     const [state, setState] = useState({
@@ -11,7 +13,13 @@ export const ExperimentProvider = ({ children }) => {
     });
 
     const { setExperiment, experiments } = useExperiments();
-    const { experiment, trialType, trial, shownMap, chooseTrial, isTrialChosen, chosenNames } = useChosenTrial();
+    const { experiment,
+        trialType,
+        trial,
+        shownMap,
+        chooseTrial,
+        setTrialIntoExp,
+    } = useChosenTrial();
 
     const currTrial = {
         experiment: experiment(),
@@ -24,21 +32,28 @@ export const ExperimentProvider = ({ children }) => {
         trialName: trial()?.name, // this field is for legacy
     };
 
-    const setCurrTrial = ({ experimentName, trialTypeName, trialName }) => {
+    const setCurrTrial = ({
+        experimentName,
+        trialTypeName,
+        trialName,
+    }: {
+        experimentName?: string | undefined,
+        trialTypeName?: string | undefined,
+        trialName?: string | undefined,
+    }) => {
         chooseTrial({ experimentName, trialTypeName, trialName });
     }
 
-    const setTrialData = (newTrialData) => {
-        if (!isTrialChosen()) {
-            console.log(`trying to set trial data without current trial\n`, newTrialData);
-            return;
-        }
+    const setTrialData = (newTrialData: ITrial) => {
         const e = structuredClone(experiment());
-        e.trialTypes[chosenNames.trialType.index].trials[chosenNames.trial.index] = newTrialData;
-        setExperiment(currTrial.experimentName, e)
+        if (setTrialIntoExp(newTrialData, e)) {
+            setExperiment(e!.name!, e!)
+        }
     }
 
-    const setLocationsToDevices = (deviceTypeItems, latlngs) => {
+    const setLocationsToDevices = (
+        deviceTypeItems: IDeviceTypeAndItem[],
+        latlngs: (ICoordinates | { lat: number; lng: number; })[]) => {
         const { trial } = currTrial;
         const mapName = currTrial.shownMapName || RealMapName;
         let count = 0;
@@ -51,7 +66,7 @@ export const ExperimentProvider = ({ children }) => {
                     return t.deviceItemName === deviceItemName && t.deviceTypeName === deviceTypeName;
                 });
                 if (coordinates) {
-                    if (coordinates.lat) {
+                    if ('lat' in coordinates) {
                         coordinates = [coordinates.lat, coordinates.lng];
                     }
                     const location = { name: mapName, coordinates };
@@ -78,7 +93,7 @@ export const ExperimentProvider = ({ children }) => {
 
     const deleteDevice = ({ experimentName, deviceItemName, deviceTypeName }) => {
         const e = structuredClone(experiments.find(e => e.name === experimentName));
-        if (!e) {
+        if (!e || !e.name) {
             console.log(`unknown experiment ${experimentName}`);
             return;
         }
@@ -93,12 +108,12 @@ export const ExperimentProvider = ({ children }) => {
                 }
             }
         }
-        setExperiment(currTrial.experimentName, e)
+        setExperiment(e.name, e)
     }
 
     const deleteDeviceType = ({ experimentName, deviceTypeName }) => {
         const e = structuredClone(experiments.find(e => e.name === experimentName));
-        if (!e) {
+        if (!e || !e.name) {
             console.log(`unknown experiment ${experimentName}`);
             return;
         }
@@ -110,7 +125,7 @@ export const ExperimentProvider = ({ children }) => {
                 }
             }
         }
-        setExperiment(currTrial.experimentName, e)
+        setExperiment(e.name, e)
     }
 
     const store = {
