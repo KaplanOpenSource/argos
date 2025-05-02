@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { AttributeValueGet } from "../Experiment/AttributeValueGet";
-import { SCOPE_TRIAL } from "../Experiment/AttributeType";
+import { ScopeEnum } from "../types/types";
 import { SaveJson } from "./FileIo";
 import JSZip from "jszip";
 import { saveAs } from 'file-saver';
@@ -25,7 +25,7 @@ export const useTrialGeoJson = () => {
                     deviceType?.attributeTypes?.forEach(attrType => {
                         const {
                             value,
-                        } = AttributeValueGet({ attrType, data: d, deviceItem, scope: SCOPE_TRIAL });
+                        } = AttributeValueGet({ attrType, data: d, deviceItem, scope: ScopeEnum.SCOPE_TRIAL });
 
                         properties[attrType.name] = value;
                     });

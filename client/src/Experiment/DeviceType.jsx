@@ -5,7 +5,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { changeByName, createNewName } from "../Utils/utils";
 import { AddMultipleDevices } from "./AddMultipleDevices";
 import { AttributeTypesDialogButton } from "./AttributeTypesDialogButton";
-import { SCOPE_EXPERIMENT } from "./AttributeType";
+import { ScopeEnum } from "../types/types";
 import { useExperimentProvider } from "../Context/ExperimentProvider";
 import { assignUuids } from "../Context/TrackUuidUtils";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
@@ -105,7 +105,7 @@ export const DeviceType = ({ data, setData, experiment }) => {
                         }}
                         deviceType={data}
                         showAttributes={true}
-                        scope={SCOPE_EXPERIMENT}
+                        scope={ScopeEnum.SCOPE_EXPERIMENT}
                         devicesEnclosingList={devicesEnclosingList}
                         experiment={experiment}
                     />

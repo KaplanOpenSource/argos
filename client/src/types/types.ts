@@ -71,9 +71,16 @@ export interface ITrialType extends INamed {
 export interface ISelectOption extends INamed {
 };
 
+export enum ScopeEnum {
+    SCOPE_TRIAL = "Trial",
+    SCOPE_EXPERIMENT = "Device definition",
+    SCOPE_EXPERIMENT_ALT = "Experiment", // legacy
+    SCOPE_CONSTANT = "Constant",
+};
+
 export interface IAttributeType extends INamed {
     type?: string;
-    scope?: string;
+    scope?: ScopeEnum;
     multiple?: boolean;
     required?: boolean;
     defaultValue?: any;

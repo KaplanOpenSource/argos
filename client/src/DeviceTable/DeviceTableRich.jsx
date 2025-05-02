@@ -4,10 +4,10 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { useContext } from "react";
 import { DeviceItem } from "../Experiment/DeviceItem";
-import { SCOPE_TRIAL } from "../Experiment/AttributeType";
 import { EnclosingListSelectionContext } from "../Experiment/EnclosedSelectionProvider";
 import { useDeviceSeletion } from "../Context/useDeviceSeletion";
 import { useExperimentProvider } from "../Context/ExperimentProvider";
+import { ScopeEnum } from "../types/types";
 
 export const DeviceTableRich = ({  }) => {
     const {
@@ -50,7 +50,7 @@ export const DeviceTableRich = ({  }) => {
                         data={deviceItem}
                         deviceType={deviceType}
                         devicesEnclosingList={shownDevices}
-                        scope={SCOPE_TRIAL}
+                        scope={ScopeEnum.SCOPE_TRIAL}
                         showAttributes={true}
                     />
                 </Paper>

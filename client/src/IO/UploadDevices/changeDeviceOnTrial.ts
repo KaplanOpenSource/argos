@@ -1,5 +1,5 @@
 import { RealMapName } from "../../constants/constants";
-import { SCOPE_TRIAL } from "../../Experiment/AttributeType";
+import { ScopeEnum } from "../../types/types";
 import { FIELD_UNASSIGNED, FIELD_MAPNAME, FIELD_LATITUDE, FIELD_LONGITUDE, FIELD_TYPE, FIELD_NAME } from "./uploadDefs";
 
 export const changeDeviceOnTrial = (
@@ -40,7 +40,7 @@ export const changeDeviceOnTrial = (
         for (const [attrNameOnDev, attrNameFromFile] of Object.entries(attrMatchForType)) {
             if (attrNameFromFile || FIELD_UNASSIGNED !== FIELD_UNASSIGNED) {
                 const attrType = deviceType?.attributeTypes?.find(x => x.name === attrNameOnDev);
-                if (attrType && (attrType.scope || SCOPE_TRIAL) === SCOPE_TRIAL) {
+                if (attrType && (attrType.scope || ScopeEnum.SCOPE_TRIAL) === ScopeEnum.SCOPE_TRIAL) {
                     const value = deviceToUpload[attrNameFromFile];
                     if (value || value === 0 || value === '') {
                         const attr = deviceOnTrial.attributes?.find(x => x.name === attrType.name);

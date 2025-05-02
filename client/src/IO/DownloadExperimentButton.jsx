@@ -12,7 +12,7 @@ import * as fa_all from "@fortawesome/free-solid-svg-icons";
 import { MARKER_DEFAULT_ICON } from "../Icons/IconPicker";
 import html2canvas from 'html2canvas';
 import { isEqual } from "lodash";
-import { SCOPE_TRIAL } from "../Experiment/AttributeType";
+import { ScopeEnum } from "../types/types";
 
 const IconToBlob = ({ iconName, obtainIcon }) => {
     const divRef = useRef(null);
@@ -57,7 +57,7 @@ const fillDefaults = (experiment) => {
     for (const deviceType of ret.deviceTypes || []) {
         for (const attrType of deviceType?.attributeTypes) {
             if (!attrType.scope) {
-                attrType.scope = SCOPE_TRIAL;
+                attrType.scope = ScopeEnum.SCOPE_TRIAL;
             }
             if (!attrType.required) {
                 attrType.required = false;

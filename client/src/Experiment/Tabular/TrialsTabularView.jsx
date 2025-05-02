@@ -1,11 +1,11 @@
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography } from "@mui/material"
 import { AttributeItemOne } from "../AttributeItemList";
-import { SCOPE_TRIAL } from "../AttributeType";
 import { Fragment } from "react";
 import { DateProperty } from "../../Property/DateProperty";
 import { sum } from "lodash";
 import { AttributeTypesDialogButton } from "../AttributeTypesDialogButton";
 import { AddNewTrialButton } from "../AddNewTrialButton";
+import { ScopeEnum } from "../../types/types";
 
 export const TrialsTabularView = ({ data, setData }) => {
     const totalDevices = sum((data?.deviceTypes || []).map(x => (x?.devices || []).length));
@@ -108,7 +108,7 @@ export const TrialsTabularView = ({ data, setData }) => {
                                                             attrType={attrType}
                                                             data={trial}
                                                             setData={val => setTrial(val)}
-                                                            scope={SCOPE_TRIAL}
+                                                            scope={ScopeEnum.SCOPE_TRIAL}
                                                             reduceNames={true}
                                                         />
                                                     </TableCell>

@@ -5,7 +5,7 @@ import { useContext, useEffect } from "react";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Download, Edit, ReadMore } from "@mui/icons-material";
 import { AttributeItemList } from "./AttributeItemList";
-import { SCOPE_TRIAL } from "./AttributeType";
+import { ScopeEnum } from "../types/types";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { useTrialGeoJson } from "../IO/TrialGeoJson";
 import { ButtonMenu } from "../Utils/ButtonMenu";
@@ -115,7 +115,7 @@ export const Trial = ({ data, setData, experiment, trialType, children }) => {
                 attributeTypes={trialType.attributeTypes}
                 data={data}
                 setData={setData}
-                scope={SCOPE_TRIAL}
+                scope={ScopeEnum.SCOPE_TRIAL}
             />
         </TreeRow>
     )

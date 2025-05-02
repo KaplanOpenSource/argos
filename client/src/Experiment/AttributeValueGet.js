@@ -1,6 +1,6 @@
 import { changeByName } from "../Utils/utils";
 import { VALUE_TYPE_DEFAULT } from "./AttributeValue";
-import { SCOPE_EXPERIMENT, SCOPE_EXPERIMENT_ALT, SCOPE_TRIAL } from "./AttributeType";
+import { ScopeEnum } from "../types/types";
 
 export const AttributeValueGet = ({
     attrType, // Type of the attribute from the container's type
@@ -18,7 +18,7 @@ export const AttributeValueGet = ({
     }
 
     const attributes = (data || {}).attributes || [];
-    const attrTypeScope = attrType.scope === SCOPE_EXPERIMENT_ALT ? SCOPE_EXPERIMENT : (attrType.scope || SCOPE_TRIAL);
+    const attrTypeScope = attrType.scope === ScopeEnum.SCOPE_EXPERIMENT_ALT ? ScopeEnum.SCOPE_EXPERIMENT : (attrType.scope || ScopeEnum.SCOPE_TRIAL);
     let value = attrType.defaultValue;
     value = obtainFromContainer(value, attributes);
 

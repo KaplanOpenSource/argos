@@ -7,7 +7,6 @@ import {
 import { useExperimentProvider } from '../../Context/ExperimentProvider';
 import { SelectDeviceButton } from '../../Experiment/SelectDeviceButton';
 import { AttributeItemList } from '../../Experiment/AttributeItemList';
-import { SCOPE_TRIAL } from '../../Experiment/AttributeType';
 import { AddContainedButton } from '../../Experiment/Contained/AddContainedButton';
 import { ContainedDevice } from '../../Experiment/Contained/ContainedDevice';
 import { DeviceLocationEdit } from './DeviceLocationEdit';
@@ -16,6 +15,7 @@ import { useCurrTrial } from '../../Context/useCurrTrial';
 import { DeviceItemLocationButton } from '../../Experiment/DeviceItemLocationButton';
 import { ButtonTooltip } from '../../Utils/ButtonTooltip';
 import { Delete } from '@mui/icons-material';
+import { ScopeEnum } from '../../types/types';
 
 export const SingleDevicePropertiesView = ({ deviceOnTrial, setDeviceOnTrial, children }) => {
     const { currTrial } = useExperimentProvider();
@@ -57,7 +57,7 @@ export const SingleDevicePropertiesView = ({ deviceOnTrial, setDeviceOnTrial, ch
                         attributeTypes={deviceType.attributeTypes}
                         data={deviceOnTrial}
                         setData={setDeviceOnTrial}
-                        scope={SCOPE_TRIAL}
+                        scope={ScopeEnum.SCOPE_TRIAL}
                         deviceItem={deviceItem}
                     />
                 </Box>

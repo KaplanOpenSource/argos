@@ -1,12 +1,11 @@
 import { AttributeItemOne } from "../AttributeItemList";
-import { SCOPE_EXPERIMENT, SCOPE_TRIAL } from "../AttributeType";
-import { useContext } from "react";
 import { useExperimentProvider } from "../../Context/ExperimentProvider";
+import { ScopeEnum } from "../../types/types";
 
 export const DevicesTabularOneAttr = ({ attrType, deviceItem, deviceType, setDeviceItem }) => {
     const { currTrial, setTrialData } = useExperimentProvider();
 
-    if ((!attrType?.scope) || attrType.scope === SCOPE_TRIAL) {
+    if ((!attrType?.scope) || attrType.scope === ScopeEnum.SCOPE_TRIAL) {
         const devicesOnTrial = currTrial?.trial?.devicesOnTrial;
         const devindex = (devicesOnTrial || []).findIndex(t => {
             return t.deviceItemName === deviceItem.name && t.deviceTypeName === deviceType.name;
@@ -25,7 +24,7 @@ export const DevicesTabularOneAttr = ({ attrType, deviceItem, deviceType, setDev
                     attrType={attrType}
                     data={deviceOnTrial}
                     setData={setDeviceOnTrial}
-                    scope={SCOPE_TRIAL}
+                    scope={ScopeEnum.SCOPE_TRIAL}
                     deviceItem={deviceItem}
                     reduceNames={true}
                 />
@@ -38,7 +37,7 @@ export const DevicesTabularOneAttr = ({ attrType, deviceItem, deviceType, setDev
             attrType={attrType}
             data={deviceItem}
             setData={val => setDeviceItem(val)}
-            scope={SCOPE_EXPERIMENT}
+            scope={ScopeEnum.SCOPE_EXPERIMENT}
             reduceNames={true}
         />
     )

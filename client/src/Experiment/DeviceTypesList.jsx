@@ -1,7 +1,7 @@
 import { Typography } from "@mui/material";
 import { TreeSublist } from "../App/TreeSublist";
 import { changeByName } from "../Utils/utils";
-import { SCOPE_CONSTANT } from "./AttributeType";
+import { ScopeEnum } from "../types/types";
 import { DeviceType } from "./DeviceType";
 import { sum } from "lodash";
 
@@ -22,7 +22,7 @@ export const DeviceTypesList = ({ data, setData }) => {
                             "type": "Boolean",
                             "name": "StoreDataPerDevice",
                             "defaultValue": false,
-                            "scope": SCOPE_CONSTANT
+                            "scope": ScopeEnum.SCOPE_CONSTANT
                         },
                     ]
                 }

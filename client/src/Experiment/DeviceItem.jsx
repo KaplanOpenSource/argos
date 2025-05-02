@@ -3,9 +3,8 @@ import { TreeRow } from "../App/TreeRow";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { AttributeItemList } from "./AttributeItemList";
 import { SelectDeviceButton } from "./SelectDeviceButton";
-import { useContext } from "react";
 import { useExperimentProvider } from "../Context/ExperimentProvider";
-import { SCOPE_TRIAL } from "./AttributeType";
+import { ScopeEnum } from "../types/types";
 import { DeviceItemLocationButton } from "./DeviceItemLocationButton";
 import { useCurrTrial } from "../Context/useCurrTrial";
 
@@ -46,10 +45,10 @@ export const DeviceItem = ({ data, setData, deviceType, showAttributes, devicesE
             {currTrial.experiment && showAttributes &&
                 <AttributeItemList
                     attributeTypes={deviceType.attributeTypes}
-                    data={scope === SCOPE_TRIAL ? device.onTrial() : data}
-                    setData={scope === SCOPE_TRIAL ? device.setOnTrial : setData}
+                    data={scope === ScopeEnum.SCOPE_TRIAL ? device.onTrial() : data}
+                    setData={scope === ScopeEnum.SCOPE_TRIAL ? device.setOnTrial : setData}
                     scope={scope}
-                    deviceItem={scope === SCOPE_TRIAL ? data : null}
+                    deviceItem={scope === ScopeEnum.SCOPE_TRIAL ? data : null}
                 />
             }
         </TreeRow>
