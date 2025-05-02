@@ -14,6 +14,8 @@ import { DeviceLocationEdit } from './DeviceLocationEdit';
 import { ContainedDevicesList } from './ContainedDevicesList';
 import { useCurrTrial } from '../../Context/useCurrTrial';
 import { DeviceItemLocationButton } from '../../Experiment/DeviceItemLocationButton';
+import { ButtonTooltip } from '../../Utils/ButtonTooltip';
+import { Delete } from '@mui/icons-material';
 
 export const SingleDevicePropertiesView = ({ deviceOnTrial, setDeviceOnTrial, children }) => {
     const { currTrial } = useExperimentProvider();
@@ -61,6 +63,11 @@ export const SingleDevicePropertiesView = ({ deviceOnTrial, setDeviceOnTrial, ch
                 </Box>
                 : <Typography variant='body2'>
                     This device exists on trial but not on experiment, please remove.
+                    <ButtonTooltip
+                        onClick={() => setDeviceOnTrial(undefined)}
+                    >
+                        <Delete />
+                    </ButtonTooltip>
                 </Typography>
             }
             <Stack direction='row'>

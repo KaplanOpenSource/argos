@@ -40,8 +40,12 @@ export const DeviceMarkersShown = ({ showDeviceNames }) => {
                         key={index}
                         deviceOnTrial={deviceOnTrial}
                         setDeviceOnTrial={newDeviceData => {
-                            const data = { ...currTrial.trial, devicesOnTrial: devicesOnTrial.slice() };
-                            data.devicesOnTrial[index] = newDeviceData;
+                            const data = structuredClone(currTrial.trial);
+                            if (newDeviceData) {
+                                data.devicesOnTrial[index] = newDeviceData;
+                            } else {
+                                data.devicesOnTrial.splice(index, 1);
+                            }
                             setTrialData(data);
                         }}
                         showDeviceNames={showDeviceNames}

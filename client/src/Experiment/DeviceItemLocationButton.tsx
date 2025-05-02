@@ -44,7 +44,7 @@ export const DeviceItemLocationButton = ({
     const { currTrial } = useExperimentProvider();
 
     const { trial } = useCurrTrial({});
-    const device = trial.getDevice(deviceType.name, deviceItem.name);
+    const device = trial.getDevice(deviceType?.name, deviceItem?.name);
 
     const { tooltip, icon } = locationIconTooltip(device, currTrial?.shownMapName || RealMapName);
 
