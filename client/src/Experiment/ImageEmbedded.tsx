@@ -21,7 +21,7 @@ export const ImageEmbedded = ({
   setData: (newData: IImageEmbedded | undefined) => any,
   experiment: IExperiment,
 }) => {
-  const { addActionOnMap, mapBounds } = useContext(ActionsOnMapContext);
+  const { addActionOnMap, mapBounds } = useContext(ActionsOnMapContext)!;
   const {
     currTrial,
     showImagePlacement,

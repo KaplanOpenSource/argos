@@ -29,19 +29,19 @@ export const MapShower = ({ children }) => {
   return (
     <MapContainer
       zoom={15}
-      // style={{ height: "1000%" }}
       style={{
-        // height: "100%", width: '100%',
-        position: 'absolute', top: '5em', bottom: 0, right: 0, left: 0,
+        position: 'absolute',
+        top: '5em',
+        bottom: 0,
+        right: 0,
+        left: 0,
         zIndex: 0,
       }}
       crs={shownMap() ? CRS.Simple : CRS.EPSG3857}
-      // bounds={posbounds}
       center={[32.081128, 34.779729]}
       zoomControl={false}
       minZoom={-6}
       maxZoom={30}
-      contextmenu={true}
       attributionControl={false}
     >
       <AttributionControl
