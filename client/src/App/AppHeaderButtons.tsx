@@ -16,6 +16,7 @@ import {
   Tooltip,
   Typography
 } from '@mui/material';
+import React from 'react';
 import { useExperimentProvider } from '../Context/ExperimentProvider';
 import { useExperiments } from '../Context/useExperiments';
 import { DocumentationButton } from '../Doc/DocumentationButton';

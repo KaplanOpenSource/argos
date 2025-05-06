@@ -14,7 +14,7 @@ import { ActionsOnMapProvider } from './Map/ActionsOnMapContext';
 
 // consoleErrorUniqueKeyFix();
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+ReactDOM.createRoot(document.getElementById('root')!).render(
   <LocalizationProvider dateAdapter={AdapterDayjs}>
     <React.StrictMode>
       <ExperimentTreeNodesExpandedProvider>

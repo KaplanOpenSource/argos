@@ -2,6 +2,7 @@ import {
   AppBar,
   Stack, Toolbar, Typography
 } from '@mui/material';
+import React from 'react';
 import { UserDetailsButton } from './UserDetailsButton';
 import { VersionId } from './VersionId';
 

@@ -11,7 +11,7 @@ interface ExperimentsStore {
   getExperiment: (experimentName: string) => IExperiment | undefined,
   setAllExperiments: (applyer: (prev: IExperiment[]) => IExperiment[]) => void,
   deleteExperiment: (name: string) => void,
-  addExperiment: (newExp: IExperiment) => void,
+  addExperiment: (newExp?: IExperiment | undefined) => void,
   setExperiment: (name: string, exp: IExperiment) => void,
 }
 
