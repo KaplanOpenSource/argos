@@ -1,5 +1,5 @@
-import React from 'react';
 import { Stack, TextField, Typography } from '@mui/material';
+import React from 'react';
 import processingDecimalDigits from '../../Utils/processingDecimalDigits';
 
 const DistributeAlongLine = ({ onSubmit, markedPoints, title }) => {

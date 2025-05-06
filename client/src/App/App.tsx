@@ -3,17 +3,17 @@ import { DevicePlanner } from './DevicePlanner';
 import { LoginForm } from './LoginForm';
 
 export function App() {
-    const { isLoggedIn } = useTokenStore();
+  const { isLoggedIn } = useTokenStore();
 
-    return isLoggedIn()
-        ? (
-            <DevicePlanner
-            />
-        )
-        : (
-            <LoginForm
-            />
-        )
+  return isLoggedIn()
+    ? (
+      <DevicePlanner
+      />
+    )
+    : (
+      <LoginForm
+      />
+    )
 
 }
 

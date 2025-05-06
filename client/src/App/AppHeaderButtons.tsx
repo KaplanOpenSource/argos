@@ -1,149 +1,149 @@
-import CloseIcon from '@mui/icons-material/Close';
 import {
-    Stack,
-    Tooltip,
-    Typography
-} from '@mui/material';
-import { useExperimentProvider } from '../Context/ExperimentProvider';
-import {
-    AccountTree,
-    AccountTreeOutlined,
-    Add,
-    CloseFullscreen,
-    ClosedCaption,
-    ClosedCaptionOff,
-    OpenInFull,
-    Upload
+  AccountTree,
+  AccountTreeOutlined,
+  Add,
+  CloseFullscreen,
+  ClosedCaption,
+  ClosedCaptionOff,
+  OpenInFull,
+  Upload
 } from '@mui/icons-material';
+import CloseIcon from '@mui/icons-material/Close';
 import EditLocationAltIcon from '@mui/icons-material/EditLocationAlt';
 import EditLocationOutlinedIcon from '@mui/icons-material/EditLocationOutlined';
-import { ButtonTooltip } from '../Utils/ButtonTooltip';
-import { ShowConfigToggles } from './ShowConfigToggles';
+import {
+  Stack,
+  Tooltip,
+  Typography
+} from '@mui/material';
+import { useExperimentProvider } from '../Context/ExperimentProvider';
+import { useExperiments } from '../Context/useExperiments';
+import { DocumentationButton } from '../Doc/DocumentationButton';
 import { UploadButton } from '../IO/UploadButton';
 import { useUploadExperiment } from '../IO/UploadExperiment';
-import { DocumentationButton } from '../Doc/DocumentationButton';
+import { ButtonTooltip } from '../Utils/ButtonTooltip';
 import { AppHeaderShownMap } from './AppHeaderShownMap';
+import { ShowConfigToggles } from './ShowConfigToggles';
 import { UndoRedoButtons } from './UndoRedo/UndoRedoButtons';
-import { useExperiments } from '../Context/useExperiments';
 
 export const AppHeaderButtons = ({
-    fullscreen, setFullscreen,
-    showConfig, setShowConfig,
-    showAttributes, setShowAttributes,
-    showDeviceNames, setShowDeviceNames
+  fullscreen, setFullscreen,
+  showConfig, setShowConfig,
+  showAttributes, setShowAttributes,
+  showDeviceNames, setShowDeviceNames
 }) => {
-    const {
-        currTrial,
-        setCurrTrial,
-        showImagePlacement,
-        setShowImagePlacement,
-    } = useExperimentProvider();
+  const {
+    currTrial,
+    setCurrTrial,
+    showImagePlacement,
+    setShowImagePlacement,
+  } = useExperimentProvider();
 
-    const { addExperiment } = useExperiments();
+  const { addExperiment } = useExperiments();
 
-    const { uploadExperiment } = useUploadExperiment();
-    const { experimentName, trialTypeName, trialName } = currTrial;
-    return (
-        <Stack
-            direction='row'
-            justifyContent="space-between"
-            alignItems="center"
-            sx={{ flexGrow: 1 }}
+  const { uploadExperiment } = useUploadExperiment();
+  const { experimentName, trialTypeName, trialName } = currTrial;
+  return (
+    <Stack
+      direction='row'
+      justifyContent="space-between"
+      alignItems="center"
+      sx={{ flexGrow: 1 }}
+    >
+      <Stack direction='row'
+        justifyContent="flex-start"
+        alignItems="center"
+      >
+        <DocumentationButton />
+        <ButtonTooltip
+          color="inherit"
+          onClick={() => addExperiment()}
+          tooltip={"Add experiment"}
         >
-            <Stack direction='row'
-                justifyContent="flex-start"
-                alignItems="center"
+          <Add />
+        </ButtonTooltip>
+        <UploadButton
+          accept=".json,.zip"
+          tooltip={"Upload experiment"}
+          uploadFunc={(file) => uploadExperiment(file)}
+        >
+          <Upload />
+        </UploadButton>
+        <ButtonTooltip
+          onClick={() => setFullscreen(!fullscreen)}
+          tooltip={fullscreen ? "Show experiment list on side" : "Expand experiment list on screen"}
+          color="inherit"
+        >
+          {fullscreen ? <CloseFullscreen /> : <OpenInFull />}
+        </ButtonTooltip>
+        <ShowConfigToggles
+          showConfig={showConfig}
+          setShowConfig={setShowConfig}
+        />
+        <ButtonTooltip
+          tooltip={showAttributes ? "Hide attributes on selected devices" : "Show attributes on selected devices"}
+          onClick={() => setShowAttributes(!showAttributes)}
+          color="inherit"
+        >
+          {showAttributes ? <AccountTree /> : <AccountTreeOutlined />}
+        </ButtonTooltip>
+        <ButtonTooltip
+          tooltip={showDeviceNames ? "Hide Names of devices" : "Show Names of devices"}
+          onClick={() => setShowDeviceNames(!showDeviceNames)}
+          color="inherit"
+        >
+          {showDeviceNames ? <ClosedCaption /> : <ClosedCaptionOff />}
+        </ButtonTooltip>
+      </Stack>
+      <Stack
+        direction='row'
+        justifyContent="flex-end"
+        alignItems="center"
+      >
+        <UndoRedoButtons
+        />
+        {experimentName
+          ? <>
+            <ButtonTooltip
+              color="inherit"
+              onClick={() => {
+                setCurrTrial({});
+              }}
+              tooltip={"Stop editing this trial"}
             >
-                <DocumentationButton />
-                <ButtonTooltip
-                    color="inherit"
-                    onClick={() => addExperiment()}
-                    tooltip={"Add experiment"}
-                >
-                    <Add />
-                </ButtonTooltip>
-                <UploadButton
-                    accept=".json,.zip"
-                    tooltip={"Upload experiment"}
-                    uploadFunc={(file) => uploadExperiment(file)}
-                >
-                    <Upload />
-                </UploadButton>
-                <ButtonTooltip
-                    onClick={() => setFullscreen(!fullscreen)}
-                    tooltip={fullscreen ? "Show experiment list on side" : "Expand experiment list on screen"}
-                    color="inherit"
-                >
-                    {fullscreen ? <CloseFullscreen /> : <OpenInFull />}
-                </ButtonTooltip>
-                <ShowConfigToggles
-                    showConfig={showConfig}
-                    setShowConfig={setShowConfig}
-                />
-                <ButtonTooltip
-                    tooltip={showAttributes ? "Hide attributes on selected devices" : "Show attributes on selected devices"}
-                    onClick={() => setShowAttributes(!showAttributes)}
-                    color="inherit"
-                >
-                    {showAttributes ? <AccountTree /> : <AccountTreeOutlined />}
-                </ButtonTooltip>
-                <ButtonTooltip
-                    tooltip={showDeviceNames ? "Hide Names of devices" : "Show Names of devices"}
-                    onClick={() => setShowDeviceNames(!showDeviceNames)}
-                    color="inherit"
-                >
-                    {showDeviceNames ? <ClosedCaption /> : <ClosedCaptionOff />}
-                </ButtonTooltip>
-            </Stack>
-            <Stack
-                direction='row'
-                justifyContent="flex-end"
-                alignItems="center"
+              <CloseIcon />
+            </ButtonTooltip>
+            <Tooltip
+              title="Experiment and trial currently edited"
             >
-                <UndoRedoButtons
-                />
-                {experimentName
-                    ? <>
-                        <ButtonTooltip
-                            color="inherit"
-                            onClick={() => {
-                                setCurrTrial({});
-                            }}
-                            tooltip={"Stop editing this trial"}
-                        >
-                            <CloseIcon />
-                        </ButtonTooltip>
-                        <Tooltip
-                            title="Experiment and trial currently edited"
-                        >
-                            <Typography variant="body1">
-                                {experimentName}
-                                {trialName
-                                    ? <>
-                                        &nbsp;:&nbsp;
-                                        {trialTypeName}
-                                        &nbsp;:&nbsp;
-                                        {trialName}
-                                    </>
-                                    : null}
-                            </Typography>
-                        </Tooltip>
-                        <AppHeaderShownMap
-                        />
-                        <ButtonTooltip
-                            color='inherit'
-                            onClick={() => setShowImagePlacement(!showImagePlacement)}
-                            tooltip="Edit image placement"
-                        >
-                            {showImagePlacement
-                                ? <EditLocationAltIcon />
-                                : <EditLocationOutlinedIcon />
-                            }
-                        </ButtonTooltip>
-                    </>
-                    : null
-                }
-            </Stack>
-        </Stack>
-    )
+              <Typography variant="body1">
+                {experimentName}
+                {trialName
+                  ? <>
+                    &nbsp;:&nbsp;
+                    {trialTypeName}
+                    &nbsp;:&nbsp;
+                    {trialName}
+                  </>
+                  : null}
+              </Typography>
+            </Tooltip>
+            <AppHeaderShownMap
+            />
+            <ButtonTooltip
+              color='inherit'
+              onClick={() => setShowImagePlacement(!showImagePlacement)}
+              tooltip="Edit image placement"
+            >
+              {showImagePlacement
+                ? <EditLocationAltIcon />
+                : <EditLocationOutlinedIcon />
+              }
+            </ButtonTooltip>
+          </>
+          : null
+        }
+      </Stack>
+    </Stack>
+  )
 }

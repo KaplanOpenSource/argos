@@ -9,10 +9,10 @@ export const ButtonWithShadow = ({ text, ...rest }) => {
         variant="outlined"
         color="primary"
         sx={{
-            paddingInline:'5px',
-            width: '95%',
-            margin: '5px auto',
-            textTransform: 'none',
+          paddingInline: '5px',
+          width: '95%',
+          margin: '5px auto',
+          textTransform: 'none',
         }}
         {...rest}
       >
