@@ -6,13 +6,15 @@ type IChosenNames = {
   experiment?: { name: string; index: number; } | undefined;
   trialType?: { name: string; index: number; } | undefined;
   trial?: { name: string; index: number; } | undefined;
+  shownMap?: { name: string; index: number; } | undefined;
 };
 
 interface ChosenTrialStore {
   experiment: () => IExperiment | undefined,
   trialType: () => ITrialType | undefined,
   trial: () => ITrial | undefined,
-  shownMap: IImageStandalone | undefined,
+  shownMap: () => IImageStandalone | undefined,
+  shownMapIndex: () => number | undefined, // for legacy
   chosenNames: IChosenNames,
   chooseTrial: (params: {
     experimentName?: string | undefined,
@@ -26,19 +28,19 @@ interface ChosenTrialStore {
   setTrialIntoExp: (newTrialData: ITrial, experiment: IExperiment | undefined) => boolean,
 }
 
-export const useChosenTrial = create<ChosenTrialStore>()((set, get) => {
+function findNamed<T extends { name?: string }>(
+  arr: T[] | undefined,
+  name?: string,
+): {
+  found?: { index: number, name: string } | undefined,
+  obj?: T | undefined,
+} {
+  const index = (arr && name) ? arr.findIndex(a => a.name === name) : -1;
+  if (index === -1) return {};
+  return { found: { index, name: name! }, obj: arr![index] };
+}
 
-  function find<T extends { name?: string }>(
-    arr: T[] | undefined,
-    name?: string,
-  ): {
-    found?: { index: number, name: string } | undefined,
-    obj?: T | undefined,
-  } {
-    const index = (arr && name) ? arr.findIndex(a => a.name === name) : -1;
-    if (index === -1) return {};
-    return { found: { index, name: name! }, obj: arr![index] };
-  }
+export const useChosenTrial = create<ChosenTrialStore>()((set, get) => {
 
   return ({
     experiment: () => {
@@ -50,16 +52,19 @@ export const useChosenTrial = create<ChosenTrialStore>()((set, get) => {
     trial: () => {
       return get().obtainTrial(get().experiment()).trial;
     },
-    shownMap: undefined,
     chosenNames: {},
+    shownMap: () => {
+      return (get().experiment()?.imageStandalone || [])[get().chosenNames.shownMap?.index ?? 1e6];
+    },
+    shownMapIndex: () => get().chosenNames.shownMap?.index,
     chooseTrial: ({
       experimentName,
       trialTypeName,
       trialName,
     }) => {
-      const experiment = find(useExperiments.getState().experiments, experimentName);
-      const trialType = find(experiment.obj?.trialTypes, trialTypeName);
-      const trial = find(trialType.obj?.trials, trialName);
+      const experiment = findNamed(useExperiments.getState().experiments, experimentName);
+      const trialType = findNamed(experiment.obj?.trialTypes, trialTypeName);
+      const trial = findNamed(trialType.obj?.trials, trialName);
       const chosenNames: IChosenNames = {
         experiment: experiment.found,
         trialType: trial.found ? trialType.found : undefined,
@@ -69,8 +74,8 @@ export const useChosenTrial = create<ChosenTrialStore>()((set, get) => {
     },
     chooseShownMap: (shownMapName: string | undefined) => {
       set(prev => {
-        const shownMap = prev.experiment()?.imageStandalone?.find(t => t.name === shownMapName);
-        return { shownMap };
+        const found = findNamed(prev.experiment()?.imageStandalone, shownMapName);
+        return { chosenNames: { ...prev.chosenNames, shownMap: found.found } };
       })
     },
     isTrialChosen: () => get().chosenNames.trial !== undefined, // TODO: check if zustand has computed
