@@ -84,6 +84,7 @@ export interface IAttributeType extends INamed {
     multiple?: boolean;
     required?: boolean;
     defaultValue?: any;
+    description?: string;
     options?: Array<ISelectOption>;
 };
 

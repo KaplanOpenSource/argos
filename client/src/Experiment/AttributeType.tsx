@@ -8,6 +8,7 @@ import { AttributeTypeOptions } from "./AttributeTypeOptions";
 import { IAttribute, IAttributeType, IExperiment, INamed, ScopeEnum } from "../types/types";
 import { useExperiments } from "../Context/useExperiments";
 import { remove } from "lodash";
+import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
 
 export const AttributeType = ({
     data,
@@ -132,6 +133,14 @@ export const AttributeType = ({
                 data={data.defaultValue}
                 setData={val => setData({ ...data, defaultValue: val })}
                 attrType={data}
+            />
+            <TextFieldDebounceOutlined
+                label="Description"
+                value={data.description}
+                onChange={val => setData({ ...data, description: val })}
+                multiline={true}
+                rows={1}
+                sx={{width: '100%'}}
             />
         </TreeRow>
     )
