@@ -1,11 +1,11 @@
-import React, { createContext, useContext, useMemo } from "react";
-import type { CSSProperties, PropsWithChildren } from "react";
 import type {
   DraggableSyntheticListeners,
   UniqueIdentifier
 } from "@dnd-kit/core";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import type { CSSProperties, PropsWithChildren } from "react";
+import React, { createContext, useContext, useMemo } from "react";
 
 import "./SortableItem.css";
 
@@ -22,7 +22,7 @@ interface Context {
 const SortableItemContext = createContext<Context>({
   attributes: {},
   listeners: undefined,
-  ref() {}
+  ref() { }
 });
 
 export function SortableItem({ children, id }: PropsWithChildren<Props>) {
