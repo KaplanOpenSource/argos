@@ -8,13 +8,11 @@ export const StandaloneImageLayer = ({
   experiment,
   setExperiment,
   shownMap,
-  shownMapIndex,
   showImagePlacement,
 }: {
   experiment: IExperiment | undefined,
   setExperiment: (name: string, exp: IExperiment) => void,
   shownMap: IImageStandalone,
-  shownMapIndex: number,
   showImagePlacement: boolean,
 }) => {
   return experiment
@@ -38,7 +36,6 @@ export const StandaloneImageLayer = ({
         ? <ImagePlacementEditor
           experiment={experiment}
           setExperiment={newExperimentData => setExperiment(experiment.name!, newExperimentData)}
-          shownMapIndex={shownMapIndex}
           imageData={shownMap}
           key={'imagemapeditor'} />
         : null}

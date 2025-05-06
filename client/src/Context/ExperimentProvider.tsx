@@ -13,7 +13,6 @@ interface IExperimentProviderStore {
     trial: ITrial | undefined; // the current trial
     shownMap: IImageStandalone | undefined; // the current shown map
     shownMapName: string | undefined; // the name of the current shown map
-    shownMapIndex: number | undefined;
     experimentName: string | undefined; // the name of the current experiment (for legacy)
     trialTypeName: string | undefined; // the name of the current trial type (for legacy)
     trialName: string | undefined; // the name of the current trial (for legacy)
@@ -39,7 +38,6 @@ export const ExperimentProvider = ({ children }) => {
     trialType,
     trial,
     shownMap,
-    shownMapIndex,
     chooseTrial,
     setTrialIntoExp,
   } = useChosenTrial();
@@ -50,7 +48,6 @@ export const ExperimentProvider = ({ children }) => {
     trial: trial(),
     shownMap: shownMap(),
     shownMapName: shownMap()?.name,
-    shownMapIndex: shownMapIndex,
     experimentName: experiment()?.name, // this field is for legacy
     trialTypeName: trialType()?.name, // this field is for legacy
     trialName: trial()?.name, // this field is for legacy

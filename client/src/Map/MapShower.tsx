@@ -58,7 +58,6 @@ export const MapShower = ({ children }) => {
             experiment={currTrial.experiment}
             setExperiment={setExperiment}
             shownMap={shownMap()!}
-            shownMapIndex={currTrial.shownMapIndex!}
             showImagePlacement={showImagePlacement}
             key={'standalone'}
           />
@@ -72,7 +71,6 @@ export const MapShower = ({ children }) => {
                 experiment={currTrial.experiment}
                 setExperiment={setExperiment}
                 shownMap={embMap}
-                shownMapIndex={i}
                 showImagePlacement={showImagePlacement}
                 key={'embedded_' + i}
               />

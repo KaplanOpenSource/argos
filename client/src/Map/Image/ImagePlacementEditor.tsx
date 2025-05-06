@@ -16,13 +16,11 @@ export const ImagePlacementEditor = ({
   imageData,
   experiment,
   setExperiment,
-  shownMapIndex,
   distLatLng = distLatLngPythagoras,
 }: {
   imageData: IImageStandalone,
   experiment: IExperiment,
   setExperiment: (newExperimentData: IExperiment) => void,
-  shownMapIndex: number,
   distLatLng: (p0: any, p1: any) => number,
 }) => {
   const mapObj = useMap();
@@ -31,10 +29,10 @@ export const ImagePlacementEditor = ({
   const placement = new ComputedImageData(imageData);
 
   const experimentWithPlacement = (newImageData: Partial<IImageStandalone>): { newExp: IExperiment; newData: IImageStandalone; } => {
+    const newData = { ...imageData, ...newImageData };
     const newExp = structuredClone(experiment);
     newExp.imageStandalone ||= [];
-    const newData = { ...imageData, ...newImageData };
-    newExp.imageStandalone[shownMapIndex] = newData;
+    newExp.imageStandalone = newExp.imageStandalone.map(x => x.name === imageData.name ? newData : x);
     return { newExp, newData };
   };
 

@@ -14,7 +14,6 @@ interface ChosenTrialStore {
   trialType: () => ITrialType | undefined,
   trial: () => ITrial | undefined,
   shownMap: () => IImageStandalone | undefined,
-  shownMapIndex: () => number | undefined, // for legacy
   chosenNames: IChosenNames,
   chooseTrial: (params: {
     experimentName?: string | undefined,
@@ -56,7 +55,6 @@ export const useChosenTrial = create<ChosenTrialStore>()((set, get) => {
     shownMap: () => {
       return (get().experiment()?.imageStandalone || [])[get().chosenNames.shownMap?.index ?? 1e6];
     },
-    shownMapIndex: () => get().chosenNames.shownMap?.index,
     chooseTrial: ({
       experimentName,
       trialTypeName,

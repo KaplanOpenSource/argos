@@ -8,39 +8,39 @@ export const EmbeddedImageLayer = ({
   experiment,
   setExperiment,
   shownMap,
-  shownMapIndex,
   showImagePlacement,
 }: {
   experiment: IExperiment | undefined,
   setExperiment: (name: string, exp: IExperiment) => void,
   shownMap: IImageEmbedded,
-  shownMapIndex: number,
   showImagePlacement: boolean,
 }) => {
-  return (<>
-    <ImageMap
-      experiment={experiment}
-      image={shownMap}
-      key={'embeddedmap_' + shownMapIndex}
-    />
-    {shownMap?.gridDelta
-      ? (
-        <GridlinesLayer
-          from={[shownMap.latsouth, shownMap.lngwest]}
-          to={[shownMap.latnorth, shownMap.lngeast]}
-          delta={shownMap?.gridDelta}
-          key={'grid'}
-        />
-      )
-      : null}
-    {showImagePlacement && shownMap && shownMap.latnorth !== undefined
-      ? <ImagePlacementStretcher
-        imageData={shownMap}
-        setImageData={v => {
-          const exp = { ...experiment, imageEmbedded: [...experiment?.imageEmbedded || []] };
-          exp.imageEmbedded[shownMapIndex] = v;
-          setExperiment(experiment!.name!, exp);
-        }} />
-      : null}
-  </>);
+  return shownMap?.name && experiment?.name
+    ? (<>
+      <ImageMap
+        experiment={experiment}
+        image={shownMap}
+        key={'embeddedmap_' + shownMap.name}
+      />
+      {shownMap?.gridDelta
+        ? (
+          <GridlinesLayer
+            from={[shownMap.latsouth, shownMap.lngwest]}
+            to={[shownMap.latnorth, shownMap.lngeast]}
+            delta={shownMap?.gridDelta}
+            key={'grid'}
+          />
+        )
+        : null}
+      {showImagePlacement && shownMap && shownMap.latnorth !== undefined
+        ? <ImagePlacementStretcher
+          imageData={shownMap}
+          setImageData={newData => {
+            const exp = structuredClone(experiment);
+            exp.imageEmbedded = (exp.imageEmbedded || []).map(x => x.name === shownMap.name ? newData : x);
+            setExperiment(experiment!.name!, exp);
+          }} />
+        : null}
+    </>)
+    : null;
 };
