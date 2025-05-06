@@ -21,7 +21,7 @@ export const ImagePlacementEditor = ({
   imageData: IImageStandalone,
   experiment: IExperiment,
   setExperiment: (newExperimentData: IExperiment) => void,
-  distLatLng: (p0: any, p1: any) => number,
+  distLatLng?: (p0: any, p1: any) => number,
 }) => {
   const mapObj = useMap();
   const { isTrialChosen, obtainTrial } = useChosenTrial();
