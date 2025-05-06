@@ -1,7 +1,7 @@
 import { Stack } from "@mui/material";
 import React, { useState } from "react";
 import { Popup, Tooltip, useMap } from "react-leaflet";
-import { useExperimentProvider } from "../../Context/ExperimentProvider";
+import { useChosenTrial } from "../../Context/useChosenTrial";
 import { distLatLngPythagoras, distXY, round9, roundDec } from "../../Utils/GeometryUtils";
 import { TextFieldDebounceOutlined } from "../../Utils/TextFieldDebounce";
 import { IExperiment, IImageStandalone } from "../../types/types";
@@ -24,7 +24,7 @@ export const ImagePlacementEditor = ({
   distLatLng: (p0: any, p1: any) => number,
 }) => {
   const mapObj = useMap();
-  const { currTrial } = useExperimentProvider()
+  const { isTrialChosen, obtainTrial } = useChosenTrial();
 
   const placement = new ComputedImageData(imageData);
 
@@ -105,9 +105,8 @@ export const ImagePlacementEditor = ({
     setMeasureTwo(compData.calcLatLng(measureTwo));
     setZeroPoint(compData.calcXY(zeroPoint));
 
-    if (currTrial?.trial) {
-      const trial = newExp?.trialTypes?.at(currTrial?.trialTypeIndex)?.trials?.at(currTrial?.trialIndex);
-      for (const d of trial?.devicesOnTrial || []) {
+    if (isTrialChosen()) {
+      for (const d of obtainTrial(newExp)?.trial?.devicesOnTrial || []) {
         const coordinates = d?.location?.coordinates;
         if (coordinates && d?.location?.name === imageData.name) {
           coordinates[0] = compData.calcLat(placement.calcY(coordinates[0]));
