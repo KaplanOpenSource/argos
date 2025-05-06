@@ -4,6 +4,7 @@ import { Box, ImageList, ImageListItem, Paper, Popover, Stack, Tooltip, Typograp
 import { Fragment, useState } from "react";
 import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
 import { iconsCategories } from "./iconsCategories";
+import { toTitleCase } from "../Utils/utils";
 
 export const MARKER_DEFAULT_ICON = fa_all.faMapMarkerAlt;
 
@@ -12,12 +13,6 @@ export const IconDeviceByName = ({ iconName, ...props }) => {
         icon={iconName ? fa_all['fa' + iconName] : MARKER_DEFAULT_ICON}
         {...props}
     />;
-}
-
-function toTitleCase(str) {
-    return str.toLowerCase().replace(/(?:^|[\s-/])\w/g, function (match) {
-        return match.toUpperCase();
-    });
 }
 
 export const IconPicker = ({ data, setData }) => {

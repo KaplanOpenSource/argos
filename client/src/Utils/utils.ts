@@ -62,3 +62,9 @@ export const arraySwapItems = (arr: any[], i0: number, i1: number): any[] => {
     arr[i0] = arr.splice(i1, 1, arr[i0])[0];
     return arr;
 }
+
+export function toTitleCase(str: string): string {
+    return str.toLowerCase().replace(/(?:^|[\s-/])\w/g, function (match) {
+        return match.toUpperCase();
+    });
+}
