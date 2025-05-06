@@ -1,13 +1,23 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { LatLngBounds, Map } from "leaflet";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { useMap } from "react-leaflet";
 import { MapEventer } from "./MapEventer";
 
-export const ActionsOnMapContext = createContext();
+type IActionOnMap = (mapObj: Map) => void;
+type IActionsOnMapStore = {
+  actionsOnMap: IActionOnMap[],
+  setActionsOnMap: (newData: IActionOnMap[]) => void,
+  addActionOnMap: (newAction: IActionOnMap) => void,
+  mapBounds: LatLngBounds | undefined,
+  setMapBounds: (newData: LatLngBounds | undefined) => void,
+}
+
+export const ActionsOnMapContext = createContext<IActionsOnMapStore | null>(null);
 
 export const ActionsOnMapProvider = ({ children }) => {
-  const [actionsOnMap, setActionsOnMap] = useState([]);
-  const [mapBounds, setMapBounds] = useState();
-  const addActionOnMap = (newAction) => {
+  const [actionsOnMap, setActionsOnMap] = useState<IActionOnMap[]>([]);
+  const [mapBounds, setMapBounds] = useState<LatLngBounds>();
+  const addActionOnMap = (newAction: IActionOnMap) => {
     setActionsOnMap([...actionsOnMap, newAction])
   }
 
@@ -25,7 +35,7 @@ export const ActionsOnMapProvider = ({ children }) => {
 }
 
 export const ActionsOnMapDoer = ({ }) => {
-  const { actionsOnMap, setActionsOnMap, setMapBounds } = useContext(ActionsOnMapContext);
+  const { actionsOnMap, setActionsOnMap, setMapBounds } = useContext(ActionsOnMapContext)!;
   const mapObject = useMap();
   useEffect(() => {
     if (mapObject && actionsOnMap.length > 0) {
@@ -43,10 +53,10 @@ export const ActionsOnMapDoer = ({ }) => {
     <MapEventer
       directlyOnMap={false}
       mapEvents={{
-        moveend: (e, mapObj) => {
+        moveend: (e, mapObj: Map) => {
           setMapBounds(mapObj.getBounds());
         },
-        load: (e, mapObj) => {
+        load: (e, mapObj: Map) => {
           setMapBounds(mapObj.getBounds());
         },
       }}
