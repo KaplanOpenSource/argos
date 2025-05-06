@@ -1,16 +1,26 @@
 import { EditLocationAlt, EditLocationOutlined, OpenInFull } from "@mui/icons-material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Stack } from "@mui/material";
-import { useContext } from "react";
+import React, { useContext } from "react";
 import { TreeRow } from "../App/TreeRow";
 import { useExperimentProvider } from "../Context/ExperimentProvider";
 import { ImageOnServer } from "../IO/ImageOnServer";
 import { UploadImageButton } from "../IO/UploadImageButton";
 import { ActionsOnMapContext } from "../Map/ActionsOnMapContext";
+import { BooleanProperty } from "../Property/BooleanProperty";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
+import { IExperiment, IImageEmbedded } from "../types/types";
 
-export const ImageEmbedded = ({ data, setData, experiment }) => {
+export const ImageEmbedded = ({
+  data,
+  setData,
+  experiment,
+}: {
+  data: IImageEmbedded,
+  setData: (newData: IImageEmbedded | undefined) => any,
+  experiment: IExperiment,
+}) => {
   const { addActionOnMap, mapBounds } = useContext(ActionsOnMapContext);
   const {
     currTrial,
@@ -85,34 +95,50 @@ export const ImageEmbedded = ({ data, setData, experiment }) => {
         </>
       }
     >
-      <Stack direction={'row'}>
-        <TextFieldDebounceOutlined
-          label="Lng West"
-          value={data.lngwest}
-          onChange={val => setData({ ...data, lngwest: val })}
-        />
-        <TextFieldDebounceOutlined
-          label="Lat North"
-          value={data.latnorth}
-          onChange={val => setData({ ...data, latnorth: val })}
+      <Stack direction={'column'}>
+        <Stack direction={'row'}>
+          <TextFieldDebounceOutlined
+            label="Lng West"
+            value={data.lngwest}
+            onChange={val => setData({ ...data, lngwest: val })}
+          />
+          <TextFieldDebounceOutlined
+            label="Lat North"
+            value={data.latnorth}
+            onChange={val => setData({ ...data, latnorth: val })}
+          />
+        </Stack>
+        <Stack direction={'row'}>
+          <TextFieldDebounceOutlined
+            label="Lng East"
+            value={data.lngeast}
+            onChange={val => setData({ ...data, lngeast: val })}
+          />
+          <TextFieldDebounceOutlined
+            label="Lat South"
+            value={data.latsouth}
+            onChange={val => setData({ ...data, latsouth: val })}
+          />
+        </Stack>
+        <Stack direction={'row'}>
+          <BooleanProperty
+            label={'Show grid'}
+            data={!!data?.gridDelta}
+            setData={(val) => setData({ ...data, gridDelta: val ? 0.001 : 0 })}
+          />
+          <TextFieldDebounceOutlined
+            label="Grid Delta"
+            value={data.gridDelta}
+            onChange={val => setData({ ...data, gridDelta: parseFloat(val) })}
+            type='number'
+            sx={{ width: 150 }}
+          />
+        </Stack>
+        <ImageOnServer
+          data={data}
+          experiment={experiment}
         />
       </Stack>
-      <Stack direction={'row'}>
-        <TextFieldDebounceOutlined
-          label="Lng East"
-          value={data.lngeast}
-          onChange={val => setData({ ...data, lngeast: val })}
-        />
-        <TextFieldDebounceOutlined
-          label="Lat South"
-          value={data.latsouth}
-          onChange={val => setData({ ...data, latsouth: val })}
-        />
-      </Stack>
-      <ImageOnServer
-        data={data}
-        experiment={experiment}
-      />
     </TreeRow>
   )
 }

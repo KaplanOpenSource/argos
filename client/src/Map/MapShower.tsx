@@ -1,8 +1,9 @@
-import { CRS } from 'leaflet';
+import L, { CRS } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
 import 'leaflet-contextmenu';
 import 'leaflet-contextmenu/dist/leaflet.contextmenu.css';
+import React from 'react';
 import { AttributionControl, MapContainer, ZoomControl } from 'react-leaflet';
 import { useExperimentProvider } from '../Context/ExperimentProvider';
 import { useChosenTrial } from '../Context/useChosenTrial';
