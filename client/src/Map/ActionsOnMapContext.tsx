@@ -53,10 +53,10 @@ export const ActionsOnMapDoer = ({ }) => {
     <MapEventer
       directlyOnMap={false}
       mapEvents={{
-        moveend: (e, mapObj: Map) => {
+        moveend: (_e: any, mapObj: Map) => {
           setMapBounds(mapObj.getBounds());
         },
-        load: (e, mapObj: Map) => {
+        load: (_e: any, mapObj: Map) => {
           setMapBounds(mapObj.getBounds());
         },
       }}
