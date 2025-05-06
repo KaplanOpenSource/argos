@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Stack, TextField, Typography } from '@mui/material';
+import { Stack, TextField, Typography } from '@mui/material';
 import processingDecimalDigits from '../../Utils/processingDecimalDigits';
 
 const DistributeAlongArc = ({ onSubmit, markedPoints }) => {
@@ -17,7 +17,7 @@ const DistributeAlongArc = ({ onSubmit, markedPoints }) => {
   })
 
   return (
-    <Stack direction="column">
+    <Stack direction="column" spacing={1}>
       {positions.map((point, index) => (
         <Stack direction="row" key={index}>
           <Typography component="span" minWidth={50}>{positions[index].label}</Typography>
@@ -27,6 +27,7 @@ const DistributeAlongArc = ({ onSubmit, markedPoints }) => {
             label="x"
             value={point.x}
             InputLabelProps={{ shrink: true }}
+            size='small'
           />
           <TextField
             InputProps={{ style: { fontSize: 14 } }}
@@ -34,6 +35,7 @@ const DistributeAlongArc = ({ onSubmit, markedPoints }) => {
             label="y"
             value={point.y}
             InputLabelProps={{ shrink: true }}
+            size='small'
           />
         </Stack>
       ))}

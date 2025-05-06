@@ -1,9 +1,32 @@
+import React from "react";
 import { createContext, useContext, useState } from "react";
 import { RealMapName } from "../constants/constants";
 import { useExperiments } from "./useExperiments";
 import { useChosenTrial } from "./useChosenTrial";
+import { ICoordinates, IDeviceTypeAndItem, IExperiment, IImageStandalone, ITrial, ITrialType } from "../types/types";
 
-const experimentContext = createContext();
+interface IExperimentProviderStore {
+    experiments: any[]; // the experiments data
+    setCurrTrial: (params: { experimentName?: string; trialTypeName?: string; trialName?: string; }) => void; // a function to set the current trial
+    currTrial: {
+        experiment: IExperiment | undefined; // the current experiment
+        trialType: ITrialType | undefined; // the current trial type
+        trial: ITrial | undefined; // the current trial
+        shownMap: IImageStandalone | undefined; // the current shown map
+        shownMapName: string | undefined; // the name of the current shown map
+        experimentName: string | undefined; // the name of the current experiment (for legacy)
+        trialTypeName: string | undefined; // the name of the current trial type (for legacy)
+        trialName: string | undefined; // the name of the current trial (for legacy)
+    }; // the current trial information
+    setTrialData: (newTrialData: ITrial) => void; // a function to set the trial data
+    deleteDevice: (params: { experimentName: string; deviceItemName: string; deviceTypeName: string; }) => void; // a function to delete a device
+    deleteDeviceType: (params: { experimentName: string; deviceTypeName: string; }) => void; // a function to delete a device type
+    setLocationsToDevices: (deviceTypeItems: IDeviceTypeAndItem[], latlngs: (ICoordinates | { lat: number; lng: number; })[]) => number; // a function to set the locations of devices
+    showImagePlacement: boolean; // a state variable to control the visibility of the image placement
+    setShowImagePlacement: (val: boolean) => void; // a function to set the showImagePlacement state
+};
+
+const experimentContext = createContext<IExperimentProviderStore | null>(null);
 
 export const ExperimentProvider = ({ children }) => {
     const [state, setState] = useState({
@@ -11,7 +34,14 @@ export const ExperimentProvider = ({ children }) => {
     });
 
     const { setExperiment, experiments } = useExperiments();
-    const { experiment, trialType, trial, shownMap, chooseTrial, isTrialChosen, chosenNames } = useChosenTrial();
+    const {
+        experiment,
+        trialType,
+        trial,
+        shownMap,
+        chooseTrial,
+        setTrialIntoExp,
+    } = useChosenTrial();
 
     const currTrial = {
         experiment: experiment(),
@@ -24,21 +54,28 @@ export const ExperimentProvider = ({ children }) => {
         trialName: trial()?.name, // this field is for legacy
     };
 
-    const setCurrTrial = ({ experimentName, trialTypeName, trialName }) => {
+    const setCurrTrial = ({
+        experimentName,
+        trialTypeName,
+        trialName,
+    }: {
+        experimentName?: string | undefined,
+        trialTypeName?: string | undefined,
+        trialName?: string | undefined,
+    }) => {
         chooseTrial({ experimentName, trialTypeName, trialName });
     }
 
-    const setTrialData = (newTrialData) => {
-        if (!isTrialChosen()) {
-            console.log(`trying to set trial data without current trial\n`, newTrialData);
-            return;
-        }
+    const setTrialData = (newTrialData: ITrial) => {
         const e = structuredClone(experiment());
-        e.trialTypes[chosenNames.trialType.index].trials[chosenNames.trial.index] = newTrialData;
-        setExperiment(currTrial.experimentName, e)
+        if (setTrialIntoExp(newTrialData, e)) {
+            setExperiment(e!.name!, e!)
+        }
     }
 
-    const setLocationsToDevices = (deviceTypeItems, latlngs) => {
+    const setLocationsToDevices = (
+        deviceTypeItems: IDeviceTypeAndItem[],
+        latlngs: (ICoordinates | { lat: number; lng: number; })[]) => {
         const { trial } = currTrial;
         const mapName = currTrial.shownMapName || RealMapName;
         let count = 0;
@@ -51,7 +88,7 @@ export const ExperimentProvider = ({ children }) => {
                     return t.deviceItemName === deviceItemName && t.deviceTypeName === deviceTypeName;
                 });
                 if (coordinates) {
-                    if (coordinates.lat) {
+                    if ('lat' in coordinates) {
                         coordinates = [coordinates.lat, coordinates.lng];
                     }
                     const location = { name: mapName, coordinates };
@@ -78,7 +115,7 @@ export const ExperimentProvider = ({ children }) => {
 
     const deleteDevice = ({ experimentName, deviceItemName, deviceTypeName }) => {
         const e = structuredClone(experiments.find(e => e.name === experimentName));
-        if (!e) {
+        if (!e || !e.name) {
             console.log(`unknown experiment ${experimentName}`);
             return;
         }
@@ -93,12 +130,12 @@ export const ExperimentProvider = ({ children }) => {
                 }
             }
         }
-        setExperiment(currTrial.experimentName, e)
+        setExperiment(e.name, e)
     }
 
     const deleteDeviceType = ({ experimentName, deviceTypeName }) => {
         const e = structuredClone(experiments.find(e => e.name === experimentName));
-        if (!e) {
+        if (!e || !e.name) {
             console.log(`unknown experiment ${experimentName}`);
             return;
         }
@@ -110,7 +147,7 @@ export const ExperimentProvider = ({ children }) => {
                 }
             }
         }
-        setExperiment(currTrial.experimentName, e)
+        setExperiment(e.name, e)
     }
 
     const store = {
@@ -133,4 +170,4 @@ export const ExperimentProvider = ({ children }) => {
 }
 
 // useExperimentProvider should be at the end to avoid reload problems
-export const useExperimentProvider = () => useContext(experimentContext);
+export const useExperimentProvider = () => useContext(experimentContext)!;

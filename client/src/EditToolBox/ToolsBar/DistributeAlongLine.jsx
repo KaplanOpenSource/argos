@@ -12,7 +12,7 @@ const DistributeAlongLine = ({ onSubmit, markedPoints, title }) => {
   })
 
   return (
-    <Stack direction="column">
+    <Stack direction="column" spacing={1}>
       {positions.map((point, index) => (
         <Stack direction="row" key={index}>
           <Typography component="span" minWidth={40}>{point.label}</Typography>
@@ -23,6 +23,7 @@ const DistributeAlongLine = ({ onSubmit, markedPoints, title }) => {
             value={point.x}
             InputLabelProps={{ shrink: true }}
             fullWidth={true}
+            size='small'
           />
           <TextField
             InputProps={{ style: { fontSize: 14 } }}
@@ -31,6 +32,7 @@ const DistributeAlongLine = ({ onSubmit, markedPoints, title }) => {
             value={point.y}
             InputLabelProps={{ shrink: true }}
             fullWidth={true}
+            size='small'
           />
         </Stack>
       ))}

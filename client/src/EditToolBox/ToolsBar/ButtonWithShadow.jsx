@@ -1,5 +1,6 @@
 import { Button as MuiButton } from '@mui/material';
 import React from 'react';
+import { toTitleCase } from '../../Utils/utils';
 
 export const ButtonWithShadow = ({ text, ...rest }) => {
   return (
@@ -7,9 +8,15 @@ export const ButtonWithShadow = ({ text, ...rest }) => {
       <MuiButton
         variant="outlined"
         color="primary"
-        style={{ width: '95%', margin: '10px auto' }}
-        {...rest}>
-        {text}
+        sx={{
+            paddingInline:'5px',
+            width: '95%',
+            margin: '5px auto',
+            textTransform: 'none',
+        }}
+        {...rest}
+      >
+        {toTitleCase(text)}
       </MuiButton>
     </div>
   );
