@@ -28,7 +28,7 @@ export const EmbeddedImageLayer = ({
         <GridlinesLayer
           from={[shownMap.latsouth, shownMap.lngwest]}
           to={[shownMap.latnorth, shownMap.lngeast]}
-          delta={shownMap?.gridDelta} // showGrid.meters}
+          delta={shownMap?.gridDelta}
           key={'grid'}
         />
       )

@@ -2,6 +2,7 @@ import { EditLocationAlt, EditLocationOutlined } from "@mui/icons-material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import MapIcon from '@mui/icons-material/Map';
 import { Stack } from "@mui/material";
+import React from "react";
 import { TreeRow } from "../App/TreeRow";
 import { useExperimentProvider } from "../Context/ExperimentProvider";
 import { useChosenTrial } from "../Context/useChosenTrial";
@@ -9,6 +10,7 @@ import { useExperiments } from "../Context/useExperiments";
 import { useShownMap } from "../Context/useShownMap";
 import { ImageOnServer } from "../IO/ImageOnServer";
 import { UploadImageButton } from "../IO/UploadImageButton";
+import { BooleanProperty } from "../Property/BooleanProperty";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
 
@@ -129,6 +131,20 @@ export const ImageStandalone = ({ data, setData, experiment }) => {
             label="Y Bottom"
             value={data.ybottom}
             onChange={val => setData({ ...data, ybottom: val })}
+          />
+        </Stack>
+        <Stack direction={'row'}>
+          <BooleanProperty
+            label={'Show grid'}
+            data={!!data?.gridDelta}
+            setData={(val) => setData({ ...data, gridDelta: val ? 10 : 0 })}
+          />
+          <TextFieldDebounceOutlined
+            label="Grid Delta"
+            value={data.gridDelta}
+            onChange={val => setData({ ...data, gridDelta: parseFloat(val) })}
+            type='number'
+            sx={{ width: 150 }}
           />
         </Stack>
         <ImageOnServer
