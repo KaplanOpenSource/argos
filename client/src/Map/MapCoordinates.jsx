@@ -25,6 +25,7 @@ export const MapCoordinates = ({ showAsLatLong = true }) => {
                 fontFamily: 'Helvetica Neue, Arial, Helvetica, sans-serif',
                 fontSize: '12px',
                 lineHeight: '18px',
+                width: '150px',
             }}>
                 {str}
             </span>

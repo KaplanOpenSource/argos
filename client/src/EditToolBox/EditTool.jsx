@@ -31,6 +31,7 @@ export const EditTool = ({ icon, id, title, shape, onClickIcon, showEditBox, onS
                     <Button key={id}
                         onClick={() => onClickIcon(id)}
                         color='inherit'
+                        style={{ height: '100%' }}
                     >
                         {icon}
                     </Button>

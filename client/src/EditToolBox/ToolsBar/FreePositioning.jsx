@@ -9,7 +9,7 @@ const FreePositioning = ({ onSubmit, buttonText }) => {
     setPos((p) => ({ ...p, [name]: parseFloat(value) }));
   };
   return (
-    <Stack direction="column">
+    <Stack direction="column" spacing={1}>
       <TextField
         key="x-input"
         id="x-input"
@@ -18,6 +18,7 @@ const FreePositioning = ({ onSubmit, buttonText }) => {
         name="x"
         defaultValue={pos.x}
         InputLabelProps={{ shrink: true }}
+        size='small'
       />
       <TextField
         key="y-input"
@@ -27,6 +28,7 @@ const FreePositioning = ({ onSubmit, buttonText }) => {
         name="y"
         defaultValue={pos.y}
         InputLabelProps={{ shrink: true }}
+        size='small'
       />
     </Stack>
   );
