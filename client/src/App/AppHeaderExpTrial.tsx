@@ -8,6 +8,7 @@ import { ButtonTooltip } from '../Utils/ButtonTooltip';
 import { useChosenTrial } from '../Context/useChosenTrial';
 import { useState } from 'react';
 import { IMenuActionItem, MenuActions } from '../Utils/MenuActions';
+import { useExperiments } from '../Context/useExperiments';
 
 export const AppHeaderExpTrial = () => {
   const [anchorEl, setAnchorEl] = useState<Element | null>(null);
@@ -21,6 +22,34 @@ export const AppHeaderExpTrial = () => {
     trialType,
     trial,
   } = useChosenTrial();
+
+  const {
+    experiments,
+  } = useExperiments();
+
+  const showTrialsMenu = (e: { currentTarget: Element | null; }) => {
+    setMenuItems((trialType()?.trials || []).map(tr => {
+      return {
+        name: tr.name!,
+        action: () => chooseTrial({
+          experimentName: experiment()?.name,
+          trialTypeName: trialType()?.name,
+          trialName: tr.name
+        }),
+      };
+    }));
+    setAnchorEl(e.currentTarget as (Element | null));
+  };
+
+  const showExperimentsMenu = (e: { currentTarget: Element | null; }) => {
+    setMenuItems(experiments.map(exp => {
+      return {
+        name: exp.name!,
+        action: () => chooseTrial({ experimentName: exp.name }),
+      };
+    }));
+    setAnchorEl(e.currentTarget as (Element | null));
+  };
 
   return (
     <Stack
@@ -45,33 +74,20 @@ export const AppHeaderExpTrial = () => {
           >
             <>
               <Typography variant="body1"
-              // onClick={(e) => setAnchorEl(e.currentTarget as (Element | null))}
+                onClick={showExperimentsMenu}
+                style={{ cursor: 'pointer' }}
               >
                 {experiment()!.name}
               </Typography>
               {isTrialChosen()
                 ? <>
                   &nbsp;:&nbsp;
-                  <Typography variant="body1"
-                  // onClick={(e) => setAnchorEl(e.currentTarget as (Element | null))}
-                  >
+                  <Typography variant="body1">
                     {trialType()!.name}
                   </Typography>
                   &nbsp;:&nbsp;
                   <Typography variant="body1"
-                    onClick={(e) => {
-                      setMenuItems((trialType()?.trials || []).map(t => {
-                        return {
-                          name: t.name!,
-                          action: () => chooseTrial({
-                            experimentName: experiment()?.name,
-                            trialTypeName: trialType()?.name,
-                            trialName: t.name
-                          }),
-                        }
-                      }));
-                      setAnchorEl(e.currentTarget as (Element | null));
-                    }}
+                    onClick={showTrialsMenu}
                     style={{ cursor: 'pointer' }}
                   >
                     {trial()!.name}
