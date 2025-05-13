@@ -21,26 +21,27 @@ import { ExperimentTreeNodesExpandedContext } from "./ExperimentTreeNodesExpande
 import { DevicesTabularView } from "./Tabular/DevicesTabularView";
 import { TrialsTabularView } from "./Tabular/TrialsTabularView";
 import { TrialTypesList } from "./TrialTypesList";
+import { IExperiment, ITrackUuid } from '../types/types';
 
 export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
   const { experiments, setExperiment } = useExperiments();
   const { currTrial, setCurrTrial } = useExperimentProvider();
-  const { experiment, experimentName } = currTrial;
   const { cloneExperiment } = useCloneExperiment();
   const { addActionOnMap } = useContext(ActionsOnMapContext)!;
   const { resetHiddenDeviceTypes } = useHiddenDeviceTypes();
   const { expandedNodes, setExpandedNodes } = useContext(ExperimentTreeNodesExpandedContext)!;
-
   const { selectionOnEnclosingUuids, setSelectionOnEnclosingUuids } = useContext(EnclosingListSelectionContext)!;
 
-  const findExperimentByUuid = (uuid) => {
+  const { experiment } = currTrial;
+
+  const findExperimentByUuid = (uuid: string | undefined) => {
     if (uuid) {
-      return experiments.find(e => e.trackUuid === uuid);
+      return (experiments as (IExperiment & ITrackUuid)[]).find(e => e.trackUuid === uuid);
     }
     return undefined;
   }
 
-  const handleNodeToggle = (_e, nodeIds) => {
+  const handleNodeToggle = (_e, nodeIds: string[]) => {
     const newlyExpanded = nodeIds.filter(nodeId => !expandedNodes.includes(nodeId));
 
     const foundExperiment = findExperimentByUuid(newlyExpanded[0]);
@@ -51,8 +52,9 @@ export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
       const newNodes = [
         foundExperiment.trackUuid,
         ...nodeIds.filter(u => !findExperimentByUuid(u)),
-      ];
-      if (foundExperiment?.trialTypes?.length < 10) {
+      ].filter(x => x !== undefined);
+      
+      if ((foundExperiment?.trialTypes?.length || 0) < 10) {
         newNodes.push(foundExperiment.trackUuid + '_trialTypes');
       }
       if (sum(foundExperiment?.trialTypes?.map(x => x?.trials?.length || 0)) < 10) {
@@ -89,7 +91,7 @@ export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
     } else {
       setShowConfig(SHOW_ALL_EXPERIMENTS);
     }
-  }, [experimentName]);
+  }, [experiment?.name]);
 
   return (
     <Paper
@@ -113,7 +115,7 @@ export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
         onNodeToggle={handleNodeToggle}
         multiSelect
         selected={selectionOnEnclosingUuids}
-        onNodeSelect={(e, ids) => setSelectionOnEnclosingUuids(ids)}
+        onNodeSelect={(_e, nodeIds: string[]) => setSelectionOnEnclosingUuids(nodeIds)}
       >
         <SwitchCase test={currTrial.experiment ? showConfig : SHOW_ALL_EXPERIMENTS}>
           <Case value={SHOW_ALL_EXPERIMENTS}>
