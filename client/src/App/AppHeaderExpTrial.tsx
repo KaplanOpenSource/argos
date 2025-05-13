@@ -4,19 +4,20 @@ import {
   Tooltip,
   Typography
 } from '@mui/material';
-import { useExperimentProvider } from '../Context/ExperimentProvider';
-import { useExperiments } from '../Context/useExperiments';
 import { ButtonTooltip } from '../Utils/ButtonTooltip';
+import { useChosenTrial } from '../Context/useChosenTrial';
 
 export const AppHeaderExpTrial = () => {
+
   const {
-    currTrial,
-    setCurrTrial,
-  } = useExperimentProvider();
+    isExperimentChosen,
+    isTrialChosen,
+    chooseTrial,
+    experiment,
+    trialType,
+    trial,
+  } = useChosenTrial();
 
-  const { addExperiment } = useExperiments();
-
-  const { experimentName, trialTypeName, trialName } = currTrial;
   return (
     <Stack
       direction='row'
@@ -24,12 +25,12 @@ export const AppHeaderExpTrial = () => {
       alignItems="center"
       sx={{ flexGrow: 1 }}
     >
-      {experimentName
+      {isExperimentChosen()
         ? <>
           <ButtonTooltip
             color="inherit"
             onClick={() => {
-              setCurrTrial({});
+              chooseTrial({});
             }}
             tooltip={"Stop editing this trial"}
           >
@@ -39,13 +40,13 @@ export const AppHeaderExpTrial = () => {
             title="Experiment and trial currently edited"
           >
             <Typography variant="body1">
-              {experimentName}
-              {trialName
+              {experiment()!.name}
+              {isTrialChosen()
                 ? <>
                   &nbsp;:&nbsp;
-                  {trialTypeName}
+                  {trialType()!.name}
                   &nbsp;:&nbsp;
-                  {trialName}
+                  {trial()!.name}
                 </>
                 : null}
             </Typography>
