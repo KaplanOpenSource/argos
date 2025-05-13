@@ -38,9 +38,9 @@ export function parseUrlParams(): { [s: string]: any; } {
   return ret;
 }
 
-export function changeByName(arr: INamed[] | undefined, name: string, newData: INamed): INamed[] {
+export function changeByName(arr: INamed[] | undefined, name: string, newData: INamed | undefined): INamed[] {
   if (arr === undefined) {
-    return [newData];
+    return newData === undefined ? [] : [newData];
   }
   if (newData === undefined) {
     return arr.filter(t => t.name !== name);

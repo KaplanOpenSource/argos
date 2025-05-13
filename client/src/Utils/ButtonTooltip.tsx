@@ -13,7 +13,7 @@ export const ButtonTooltip = ({ onClick, tooltip, disabled = false, closeTooltip
       size="small"
       onClick={(e) => {
         e.stopPropagation();
-        DomEvent.stop(e);
+        DomEvent.stop(e as any);
         if (closeTooltipOnClick) {
           setOpen(false);
         }
