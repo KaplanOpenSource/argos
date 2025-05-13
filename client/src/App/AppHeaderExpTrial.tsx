@@ -6,8 +6,12 @@ import {
 } from '@mui/material';
 import { ButtonTooltip } from '../Utils/ButtonTooltip';
 import { useChosenTrial } from '../Context/useChosenTrial';
+import { useState } from 'react';
+import { IMenuActionItem, MenuActions } from '../Utils/MenuActions';
 
 export const AppHeaderExpTrial = () => {
+  const [anchorEl, setAnchorEl] = useState<Element | null>(null);
+  const [menuItems, setMenuItems] = useState<IMenuActionItem[]>([]);
 
   const {
     isExperimentChosen,
@@ -39,18 +43,48 @@ export const AppHeaderExpTrial = () => {
           <Tooltip
             title="Experiment and trial currently edited"
           >
-            <Typography variant="body1">
-              {experiment()!.name}
+            <>
+              <Typography variant="body1"
+              // onClick={(e) => setAnchorEl(e.currentTarget as (Element | null))}
+              >
+                {experiment()!.name}
+              </Typography>
               {isTrialChosen()
                 ? <>
                   &nbsp;:&nbsp;
-                  {trialType()!.name}
+                  <Typography variant="body1"
+                  // onClick={(e) => setAnchorEl(e.currentTarget as (Element | null))}
+                  >
+                    {trialType()!.name}
+                  </Typography>
                   &nbsp;:&nbsp;
-                  {trial()!.name}
+                  <Typography variant="body1"
+                    onClick={(e) => {
+                      setMenuItems((trialType()?.trials || []).map(t => {
+                        return {
+                          name: t.name!,
+                          action: () => chooseTrial({
+                            experimentName: experiment()?.name,
+                            trialTypeName: trialType()?.name,
+                            trialName: t.name
+                          }),
+                        }
+                      }));
+                      setAnchorEl(e.currentTarget as (Element | null));
+                    }}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    {trial()!.name}
+                  </Typography>
                 </>
                 : null}
-            </Typography>
+            </>
           </Tooltip>
+          <MenuActions
+            anchorEl={anchorEl}
+            setAnchorEl={setAnchorEl}
+            menuItems={menuItems}
+          />
         </>
         : null
       }

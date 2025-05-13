@@ -1,6 +1,6 @@
 import { Menu, MenuItem } from "@mui/material";
 
-type IMenuActionItem = {
+export type IMenuActionItem = {
   name: string;
   action: () => void;
 };
