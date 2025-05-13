@@ -1,10 +1,8 @@
 import PlaceIcon from '@mui/icons-material/Place';
-import RotateLeftIcon from '@mui/icons-material/RotateLeft';
 import {
   Paper,
   Stack,
 } from '@mui/material';
-import React from 'react';
 
 import { useShape } from './ShapeContext.jsx';
 import {
@@ -25,13 +23,8 @@ import {
   SELECT_SHAPE,
   SELECT_TITLE
 } from './utils/constants.js';
-import CurveIcon from './utils/icons/CurveIcon.svg?react';
-import DistrubteAlongLineIcon from './utils/icons/DistrubteAlongLineIcon.svg?react';
-import DotIcon from './utils/icons/DotIcon.svg?react';
-import FreePositioningIcon from './utils/icons/FreePositioningIcon.svg?react';
-import RectangleIcon from './utils/icons/RectangleIcon.svg?react';
 
-import { PlaylistAdd } from '@mui/icons-material';
+import { PlaylistAdd, RotateLeftRounded, Timeline } from '@mui/icons-material';
 import { useExperimentProvider } from '../Context/ExperimentProvider.jsx';
 import { useCurrTrial } from '../Context/useCurrTrial';
 import { useDeviceSeletion } from '../Context/useDeviceSeletion';
@@ -119,7 +112,7 @@ export const EditToolBox = ({
           onClickIcon={onClickIcon}
           showEditBox={showEditBox}
           id={FREEPOSITIONING_SHAPE}
-          icon={<FreePositioningIcon />}
+          icon={<img src='/icons/FreePositioningIcon.svg' />}
           title={FREEPOSITIONING_TITLE}
           onSubmit={pos => handleSetOne({ latlng: { lat: pos.x, lng: pos.y } })}
           submitText={"free position"}
@@ -133,7 +126,7 @@ export const EditToolBox = ({
           onClickIcon={onClickIcon}
           showEditBox={showEditBox}
           id={POINT_SHAPE}
-          icon={<DotIcon />}
+          icon={<img src='/icons/DotIcon.svg' />}
           title={POINT_TITLE}
           onSubmit={pos => handleSetOne({ latlng: { lat: pos.x, lng: pos.y } })}
           submitText={"position all"}
@@ -147,7 +140,7 @@ export const EditToolBox = ({
           onClickIcon={onClickIcon}
           showEditBox={showEditBox}
           id={CURVE_SHAPE}
-          icon={<CurveIcon />}
+          icon={<img src='/icons/CurveIcon.svg' />}
           title={CURVE_TITLE}
           onSubmit={setMultipleDeviceLocations}
         >
@@ -160,7 +153,7 @@ export const EditToolBox = ({
           onClickIcon={onClickIcon}
           showEditBox={showEditBox}
           id={DISTRIBUTE_ALONG_LINE_SHAPE}
-          icon={<DistrubteAlongLineIcon />}
+          icon={<Timeline fontSize="large" />}
           title={DISTRIBUTE_ALONG_LINE_TITLE}
           onSubmit={setMultipleDeviceLocations}
         >
@@ -173,7 +166,7 @@ export const EditToolBox = ({
           onClickIcon={onClickIcon}
           showEditBox={showEditBox}
           id={ARC_SHAPE}
-          icon={<RotateLeftIcon fontSize="large" />}
+          icon={<RotateLeftRounded fontSize="large" />}
           onSubmit={setMultipleDeviceLocations}
           title={ARC_TITLE}
         >
@@ -186,7 +179,7 @@ export const EditToolBox = ({
           onClickIcon={onClickIcon}
           showEditBox={showEditBox}
           id={RECTANGLE_SHAPE}
-          icon={<RectangleIcon />}
+          icon={<img src='/icons/RectangleIcon.svg' />}
           title={RECTANGLE_TITLE}
           onSubmit={setMultipleDeviceLocations}
         >
