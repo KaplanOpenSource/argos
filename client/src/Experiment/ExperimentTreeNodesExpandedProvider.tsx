@@ -1,15 +1,22 @@
 import { createContext, useState } from "react";
 
-export const ExperimentTreeNodesExpandedContext = createContext();
+type IExperimentTreeNodesExpandedStore = {
+  expandedNodes: string[],
+  setExpandedNodes: (nodeNames: string[]) => void,
+  addExpandedNode: (nodeName: string) => void,
+  removeExpandedNode: (nodeName: string) => void,
+};
+
+export const ExperimentTreeNodesExpandedContext = createContext<IExperimentTreeNodesExpandedStore | null>(null);
 
 export const ExperimentTreeNodesExpandedProvider = ({ children }) => {
-  const [expandedNodes, setExpandedNodes] = useState([]);
+  const [expandedNodes, setExpandedNodes] = useState<string[]>([]);
 
-  const addExpandedNode = (newNode) => {
+  const addExpandedNode = (newNode: string) => {
     setExpandedNodes(prev => [...prev.filter(x => x !== newNode), newNode]);
   };
 
-  const removeExpandedNode = (newNode) => {
+  const removeExpandedNode = (newNode: string) => {
     setExpandedNodes(prev => prev.filter(x => x !== newNode));
   };
 

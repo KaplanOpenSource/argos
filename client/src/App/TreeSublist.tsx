@@ -28,9 +28,7 @@ export const TreeSublist = ({
   components?: ReactNode,
   children?: ReactNode,
 }) => {
-  const {
-    addExpandedNode,
-  } = useContext(ExperimentTreeNodesExpandedContext);
+  const { addExpandedNode } = useContext(ExperimentTreeNodesExpandedContext)!;
 
   const items = data[fieldName] || [];
   const key = parentKey + '_' + fieldName;
