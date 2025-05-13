@@ -8,15 +8,10 @@ import {
   OpenInFull,
   Upload
 } from '@mui/icons-material';
-import CloseIcon from '@mui/icons-material/Close';
 import EditLocationAltIcon from '@mui/icons-material/EditLocationAlt';
 import EditLocationOutlinedIcon from '@mui/icons-material/EditLocationOutlined';
 import {
-  Stack,
-  Tooltip,
-  Typography
-} from '@mui/material';
-import React from 'react';
+  Stack} from '@mui/material';
 import { useExperimentProvider } from '../Context/ExperimentProvider';
 import { useExperiments } from '../Context/useExperiments';
 import { DocumentationButton } from '../Doc/DocumentationButton';
@@ -26,6 +21,7 @@ import { ButtonTooltip } from '../Utils/ButtonTooltip';
 import { AppHeaderShownMap } from './AppHeaderShownMap';
 import { ShowConfigToggles } from './ShowConfigToggles';
 import { UndoRedoButtons } from './UndoRedo/UndoRedoButtons';
+import { AppHeaderExpTrial } from './AppHeaderExpTrial';
 
 export const AppHeaderButtons = ({
   fullscreen, setFullscreen,
@@ -35,7 +31,6 @@ export const AppHeaderButtons = ({
 }) => {
   const {
     currTrial,
-    setCurrTrial,
     showImagePlacement,
     setShowImagePlacement,
   } = useExperimentProvider();
@@ -43,7 +38,7 @@ export const AppHeaderButtons = ({
   const { addExperiment } = useExperiments();
 
   const { uploadExperiment } = useUploadExperiment();
-  const { experimentName, trialTypeName, trialName } = currTrial;
+  const { experimentName } = currTrial;
   return (
     <Stack
       direction='row'
@@ -105,30 +100,8 @@ export const AppHeaderButtons = ({
         />
         {experimentName
           ? <>
-            <ButtonTooltip
-              color="inherit"
-              onClick={() => {
-                setCurrTrial({});
-              }}
-              tooltip={"Stop editing this trial"}
-            >
-              <CloseIcon />
-            </ButtonTooltip>
-            <Tooltip
-              title="Experiment and trial currently edited"
-            >
-              <Typography variant="body1">
-                {experimentName}
-                {trialName
-                  ? <>
-                    &nbsp;:&nbsp;
-                    {trialTypeName}
-                    &nbsp;:&nbsp;
-                    {trialName}
-                  </>
-                  : null}
-              </Typography>
-            </Tooltip>
+            <AppHeaderExpTrial
+            />
             <AppHeaderShownMap
             />
             <ButtonTooltip
