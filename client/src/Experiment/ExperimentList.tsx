@@ -31,7 +31,7 @@ export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
   const { resetHiddenDeviceTypes } = useHiddenDeviceTypes();
   const { expandedNodes, setExpandedNodes } = useContext(ExperimentTreeNodesExpandedContext)!;
 
-  const { selectionOnEnclosingUuids, setSelectionOnEnclosingUuids } = useContext(EnclosingListSelectionContext);
+  const { selectionOnEnclosingUuids, setSelectionOnEnclosingUuids } = useContext(EnclosingListSelectionContext)!;
 
   const findExperimentByUuid = (uuid) => {
     if (uuid) {
