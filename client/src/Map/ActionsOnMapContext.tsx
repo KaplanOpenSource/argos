@@ -1,5 +1,5 @@
 import { LatLngBounds, Map } from "leaflet";
-import React, { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { useMap } from "react-leaflet";
 import { MapEventer } from "./MapEventer";
 

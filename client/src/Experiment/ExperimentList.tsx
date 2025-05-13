@@ -27,18 +27,11 @@ export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
   const { currTrial, setCurrTrial } = useExperimentProvider();
   const { experiment, experimentName } = currTrial;
   const { cloneExperiment } = useCloneExperiment();
-  const { addActionOnMap } = useContext(ActionsOnMapContext);
+  const { addActionOnMap } = useContext(ActionsOnMapContext)!;
   const { resetHiddenDeviceTypes } = useHiddenDeviceTypes();
+  const { expandedNodes, setExpandedNodes } = useContext(ExperimentTreeNodesExpandedContext)!;
 
-  const {
-    selectionOnEnclosingUuids,
-    setSelectionOnEnclosingUuids,
-  } = useContext(EnclosingListSelectionContext);
-
-  const {
-    expandedNodes,
-    setExpandedNodes,
-  } = useContext(ExperimentTreeNodesExpandedContext);
+  const { selectionOnEnclosingUuids, setSelectionOnEnclosingUuids } = useContext(EnclosingListSelectionContext);
 
   const findExperimentByUuid = (uuid) => {
     if (uuid) {
