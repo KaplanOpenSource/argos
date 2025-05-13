@@ -12,7 +12,7 @@ export const AppHeaderShownMap = ({ }) => {
   const { shownMapName, experiment } = currTrial;
   const { switchToMap } = useShownMap({});
 
-  const standaloneNames: string[] = (experiment?.imageStandalone || []).map((x: IImageStandalone) => x.name);
+  const standaloneNames: string[] = (experiment?.imageStandalone || []).map((x: IImageStandalone) => x.name!);
   const menuItems = standaloneNames.map(name => ({
     name,
     action: () => switchToMap(name)
