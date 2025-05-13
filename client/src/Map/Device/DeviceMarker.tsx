@@ -89,7 +89,8 @@ export const DeviceMarker = ({
         drag: e => {
           const tooltipMarkerEl = document.getElementById('tooltip-marker');
           if (tooltipMarkerEl) {
-            tooltipMarkerEl.textContent = locationToStr({ coordinates: [e.latlng.lat, e.latlng.lng] });
+            const latlng = e.target.getLatLng();
+            tooltipMarkerEl.textContent = locationToStr({ coordinates: [latlng.lat, latlng.lng] });
           }
         },
         click: () => {
