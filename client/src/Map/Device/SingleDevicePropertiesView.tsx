@@ -3,7 +3,6 @@ import {
   Box,
   Stack, Typography
 } from '@mui/material';
-import React from 'react';
 import { useExperimentProvider } from '../../Context/ExperimentProvider';
 import { useCurrTrial } from '../../Context/useCurrTrial';
 import { AttributeItemList } from '../../Experiment/AttributeItemList';
@@ -11,12 +10,20 @@ import { AddContainedButton } from '../../Experiment/Contained/AddContainedButto
 import { ContainedDevice } from '../../Experiment/Contained/ContainedDevice';
 import { DeviceItemLocationButton } from '../../Experiment/DeviceItemLocationButton';
 import { SelectDeviceButton } from '../../Experiment/SelectDeviceButton';
-import { ScopeEnum } from '../../types/types';
+import { IDeviceOnTrial, ScopeEnum } from '../../types/types';
 import { ButtonTooltip } from '../../Utils/ButtonTooltip';
 import { ContainedDevicesList } from './ContainedDevicesList';
 import { DeviceLocationEdit } from './DeviceLocationEdit';
 
-export const SingleDevicePropertiesView = ({ deviceOnTrial, setDeviceOnTrial, children }) => {
+export const SingleDevicePropertiesView = ({
+  deviceOnTrial,
+  setDeviceOnTrial,
+  children,
+}: {
+  deviceOnTrial: IDeviceOnTrial,
+  setDeviceOnTrial: (newData: IDeviceOnTrial) => void,
+  children?: any,
+}) => {
   const { currTrial } = useExperimentProvider();
   const experiment = currTrial.experiment || {};
   const { deviceTypeName, deviceItemName } = deviceOnTrial;

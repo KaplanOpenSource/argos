@@ -6,6 +6,7 @@ import { useCurrTrial } from "../../Context/useCurrTrial";
 import { useDeviceSeletion } from "../../Context/useDeviceSeletion";
 import { useShape } from "../../EditToolBox/ShapeContext";
 import { SELECT_SHAPE } from "../../EditToolBox/utils/constants";
+import { IDeviceOnTrial } from "../../types/types";
 import { round9, roundDec } from "../../Utils/GeometryUtils";
 import { usePopupSwitch } from "../PopupSwitchContext";
 import { DeviceMarkerIcon } from "./DeviceMarkerIcon";
@@ -21,7 +22,15 @@ export const locationToStr = (location) => {
   }
 }
 
-export const DeviceMarker = ({ deviceOnTrial, setDeviceOnTrial, showDeviceNames }) => {
+export const DeviceMarker = ({
+  deviceOnTrial,
+  setDeviceOnTrial,
+  showDeviceNames,
+}: {
+  deviceOnTrial: IDeviceOnTrial,
+  setDeviceOnTrial: (newData: IDeviceOnTrial) => void,
+  showDeviceNames: boolean,
+}) => {
   const { selection, setSelection } = useDeviceSeletion();
   const { currTrial } = useExperimentProvider();
   const { trial } = useCurrTrial({});
@@ -41,7 +50,20 @@ export const DeviceMarker = ({ deviceOnTrial, setDeviceOnTrial, showDeviceNames 
   if (!coordinates) return null;
 
   const setLocation = (latlng) => {
-    trial.getDevice(deviceTypeName, deviceItemName).setLocationOnMap([latlng.lat, latlng.lng], currTrial.shownMapName);
+    const dlat = latlng.lat - coordinates[0];
+    const dlng = latlng.lng - coordinates[1];
+    trial.batch(draft => {
+      draft.getDevicesByNames(selection).forEach(devSelect => {
+        if (devSelect.hasLocationOnMap(currTrial.shownMapName)) {
+          const coordSelect = devSelect.getLocation()?.coordinates;
+          if (coordSelect) {
+            devSelect.setLocationOnMap([coordSelect[0] + dlat, coordSelect[1] + dlng], currTrial.shownMapName);
+          }
+        }
+      })
+      const devDrag = draft.getDevice(deviceTypeName, deviceItemName);
+      devDrag.setLocationOnMap([latlng.lat, latlng.lng], currTrial.shownMapName);
+    })
   }
 
   const isSelected = selection.find(s => s.deviceItemName === deviceItemName && s.deviceTypeName === deviceTypeName);
@@ -65,7 +87,10 @@ export const DeviceMarker = ({ deviceOnTrial, setDeviceOnTrial, showDeviceNames 
           setLocation(e.target.getLatLng());
         },
         drag: e => {
-          document.getElementById('tooltip-marker').textContent = locationToStr({ coordinates: [e.latlng.lat, e.latlng.lng] });
+          const tooltipMarkerEl = document.getElementById('tooltip-marker');
+          if (tooltipMarkerEl) {
+            tooltipMarkerEl.textContent = locationToStr({ coordinates: [e.latlng.lat, e.latlng.lng] });
+          }
         },
         click: () => {
           if (shape === SELECT_SHAPE) {
