@@ -1,3 +1,4 @@
+import { LatLng } from "leaflet";
 import { useEffect, useRef } from "react";
 import { Marker, Popup, Tooltip } from "react-leaflet";
 import { RealMapName } from "../../constants/constants";
@@ -49,7 +50,7 @@ export const DeviceMarker = ({
   const { coordinates } = location || {};
   if (!coordinates) return null;
 
-  const setLocation = (latlng) => {
+  const setLocation = (latlng: LatLng) => {
     const dlat = latlng.lat - coordinates[0];
     const dlng = latlng.lng - coordinates[1];
     trial.batch(draft => {
@@ -65,6 +66,8 @@ export const DeviceMarker = ({
       devDrag.setLocationOnMap([latlng.lat, latlng.lng], currTrial.shownMapName);
     })
   }
+
+  // const dragLocation = ()
 
   const isSelected = selection.find(s => s.deviceItemName === deviceItemName && s.deviceTypeName === deviceTypeName);
 
@@ -83,7 +86,6 @@ export const DeviceMarker = ({
       icon={icon}
       eventHandlers={{
         dragend: e => {
-          // e.target.closeTooltip();
           setLocation(e.target.getLatLng());
         },
         drag: e => {
