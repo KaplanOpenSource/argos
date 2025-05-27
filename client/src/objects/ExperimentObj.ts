@@ -1,81 +1,81 @@
-import { IExperiment } from '../types';
-import { ImageEmbeddedObj, ImageStandaloneObj, TrialTypeObj, DeviceTypeObj, ShapeObj } from '.';
+import { DeviceTypeObj, ImageEmbeddedObj, ImageStandaloneObj, ShapeObj, TrialTypeObj } from '.';
+import { IExperiment } from '../types/types';
 import { ExperimentChange } from './ExperimentChange';
 
 export class ExperimentObj implements IExperiment {
-    version?: string;
-    startDate?: string;
-    endDate?: string;
-    description?: string;
-    name: string;
-    imageEmbedded: ImageEmbeddedObj[] = [];
-    imageStandalone: ImageStandaloneObj[] = [];
-    trialTypes: TrialTypeObj[] = [];
-    deviceTypes: DeviceTypeObj[] = [];
-    shapes: ShapeObj[] = [];
+  version?: string;
+  startDate?: string;
+  endDate?: string;
+  description?: string;
+  name: string;
+  imageEmbedded: ImageEmbeddedObj[] = [];
+  imageStandalone: ImageStandaloneObj[] = [];
+  trialTypes: TrialTypeObj[] = [];
+  deviceTypes: DeviceTypeObj[] = [];
+  shapes: ShapeObj[] = [];
 
-    constructor(data: IExperiment) {
-        if (!data.name) {
-            throw new Error('Experiment name is required');
-        }
-        this.version = data.version;
-        this.startDate = data.startDate;
-        this.endDate = data.endDate;
-        this.description = data.description;
-        this.name = data.name;
-        
-        this.imageEmbedded = data.imageEmbedded?.map(img => new ImageEmbeddedObj(img)) || [];
-        this.imageStandalone = data.imageStandalone?.map(img => new ImageStandaloneObj(img)) || [];
-        this.deviceTypes = data.deviceTypes?.map(type => new DeviceTypeObj(type)) || [];
-        this.trialTypes = data.trialTypes?.map(type => new TrialTypeObj(type, this.deviceTypes)) || [];
-        this.shapes = data.shapes?.map(shape => new ShapeObj(shape)) || [];
+  constructor(data: IExperiment) {
+    if (!data.name) {
+      throw new Error('Experiment name is required');
     }
+    this.version = data.version;
+    this.startDate = data.startDate;
+    this.endDate = data.endDate;
+    this.description = data.description;
+    this.name = data.name;
 
-    getTrialTypeCount(): number {
-        return this.trialTypes.length;
-    }
+    this.imageEmbedded = data.imageEmbedded?.map(img => new ImageEmbeddedObj(img)) || [];
+    this.imageStandalone = data.imageStandalone?.map(img => new ImageStandaloneObj(img)) || [];
+    this.deviceTypes = data.deviceTypes?.map(type => new DeviceTypeObj(type)) || [];
+    this.trialTypes = data.trialTypes?.map(type => new TrialTypeObj(type, this.deviceTypes)) || [];
+    this.shapes = data.shapes?.map(shape => new ShapeObj(shape)) || [];
+  }
 
-    getTrialCount(): number {
-        return this.trialTypes.reduce((sum, type) => sum + type.trials.length, 0);
-    }
+  getTrialTypeCount(): number {
+    return this.trialTypes.length;
+  }
 
-    getDeviceCount(): number {
-        return this.deviceTypes.reduce((sum, type) => sum + type.devices.length, 0);
-    }
+  getTrialCount(): number {
+    return this.trialTypes.reduce((sum, type) => sum + type.trials.length, 0);
+  }
 
-    toJson(): IExperiment {
-        const result: IExperiment = {
-            version: this.version,
-            startDate: this.startDate,
-            endDate: this.endDate,
-            description: this.description,
-            name: this.name
-        };
-        if (this.imageEmbedded.length > 0) {
-            result.imageEmbedded = this.imageEmbedded.map(img => img.toJson());
-        }
-        if (this.imageStandalone.length > 0) {
-            result.imageStandalone = this.imageStandalone.map(img => img.toJson());
-        }
-        if (this.trialTypes.length > 0) {
-            result.trialTypes = this.trialTypes.map(type => type.toJson());
-        }
-        if (this.deviceTypes.length > 0) {
-            result.deviceTypes = this.deviceTypes.map(type => type.toJson());
-        }
-        if (this.shapes.length > 0) {
-            result.shapes = this.shapes.map(shape => shape.toJson());
-        }
-        return result;
-    }
+  getDeviceCount(): number {
+    return this.deviceTypes.reduce((sum, type) => sum + type.devices.length, 0);
+  }
 
-    /**
-     * Creates a new ExperimentChange instance for this experiment.
-     * Use this to create a modified clone of the experiment while maintaining
-     * references to specific objects.
-     * @returns A new ExperimentChange instance
-     */
-    createChange(): ExperimentChange {
-        return new ExperimentChange(this);
+  toJson(): IExperiment {
+    const result: IExperiment = {
+      version: this.version,
+      startDate: this.startDate,
+      endDate: this.endDate,
+      description: this.description,
+      name: this.name
+    };
+    if (this.imageEmbedded.length > 0) {
+      result.imageEmbedded = this.imageEmbedded.map(img => img.toJson());
     }
+    if (this.imageStandalone.length > 0) {
+      result.imageStandalone = this.imageStandalone.map(img => img.toJson());
+    }
+    if (this.trialTypes.length > 0) {
+      result.trialTypes = this.trialTypes.map(type => type.toJson());
+    }
+    if (this.deviceTypes.length > 0) {
+      result.deviceTypes = this.deviceTypes.map(type => type.toJson());
+    }
+    if (this.shapes.length > 0) {
+      result.shapes = this.shapes.map(shape => shape.toJson());
+    }
+    return result;
+  }
+
+  /**
+   * Creates a new ExperimentChange instance for this experiment.
+   * Use this to create a modified clone of the experiment while maintaining
+   * references to specific objects.
+   * @returns A new ExperimentChange instance
+   */
+  createChange(): ExperimentChange {
+    return new ExperimentChange(this);
+  }
 }

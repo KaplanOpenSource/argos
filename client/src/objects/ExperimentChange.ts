@@ -1,5 +1,5 @@
-import { ExperimentObj } from './ExperimentObj';
-import cloneDeepWith from 'lodash/cloneDeepWith';
+import { cloneDeepWith } from 'lodash';
+import { ExperimentObj } from '.';
 
 /**
  * Handles creating a modified clone of an experiment while maintaining references to specific objects.
@@ -39,32 +39,32 @@ import cloneDeepWith from 'lodash/cloneDeepWith';
  *     .apply();
  */
 export class ExperimentChange {
-    private changes: Map<object, object> = new Map();
+  private changes: Map<object, object> = new Map();
 
-    constructor(private readonly experiment: ExperimentObj) {}
+  constructor(private readonly experiment: ExperimentObj) { }
 
-    /**
-     * Specifies a change to be applied to the experiment.
-     * @param originalValue The original value in the experiment
-     * @param newValue The new value to use in the clone
-     * @returns this for method chaining
-     */
-    change<T extends object>(originalValue: T, newValue: T): ExperimentChange {
-        this.changes.set(originalValue, newValue);
-        return this;
-    }
+  /**
+   * Specifies a change to be applied to the experiment.
+   * @param originalValue The original value in the experiment
+   * @param newValue The new value to use in the clone
+   * @returns this for method chaining
+   */
+  change<T extends object>(originalValue: T, newValue: T): ExperimentChange {
+    this.changes.set(originalValue, newValue);
+    return this;
+  }
 
-    /**
-     * Creates a new experiment with all specified changes applied.
-     * Uses lodash.cloneDeepWith to maintain references to unchanged objects.
-     * @returns A new ExperimentObj with the changes applied
-     */
-    apply(): ExperimentObj {
-        return cloneDeepWith(this.experiment, (value: unknown) => {
-            if (this.changes.has(value as object)) {
-                return this.changes.get(value as object);
-            }
-            return undefined;
-        });
-    }
+  /**
+   * Creates a new experiment with all specified changes applied.
+   * Uses lodash.cloneDeepWith to maintain references to unchanged objects.
+   * @returns A new ExperimentObj with the changes applied
+   */
+  apply(): ExperimentObj {
+    return cloneDeepWith(this.experiment, (value: unknown) => {
+      if (this.changes.has(value as object)) {
+        return this.changes.get(value as object);
+      }
+      return undefined;
+    });
+  }
 } 

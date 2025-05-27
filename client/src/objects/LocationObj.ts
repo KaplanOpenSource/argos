@@ -1,19 +1,19 @@
-import { ILocation, ICoordinates } from '../types';
-import { RealMapName } from '../constants';
+import { RealMapName } from '../constants/constants';
+import { ICoordinates, ILocation } from '../types/types';
 
 export class LocationObj implements ILocation {
-    name: string;
-    coordinates?: ICoordinates;
+  name: string;
+  coordinates?: ICoordinates;
 
-    constructor(data: ILocation) {
-        this.name = data.name || RealMapName;
-        this.coordinates = data.coordinates;
-    }
+  constructor(data: ILocation) {
+    this.name = data.name || RealMapName;
+    this.coordinates = data.coordinates;
+  }
 
-    toJson(): ILocation {
-        return {
-            name: this.name,
-            coordinates: this.coordinates
-        };
-    }
+  toJson(): ILocation {
+    return {
+      name: this.name,
+      coordinates: this.coordinates
+    };
+  }
 }
