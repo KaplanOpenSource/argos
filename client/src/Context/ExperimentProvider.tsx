@@ -1,14 +1,12 @@
 import { createContext, useContext } from "react";
 import { RealMapName } from "../constants/constants";
-import { ICoordinates, IDeviceTypeAndItem, IExperiment, IImageStandalone, ITrial, ITrialType } from "../types/types";
+import { ICoordinates, IDeviceTypeAndItem, IImageStandalone, ITrial, ITrialType } from "../types/types";
 import { useChosenTrial } from "./useChosenTrial";
 import { useExperiments } from "./useExperiments";
 
 interface IExperimentProviderStore {
-  experiments: any[]; // the experiments data
   setCurrTrial: (params: { experimentName?: string; trialTypeName?: string; trialName?: string; }) => void; // a function to set the current trial
   currTrial: {
-    experiment: IExperiment | undefined; // the current experiment
     trialType: ITrialType | undefined; // the current trial type
     trial: ITrial | undefined; // the current trial
     shownMap: IImageStandalone | undefined; // the current shown map
@@ -144,7 +142,6 @@ export const ExperimentProvider = ({ children }) => {
   }
 
   const store = {
-    experiments,
     setCurrTrial,
     currTrial,
     setTrialData,
