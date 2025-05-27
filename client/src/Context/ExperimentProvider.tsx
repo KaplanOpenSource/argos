@@ -1,6 +1,5 @@
 import { createContext, useContext } from "react";
-import { RealMapName } from "../constants/constants";
-import { ICoordinates, IDeviceTypeAndItem, IImageStandalone, ITrial, ITrialType } from "../types/types";
+import { IImageStandalone, ITrial, ITrialType } from "../types/types";
 import { useChosenTrial } from "./useChosenTrial";
 import { useExperiments } from "./useExperiments";
 
@@ -18,7 +17,6 @@ interface IExperimentProviderStore {
   setTrialData: (newTrialData: ITrial) => void; // a function to set the trial data
   deleteDevice: (params: { experimentName: string; deviceItemName: string; deviceTypeName: string; }) => void; // a function to delete a device
   deleteDeviceType: (params: { experimentName: string; deviceTypeName: string; }) => void; // a function to delete a device type
-  setLocationsToDevices: (deviceTypeItems: IDeviceTypeAndItem[], latlngs: (ICoordinates | { lat: number; lng: number; })[]) => number; // a function to set the locations of devices
 };
 
 const experimentContext = createContext<IExperimentProviderStore | null>(null);
@@ -64,46 +62,6 @@ export const ExperimentProvider = ({ children }) => {
     }
   }
 
-  const setLocationsToDevices = (
-    deviceTypeItems: IDeviceTypeAndItem[],
-    latlngs: (ICoordinates | { lat: number; lng: number; })[]) => {
-    const { trial } = currTrial;
-    const mapName = currTrial.shownMapName || RealMapName;
-    let count = 0;
-    if (trial) {
-      const devicesOnTrial = [...(trial.devicesOnTrial || [])];
-      for (let i = 0, il = Math.min(deviceTypeItems.length, latlngs.length); i < il; ++i) {
-        const { deviceTypeName, deviceItemName } = deviceTypeItems[i];
-        let coordinates = latlngs[i];
-        const idev = devicesOnTrial.findIndex(t => {
-          return t.deviceItemName === deviceItemName && t.deviceTypeName === deviceTypeName;
-        });
-        if (coordinates) {
-          if ('lat' in coordinates) {
-            coordinates = [coordinates.lat, coordinates.lng];
-          }
-          const location = { name: mapName, coordinates };
-          if (idev !== -1) {
-            devicesOnTrial[idev] = { ...devicesOnTrial[idev], location }; // Done like this because location is frozen
-          } else {
-            devicesOnTrial.push({ deviceTypeName, deviceItemName, location });
-          }
-          count++;
-        } else {
-          if (idev !== -1) {
-            devicesOnTrial.splice(idev, 1);
-          }
-          count++;
-        }
-      }
-      if (count > 0) {
-        const data = { ...trial, devicesOnTrial };
-        setTrialData(data);
-      }
-    }
-    return count;
-  }
-
   const deleteDevice = ({ experimentName, deviceItemName, deviceTypeName }) => {
     const e = structuredClone(experiments.find(e => e.name === experimentName));
     if (!e || !e.name) {
@@ -147,7 +105,6 @@ export const ExperimentProvider = ({ children }) => {
     setTrialData,
     deleteDevice,
     deleteDeviceType,
-    setLocationsToDevices,
   };
 
   return (
