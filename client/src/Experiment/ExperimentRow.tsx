@@ -3,7 +3,7 @@ import PublicIcon from '@mui/icons-material/Public';
 import { Stack } from "@mui/material";
 import { TreeRow } from "../App/TreeRow";
 import { TreeSublist } from "../App/TreeSublist";
-import { useExperimentProvider } from "../Context/ExperimentProvider";
+import { useChosenTrial } from '../Context/useChosenTrial';
 import { useExperiments } from "../Context/useExperiments";
 import { useShownMap } from "../Context/useShownMap";
 import { DownloadExperimentButton } from "../IO/DownloadExperimentButton";
@@ -18,14 +18,14 @@ import { ShapeList } from "./Shape/ShapeList";
 import { TrialTypesList } from "./TrialTypesList";
 
 export const ExperimentRow = ({ data, setData, children }) => {
-  const { currTrial } = useExperimentProvider();
+  const { experiment } = useChosenTrial();
   const { deleteExperiment } = useExperiments();
   const { switchToMap } = useShownMap({});
   return (
     <TreeRow
       data={data}
       setData={setData}
-      boldName={data === currTrial?.experiment}
+      boldName={data === experiment()}
       components={
         <>
           <DateProperty
@@ -65,7 +65,6 @@ export const ExperimentRow = ({ data, setData, children }) => {
         data={data}
         setData={setData}
       />
-
 
       <DeviceTypesList
         data={data}
