@@ -52,15 +52,29 @@ describe('DeviceItemObj', () => {
     expect(device.attributes[1].value).toBe(10);
   });
 
-  it('should throw error when attribute type is not found', () => {
+  it('should skip attributes without matching type', () => {
     const deviceData: IDevice = {
       name: 'TestDevice',
       attributes: [
         { name: 'invalidAttr', value: 'test' }
       ]
     };
-    expect(() => new DeviceItemObj(deviceData, mockDeviceType))
-      .toThrow('Attribute type invalidAttr not found in device type TestDeviceType');
+    const device = new DeviceItemObj(deviceData, mockDeviceType);
+    expect(device.attributes).toHaveLength(0);
+  });
+
+  it('should skip attributes with invalid types', () => {
+    const deviceData: IDevice = {
+      name: 'TestDevice',
+      attributes: [
+        { name: 'invalidAttr', value: 'test' },
+        { name: 'color', value: 'red' }
+      ]
+    };
+    const device = new DeviceItemObj(deviceData, mockDeviceType);
+    expect(device.attributes).toHaveLength(1);
+    expect(device.attributes[0].name).toBe('color');
+    expect(device.attributes[0].value).toBe('red');
   });
 
   it('should convert to JSON correctly', () => {

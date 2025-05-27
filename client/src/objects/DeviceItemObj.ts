@@ -14,13 +14,17 @@ export class DeviceItemObj implements IDevice {
     }
     this.deviceType = deviceType;
     this.name = data.name;
-    this.attributes = data.attributes?.map(attr => {
-      const attrType = this.deviceType.attributeTypes?.find(at => at.name === attr.name);
-      if (!attrType) {
-        throw new Error(`Attribute type ${attr.name} not found in device type ${this.deviceType.name}`);
+
+    // Process attributes
+    if (data.attributes) {
+      for (const attr of data.attributes) {
+        const attrType = this.deviceType.attributeTypes?.find(at => at.name === attr.name);
+        if (attrType) {
+          this.attributes.push(new AttributeObj(attr, attrType));
+        }
       }
-      return new AttributeObj(attr, attrType);
-    }) || [];
+    }
+
     this.trackUuid = data.trackUuid || uuidv4();
   }
 
