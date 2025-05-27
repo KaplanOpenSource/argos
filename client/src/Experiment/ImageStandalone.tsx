@@ -2,11 +2,11 @@ import { EditLocationAlt, EditLocationOutlined } from "@mui/icons-material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import MapIcon from '@mui/icons-material/Map';
 import { Stack } from "@mui/material";
-import React from "react";
 import { TreeRow } from "../App/TreeRow";
 import { useExperimentProvider } from "../Context/ExperimentProvider";
 import { useChosenTrial } from "../Context/useChosenTrial";
 import { useExperiments } from "../Context/useExperiments";
+import { useShowImagePlacement } from "../Context/useShowImagePlacement";
 import { useShownMap } from "../Context/useShownMap";
 import { ImageOnServer } from "../IO/ImageOnServer";
 import { UploadImageButton } from "../IO/UploadImageButton";
@@ -17,9 +17,8 @@ import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
 export const ImageStandalone = ({ data, setData, experiment }) => {
   const {
     currTrial,
-    showImagePlacement,
-    setShowImagePlacement,
   } = useExperimentProvider();
+  const { showImagePlacement, setShowImagePlacement } = useShowImagePlacement();
   const { setExperiment } = useExperiments();
   const { switchToMap } = useShownMap({});
   const { chooseShownMap } = useChosenTrial();

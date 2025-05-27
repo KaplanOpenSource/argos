@@ -1,9 +1,10 @@
 import { EditLocationAlt, EditLocationOutlined, OpenInFull } from "@mui/icons-material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Stack } from "@mui/material";
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { TreeRow } from "../App/TreeRow";
 import { useExperimentProvider } from "../Context/ExperimentProvider";
+import { useShowImagePlacement } from "../Context/useShowImagePlacement";
 import { ImageOnServer } from "../IO/ImageOnServer";
 import { UploadImageButton } from "../IO/UploadImageButton";
 import { ActionsOnMapContext } from "../Map/ActionsOnMapContext";
@@ -24,9 +25,8 @@ export const ImageEmbedded = ({
   const { addActionOnMap, mapBounds } = useContext(ActionsOnMapContext)!;
   const {
     currTrial,
-    showImagePlacement,
-    setShowImagePlacement,
   } = useExperimentProvider();
+  const { showImagePlacement, setShowImagePlacement } = useShowImagePlacement();
 
   return (
     <TreeRow

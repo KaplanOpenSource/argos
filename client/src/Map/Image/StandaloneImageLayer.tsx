@@ -1,4 +1,3 @@
-import React from 'react';
 import { IExperiment, IImageStandalone } from '../../types/types';
 import { GridlinesLayer } from '../GridlinesLayer';
 import { ImageMap } from './ImageMap';

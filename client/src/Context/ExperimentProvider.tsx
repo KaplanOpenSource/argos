@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import { createContext, useContext } from "react";
 import { RealMapName } from "../constants/constants";
 import { ICoordinates, IDeviceTypeAndItem, IExperiment, IImageStandalone, ITrial, ITrialType } from "../types/types";
 import { useChosenTrial } from "./useChosenTrial";
@@ -21,17 +21,11 @@ interface IExperimentProviderStore {
   deleteDevice: (params: { experimentName: string; deviceItemName: string; deviceTypeName: string; }) => void; // a function to delete a device
   deleteDeviceType: (params: { experimentName: string; deviceTypeName: string; }) => void; // a function to delete a device type
   setLocationsToDevices: (deviceTypeItems: IDeviceTypeAndItem[], latlngs: (ICoordinates | { lat: number; lng: number; })[]) => number; // a function to set the locations of devices
-  showImagePlacement: boolean; // a state variable to control the visibility of the image placement
-  setShowImagePlacement: (val: boolean) => void; // a function to set the showImagePlacement state
 };
 
 const experimentContext = createContext<IExperimentProviderStore | null>(null);
 
 export const ExperimentProvider = ({ children }) => {
-  const [state, setState] = useState({
-    showImagePlacement: false,
-  });
-
   const { setExperiment, experiments } = useExperiments();
   const {
     experiment,
@@ -157,8 +151,6 @@ export const ExperimentProvider = ({ children }) => {
     deleteDevice,
     deleteDeviceType,
     setLocationsToDevices,
-    showImagePlacement: state.showImagePlacement,
-    setShowImagePlacement: val => setState(prev => ({ ...prev, showImagePlacement: val })),
   };
 
   return (
