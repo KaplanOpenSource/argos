@@ -1,0 +1,375 @@
+{
+  "version": "3.0.0",
+  "startDate": "2025-04-21T23:00:00.000Z",
+  "endDate": "2025-04-28T23:00:00.000Z",
+  "description": "",
+  "name": "New Experiment",
+  "trackUuid": "fe70344b-9f12-43df-9b63-284733602bfa",
+  "trialTypes": [
+    {
+      "name": "New Trial Type",
+      "attributeTypes": [
+        {
+          "type": "Date",
+          "name": "TrialStart",
+          "trackUuid": "6e0ceef2-ee4c-4ea0-9697-85e800e0b3ca"
+        },
+        {
+          "type": "Date",
+          "name": "TrialEnd",
+          "trackUuid": "a96fc424-8ab2-4dee-b497-6f9d5e3aa429"
+        }
+      ],
+      "trackUuid": "4e23c6db-22a6-44d0-b871-a394c8c89a92",
+      "trials": [
+        {
+          "name": "New Trial",
+          "createdDate": "2025-04-22T11:00:00.000Z",
+          "trackUuid": "f3dd9816-8d6d-406f-a36a-809ba0a36639",
+          "devicesOnTrial": [
+            {
+              "deviceTypeName": "Sensor3",
+              "deviceItemName": "Sensor3_002",
+              "location": {
+                "name": "New Standalone Image",
+                "coordinates": [
+                  296,
+                  518
+                ]
+              },
+              "attributes": [
+                {
+                  "name": "Attribute",
+                  "value": false
+                }
+              ]
+            },
+            {
+              "deviceTypeName": "Sensor3",
+              "deviceItemName": "Sensor3_004",
+              "attributes": [
+                {
+                  "name": "Attribute",
+                  "value": false
+                }
+              ],
+              "containedIn": {
+                "deviceItemName": "Sensor3_002",
+                "deviceTypeName": "Sensor3"
+              }
+            },
+            {
+              "deviceTypeName": "Sensor3",
+              "deviceItemName": "Sensor3_007",
+              "location": {
+                "name": "OSMMap",
+                "coordinates": [
+                  32.092936988961235,
+                  34.78172779083253
+                ]
+              }
+            },
+            {
+              "deviceTypeName": "Sensor3",
+              "deviceItemName": "Sensor3_008",
+              "location": {
+                "name": "OSMMap",
+                "coordinates": [
+                  32.09055727916491,
+                  34.77468490600587
+                ]
+              }
+            },
+            {
+              "deviceTypeName": "Sensor3",
+              "deviceItemName": "Sensor3_009",
+              "location": {
+                "name": "OSMMap",
+                "coordinates": [
+                  32.08860211591483,
+                  34.77569580078126
+                ]
+              }
+            },
+            {
+              "deviceTypeName": "Sensor3",
+              "deviceItemName": "Sensor3_010",
+              "location": {
+                "name": "OSMMap",
+                "coordinates": [
+                  32.08664695266476,
+                  34.77670669555665
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "New Trial 1",
+          "createdDate": "2025-05-02T09:00:00.000Z",
+          "trackUuid": "2efab2b5-e496-4056-a396-2664d8c3698e",
+          "devicesOnTrial": [
+            {
+              "deviceTypeName": "Sensor3",
+              "deviceItemName": "Sensor3_002",
+              "location": {
+                "name": "OSMMap",
+                "coordinates": [
+                  32.10220764019743,
+                  34.80588912963868
+                ]
+              }
+            },
+            {
+              "deviceTypeName": "Sensor3",
+              "deviceItemName": "Sensor3_004",
+              "location": {
+                "name": "OSMMap",
+                "coordinates": [
+                  32.0899152900636,
+                  34.855344312415575
+                ]
+              }
+            },
+            {
+              "deviceTypeName": "Sensor3",
+              "deviceItemName": "Sensor3_005",
+              "location": {
+                "name": "OSMMap",
+                "coordinates": [
+                  32.07923151152579,
+                  34.84897613525391
+                ]
+              }
+            },
+            {
+              "deviceTypeName": "Sensor3",
+              "deviceItemName": "Sensor3_006",
+              "location": {
+                "name": "OSMMap",
+                "coordinates": [
+                  32.075176748171465,
+                  34.845449609809386
+                ]
+              }
+            },
+            {
+              "deviceTypeName": "Sensor3",
+              "deviceItemName": "Sensor3_007",
+              "location": {
+                "name": "OSMMap",
+                "coordinates": [
+                  32.0742624718796,
+                  34.839212165694555
+                ]
+              }
+            },
+            {
+              "deviceTypeName": "Sensor3",
+              "deviceItemName": "Sensor3_008",
+              "location": {
+                "name": "OSMMap",
+                "coordinates": [
+                  32.10104431598393,
+                  34.75387573242188
+                ]
+              }
+            },
+            {
+              "deviceTypeName": "Sensor3",
+              "deviceItemName": "Sensor3_009",
+              "location": {
+                "name": "OSMMap",
+                "coordinates": [
+                  32.07885926014393,
+                  34.77508465334972
+                ]
+              }
+            },
+            {
+              "deviceTypeName": "Sensor3",
+              "deviceItemName": "Sensor3_010",
+              "location": {
+                "name": "OSMMap",
+                "coordinates": [
+                  32.078680221451094,
+                  34.768777394256595
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "New Trial cloned",
+          "createdDate": "2025-05-02T09:00:00.000Z",
+          "trackUuid": "f3dd9816-8d6d-406f-a36a-809ba0a36639",
+          "devicesOnTrial": [
+            {
+              "deviceTypeName": "Sensor3",
+              "deviceItemName": "Sensor3_002",
+              "location": {
+                "name": "OSMMap",
+                "coordinates": [
+                  32.10228825866538,
+                  34.76861953735352
+                ]
+              }
+            },
+            {
+              "deviceTypeName": "Sensor3",
+              "deviceItemName": "Sensor3_004",
+              "location": {
+                "name": "OSMMap",
+                "coordinates": [
+                  32.09837793216523,
+                  34.770641326904304
+                ]
+              }
+            },
+            {
+              "deviceTypeName": "Sensor3",
+              "deviceItemName": "Sensor3_005",
+              "location": {
+                "name": "OSMMap",
+                "coordinates": [
+                  32.09642276891515,
+                  34.771652221679695
+                ]
+              }
+            },
+            {
+              "deviceTypeName": "Sensor3",
+              "deviceItemName": "Sensor3_006",
+              "location": {
+                "name": "OSMMap",
+                "coordinates": [
+                  32.09446760566507,
+                  34.772663116455085
+                ]
+              }
+            },
+            {
+              "deviceTypeName": "Sensor3",
+              "deviceItemName": "Sensor3_007",
+              "location": {
+                "name": "OSMMap",
+                "coordinates": [
+                  32.09251244241499,
+                  34.773674011230476
+                ]
+              }
+            },
+            {
+              "deviceTypeName": "Sensor3",
+              "deviceItemName": "Sensor3_008",
+              "location": {
+                "name": "OSMMap",
+                "coordinates": [
+                  32.09055727916491,
+                  34.77468490600587
+                ]
+              }
+            },
+            {
+              "deviceTypeName": "Sensor3",
+              "deviceItemName": "Sensor3_009",
+              "location": {
+                "name": "OSMMap",
+                "coordinates": [
+                  32.08860211591483,
+                  34.77569580078126
+                ]
+              }
+            },
+            {
+              "deviceTypeName": "Sensor3",
+              "deviceItemName": "Sensor3_010",
+              "location": {
+                "name": "OSMMap",
+                "coordinates": [
+                  32.08664695266476,
+                  34.77670669555665
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "deviceTypes": [
+    {
+      "name": "Sensor3",
+      "attributeTypes": [
+        {
+          "name": "Attribute",
+          "type": "Boolean",
+          "trackUuid": "d53ae122-4dec-42c0-a8ab-67ef9086e15d"
+        }
+      ],
+      "trackUuid": "869da061-e9fe-4f89-997f-25c883691b5b",
+      "devices": [
+        {
+          "name": "Sensor3_002",
+          "trackUuid": "93d7b211-e390-454e-843b-121ba4d1ff75"
+        },
+        {
+          "name": "Sensor3_004",
+          "trackUuid": "ce2e52bf-b7c8-4e3b-b1db-cf91d2da1b64"
+        },
+        {
+          "name": "Sensor3_005",
+          "trackUuid": "2e436fc8-76af-4f04-b631-07900c88ba94"
+        },
+        {
+          "name": "Sensor3_006",
+          "trackUuid": "3b9427be-5693-4fa7-84e5-e2f0d71098eb"
+        },
+        {
+          "name": "Sensor3_007",
+          "trackUuid": "529efbf5-c975-42ca-aabf-f522e8111cf3"
+        },
+        {
+          "name": "Sensor3_008",
+          "trackUuid": "b85e55a6-fdd3-41aa-8eb9-6529fb956e48"
+        },
+        {
+          "name": "Sensor3_009",
+          "trackUuid": "c98376fe-6d4d-4f32-8ef1-a5fde89116ad"
+        },
+        {
+          "name": "Sensor3_010",
+          "trackUuid": "6b2f8414-696a-4a80-bec5-0ae10d258c12"
+        }
+      ]
+    }
+  ],
+  "imageEmbedded": [
+    {
+      "name": "New Embedded Image",
+      "trackUuid": "bbb321cd-0b2b-4428-bd5c-4b8747db7f8b",
+      "filename": "New_Embedded_Image_20250506T175910_571470.png",
+      "height": 1052,
+      "width": 1488,
+      "latnorth": 32.133412509373045,
+      "lngwest": 34.77872371673585,
+      "latsouth": 32.05058243407831,
+      "lngeast": 34.66156482696534,
+      "gridDelta": 0.001
+    }
+  ],
+  "imageStandalone": [
+    {
+      "name": "New Standalone Image",
+      "trackUuid": "f45c4b0e-d221-42a9-85c6-f63432ad9bd4",
+      "filename": "New_Standalone_Image_20250506T180012_664897.png",
+      "height": 1052,
+      "width": 1488,
+      "xleft": -326,
+      "ybottom": -272,
+      "xright": 1162,
+      "ytop": 780,
+      "gridDelta": 0
+    }
+  ]
+}
