@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 import { AttributeObj, DeviceTypeObj } from '.';
 import { IDevice } from '../types/types';
 
@@ -5,6 +6,7 @@ export class DeviceItemObj implements IDevice {
   readonly deviceType: DeviceTypeObj;
   name: string;
   attributes: AttributeObj[] = [];
+  trackUuid: string;
 
   constructor(data: IDevice, deviceType: DeviceTypeObj) {
     if (!data.name) {
@@ -19,6 +21,7 @@ export class DeviceItemObj implements IDevice {
       }
       return new AttributeObj(attr, attrType);
     }) || [];
+    this.trackUuid = data.trackUuid || uuidv4();
   }
 
   toJson(): IDevice {

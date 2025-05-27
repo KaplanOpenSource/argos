@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 import { AttributeObj, DeviceItemObj, LocationObj, TrialObj } from '.';
 import { IDeviceOnTrial, IDeviceTypeAndItem } from '../types/types';
 
@@ -7,6 +8,7 @@ export class DeviceOnTrialObj implements IDeviceOnTrial {
   location?: LocationObj;
   attributes: AttributeObj[] = [];
   containedIn?: DeviceOnTrialObj;
+  trackUuid: string;
 
   constructor(data: IDeviceOnTrial, deviceItem: DeviceItemObj, trial: TrialObj) {
     this.deviceItem = deviceItem;
@@ -19,6 +21,7 @@ export class DeviceOnTrialObj implements IDeviceOnTrial {
       }
       return new AttributeObj(attr, attrType);
     }) || [];
+    this.trackUuid = data.trackUuid || uuidv4();
   }
 
   setContainedIn(containedIn?: IDeviceTypeAndItem) {

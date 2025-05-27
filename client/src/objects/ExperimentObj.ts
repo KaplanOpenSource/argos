@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 import { DeviceTypeObj, ImageEmbeddedObj, ImageStandaloneObj, ShapeObj, TrialTypeObj } from '.';
 import { IExperiment } from '../types/types';
 import { ExperimentChange } from './ExperimentChange';
@@ -13,6 +14,7 @@ export class ExperimentObj implements IExperiment {
   trialTypes: TrialTypeObj[] = [];
   deviceTypes: DeviceTypeObj[] = [];
   shapes: ShapeObj[] = [];
+  trackUuid: string;
 
   constructor(data: IExperiment) {
     if (!data.name) {
@@ -23,6 +25,7 @@ export class ExperimentObj implements IExperiment {
     this.endDate = data.endDate;
     this.description = data.description;
     this.name = data.name;
+    this.trackUuid = data.trackUuid || uuidv4();
 
     this.imageEmbedded = data.imageEmbedded?.map(img => new ImageEmbeddedObj(img)) || [];
     this.imageStandalone = data.imageStandalone?.map(img => new ImageStandaloneObj(img)) || [];

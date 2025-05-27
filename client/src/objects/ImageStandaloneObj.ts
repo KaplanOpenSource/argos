@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 import { ImageObj } from '.';
 import { IImageStandalone } from '../types/types';
 
@@ -6,6 +7,7 @@ export class ImageStandaloneObj extends ImageObj implements IImageStandalone {
   ybottom?: number;
   xright?: number;
   ytop?: number;
+  trackUuid: string;
 
   constructor(data: IImageStandalone) {
     super(data);
@@ -13,6 +15,7 @@ export class ImageStandaloneObj extends ImageObj implements IImageStandalone {
     this.ybottom = data.ybottom;
     this.xright = data.xright;
     this.ytop = data.ytop;
+    this.trackUuid = data.trackUuid || uuidv4();
   }
 
   toJson(): IImageStandalone {

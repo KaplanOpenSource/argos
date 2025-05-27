@@ -3,7 +3,7 @@ import { ValueTypeEnum } from './ValueTypeEnum';
 export type ICoordinates = [number, number];
 export type ITrackUuid = { trackUuid?: string };
 
-export interface INamed {
+export interface INamed extends ITrackUuid {
   name?: string;
 };
 
@@ -33,7 +33,7 @@ export interface ILocation {
   coordinates?: ICoordinates;
 };
 
-export interface IDeviceTypeAndItem {
+export interface IDeviceTypeAndItem extends ITrackUuid {
   deviceTypeName: string;
   deviceItemName: string;
 }

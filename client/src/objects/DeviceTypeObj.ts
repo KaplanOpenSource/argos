@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 import { AttributeTypeObj, DeviceItemObj } from '.';
 import { IDeviceType } from '../types/types';
 
@@ -5,6 +6,7 @@ export class DeviceTypeObj implements IDeviceType {
   name: string;
   devices: DeviceItemObj[] = [];
   attributeTypes: AttributeTypeObj[] = [];
+  trackUuid: string;
 
   constructor(data: IDeviceType) {
     if (!data.name) {
@@ -13,6 +15,7 @@ export class DeviceTypeObj implements IDeviceType {
     this.name = data.name;
     this.devices = data.devices?.map(device => new DeviceItemObj(device, this)) || [];
     this.attributeTypes = data.attributeTypes?.map(attr => new AttributeTypeObj(attr)) || [];
+    this.trackUuid = data.trackUuid || uuidv4();
   }
 
   toJson(): IDeviceType {

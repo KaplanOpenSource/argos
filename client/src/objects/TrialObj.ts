@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 import { AttributeObj, DeviceOnTrialObj, DeviceTypeObj } from '.';
 import { ITrial, ITrialType } from '../types/types';
 
@@ -9,6 +10,7 @@ export class TrialObj implements ITrial {
   attributes: AttributeObj[] = [];
   protected readonly deviceTypes: DeviceTypeObj[];
   protected readonly trialType: ITrialType;
+  trackUuid: string;
 
   constructor(data: ITrial, deviceTypes: DeviceTypeObj[], trialType: ITrialType) {
     if (!data.name) {
@@ -18,6 +20,7 @@ export class TrialObj implements ITrial {
     this.createdDate = data.createdDate;
     this.deviceTypes = deviceTypes;
     this.trialType = trialType;
+    this.trackUuid = data.trackUuid || uuidv4();
 
     // First create all devices
     this._devicesOnTrial = data.devicesOnTrial?.map(device => {

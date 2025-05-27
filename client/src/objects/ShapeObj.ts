@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 import { ICoordinates, IShape } from '../types/types';
 
 export class ShapeObj implements IShape {
@@ -5,6 +6,7 @@ export class ShapeObj implements IShape {
   coordinates: ICoordinates[] = [];
   center?: ICoordinates;
   radius?: number;
+  trackUuid: string;
 
   constructor(data: IShape) {
     if (!data.name) {
@@ -14,6 +16,7 @@ export class ShapeObj implements IShape {
     this.coordinates = data.coordinates || [];
     this.center = data.center;
     this.radius = data.radius;
+    this.trackUuid = data.trackUuid || uuidv4();
   }
 
   toJson(): IShape {

@@ -1,8 +1,10 @@
+import { v4 as uuidv4 } from 'uuid';
 import { IAttribute, IAttributeType } from '../types/types';
 
 export class AttributeObj implements IAttribute {
   private attrType: IAttributeType;
   value?: any;
+  trackUuid: string;
 
   constructor(data: IAttribute, attrType: IAttributeType) {
     if (!attrType) {
@@ -10,6 +12,7 @@ export class AttributeObj implements IAttribute {
     }
     this.attrType = attrType;
     this.value = data.value;
+    this.trackUuid = data.trackUuid || uuidv4();
   }
 
   get name(): string {
