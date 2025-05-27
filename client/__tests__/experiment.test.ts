@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import { ExperimentObj, LocationObj } from '../src/objects';
 import { IExperiment } from '../src/types/types';
+import { ValueTypeEnum } from '../src/types/ValueTypeEnum';
 
 // Mock fs module
 jest.mock('fs');
@@ -52,7 +53,7 @@ describe('Experiment Tests', () => {
       {
         name: 'TrialTypeA',
         attributeTypes: [
-          { name: 'AttrType1', type: 'string' }
+          { name: 'AttrType1', type: 'String' as ValueTypeEnum }
         ],
         trials: [
           {

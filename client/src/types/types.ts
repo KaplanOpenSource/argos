@@ -1,3 +1,5 @@
+import { ValueTypeEnum } from './ValueTypeEnum';
+
 export type ICoordinates = [number, number];
 export type ITrackUuid = { trackUuid?: string };
 
@@ -80,7 +82,7 @@ export enum ScopeEnum {
 };
 
 export interface IAttributeType extends INamed {
-  type?: string;
+  type?: ValueTypeEnum;
   scope?: ScopeEnum;
   multiple?: boolean;
   required?: boolean;

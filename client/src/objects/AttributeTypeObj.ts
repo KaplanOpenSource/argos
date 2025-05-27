@@ -1,8 +1,9 @@
 import { IAttributeType, ISelectOption, ScopeEnum } from '../types/types';
+import { ValueTypeEnum } from '../types/ValueTypeEnum';
 
 export class AttributeTypeObj implements IAttributeType {
   name: string;
-  type?: string;
+  type?: ValueTypeEnum;
   scope?: ScopeEnum;
   multiple?: boolean;
   required?: boolean;
