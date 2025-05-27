@@ -1,4 +1,4 @@
-import { ExperimentObj } from './objects';
+import { ExperimentObj } from './ExperimentObj';
 import cloneDeepWith from 'lodash/cloneDeepWith';
 
 /**
