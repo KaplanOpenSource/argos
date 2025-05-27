@@ -1,15 +1,19 @@
-import { IAttribute } from '../types/types';
+import { IAttribute, IAttributeType } from '../types/types';
 
 export class AttributeObj implements IAttribute {
-  name: string;
+  private attrType: IAttributeType;
   value?: any;
 
-  constructor(data: IAttribute) {
-    if (!data.name) {
-      throw new Error('Attribute name is required');
+  constructor(data: IAttribute, attrType: IAttributeType) {
+    if (!attrType) {
+      throw new Error('Attribute type is required');
     }
-    this.name = data.name;
+    this.attrType = attrType;
     this.value = data.value;
+  }
+
+  get name(): string {
+    return this.attrType.name || '';
   }
 
   toJson(): IAttribute {

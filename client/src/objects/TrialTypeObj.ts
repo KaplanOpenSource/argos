@@ -11,8 +11,8 @@ export class TrialTypeObj implements ITrialType {
       throw new Error('TrialType name is required');
     }
     this.name = data.name;
-    this.trials = data.trials?.map(trial => new TrialObj(trial, deviceTypes)) || [];
     this.attributeTypes = data.attributeTypes?.map(attr => new AttributeTypeObj(attr)) || [];
+    this.trials = data.trials?.map(trial => new TrialObj(trial, deviceTypes, this)) || [];
   }
 
   toJson(): ITrialType {

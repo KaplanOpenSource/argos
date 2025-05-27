@@ -46,6 +46,9 @@ describe('Experiment Tests', () => {
         devices: [
           { name: 'DeviceA1' },
           { name: 'DeviceA2' }
+        ],
+        attributeTypes: [
+          { name: 'Attr1', type: 'String' as ValueTypeEnum }
         ]
       }
     ],
@@ -53,7 +56,7 @@ describe('Experiment Tests', () => {
       {
         name: 'TrialTypeA',
         attributeTypes: [
-          { name: 'AttrType1', type: 'String' as ValueTypeEnum }
+          { name: 'TrialAttr', type: 'String' as ValueTypeEnum }
         ],
         trials: [
           {

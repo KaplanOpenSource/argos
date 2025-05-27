@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { AttributeObj, ExperimentObj, LocationObj } from '../src/objects';
+import { ExperimentObj, LocationObj } from '../src/objects';
 import { IExperiment } from '../src/types/types';
 
 describe('Experiment I/O Tests', () => {
@@ -33,9 +33,8 @@ describe('Experiment I/O Tests', () => {
     // Change a trial's attribute
     const oldAttr = experiment.trialTypes[0].trials[0].attributes?.[0];
     if (oldAttr) {
-      const newAttr = new AttributeObj({ name: 'NewAttr', value: 'newVal' });
-      const changedAttr = experiment.createChange().change(oldAttr, newAttr).apply();
-      expect(changedAttr.trialTypes[0].trials[0].attributes?.[0].name).toBe('NewAttr');
+      const changedAttr = experiment.createChange().change(oldAttr.value, 'newVal').apply();
+      expect(changedAttr.trialTypes[0].trials[0].attributes?.[0].value).toBe('newVal');
     }
   });
 }); 

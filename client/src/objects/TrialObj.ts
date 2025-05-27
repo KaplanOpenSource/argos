@@ -1,5 +1,5 @@
 import { AttributeObj, DeviceOnTrialObj, DeviceTypeObj } from '.';
-import { ITrial } from '../types/types';
+import { ITrial, ITrialType } from '../types/types';
 
 export class TrialObj implements ITrial {
   name: string;
@@ -8,14 +8,16 @@ export class TrialObj implements ITrial {
   description?: string;
   attributes: AttributeObj[] = [];
   protected readonly deviceTypes: DeviceTypeObj[];
+  protected readonly trialType: ITrialType;
 
-  constructor(data: ITrial, deviceTypes: DeviceTypeObj[]) {
+  constructor(data: ITrial, deviceTypes: DeviceTypeObj[], trialType: ITrialType) {
     if (!data.name) {
       throw new Error('Trial name is required');
     }
     this.name = data.name;
     this.createdDate = data.createdDate;
     this.deviceTypes = deviceTypes;
+    this.trialType = trialType;
 
     // First create all devices
     this._devicesOnTrial = data.devicesOnTrial?.map(device => {
@@ -36,7 +38,13 @@ export class TrialObj implements ITrial {
     }
 
     this.description = data.description;
-    this.attributes = data.attributes?.map(attr => new AttributeObj(attr)) || [];
+    this.attributes = data.attributes?.map(attr => {
+      const attrType = this.trialType.attributeTypes?.find(at => at.name === attr.name);
+      if (!attrType) {
+        throw new Error(`Attribute type ${attr.name} not found in trial type ${this.trialType.name}`);
+      }
+      return new AttributeObj(attr, attrType);
+    }) || [];
   }
 
   private filterValidDevices(devices: DeviceOnTrialObj[]): DeviceOnTrialObj[] {

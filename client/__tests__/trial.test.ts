@@ -1,5 +1,6 @@
 import { ExperimentObj } from '../src/objects';
 import { IExperiment } from '../src/types/types';
+import { ValueTypeEnum } from '../src/types/ValueTypeEnum';
 
 describe('Trial Manipulation', () => {
   const baseExperiment: IExperiment = {
@@ -7,12 +8,20 @@ describe('Trial Manipulation', () => {
     deviceTypes: [
       {
         name: 'TypeA',
-        devices: [{ name: 'DeviceA1' }]
+        devices: [{ name: 'DeviceA1' }],
+        attributeTypes: [
+          { name: 'Attr1', type: 'String' as ValueTypeEnum },
+          { name: 'Attr2', type: 'String' as ValueTypeEnum }
+        ]
       }
     ],
     trialTypes: [
       {
         name: 'TrialTypeA',
+        attributeTypes: [
+          { name: 'TrialAttr', type: 'String' as ValueTypeEnum },
+          { name: 'TrialAttr2', type: 'String' as ValueTypeEnum }
+        ],
         trials: [
           {
             name: 'Trial1',

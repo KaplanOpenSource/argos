@@ -12,7 +12,13 @@ export class DeviceOnTrialObj implements IDeviceOnTrial {
     this.deviceItem = deviceItem;
     this.trial = trial;
     this.location = data.location ? new LocationObj(data.location) : undefined;
-    this.attributes = data.attributes?.map(attr => new AttributeObj(attr)) || [];
+    this.attributes = data.attributes?.map(attr => {
+      const attrType = this.deviceItem.deviceType.attributeTypes?.find(at => at.name === attr.name);
+      if (!attrType) {
+        throw new Error(`Attribute type ${attr.name} not found in device type ${this.deviceItem.deviceType.name}`);
+      }
+      return new AttributeObj(attr, attrType);
+    }) || [];
   }
 
   setContainedIn(containedIn?: IDeviceTypeAndItem) {

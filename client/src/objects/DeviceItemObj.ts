@@ -12,7 +12,13 @@ export class DeviceItemObj implements IDevice {
     }
     this.deviceType = deviceType;
     this.name = data.name;
-    this.attributes = data.attributes?.map(attr => new AttributeObj(attr)) || [];
+    this.attributes = data.attributes?.map(attr => {
+      const attrType = this.deviceType.attributeTypes?.find(at => at.name === attr.name);
+      if (!attrType) {
+        throw new Error(`Attribute type ${attr.name} not found in device type ${this.deviceType.name}`);
+      }
+      return new AttributeObj(attr, attrType);
+    }) || [];
   }
 
   toJson(): IDevice {
