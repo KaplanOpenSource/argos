@@ -2,7 +2,7 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Typography } from "@mui/material";
-import { TreeRow } from "../App/TreeRow";
+import { TreeRowOnChosen } from "../App/TreeRow";
 import { useExperimentProvider } from "../Context/ExperimentProvider";
 import { assignUuids } from "../Context/TrackUuidUtils";
 import { useHiddenDeviceTypes } from "../Context/useHiddenDeviceTypes";
@@ -44,7 +44,7 @@ export const DeviceType = ({ data, setData, experiment }) => {
   }
 
   return (
-    <TreeRow
+    <TreeRowOnChosen
       data={data}
       setData={setData}
       components={
@@ -111,6 +111,6 @@ export const DeviceType = ({ data, setData, experiment }) => {
           />
         ))
       }
-    </TreeRow>
+    </TreeRowOnChosen>
   )
 }

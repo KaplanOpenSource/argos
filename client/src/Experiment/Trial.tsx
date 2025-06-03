@@ -3,7 +3,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { Stack, Typography } from "@mui/material";
 import { sum } from "lodash";
 import { useContext, useEffect } from "react";
-import { TreeRow } from "../App/TreeRow";
+import { TreeRowOnChosen } from "../App/TreeRow";
 import { RealMapName } from "../constants/constants";
 import { useExperimentProvider } from "../Context/ExperimentProvider";
 import { useChosenTrial } from "../Context/useChosenTrial";
@@ -59,9 +59,8 @@ export const Trial = ({ data, setData, experiment, trialType, children }) => {
   const placedDevices = (data.devicesOnTrial || []).length;
 
   return (
-    <TreeRow
+    <TreeRowOnChosen
       data={data}
-      setData={setData}
       boldName={data === currTrial?.trial}
       validateName={(name) => !trialType?.trials?.find(tt => tt.name === name) ? '' : 'Duplicate name'}
       components={
@@ -152,6 +151,6 @@ export const Trial = ({ data, setData, experiment, trialType, children }) => {
         setData={setData}
         scope={ScopeEnum.SCOPE_TRIAL}
       />
-    </TreeRow>
+    </TreeRowOnChosen>
   )
 }
