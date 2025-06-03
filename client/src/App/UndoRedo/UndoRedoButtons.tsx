@@ -1,6 +1,6 @@
 import { Redo, Undo } from "@mui/icons-material";
 import { usePrevious } from "@radix-ui/react-use-previous";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useExperiments } from "../../Context/useExperiments";
 import { IExperiment } from "../../types/types";
 import { ButtonTooltip } from "../../Utils/ButtonTooltip";
@@ -9,7 +9,7 @@ import { useUndoRedo } from "./useUndoRedo";
 
 export const UndoRedoButtons = () => {
   const { trackChanges, setTrackChanges, obtainUndo, obtainRedo, undoStack, redoStack } = useUndoRedo();
-  const { experiments, setAllExperiments } = useExperiments();
+  const { experiments, setExperiment } = useExperiments();
   const [waitForOperation, setWaitForOperation] = useState(false);
   const prevExperiments: IExperiment[] = usePrevious(experiments);
 
@@ -17,12 +17,14 @@ export const UndoRedoButtons = () => {
     if (experimentName && patch) {
       setWaitForOperation(true);
       setTrackChanges(false);
-      setAllExperiments((prev: IExperiment[]) => {
-        const i = prev.findIndex(t => t.name === experimentName);
-        const draft = structuredClone(prev);
-        jsonApplyItem(draft, i, draft[i], patch);
-        return draft;
-      });
+      const draft = structuredClone(experiments);
+      const i = draft.findIndex(t => t.name === experimentName);
+      jsonApplyItem(draft, i, draft[i], patch);
+      if (draft.length !== experiments.length) {
+        // TODO: fix undo/redo of full experiment
+        alert('Unable to complete undo/redo');
+      }
+      setExperiment(experimentName, draft[i]);
     }
   }
 
