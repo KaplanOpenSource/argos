@@ -3,7 +3,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { Stack, Typography } from "@mui/material";
 import { sum } from "lodash";
 import { useContext, useEffect } from "react";
-import { TreeRowOnChosen } from "../App/TreeRow";
+import { TreeRowOnChosen } from "../App/TreeRowOnChosen";
 import { RealMapName } from "../constants/constants";
 import { useExperimentProvider } from "../Context/ExperimentProvider";
 import { useChosenTrial } from "../Context/useChosenTrial";

@@ -1,7 +1,6 @@
 import { Box } from "@mui/material";
 import { TreeItem } from "@mui/x-tree-view/TreeItem";
 import { ReactNode } from "react";
-import { useChosenTrial } from "../Context/useChosenTrial";
 import { useExperiments } from "../Context/useExperiments";
 import { INamed } from "../types/types";
 import { TextFieldDebounce } from "../Utils/TextFieldDebounce";
@@ -80,18 +79,3 @@ export const TreeRow = ({
   )
 }
 
-export const TreeRowOnChosen = (props: {
-  data: INamed,
-  components: ReactNode,
-  children?: ReactNode,
-  boldName?: boolean,
-  validateName?: (val: string) => string,
-}) => {
-  const { changeChosen } = useChosenTrial();
-  return (
-    <TreeRow
-      onRename={newName => changeChosen(props.data.name, newName)}
-      {...props}
-    />
-  )
-}

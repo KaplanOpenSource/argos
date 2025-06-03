@@ -1,5 +1,5 @@
 import { Delete } from "@mui/icons-material"
-import { TreeRowOnChosen } from "../../App/TreeRow"
+import { TreeRowOnChosen } from "../../App/TreeRowOnChosen"
 import { ButtonTooltip } from "../../Utils/ButtonTooltip"
 import { ShapeEditContent } from "./ShapeEditContent"
 
