@@ -46,7 +46,7 @@ export class ExperimentObj implements IExperiment {
     return this.deviceTypes.reduce((sum, type) => sum + type.devices.length, 0);
   }
 
-  toJson(): IExperiment {
+  toJson(includeTrackUuid: boolean = false): IExperiment {
     const result: IExperiment = {
       version: this.version,
       startDate: this.startDate,
@@ -55,19 +55,22 @@ export class ExperimentObj implements IExperiment {
       name: this.name
     };
     if (this.imageEmbedded.length > 0) {
-      result.imageEmbedded = this.imageEmbedded.map(img => img.toJson());
+      result.imageEmbedded = this.imageEmbedded.map(img => img.toJson(includeTrackUuid));
     }
     if (this.imageStandalone.length > 0) {
-      result.imageStandalone = this.imageStandalone.map(img => img.toJson());
+      result.imageStandalone = this.imageStandalone.map(img => img.toJson(includeTrackUuid));
     }
     if (this.trialTypes.length > 0) {
-      result.trialTypes = this.trialTypes.map(type => type.toJson());
+      result.trialTypes = this.trialTypes.map(type => type.toJson(includeTrackUuid));
     }
     if (this.deviceTypes.length > 0) {
-      result.deviceTypes = this.deviceTypes.map(type => type.toJson());
+      result.deviceTypes = this.deviceTypes.map(type => type.toJson(includeTrackUuid));
     }
     if (this.shapes.length > 0) {
-      result.shapes = this.shapes.map(shape => shape.toJson());
+      result.shapes = this.shapes.map(shape => shape.toJson(includeTrackUuid));
+    }
+    if (includeTrackUuid) {
+      result.trackUuid = this.trackUuid;
     }
     return result;
   }

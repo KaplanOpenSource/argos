@@ -20,18 +20,21 @@ export class DeviceTypeObj implements IDeviceType {
     this.trackUuid = data.trackUuid || uuidv4();
   }
 
-  toJson(): IDeviceType {
+  toJson(includeTrackUuid: boolean = false): IDeviceType {
     const result: IDeviceType = {
       name: this.name
     };
     if (this.devices.length > 0) {
-      result.devices = this.devices.map(device => device.toJson());
+      result.devices = this.devices.map(device => device.toJson(includeTrackUuid));
     }
     if (this.attributeTypes.length > 0) {
-      result.attributeTypes = this.attributeTypes.map(attr => attr.toJson());
+      result.attributeTypes = this.attributeTypes.map(attr => attr.toJson(includeTrackUuid));
     }
     if (this.icon) {
       result.icon = this.icon;
+    }
+    if (includeTrackUuid) {
+      result.trackUuid = this.trackUuid;
     }
     return result;
   }

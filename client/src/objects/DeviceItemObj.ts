@@ -28,12 +28,15 @@ export class DeviceItemObj implements IDevice {
     this.trackUuid = data.trackUuid || uuidv4();
   }
 
-  toJson(): IDevice {
+  toJson(includeTrackUuid: boolean = false): IDevice {
     const result: IDevice = {
       name: this.name
     };
     if (this.attributes.length > 0) {
-      result.attributes = this.attributes.map(attr => attr.toJson());
+      result.attributes = this.attributes.map(attr => attr.toJson(includeTrackUuid));
+    }
+    if (includeTrackUuid) {
+      result.trackUuid = this.trackUuid;
     }
     return result;
   }

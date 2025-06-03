@@ -18,15 +18,18 @@ export class TrialTypeObj implements ITrialType {
     this.trackUuid = data.trackUuid || uuidv4();
   }
 
-  toJson(): ITrialType {
+  toJson(includeTrackUuid: boolean = false): ITrialType {
     const result: ITrialType = {
       name: this.name
     };
     if (this.trials.length > 0) {
-      result.trials = this.trials.map(trial => trial.toJson());
+      result.trials = this.trials.map(trial => trial.toJson(includeTrackUuid));
     }
     if (this.attributeTypes.length > 0) {
-      result.attributeTypes = this.attributeTypes.map(attr => attr.toJson());
+      result.attributeTypes = this.attributeTypes.map(attr => attr.toJson(includeTrackUuid));
+    }
+    if (includeTrackUuid) {
+      result.trackUuid = this.trackUuid;
     }
     return result;
   }

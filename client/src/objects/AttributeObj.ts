@@ -19,10 +19,14 @@ export class AttributeObj implements IAttribute {
     return this.attrType.name || '';
   }
 
-  toJson(): IAttribute {
-    return {
+  toJson(includeTrackUuid: boolean = false): IAttribute {
+    const result: IAttribute = {
       name: this.name,
       value: this.value
     };
+    if (includeTrackUuid) {
+      result.trackUuid = this.trackUuid;
+    }
+    return result;
   }
 }

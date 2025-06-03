@@ -18,13 +18,17 @@ export class ImageEmbeddedObj extends ImageObj implements IImageEmbedded {
     this.trackUuid = data.trackUuid || uuidv4();
   }
 
-  toJson(): IImageEmbedded {
-    return {
-      ...super.toJson(),
+  toJson(includeTrackUuid: boolean = false): IImageEmbedded {
+    const result: IImageEmbedded = {
+      ...super.toJson(includeTrackUuid),
       latsouth: this.latsouth,
       lngwest: this.lngwest,
       latnorth: this.latnorth,
       lngeast: this.lngeast
     };
+    if (includeTrackUuid) {
+      result.trackUuid = this.trackUuid;
+    }
+    return result;
   }
 }

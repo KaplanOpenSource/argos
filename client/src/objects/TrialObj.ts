@@ -73,17 +73,20 @@ export class TrialObj implements ITrial {
       });
   }
 
-  toJson(): ITrial {
+  toJson(includeTrackUuid: boolean = false): ITrial {
     const result: ITrial = {
       name: this.name,
       createdDate: this.createdDate,
       description: this.description
     };
     if (this.devicesOnTrial.length > 0) {
-      result.devicesOnTrial = this.devicesOnTrial.map(device => device.toJson());
+      result.devicesOnTrial = this.devicesOnTrial.map(device => device.toJson(includeTrackUuid));
     }
     if (this.attributes.length > 0) {
-      result.attributes = this.attributes.map(attr => attr.toJson());
+      result.attributes = this.attributes.map(attr => attr.toJson(includeTrackUuid));
+    }
+    if (includeTrackUuid) {
+      result.trackUuid = this.trackUuid;
     }
     return result;
   }

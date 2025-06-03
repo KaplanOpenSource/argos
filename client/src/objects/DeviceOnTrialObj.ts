@@ -43,11 +43,11 @@ export class DeviceOnTrialObj implements IDeviceOnTrial {
     return this.deviceItem.name;
   }
 
-  toJson(): IDeviceOnTrial {
+  toJson(includeTrackUuid: boolean = false): IDeviceOnTrial {
     const result: IDeviceOnTrial = {
       deviceTypeName: this.deviceTypeName,
       deviceItemName: this.deviceItemName,
-      location: this.location?.toJson()
+      location: this.location?.toJson(includeTrackUuid)
     };
     if (this.containedIn) {
       result.containedIn = {
@@ -56,7 +56,10 @@ export class DeviceOnTrialObj implements IDeviceOnTrial {
       };
     }
     if (this.attributes.length > 0) {
-      result.attributes = this.attributes.map(attr => attr.toJson());
+      result.attributes = this.attributes.map(attr => attr.toJson(includeTrackUuid));
+    }
+    if (includeTrackUuid) {
+      result.trackUuid = this.trackUuid;
     }
     return result;
   }

@@ -18,13 +18,14 @@ export class ImageObj implements IImage {
     this.gridDelta = data.gridDelta;
   }
 
-  toJson(): IImage {
-    return {
+  toJson(includeTrackUuid: boolean = false): IImage {
+    const result: IImage = {
       name: this.name,
       filename: this.filename,
       height: this.height,
       width: this.width,
       gridDelta: this.gridDelta
     };
+    return result;
   }
 }

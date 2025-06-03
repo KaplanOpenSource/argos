@@ -10,10 +10,11 @@ export class LocationObj implements ILocation {
     this.coordinates = data.coordinates;
   }
 
-  toJson(): ILocation {
-    return {
+  toJson(includeTrackUuid: boolean = false): ILocation {
+    const result: ILocation = {
       name: this.name,
       coordinates: this.coordinates
     };
+    return result;
   }
 }

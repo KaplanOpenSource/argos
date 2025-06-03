@@ -18,13 +18,17 @@ export class ImageStandaloneObj extends ImageObj implements IImageStandalone {
     this.trackUuid = data.trackUuid || uuidv4();
   }
 
-  toJson(): IImageStandalone {
-    return {
-      ...super.toJson(),
+  toJson(includeTrackUuid: boolean = false): IImageStandalone {
+    const result: IImageStandalone = {
+      ...super.toJson(includeTrackUuid),
       xleft: this.xleft,
       ybottom: this.ybottom,
       xright: this.xright,
       ytop: this.ytop
     };
+    if (includeTrackUuid) {
+      result.trackUuid = this.trackUuid;
+    }
+    return result;
   }
 }

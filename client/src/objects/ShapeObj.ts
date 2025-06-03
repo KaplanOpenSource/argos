@@ -19,7 +19,7 @@ export class ShapeObj implements IShape {
     this.trackUuid = data.trackUuid || uuidv4();
   }
 
-  toJson(): IShape {
+  toJson(includeTrackUuid: boolean = false): IShape {
     const result: IShape = {
       name: this.name,
       center: this.center,
@@ -27,6 +27,9 @@ export class ShapeObj implements IShape {
     };
     if (this.coordinates.length > 0) {
       result.coordinates = this.coordinates;
+    }
+    if (includeTrackUuid) {
+      result.trackUuid = this.trackUuid;
     }
     return result;
   }

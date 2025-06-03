@@ -28,7 +28,7 @@ export class AttributeTypeObj implements IAttributeType {
     this.trackUuid = data.trackUuid || uuidv4();
   }
 
-  toJson(): IAttributeType {
+  toJson(includeTrackUuid: boolean = false): IAttributeType {
     const result: IAttributeType = {
       name: this.name,
       type: this.type,
@@ -40,6 +40,9 @@ export class AttributeTypeObj implements IAttributeType {
     };
     if (this.options.length > 0) {
       result.options = this.options;
+    }
+    if (includeTrackUuid) {
+      result.trackUuid = this.trackUuid;
     }
     return result;
   }
