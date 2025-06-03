@@ -1,11 +1,12 @@
 import { createContext, useContext } from "react";
-import { IImageStandalone, ITrial, ITrialType } from "../types/types";
+import { IExperiment, IImageStandalone, ITrial, ITrialType } from "../types/types";
 import { useChosenTrial } from "./useChosenTrial";
 import { useExperiments } from "./useExperiments";
 
 interface IExperimentProviderStore {
   setCurrTrial: (params: { experimentName?: string; trialTypeName?: string; trialName?: string; }) => void; // a function to set the current trial
   currTrial: {
+    experiment: IExperiment | undefined;
     trialType: ITrialType | undefined; // the current trial type
     trial: ITrial | undefined; // the current trial
     shownMap: IImageStandalone | undefined; // the current shown map
