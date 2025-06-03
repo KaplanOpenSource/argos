@@ -1,5 +1,4 @@
 import { divIcon } from "leaflet";
-import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { IconDeviceByName } from "../../Icons/IconPicker";
 
@@ -9,7 +8,7 @@ export const DeviceMarkerIcon = ({
   isSelected,
   showDeviceNames,
 }: {
-  iconName: string,
+  iconName?: string | undefined,
   deviceItemName: string,
   isSelected: boolean,
   showDeviceNames: boolean,

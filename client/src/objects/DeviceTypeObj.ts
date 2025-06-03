@@ -6,6 +6,7 @@ export class DeviceTypeObj implements IDeviceType {
   name: string;
   devices: DeviceItemObj[] = [];
   attributeTypes: AttributeTypeObj[] = [];
+  icon?: string | undefined;
   trackUuid: string;
 
   constructor(data: IDeviceType) {
@@ -15,6 +16,7 @@ export class DeviceTypeObj implements IDeviceType {
     this.name = data.name;
     this.devices = data.devices?.map(device => new DeviceItemObj(device, this)) || [];
     this.attributeTypes = data.attributeTypes?.map(attr => new AttributeTypeObj(attr)) || [];
+    this.icon = data.icon;
     this.trackUuid = data.trackUuid || uuidv4();
   }
 
@@ -27,6 +29,9 @@ export class DeviceTypeObj implements IDeviceType {
     }
     if (this.attributeTypes.length > 0) {
       result.attributeTypes = this.attributeTypes.map(attr => attr.toJson());
+    }
+    if (this.icon) {
+      result.icon = this.icon;
     }
     return result;
   }

@@ -94,6 +94,7 @@ export interface IAttributeType extends INamed {
 export interface IDeviceType extends INamed {
   devices?: Array<IDevice>;
   attributeTypes?: Array<IAttributeType>;
+  icon?: string;
 };
 
 export interface IExperiment extends INamed {
