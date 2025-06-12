@@ -2,10 +2,8 @@ import { EditLocationAlt, EditLocationOutlined } from "@mui/icons-material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import MapIcon from '@mui/icons-material/Map';
 import { Stack } from "@mui/material";
-import { TreeRow } from "../App/TreeRow";
+import { TreeRowOnChosen } from "../App/TreeRowOnChosen";
 import { useExperimentProvider } from "../Context/ExperimentProvider";
-import { useChosenTrial } from "../Context/useChosenTrial";
-import { useExperiments } from "../Context/useExperiments";
 import { useShowImagePlacement } from "../Context/useShowImagePlacement";
 import { useShownMap } from "../Context/useShownMap";
 import { ImageOnServer } from "../IO/ImageOnServer";
@@ -19,46 +17,14 @@ export const ImageStandalone = ({ data, setData, experiment }) => {
     currTrial,
   } = useExperimentProvider();
   const { showImagePlacement, setShowImagePlacement } = useShowImagePlacement();
-  const { setExperiment } = useExperiments();
   const { switchToMap } = useShownMap({});
-  const { chooseShownMap } = useChosenTrial();
 
   const isShown = currTrial.shownMapName === data.name && currTrial.experimentName === experiment.name;
   const isBeingEdit = showImagePlacement && isShown;
 
-  const setDataCheckName = (newData) => {
-    const newName = newData?.name;
-    const oldName = data?.name;
-    if (newName === oldName) {
-      setData(newData);
-    } else {
-      console.log('image name changed from', data?.name, 'to', newData?.name);
-      const exp = structuredClone(currTrial?.experiment);
-      for (const trialType of exp?.trialTypes || []) {
-        for (const trial of trialType?.trials || []) {
-          for (const d of trial?.devicesOnTrial || []) {
-            if (d.location.name === oldName) {
-              d.location.name = newName;
-            }
-          }
-        }
-      }
-      for (const s of exp?.imageStandalone || []) {
-        if (s?.name === oldName) {
-          s.name = newName;
-        }
-      }
-      setExperiment(exp.name, exp);
-      if (isShown) {
-        chooseShownMap(newName)
-      }
-    }
-  }
-
   return (
-    <TreeRow
+    <TreeRowOnChosen
       data={data}
-      setData={setDataCheckName}
       components={
         <>
           <ButtonTooltip
@@ -151,6 +117,6 @@ export const ImageStandalone = ({ data, setData, experiment }) => {
           experiment={experiment}
         />
       </Stack>
-    </TreeRow>
+    </TreeRowOnChosen>
   )
 }

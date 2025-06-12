@@ -2,7 +2,7 @@ import { EditLocationAlt, EditLocationOutlined, OpenInFull } from "@mui/icons-ma
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Stack } from "@mui/material";
 import { useContext } from "react";
-import { TreeRow } from "../App/TreeRow";
+import { TreeRowOnChosen } from "../App/TreeRowOnChosen";
 import { useExperimentProvider } from "../Context/ExperimentProvider";
 import { useShowImagePlacement } from "../Context/useShowImagePlacement";
 import { ImageOnServer } from "../IO/ImageOnServer";
@@ -31,9 +31,8 @@ export const ImageEmbedded = ({
   const hasBounds = data?.latnorth && data?.lngwest && data?.latsouth && data?.lngeast;
 
   return (
-    <TreeRow
+    <TreeRowOnChosen
       data={data}
-      setData={setData}
       components={
         <>
           <ButtonTooltip
@@ -143,6 +142,6 @@ export const ImageEmbedded = ({
           experiment={experiment}
         />
       </Stack>
-    </TreeRow>
+    </TreeRowOnChosen>
   )
 }
