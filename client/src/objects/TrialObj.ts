@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
-import { AttributeObj, DeviceItemObj, DeviceOnTrialObj, DeviceTypeObj } from '.';
-import { IDeviceOnTrial, ITrial, ITrialType } from '../types/types';
+import { AttributeObj, DeviceItemObj, DeviceOnTrialObj, DeviceTypeObj, TrialTypeObj } from '.';
+import { IDeviceOnTrial, ITrial } from '../types/types';
 
 export class TrialObj implements ITrial {
   name: string;
@@ -9,10 +9,10 @@ export class TrialObj implements ITrial {
   description?: string;
   attributes: AttributeObj[] = [];
   protected readonly deviceTypes: DeviceTypeObj[];
-  protected readonly trialType: ITrialType;
+  readonly trialType: TrialTypeObj;
   trackUuid: string;
 
-  constructor(data: ITrial, deviceTypes: DeviceTypeObj[], trialType: ITrialType) {
+  constructor(data: ITrial, deviceTypes: DeviceTypeObj[], trialType: TrialTypeObj) {
     if (!data.name) {
       throw new Error('Trial name is required');
     }

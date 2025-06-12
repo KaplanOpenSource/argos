@@ -30,7 +30,7 @@ export class ExperimentObj implements IExperiment {
     this.imageEmbedded = data.imageEmbedded?.map(img => new ImageEmbeddedObj(img)) || [];
     this.imageStandalone = data.imageStandalone?.map(img => new ImageStandaloneObj(img)) || [];
     this.deviceTypes = data.deviceTypes?.map(type => new DeviceTypeObj(type)) || [];
-    this.trialTypes = data.trialTypes?.map(type => new TrialTypeObj(type, this.deviceTypes)) || [];
+    this.trialTypes = data.trialTypes?.map(type => new TrialTypeObj(type, this)) || [];
     this.shapes = data.shapes?.map(shape => new ShapeObj(shape)) || [];
   }
 

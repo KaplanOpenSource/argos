@@ -1,16 +1,21 @@
 import { RealMapName } from '../constants/constants';
-import { ICoordinates, ILocation } from '../types/types';
+import { ICoordinates, IImageStandalone, ILocation } from '../types/types';
 
 export class LocationObj implements ILocation {
-  name: string;
   coordinates?: ICoordinates;
 
-  constructor(data: ILocation) {
-    this.name = data.name || RealMapName;
+  constructor(
+    data: ILocation,
+    private imageStandalone?: IImageStandalone | undefined,
+  ) {
     this.coordinates = data.coordinates;
   }
 
-  toJson(includeTrackUuid: boolean = false): ILocation {
+  get name(): string {
+    return this.imageStandalone?.name || RealMapName;
+  }
+
+  toJson(_includeTrackUuid: boolean = false): ILocation {
     const result: ILocation = {
       name: this.name,
       coordinates: this.coordinates

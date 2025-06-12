@@ -13,7 +13,9 @@ export class DeviceOnTrialObj implements IDeviceOnTrial {
   constructor(data: IDeviceOnTrial, deviceItem: DeviceItemObj, trial: TrialObj) {
     this.deviceItem = deviceItem;
     this.trial = trial;
-    this.location = data.location ? new LocationObj(data.location) : undefined;
+
+    const imageStandalone = this.trial.trialType.experiment.imageStandalone.find(s => s.name === data.location?.name);
+    this.location = data.location ? new LocationObj(data.location, imageStandalone) : undefined;
 
     // Process attributes
     if (data.attributes) {
