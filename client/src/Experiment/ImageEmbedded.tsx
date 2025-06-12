@@ -28,6 +28,8 @@ export const ImageEmbedded = ({
   } = useExperimentProvider();
   const { showImagePlacement, setShowImagePlacement } = useShowImagePlacement();
 
+  const hasBounds = data?.latnorth && data?.lngwest && data?.latsouth && data?.lngeast;
+
   return (
     <TreeRow
       data={data}
@@ -68,11 +70,13 @@ export const ImageEmbedded = ({
             }}
           />
           <ButtonTooltip
-            tooltip="Fit image to screen"
+            tooltip={"Fit image to screen" + (hasBounds ? "" : ", disabled when no bounds")}
             onClick={() => addActionOnMap((mapObject) => {
-              mapObject.fitBounds([[data.latnorth, data.lngwest], [data.latsouth, data.lngeast]]);
+              if (hasBounds) {
+                mapObject.fitBounds([[data.latnorth!, data.lngwest!], [data.latsouth!, data.lngeast!]]);
+              }
             })}
-            disabled={(data || {}).latnorth === undefined}
+            disabled={!hasBounds}
           >
             <OpenInFull />
           </ButtonTooltip>
