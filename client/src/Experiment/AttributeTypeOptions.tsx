@@ -1,11 +1,9 @@
 import Delete from "@mui/icons-material/Delete";
 import { IconButton } from "@mui/material";
-import React from "react";
-import { TreeRow } from "../App/TreeRow";
+import { TreeRowOnChosen } from "../App/TreeRowOnChosen";
 import { TreeSublist } from "../App/TreeSublist";
 import { BooleanProperty } from "../Property/BooleanProperty";
 import { IAttributeType, ISelectOption, ITrackUuid } from "../types/types";
-import { changeByName } from "../Utils/utils";
 
 export const AttributeTypeOptions = ({
   data,
@@ -33,12 +31,9 @@ export const AttributeTypeOptions = ({
     >
       {
         ((data.options || []) as (ISelectOption & ITrackUuid)[]).map(itemData => (
-          <TreeRow
+          <TreeRowOnChosen
             key={itemData.trackUuid}
             data={itemData}
-            setData={newData => {
-              setData({ ...data, options: changeByName(data.options, itemData.name!, newData) });
-            }}
             components={
               <>
                 <IconButton
@@ -49,7 +44,7 @@ export const AttributeTypeOptions = ({
               </>
             }
           >
-          </TreeRow>
+          </TreeRowOnChosen>
         ))
       }
     </TreeSublist >
