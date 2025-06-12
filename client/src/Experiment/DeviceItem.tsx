@@ -1,6 +1,6 @@
 import DeleteIcon from '@mui/icons-material/Delete';
 import { IconButton } from "@mui/material";
-import { TreeRow } from "../App/TreeRow";
+import { TreeRowOnChosen } from "../App/TreeRowOnChosen";
 import { useExperimentProvider } from "../Context/ExperimentProvider";
 import { useCurrTrial } from "../Context/useCurrTrial";
 import { ScopeEnum } from "../types/types";
@@ -15,9 +15,8 @@ export const DeviceItem = ({ data, setData, deviceType, showAttributes, devicesE
   const device = trial.getDevice(deviceType.name, data.name);
 
   return (
-    <TreeRow
+    <TreeRowOnChosen
       data={data}
-      setData={setData}
       components={
         <>
           <SelectDeviceButton
@@ -51,6 +50,6 @@ export const DeviceItem = ({ data, setData, deviceType, showAttributes, devicesE
           deviceItem={scope === ScopeEnum.SCOPE_TRIAL ? data : null}
         />
       }
-    </TreeRow>
+    </TreeRowOnChosen>
   )
 }

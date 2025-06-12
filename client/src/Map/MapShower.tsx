@@ -3,11 +3,11 @@ import 'leaflet/dist/leaflet.css';
 
 import 'leaflet-contextmenu';
 import 'leaflet-contextmenu/dist/leaflet.contextmenu.css';
-import React from 'react';
 import { AttributionControl, MapContainer, ZoomControl } from 'react-leaflet';
 import { useExperimentProvider } from '../Context/ExperimentProvider';
 import { useChosenTrial } from '../Context/useChosenTrial';
 import { useExperiments } from '../Context/useExperiments';
+import { useShowImagePlacement } from '../Context/useShowImagePlacement';
 import { DeviceIconLegend } from '../Icons/DeviceIconLegend';
 import { EmbeddedImageLayer } from './Image/EmbeddedImageLayer';
 import { StandaloneImageLayer } from './Image/StandaloneImageLayer';
@@ -19,8 +19,8 @@ L.Icon.Default.imagePath = 'leaflet-images/';
 export const MapShower = ({ children }) => {
   const {
     currTrial,
-    showImagePlacement,
   } = useExperimentProvider();
+  const { showImagePlacement } = useShowImagePlacement();
   const { setExperiment } = useExperiments();
   const { shownMap } = useChosenTrial();
 

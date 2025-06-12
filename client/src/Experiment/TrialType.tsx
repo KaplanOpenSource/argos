@@ -2,7 +2,7 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { IconButton, Tooltip, Typography } from "@mui/material";
 import dayjs from "dayjs";
-import { TreeRow } from "../App/TreeRow";
+import { TreeRowOnChosen } from "../App/TreeRowOnChosen";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { changeByName, createNewName } from "../Utils/utils";
 import { AddNewTrialButton } from "./AddNewTrialButton";
@@ -12,9 +12,8 @@ import { Trial } from "./Trial";
 export const TrialType = ({ data, setData, experiment }) => {
   const trials = data?.trials || [];
   return (
-    <TreeRow
+    <TreeRowOnChosen
       data={data}
-      setData={setData}
       components={
         <>
           <Tooltip title="Delete trial type" placement="top">
@@ -66,6 +65,6 @@ export const TrialType = ({ data, setData, experiment }) => {
           </Trial>
         ))
       }
-    </TreeRow >
+    </TreeRowOnChosen >
   )
 }

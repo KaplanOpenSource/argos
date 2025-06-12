@@ -69,9 +69,9 @@ export const DeviceMarker = ({
 
   // const dragLocation = ()
 
-  const isSelected = selection.find(s => s.deviceItemName === deviceItemName && s.deviceTypeName === deviceTypeName);
+  const isSelected = !!selection.find(s => s.deviceItemName === deviceItemName && s.deviceTypeName === deviceTypeName);
 
-  const deviceType = currTrial.experiment.deviceTypes.find(dt => dt.name === deviceTypeName);
+  const deviceType = currTrial?.experiment?.deviceTypes?.find(dt => dt.name === deviceTypeName);
 
   const icon = DeviceMarkerIcon({ iconName: deviceType?.icon, deviceItemName, isSelected, showDeviceNames });
 

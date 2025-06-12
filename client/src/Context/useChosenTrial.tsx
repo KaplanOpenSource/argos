@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { ExperimentObj } from "../objects";
 import { IExperiment, IImageStandalone, ITrial, ITrialType } from "../types/types";
 import { useExperiments } from "./useExperiments";
 
@@ -25,6 +26,7 @@ interface ChosenTrialStore {
   isExperimentChosen: () => boolean,
   obtainTrial: (experiment: IExperiment | undefined) => { trialType: ITrialType | undefined, trial: ITrial | undefined },
   setTrialIntoExp: (newTrialData: ITrial, experiment: IExperiment | undefined) => boolean,
+  changeChosen: (prevData: any, newData: any) => void,
 }
 
 function findNamed<T extends { name?: string }>(
@@ -95,5 +97,13 @@ export const useChosenTrial = create<ChosenTrialStore>()((set, get) => {
       trialType!.trials![tri!] = newTrialData;
       return true;
     },
+    changeChosen: (prevData: any, newData: any) => {
+      const experiment = get().experiment();
+      if (experiment && experiment.name) {
+        // The following will clone the experiment and change (recursively and deeply) the prevData to newData
+        const changedExperiment = new ExperimentObj(experiment).createChange().change(prevData, newData).apply().toJson(true);
+        useExperiments.getState().setExperiment(experiment.name, changedExperiment);
+      }
+    }
   })
 })

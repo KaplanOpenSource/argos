@@ -1,37 +1,31 @@
 import { Box } from "@mui/material";
 import { TreeItem } from "@mui/x-tree-view/TreeItem";
-import React, { ReactNode, useEffect } from "react";
-import { assignUuids } from "../Context/TrackUuidUtils";
-import { INamed, ITrackUuid } from "../types/types";
+import { ReactNode } from "react";
+import { useExperiments } from "../Context/useExperiments";
+import { INamed } from "../types/types";
 import { TextFieldDebounce } from "../Utils/TextFieldDebounce";
-
-type IData = INamed & ITrackUuid;
 
 export const TreeRow = ({
   data,
   setData,
+  onRename,
   components,
   children,
   boldName = false,
   validateName = (_val) => '',
 }: {
-  data: IData,
-  setData: (newData: IData) => any,
+  data: INamed,
+  setData?: (newData: INamed) => any, // optional for legacy usages
+  onRename?: (newName: string) => any, // optional to allow legacy not to change
   components: ReactNode,
   children?: ReactNode,
   boldName?: boolean,
   validateName?: (val: string) => string,
 }) => {
+  const { } = useExperiments();
   const { name } = data;
 
-  useEffect(() => {
-    if (!data.trackUuid) {
-      console.log("if you get here, then this item was created without a uuid", data);
-      setData(assignUuids({ ...data }))
-    }
-  }, [(data || {}).trackUuid]);
-
-  if (!(data || {}).trackUuid) {
+  if (!data) {
     return null;
   }
 
@@ -42,6 +36,14 @@ export const TreeRow = ({
       },
     }
   };
+
+  const handleChange = (val: string) => {
+    if (onRename) {
+      onRename(val);
+    } else if (setData) {
+      setData({ ...data, name: val });
+    }
+  }
 
   return (
     <TreeItem
@@ -61,8 +63,8 @@ export const TreeRow = ({
                 label="Name"
                 InputLabelProps={{ shrink: true }}
                 value={name}
-                onChange={val => setData({ ...data, name: val })}
-                disabled={!setData}
+                onChange={handleChange}
+                disabled={!onRename && !setData}
                 {...(boldName ? BOLD_PROPS : {})}
                 validate={validateName}
               />
@@ -76,3 +78,4 @@ export const TreeRow = ({
     </TreeItem>
   )
 }
+
