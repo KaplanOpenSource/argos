@@ -3,7 +3,7 @@ import { TooltipItem } from "../Utils/TooltipItem";
 
 export const BooleanProperty = ({ data, setData, label, tooltipTitle = "", ...restProps }) => {
   const value = (!data || data === 'false' || data === '0') ? false : true; // for legacy experiments
-  const style = data !== undefined ? {} : {
+  const diagonalStyle = {
     '& .MuiSwitch-track': {
       position: 'relative',
       background: (theme) =>
@@ -52,7 +52,7 @@ export const BooleanProperty = ({ data, setData, label, tooltipTitle = "", ...re
                 setData(!!e.target.checked);
               }}
               onClick={e => e.stopPropagation()}
-              sx={{ ...style }}
+              sx={data !== undefined ? {} : diagonalStyle}
             />
           }
           label={label}
