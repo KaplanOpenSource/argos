@@ -1,8 +1,7 @@
 import DeleteIcon from '@mui/icons-material/Delete';
 import { FormControlLabel, IconButton, Switch } from "@mui/material";
 import { remove } from "lodash";
-import React from "react";
-import { TreeRow } from "../App/TreeRow";
+import { TreeRowOnChosen } from '../App/TreeRowOnChosen';
 import { useExperiments } from "../Context/useExperiments";
 import { SelectProperty } from "../Property/SelectProperty";
 import { IAttribute, IAttributeType, IExperiment, INamed, ScopeEnum } from "../types/types";
@@ -54,17 +53,6 @@ export const AttributeType = ({
     }
   }
 
-  const handleRename = (v: INamed) => {
-    const experiment = structuredClone(containers.experiment as IExperiment);
-    if (experiment) {
-      getAttributeContainers(experiment,
-        (types) => types.filter(at => at.name === data.name).forEach(at => at.name = v.name),
-        (attrs) => attrs.filter(at => at.name === data.name).forEach(at => at.name = v.name),
-      );
-      setExperiment(experiment?.name!, experiment);
-    }
-  };
-
   const handleDelete = () => {
     const experiment = structuredClone(containers.experiment as IExperiment);
     if (experiment) {
@@ -77,9 +65,8 @@ export const AttributeType = ({
   };
 
   return (
-    <TreeRow
+    <TreeRowOnChosen
       data={data}
-      setData={handleRename}
       components={
         <>
           <FormControlLabel
@@ -142,6 +129,6 @@ export const AttributeType = ({
         rows={1}
         sx={{ width: '100%' }}
       />
-    </TreeRow>
+    </TreeRowOnChosen>
   )
 }
