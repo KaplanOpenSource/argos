@@ -28,12 +28,12 @@ export const AppHeaderExpTrial = () => {
   } = useExperiments();
 
   const showTrialsMenu = (e: { currentTarget: Element | null; }) => {
-    setMenuItems((trialType()?.trials || []).map(tr => {
+    setMenuItems((trialType?.trials || []).map(tr => {
       return {
         name: tr.name!,
         action: () => chooseTrial({
           experimentName: experiment?.name,
-          trialTypeName: trialType()?.name,
+          trialTypeName: trialType?.name,
           trialName: tr.name
         }),
       };
@@ -83,14 +83,14 @@ export const AppHeaderExpTrial = () => {
                 ? <>
                   &nbsp;:&nbsp;
                   <Typography variant="body1">
-                    {trialType()!.name}
+                    {trialType!.name}
                   </Typography>
                   &nbsp;:&nbsp;
                   <Typography variant="body1"
                     onClick={showTrialsMenu}
                     style={{ cursor: 'pointer' }}
                   >
-                    {trial()!.name}
+                    {trial!.name}
                   </Typography>
                 </>
                 : null}

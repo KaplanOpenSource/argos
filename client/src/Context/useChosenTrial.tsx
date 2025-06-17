@@ -13,8 +13,8 @@ type IChosenNames = {
 
 interface ChosenTrialStore {
   experiment: IExperiment | undefined,
-  trialType: () => ITrialType | undefined,
-  trial: () => ITrial | undefined,
+  trialType: ITrialType | undefined,
+  trial: ITrial | undefined,
   shownMap: () => IImageStandalone | undefined,
   chosenNames: IChosenNames,
   chooseTrial: (params: {
@@ -46,12 +46,8 @@ export const useChosenTrial = create<ChosenTrialStore>()((set, get) => {
 
   return ({
     experiment: undefined,
-    trialType: () => {
-      return get().obtainTrial(get().experiment).trialType;
-    },
-    trial: () => {
-      return get().obtainTrial(get().experiment).trial;
-    },
+    trialType: undefined,
+    trial: undefined,
     chosenNames: {},
     shownMap: () => {
       return (get().experiment?.imageStandalone || [])[get().chosenNames.shownMap?.index ?? 1e6];
@@ -108,12 +104,13 @@ export const useChosenTrial = create<ChosenTrialStore>()((set, get) => {
 })
 
 export const ChosenExperimentUpdater = ({ }) => {
-  const { chosenNames } = useChosenTrial();
+  const { chosenNames, obtainTrial } = useChosenTrial();
   const { experiments } = useExperiments();
 
   useEffect(() => {
     const experiment = experiments[chosenNames.experiment?.index ?? 1e6];
-    useChosenTrial.setState({ experiment });
+    const { trialType, trial } = obtainTrial(experiment);
+    useChosenTrial.setState({ experiment, trialType, trial });
   }, [experiments, chosenNames]);
 
   return null;
