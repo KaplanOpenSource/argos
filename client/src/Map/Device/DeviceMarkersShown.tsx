@@ -9,7 +9,7 @@ import { DeviceMarker } from "./DeviceMarker";
 
 export const DeviceMarkersShown = ({ showDeviceNames }) => {
   const { selection, setSelection } = useDeviceSeletion();
-  const { trial, shownMap, setTrialData } = useChosenTrial();
+  const { trial, shownMap, changeTrialData } = useChosenTrial();
   const { isDeviceTypeHidden } = useHiddenDeviceTypes();
 
   const mapName = shownMap?.name || RealMapName;
@@ -28,15 +28,12 @@ export const DeviceMarkersShown = ({ showDeviceNames }) => {
             key={index}
             deviceOnTrial={deviceOnTrial.toJson(true)}
             setDeviceOnTrial={newDeviceData => {
-              if (!newDeviceData) {
-                console.log('delete device should be handled internally')
-              }
-              const trialData = trial?.toJson(true)!;
-              trialData.devicesOnTrial = trialData.devicesOnTrial?.map(x => {
-                if (!isSameDevice(x, deviceOnTrial)) return x;
-                return newDeviceData;
+              changeTrialData(prev => {
+                prev.devicesOnTrial = prev.devicesOnTrial
+                  ?.map(x => isSameDevice(x, deviceOnTrial) ? newDeviceData : x)
+                  ?.filter(x => x !== undefined);
+                return prev;
               });
-              setTrialData(trialData);
             }}
             showDeviceNames={showDeviceNames}
           />
