@@ -45,12 +45,12 @@ export const ExperimentProvider = ({ children }) => {
   } = useChosenTrial();
 
   const currTrial = {
-    experiment: experiment(),
+    experiment: experiment,
     trialType: trialType(),
     trial: trial(),
     shownMap: shownMap(),
     shownMapName: shownMap()?.name,
-    experimentName: experiment()?.name, // this field is for legacy
+    experimentName: experiment?.name, // this field is for legacy
     trialTypeName: trialType()?.name, // this field is for legacy
     trialName: trial()?.name, // this field is for legacy
   };
@@ -68,7 +68,7 @@ export const ExperimentProvider = ({ children }) => {
   }
 
   const setTrialData = (newTrialData: ITrial) => {
-    const e = structuredClone(experiment());
+    const e = structuredClone(experiment);
     if (setTrialIntoExp(newTrialData, e)) {
       setExperiment(e!.name!, e!)
     }

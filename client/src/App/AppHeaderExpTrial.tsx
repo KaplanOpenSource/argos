@@ -4,11 +4,11 @@ import {
   Tooltip,
   Typography
 } from '@mui/material';
-import { ButtonTooltip } from '../Utils/ButtonTooltip';
-import { useChosenTrial } from '../Context/useChosenTrial';
 import { useState } from 'react';
-import { IMenuActionItem, MenuActions } from '../Utils/MenuActions';
+import { useChosenTrial } from '../Context/useChosenTrial';
 import { useExperiments } from '../Context/useExperiments';
+import { ButtonTooltip } from '../Utils/ButtonTooltip';
+import { IMenuActionItem, MenuActions } from '../Utils/MenuActions';
 
 export const AppHeaderExpTrial = () => {
   const [anchorEl, setAnchorEl] = useState<Element | null>(null);
@@ -32,7 +32,7 @@ export const AppHeaderExpTrial = () => {
       return {
         name: tr.name!,
         action: () => chooseTrial({
-          experimentName: experiment()?.name,
+          experimentName: experiment?.name,
           trialTypeName: trialType()?.name,
           trialName: tr.name
         }),
@@ -77,7 +77,7 @@ export const AppHeaderExpTrial = () => {
                 onClick={showExperimentsMenu}
                 style={{ cursor: 'pointer' }}
               >
-                {experiment()!.name}
+                {experiment!.name}
               </Typography>
               {isTrialChosen()
                 ? <>

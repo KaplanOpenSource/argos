@@ -76,7 +76,7 @@ export const Trial = ({ data, setData, experiment, trialType, children }) => {
               setCurrTrial({ experimentName: experiment.name, trialTypeName: trialType.name, trialName: data.name });
             }}
           >
-            <Edit color={data === currTrial?.trial ? "primary" : ""} />
+            <Edit color={data === currTrial?.trial ? "primary" : "inherit"} />
           </ButtonTooltip>
           <ButtonTooltip
             tooltip="Delete trial"

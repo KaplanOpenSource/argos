@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { create } from "zustand";
 import { ExperimentObj } from "../objects";
 import { IExperiment, IImageStandalone, ITrial, ITrialType } from "../types/types";
@@ -11,7 +12,7 @@ type IChosenNames = {
 };
 
 interface ChosenTrialStore {
-  experiment: () => IExperiment | undefined,
+  experiment: IExperiment | undefined,
   trialType: () => ITrialType | undefined,
   trial: () => ITrial | undefined,
   shownMap: () => IImageStandalone | undefined,
@@ -44,18 +45,16 @@ function findNamed<T extends { name?: string }>(
 export const useChosenTrial = create<ChosenTrialStore>()((set, get) => {
 
   return ({
-    experiment: () => {
-      return useExperiments.getState().experiments[get().chosenNames.experiment?.index ?? 1e6];
-    },
+    experiment: undefined,
     trialType: () => {
-      return get().obtainTrial(get().experiment()).trialType;
+      return get().obtainTrial(get().experiment).trialType;
     },
     trial: () => {
-      return get().obtainTrial(get().experiment()).trial;
+      return get().obtainTrial(get().experiment).trial;
     },
     chosenNames: {},
     shownMap: () => {
-      return (get().experiment()?.imageStandalone || [])[get().chosenNames.shownMap?.index ?? 1e6];
+      return (get().experiment?.imageStandalone || [])[get().chosenNames.shownMap?.index ?? 1e6];
     },
     chooseTrial: ({
       experimentName,
@@ -74,7 +73,7 @@ export const useChosenTrial = create<ChosenTrialStore>()((set, get) => {
     },
     chooseShownMap: (shownMapName: string | undefined) => {
       set(prev => {
-        const found = findNamed(prev.experiment()?.imageStandalone, shownMapName);
+        const found = findNamed(prev.experiment?.imageStandalone, shownMapName);
         return { chosenNames: { ...prev.chosenNames, shownMap: found.found } };
       })
     },
@@ -98,7 +97,7 @@ export const useChosenTrial = create<ChosenTrialStore>()((set, get) => {
       return true;
     },
     changeChosen: (prevData: any, newData: any) => {
-      const experiment = get().experiment();
+      const experiment = get().experiment;
       if (experiment && experiment.name) {
         // The following will clone the experiment and change (recursively and deeply) the prevData to newData
         const changedExperiment = new ExperimentObj(experiment).createChange().change(prevData, newData).apply().toJson(true);
@@ -107,3 +106,15 @@ export const useChosenTrial = create<ChosenTrialStore>()((set, get) => {
     }
   })
 })
+
+export const ChosenExperimentUpdater = ({ }) => {
+  const { chosenNames } = useChosenTrial();
+  const { experiments } = useExperiments();
+
+  useEffect(() => {
+    const experiment = experiments[chosenNames.experiment?.index ?? 1e6];
+    useChosenTrial.setState({ experiment });
+  }, [experiments, chosenNames]);
+
+  return null;
+}

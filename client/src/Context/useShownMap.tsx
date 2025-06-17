@@ -35,7 +35,7 @@ export const useShownMap = ({ }) => {
   }
 
   const switchToMap = (mapName: string | undefined) => {
-    const exp = experiment();
+    const exp = experiment;
     if (exp) {
       const s = exp.imageStandalone?.find(s => s.name === mapName);
       if (s) {
