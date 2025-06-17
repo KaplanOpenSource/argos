@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { create } from "zustand";
-import { ExperimentObj } from "../objects";
+import { ExperimentObj, TrialObj, TrialTypeObj } from "../objects";
 import { IExperiment, IImageStandalone, ITrial, ITrialType } from "../types/types";
 import { useExperiments } from "./useExperiments";
 
@@ -13,8 +13,8 @@ type IChosenNames = {
 
 interface ChosenTrialStore {
   experiment: ExperimentObj | undefined,
-  trialType: ITrialType | undefined,
-  trial: ITrial | undefined,
+  trialType: TrialTypeObj | undefined,
+  trial: TrialObj | undefined,
   shownMap: IImageStandalone | undefined,
   chosenNames: IChosenNames,
   chooseTrial: (params: {
@@ -102,13 +102,14 @@ export const useChosenTrial = create<ChosenTrialStore>()((set, get) => {
 })
 
 export const ChosenExperimentUpdater = ({ }) => {
-  const { chosenNames, obtainTrial } = useChosenTrial();
+  const { chosenNames } = useChosenTrial();
   const { experiments } = useExperiments();
 
   useEffect(() => {
     const exp = experiments[chosenNames.experiment?.index ?? 1e6];
     const experiment = exp ? new ExperimentObj(exp) : undefined;
-    const { trialType, trial } = obtainTrial(experiment);
+    const trialType = (experiment?.trialTypes || [])[chosenNames.trialType?.index ?? 1e6];
+    const trial = (trialType?.trials || [])[chosenNames.trial?.index ?? 1e6];
     const shownMap = (experiment?.imageStandalone || [])[chosenNames.shownMap?.index ?? 1e6];
     useChosenTrial.setState({ experiment, trialType, trial, shownMap });
   }, [experiments, chosenNames]);
