@@ -37,7 +37,7 @@ export const MapShower = ({ children }) => {
         left: 0,
         zIndex: 0,
       }}
-      crs={shownMap() ? CRS.Simple : CRS.EPSG3857}
+      crs={shownMap ? CRS.Simple : CRS.EPSG3857}
       center={[32.081128, 34.779729]}
       zoomControl={false}
       minZoom={-6}
@@ -49,15 +49,15 @@ export const MapShower = ({ children }) => {
       />
       <MapEventer directlyOnMap={false}
         mapEvents={{
-          layeradd: (_, mapObject) => mapObject.options.crs = shownMap() ? CRS.Simple : CRS.EPSG3857
+          layeradd: (_, mapObject) => mapObject.options.crs = shownMap ? CRS.Simple : CRS.EPSG3857
         }}
       />
-      {shownMap()
+      {shownMap
         ? (
           <StandaloneImageLayer
             experiment={currTrial.experiment}
             setExperiment={setExperiment}
-            shownMap={shownMap()!}
+            shownMap={shownMap!}
             showImagePlacement={showImagePlacement}
             key={'standalone'}
           />

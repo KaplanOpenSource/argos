@@ -15,7 +15,7 @@ interface ChosenTrialStore {
   experiment: IExperiment | undefined,
   trialType: ITrialType | undefined,
   trial: ITrial | undefined,
-  shownMap: () => IImageStandalone | undefined,
+  shownMap: IImageStandalone | undefined,
   chosenNames: IChosenNames,
   chooseTrial: (params: {
     experimentName?: string | undefined,
@@ -48,10 +48,8 @@ export const useChosenTrial = create<ChosenTrialStore>()((set, get) => {
     experiment: undefined,
     trialType: undefined,
     trial: undefined,
+    shownMap: undefined,
     chosenNames: {},
-    shownMap: () => {
-      return (get().experiment?.imageStandalone || [])[get().chosenNames.shownMap?.index ?? 1e6];
-    },
     chooseTrial: ({
       experimentName,
       trialTypeName,
@@ -110,7 +108,8 @@ export const ChosenExperimentUpdater = ({ }) => {
   useEffect(() => {
     const experiment = experiments[chosenNames.experiment?.index ?? 1e6];
     const { trialType, trial } = obtainTrial(experiment);
-    useChosenTrial.setState({ experiment, trialType, trial });
+    const shownMap = (experiment?.imageStandalone || [])[chosenNames.shownMap?.index ?? 1e6];
+    useChosenTrial.setState({ experiment, trialType, trial, shownMap });
   }, [experiments, chosenNames]);
 
   return null;

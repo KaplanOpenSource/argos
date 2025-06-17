@@ -48,8 +48,8 @@ export const ExperimentProvider = ({ children }) => {
     experiment: experiment,
     trialType: trialType,
     trial: trial,
-    shownMap: shownMap(),
-    shownMapName: shownMap()?.name,
+    shownMap: shownMap,
+    shownMapName: shownMap?.name,
     experimentName: experiment?.name, // this field is for legacy
     trialTypeName: trialType?.name, // this field is for legacy
     trialName: trial?.name, // this field is for legacy
