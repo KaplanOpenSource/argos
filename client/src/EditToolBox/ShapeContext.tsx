@@ -1,10 +1,6 @@
-import React, { createContext, useContext } from 'react';
+import { createContext, useContext, useState } from 'react';
 import { arcCurveFromPoints, lerpPoint, rectByAngle, resamplePolyline, splineCurve } from '../Utils/GeometryUtils';
 import { CHOOSE_SHAPE, FREEPOSITIONING_SHAPE, POINT_SHAPE, SELECT_SHAPE } from './utils/constants.js';
-
-export const ShapeContext = createContext(null)
-
-export const useShape = () => useContext(ShapeContext);
 
 type IShapeOption = {
   name: string;
@@ -14,10 +10,25 @@ type IShapeOption = {
   maxPoints?: undefined | number;
 };
 
+type IShapeContextStore = {
+  shape: string;
+  setShape: React.Dispatch<React.SetStateAction<string>>;
+  rectAngle: number;
+  setRectAngle: React.Dispatch<React.SetStateAction<number>>;
+  rectRows: number;
+  setRectRows: React.Dispatch<number>;
+  shapeOptions: IShapeOption[];
+  shapeData: IShapeOption | undefined;
+};
+
+export const ShapeContext = createContext<IShapeContextStore | null>(null)
+
+export const useShape = () => useContext(ShapeContext)!;
+
 export const ShapeProvider = ({ children }) => {
-  const [shape, setShape] = React.useState(SELECT_SHAPE);
-  const [rectAngle, setRectAngle] = React.useState(0);
-  const [rectRows, setRectRows] = React.useState(3);
+  const [shape, setShape] = useState(SELECT_SHAPE);
+  const [rectAngle, setRectAngle] = useState(0);
+  const [rectRows, setRectRows] = useState(3);
 
   const shapeOptions: IShapeOption[] = [
     {
@@ -92,14 +103,16 @@ export const ShapeProvider = ({ children }) => {
   // TODO: get default shapeData in a nicer way, maybe convert shapeOptions to struct
   const shapeData = shapeOptions.find(s => s.name === shape) || shapeOptions.find(s => s.name === CHOOSE_SHAPE);
 
-  const store = {
+  const store: IShapeContextStore = {
     shape, setShape,
     rectAngle, setRectAngle,
     rectRows, setRectRows,
     shapeOptions, shapeData
   }
 
-  return <ShapeContext.Provider value={store}>
-    {children}
-  </ShapeContext.Provider>
+  return (
+    <ShapeContext.Provider value={store}>
+      {children}
+    </ShapeContext.Provider>
+  )
 }
