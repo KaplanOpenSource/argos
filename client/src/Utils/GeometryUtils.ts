@@ -17,7 +17,7 @@ export const lerpPoint = function (from: number[], to: number[], t: number) {
 };
 
 export const resampleLine = (from: number[], to: number[], num: number) => {
-  let ret = new Array(num);
+  let ret: number[][] = new Array(num);
   ret[0] = from;
   for (let i = 1; i < num - 1; ++i) {
     ret[i] = lerpPoint(from, to, i / (num - 1));
@@ -71,7 +71,7 @@ export const findPositionOnPolyline = (points: number[][], pos: number) => {
 
 export const resamplePolyline = (points: number[][], num: number) => {
   const total = polylineLength(points);
-  let resampled = new Array(num);
+  let resampled: number[][] = new Array(num);
   for (let i = 0; i < num; ++i) {
     resampled[i] = findPositionOnPolyline(points, (num > 1 ? (i / (num - 1)) : 0.5) * total);
   }
@@ -104,9 +104,9 @@ export const splineCurveOne = (points: number[][], t: number) => {
   ];
 };
 
-export const splineCurve = (points: number[][], amount: number) => {
+export const splineCurve = (points: number[][], amount: number): number[][] => {
   if (points.length <= 2) return points;
-  let ret = new Array(amount);
+  let ret: number[][] = new Array(amount);
   for (let i = 0; i < amount; ++i) {
     ret[i] = splineCurveOne(points, i / amount);
   }
@@ -116,7 +116,7 @@ export const splineCurve = (points: number[][], amount: number) => {
 export const arcCurve = (center: number[], radius: number, fromAngle: number, toAngle: number, amount: number) => {
   // console.log(center, radius, fromAngle, toAngle);
   if (toAngle > fromAngle) toAngle -= Math.PI * 2;
-  let ret = new Array(amount);
+  let ret: number[][] = new Array(amount);
   for (let i = 0; i < amount; ++i) {
     const t = i / (amount - 1);
     const a = fromAngle * (1 - t) + toAngle * t;
@@ -127,7 +127,7 @@ export const arcCurve = (center: number[], radius: number, fromAngle: number, to
 }
 
 export const arcCurveFromPoints = (points: number[][], amount: number) => {
-  let curve;
+  let curve: number[][];
   if (points.length <= 2) {
     curve = [];
   } else {

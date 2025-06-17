@@ -6,12 +6,20 @@ export const ShapeContext = createContext(null)
 
 export const useShape = () => useContext(ShapeContext);
 
+type IShapeOption = {
+  name: string;
+  noControlPoints?: boolean;
+  toLine: (points: number[][]) => number[][][];
+  toPositions: (points: number[][], amount: number) => number[][];
+  maxPoints?: undefined | number;
+};
+
 export const ShapeProvider = ({ children }) => {
   const [shape, setShape] = React.useState(SELECT_SHAPE);
   const [rectAngle, setRectAngle] = React.useState(0);
   const [rectRows, setRectRows] = React.useState(3);
 
-  const shapeOptions = [
+  const shapeOptions: IShapeOption[] = [
     {
       name: CHOOSE_SHAPE,
       noControlPoints: true,
@@ -65,7 +73,7 @@ export const ShapeProvider = ({ children }) => {
       toPositions: (points, amount, rows = rectRows, angle = rectAngle) => {
         if (points.length === 0) return [];
         const [nw, ne, se, sw] = rectByAngle(points, angle);
-        let ret = [];
+        let ret: number[][] = [];
         const cols = Math.ceil(amount / rows);
         if (rows > 1 && cols > 1) {
           for (let y = 0; y < rows; ++y) {
