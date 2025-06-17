@@ -43,7 +43,7 @@ export const DeviceMarkersShown = ({ showDeviceNames }) => {
         onAreaMarked={({ boxZoomBounds }) => {
           const newSelection = [...selection];
           for (const { deviceItemName, deviceTypeName, location } of shownDevices) {
-            const coordinates = location.coordinates.map(x => parseFloat(x));
+            const coordinates = location!.coordinates!.map(x => parseFloat(x));
             if (boxZoomBounds.contains(coordinates)) {
               const isSelected = newSelection.find(s => {
                 return s.deviceItemName === deviceItemName && s.deviceTypeName === deviceTypeName
