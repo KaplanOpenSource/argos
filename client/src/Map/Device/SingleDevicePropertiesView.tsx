@@ -49,7 +49,7 @@ export const SingleDevicePropertiesView = ({
       <Typography variant='h6'>
         {deviceItemName}
       </Typography>
-      <Typography variant='p'>
+      <Typography variant='caption'>
         {deviceTypeName}
       </Typography>
       <br />
