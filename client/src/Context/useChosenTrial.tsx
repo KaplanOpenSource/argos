@@ -29,6 +29,7 @@ interface ChosenTrialStore {
   setTrialIntoExp: (newTrialData: ITrial, experiment: IExperiment | undefined) => boolean,
   changeChosen: (prevData: any, newData: any) => void,
   setTrialData: (newTrialData: ITrial) => void,
+  changeTrialData: (changer: (prevTrialData: ITrial) => ITrial | undefined) => void,
 }
 
 export const useChosenTrial = create<ChosenTrialStore>()((set, get) => {
@@ -100,10 +101,20 @@ export const useChosenTrial = create<ChosenTrialStore>()((set, get) => {
       }
     },
     setTrialData: (newTrialData: ITrial) => {
+      get().changeTrialData(() => newTrialData);
+    },
+    changeTrialData: (changer: (prevTrialData: ITrial) => ITrial | undefined) => {
       const experiment = get().experiment;
       if (experiment?.name && get().trial) {
         const changedExperiment = new ExperimentObj(experiment).toJson(true);
-        changedExperiment.trialTypes![get().chosenNames.trialType?.index!].trials![get().chosenNames.trial?.index!] = newTrialData;
+        const trialType = changedExperiment.trialTypes![get().chosenNames.trialType?.index!];
+        const index = get().chosenNames.trial?.index!;
+        const newTrialData = changer(trialType.trials![index]);
+        if (newTrialData) {
+          trialType.trials![index] = newTrialData;
+        } else {
+          trialType.trials!.splice(index, 1);
+        }
         useExperiments.getState().setExperiment(experiment.name, changedExperiment);
       }
     }
