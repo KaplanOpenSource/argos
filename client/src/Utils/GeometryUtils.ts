@@ -1,6 +1,7 @@
 import { LatLng } from "leaflet";
+import { ICoordinates } from "../types/types";
 
-export const pos2arr = function (lnglat: { lng: number; lat: number; }): [number, number] {
+export const pos2arr = function (lnglat: { lng: number; lat: number; }): ICoordinates {
   return [lnglat.lng, lnglat.lat];
 }
 
@@ -8,16 +9,16 @@ export const lerp = function (from: number, to: number, t: number) {
   return from * (1 - t) + to * t;
 };
 
-export const lerpYX = function (from: number[], to: number[], t0: number, t1: number) {
+export const lerpYX = function (from: ICoordinates, to: ICoordinates, t0: number, t1: number): ICoordinates {
   return [lerp(from[0], to[0], t0), lerp(from[1], to[1], t1)];
 };
 
-export const lerpPoint = function (from: number[], to: number[], t: number) {
+export const lerpPoint = function (from: ICoordinates, to: ICoordinates, t: number): ICoordinates {
   return lerpYX(from, to, t, t);
 };
 
-export const resampleLine = (from: number[], to: number[], num: number) => {
-  let ret: number[][] = new Array(num);
+export const resampleLine = (from: ICoordinates, to: ICoordinates, num: number) => {
+  let ret: ICoordinates[] = new Array(num);
   ret[0] = from;
   for (let i = 1; i < num - 1; ++i) {
     ret[i] = lerpPoint(from, to, i / (num - 1));
@@ -26,13 +27,13 @@ export const resampleLine = (from: number[], to: number[], num: number) => {
   return ret;
 }
 
-export const distance = (p: number[], q: number[]) => {
+export const distance = (p: ICoordinates, q: ICoordinates) => {
   const dx = p[0] - q[0];
   const dy = p[1] - q[1];
   return Math.sqrt(dx * dx + dy * dy);
 }
 
-export const polylineLength = (points: number[][]) => {
+export const polylineLength = (points: ICoordinates[]) => {
   let total = 0;
   for (let i = 0; i < points.length - 1; ++i) {
     total += distance(points[i], points[i + 1]);
@@ -54,7 +55,7 @@ export const distToText = (dist: number) => {
   return (Math.round(dist * 10) / 10) + "m";
 }
 
-export const findPositionOnPolyline = (points: number[][], pos: number) => {
+export const findPositionOnPolyline = (points: ICoordinates[], pos: number): ICoordinates => {
   let curr = 0;
   for (let i = 0; i < points.length - 1; ++i) {
     const dist = distance(points[i], points[i + 1]);
@@ -69,9 +70,9 @@ export const findPositionOnPolyline = (points: number[][], pos: number) => {
   return points[points.length - 1];
 }
 
-export const resamplePolyline = (points: number[][], num: number) => {
+export const resamplePolyline = (points: ICoordinates[], num: number) => {
   const total = polylineLength(points);
-  let resampled: number[][] = new Array(num);
+  let resampled: ICoordinates[] = new Array(num);
   for (let i = 0; i < num; ++i) {
     resampled[i] = findPositionOnPolyline(points, (num > 1 ? (i / (num - 1)) : 0.5) * total);
   }
@@ -87,7 +88,7 @@ export const catmullRom = (t: number, p0: number, p1: number, p2: number, p3: nu
   return (2 * p1 - 2 * p2 + v0 + v1) * t3 + (- 3 * p1 + 3 * p2 - 2 * v0 - v1) * t2 + v0 * t + p1;
 }
 
-export const splineCurveOne = (points: number[][], t: number) => {
+export const splineCurveOne = (points: ICoordinates[], t: number): ICoordinates => {
   var p = (points.length - 1) * t;
 
   var intPoint = Math.floor(p);
@@ -104,9 +105,9 @@ export const splineCurveOne = (points: number[][], t: number) => {
   ];
 };
 
-export const splineCurve = (points: number[][], amount: number): number[][] => {
+export const splineCurve = (points: ICoordinates[], amount: number): ICoordinates[] => {
   if (points.length <= 2) return points;
-  let ret: number[][] = new Array(amount);
+  let ret: ICoordinates[] = new Array(amount);
   for (let i = 0; i < amount; ++i) {
     ret[i] = splineCurveOne(points, i / amount);
   }
@@ -116,7 +117,7 @@ export const splineCurve = (points: number[][], amount: number): number[][] => {
 export const arcCurve = (center: number[], radius: number, fromAngle: number, toAngle: number, amount: number) => {
   // console.log(center, radius, fromAngle, toAngle);
   if (toAngle > fromAngle) toAngle -= Math.PI * 2;
-  let ret: number[][] = new Array(amount);
+  let ret: ICoordinates[] = new Array(amount);
   for (let i = 0; i < amount; ++i) {
     const t = i / (amount - 1);
     const a = fromAngle * (1 - t) + toAngle * t;
@@ -126,8 +127,8 @@ export const arcCurve = (center: number[], radius: number, fromAngle: number, to
   return ret;
 }
 
-export const arcCurveFromPoints = (points: number[][], amount: number) => {
-  let curve: number[][];
+export const arcCurveFromPoints = (points: ICoordinates[], amount: number) => {
+  let curve: ICoordinates[];
   if (points.length <= 2) {
     curve = [];
   } else {
@@ -150,7 +151,7 @@ export const partition = (arr: any[], num: number) => {
 }
 
 /** @returns Rectangle as an array of its 4 points */
-export const rectByAngle = (points: number[][], _angle: number) => {
+export const rectByAngle = (points: ICoordinates[], _angle: number) => {
   // return [p0, [p1[0], p0[1]], p1, [p0[0], p1[1]]];
   return points.concat([points[0], points[0], points[0], points[0]]).slice(0, 4);
 }

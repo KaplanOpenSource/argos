@@ -1,12 +1,13 @@
 import { createContext, useContext, useState } from 'react';
+import { ICoordinates } from '../types/types.js';
 import { arcCurveFromPoints, lerpPoint, rectByAngle, resamplePolyline, splineCurve } from '../Utils/GeometryUtils';
 import { CHOOSE_SHAPE, FREEPOSITIONING_SHAPE, POINT_SHAPE, SELECT_SHAPE } from './utils/constants.js';
 
 type IShapeOption = {
   name: string;
   noControlPoints?: boolean;
-  toLine: (points: number[][]) => number[][][];
-  toPositions: (points: number[][], amount: number) => number[][];
+  toLine: (points: ICoordinates[]) => ICoordinates[][];
+  toPositions: (points: ICoordinates[], amount: number) => ICoordinates[];
   maxPoints?: undefined | number;
 };
 
@@ -18,7 +19,7 @@ type IShapeContextStore = {
   rectRows: number;
   setRectRows: React.Dispatch<number>;
   shapeOptions: IShapeOption[];
-  shapeData: IShapeOption | undefined;
+  shapeData: IShapeOption;
 };
 
 export const ShapeContext = createContext<IShapeContextStore | null>(null)
@@ -84,7 +85,7 @@ export const ShapeProvider = ({ children }) => {
       toPositions: (points, amount, rows = rectRows, angle = rectAngle) => {
         if (points.length === 0) return [];
         const [nw, ne, se, sw] = rectByAngle(points, angle);
-        let ret: number[][] = [];
+        let ret: ICoordinates[] = [];
         const cols = Math.ceil(amount / rows);
         if (rows > 1 && cols > 1) {
           for (let y = 0; y < rows; ++y) {
@@ -101,7 +102,8 @@ export const ShapeProvider = ({ children }) => {
   ];
 
   // TODO: get default shapeData in a nicer way, maybe convert shapeOptions to struct
-  const shapeData = shapeOptions.find(s => s.name === shape) || shapeOptions.find(s => s.name === CHOOSE_SHAPE);
+  const defaultShape = shapeOptions.find(s => s.name === CHOOSE_SHAPE)!;
+  const shapeData: IShapeOption = shapeOptions.find(s => s.name === shape) || defaultShape;
 
   const store: IShapeContextStore = {
     shape, setShape,
