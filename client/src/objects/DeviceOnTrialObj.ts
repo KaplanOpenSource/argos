@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { AttributeObj, DeviceItemObj, LocationObj, TrialObj } from '.';
 import { IDeviceOnTrial, IDeviceTypeAndItem } from '../types/types';
+import { isSameDevice } from '../Utils/isSameDevice';
 
 export class DeviceOnTrialObj implements IDeviceOnTrial {
   readonly deviceItem: DeviceItemObj;
@@ -28,6 +29,10 @@ export class DeviceOnTrialObj implements IDeviceOnTrial {
     }
 
     this.trackUuid = data.trackUuid || uuidv4();
+  }
+
+  isSame(other: IDeviceOnTrial) {
+    return isSameDevice(this, other);
   }
 
   setContainedIn(containedIn?: IDeviceTypeAndItem) {
