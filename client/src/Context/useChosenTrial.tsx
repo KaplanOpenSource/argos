@@ -28,6 +28,7 @@ interface ChosenTrialStore {
   obtainTrial: (experiment: IExperiment | undefined) => { trialType: ITrialType | undefined, trial: ITrial | undefined },
   setTrialIntoExp: (newTrialData: ITrial, experiment: IExperiment | undefined) => boolean,
   changeChosen: (prevData: any, newData: any) => void,
+  setTrialData: (newTrialData: ITrial) => void,
 }
 
 export const useChosenTrial = create<ChosenTrialStore>()((set, get) => {
@@ -95,6 +96,14 @@ export const useChosenTrial = create<ChosenTrialStore>()((set, get) => {
       if (experiment && experiment.name) {
         // The following will clone the experiment and change (recursively and deeply) the prevData to newData
         const changedExperiment = new ExperimentObj(experiment).createChange().change(prevData, newData).apply().toJson(true);
+        useExperiments.getState().setExperiment(experiment.name, changedExperiment);
+      }
+    },
+    setTrialData: (newTrialData: ITrial) => {
+      const experiment = get().experiment;
+      if (experiment?.name && get().trial) {
+        const changedExperiment = new ExperimentObj(experiment).toJson(true);
+        changedExperiment.trialTypes![get().chosenNames.trialType?.index!].trials![get().chosenNames.trial?.index!] = newTrialData;
         useExperiments.getState().setExperiment(experiment.name, changedExperiment);
       }
     }

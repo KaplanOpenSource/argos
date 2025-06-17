@@ -4,6 +4,7 @@ import { useChosenTrial } from "./useChosenTrial";
 import { useExperiments } from "./useExperiments";
 
 // TODO:
+// - When changing name or deleting trial before current trial, different trial is chosen
 // - change setLocation to Obj
 // - Select options on attribute should not be name but be reference to attribute option
 // - Trial object batch should be replaced with changing the trial or experiment using changeChosen

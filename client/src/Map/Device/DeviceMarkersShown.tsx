@@ -1,6 +1,7 @@
-import { useExperimentProvider } from "../../Context/ExperimentProvider";
+import { useChosenTrial } from "../../Context/useChosenTrial";
 import { useDeviceSeletion } from "../../Context/useDeviceSeletion";
 import { useHiddenDeviceTypes } from "../../Context/useHiddenDeviceTypes";
+import { isSameDevice } from "../../Utils/isSameDevice";
 import { RealMapName } from "../../constants/constants";
 import { AreaMarkListener } from "../AreaMarkListener";
 import { PopupSwitchProvider } from "../PopupSwitchContext";
@@ -8,7 +9,7 @@ import { DeviceMarker } from "./DeviceMarker";
 
 export const DeviceMarkersShown = ({ showDeviceNames }) => {
   const { selection, setSelection } = useDeviceSeletion();
-  const { currTrial, setTrialData } = useExperimentProvider();
+  const { trial, shownMap, setTrialData } = useChosenTrial();
   const { isDeviceTypeHidden } = useHiddenDeviceTypes();
 
   const mapName = shownMap?.name || RealMapName;
@@ -25,15 +26,17 @@ export const DeviceMarkersShown = ({ showDeviceNames }) => {
         {shownDevices.map((deviceOnTrial, index) => (
           <DeviceMarker
             key={index}
-            deviceOnTrial={deviceOnTrial}
+            deviceOnTrial={deviceOnTrial.toJson(true)}
             setDeviceOnTrial={newDeviceData => {
-              const data = structuredClone(currTrial.trial);
-              if (newDeviceData) {
-                data.devicesOnTrial[index] = newDeviceData;
-              } else {
-                data.devicesOnTrial.splice(index, 1);
+              if (!newDeviceData) {
+                console.log('delete device should be handled internally')
               }
-              setTrialData(data);
+              const trialData = trial?.toJson(true)!;
+              trialData.devicesOnTrial = trialData.devicesOnTrial?.map(x => {
+                if (!isSameDevice(x, deviceOnTrial)) return x;
+                return newDeviceData;
+              });
+              setTrialData(trialData);
             }}
             showDeviceNames={showDeviceNames}
           />
@@ -43,7 +46,7 @@ export const DeviceMarkersShown = ({ showDeviceNames }) => {
         onAreaMarked={({ boxZoomBounds }) => {
           const newSelection = [...selection];
           for (const { deviceItemName, deviceTypeName, location } of shownDevices) {
-            const coordinates = location!.coordinates!.map(x => parseFloat(x));
+            const coordinates = location!.coordinates!.map(x => parseFloat(x + ''));
             if (boxZoomBounds.contains(coordinates)) {
               const isSelected = newSelection.find(s => {
                 return s.deviceItemName === deviceItemName && s.deviceTypeName === deviceTypeName
