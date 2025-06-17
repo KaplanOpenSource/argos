@@ -12,7 +12,7 @@ type IChosenNames = {
 };
 
 interface ChosenTrialStore {
-  experiment: IExperiment | undefined,
+  experiment: ExperimentObj | undefined,
   trialType: ITrialType | undefined,
   trial: ITrial | undefined,
   shownMap: IImageStandalone | undefined,
@@ -30,19 +30,19 @@ interface ChosenTrialStore {
   changeChosen: (prevData: any, newData: any) => void,
 }
 
-function findNamed<T extends { name?: string }>(
-  arr: T[] | undefined,
-  name?: string,
-): {
-  found?: { index: number, name: string } | undefined,
-  obj?: T | undefined,
-} {
-  const index = (arr && name) ? arr.findIndex(a => a.name === name) : -1;
-  if (index === -1) return {};
-  return { found: { index, name: name! }, obj: arr![index] };
-}
-
 export const useChosenTrial = create<ChosenTrialStore>()((set, get) => {
+
+  function findNamed<T extends { name?: string }>(
+    arr: T[] | undefined,
+    name?: string,
+  ): {
+    found?: { index: number, name: string } | undefined,
+    obj?: T | undefined,
+  } {
+    const index = (arr && name) ? arr.findIndex(a => a.name === name) : -1;
+    if (index === -1) return {};
+    return { found: { index, name: name! }, obj: arr![index] };
+  }
 
   return ({
     experiment: undefined,
@@ -106,7 +106,8 @@ export const ChosenExperimentUpdater = ({ }) => {
   const { experiments } = useExperiments();
 
   useEffect(() => {
-    const experiment = experiments[chosenNames.experiment?.index ?? 1e6];
+    const exp = experiments[chosenNames.experiment?.index ?? 1e6];
+    const experiment = exp ? new ExperimentObj(exp) : undefined;
     const { trialType, trial } = obtainTrial(experiment);
     const shownMap = (experiment?.imageStandalone || [])[chosenNames.shownMap?.index ?? 1e6];
     useChosenTrial.setState({ experiment, trialType, trial, shownMap });
