@@ -11,26 +11,13 @@ export const DeviceMarkersShown = ({ showDeviceNames }) => {
   const { currTrial, setTrialData } = useExperimentProvider();
   const { isDeviceTypeHidden } = useHiddenDeviceTypes();
 
-  const devicesOnTrial = (currTrial.trial || {}).devicesOnTrial || [];
-  const mapName = currTrial.shownMapName || RealMapName;
+  const mapName = shownMap?.name || RealMapName;
 
-  const devicesWithoutLocation = [];
-  const shownDevices = [];
-
-  for (const dev of devicesOnTrial) {
-    const { location } = dev;
-    if (!location || !location.coordinates) {
-      devicesWithoutLocation.push(dev);
-    } else if (location.name === mapName) {
-      if (!isDeviceTypeHidden(dev.deviceTypeName)) {
-        shownDevices.push(dev);
-      }
-    }
-  }
-
-  // if (devicesWithoutLocation.length) {
-  //     console.log('no locations on devices:', JSON.stringify(devicesWithoutLocation));
-  // }
+  const shownDevices = (trial?.devicesOnTrial || []).filter(dev => {
+    return dev?.location?.coordinates
+      && dev?.location?.name === mapName
+      && !isDeviceTypeHidden(dev.deviceTypeName);
+  });
 
   return (
     <>
