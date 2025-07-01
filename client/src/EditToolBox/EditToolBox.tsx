@@ -25,9 +25,7 @@ import {
 } from './utils/constants.js';
 
 import { PlaylistAdd, RotateLeftRounded, Timeline } from '@mui/icons-material';
-import { useExperimentProvider } from '../Context/ExperimentProvider.jsx';
 import { useChosenTrial } from '../Context/useChosenTrial.js';
-import { useCurrTrial } from '../Context/useCurrTrial';
 import { useDeviceSeletion } from '../Context/useDeviceSeletion';
 import { EditTool } from './EditTool.jsx';
 import DistributeAlongArc from './ToolsBar/DistributeAlongArc.jsx';
@@ -47,9 +45,7 @@ export const EditToolBox = ({
   const { shape, setShape, shapeData, } = useShape();
 
   const { selection, setSelection } = useDeviceSeletion();
-  const { currTrial } = useExperimentProvider();
-  const { trial } = useCurrTrial({});
-  const { changeTrialObj } = useChosenTrial();
+  const { changeTrialObj, shownMap } = useChosenTrial();
 
   const onClickIcon = (id) => {
     if (id === shape) {
@@ -67,7 +63,7 @@ export const EditToolBox = ({
       changeTrialObj(draft => {
         let i = 0;
         for (const s of selection) {
-          draft.setDeviceLocation(s, positions[i++], currTrial.shownMapName);
+          draft.setDeviceLocation(s, positions[i++], shownMap?.name);
         }
       });
       setSelection([]);
