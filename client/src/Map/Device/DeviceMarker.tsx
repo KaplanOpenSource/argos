@@ -1,9 +1,9 @@
-import { LatLng } from "leaflet";
+import L, { LatLng } from "leaflet";
 import { useEffect, useRef } from "react";
 import { Marker, Popup, Tooltip } from "react-leaflet";
 import { RealMapName } from "../../constants/constants";
 import { useExperimentProvider } from "../../Context/ExperimentProvider";
-import { useCurrTrial } from "../../Context/useCurrTrial";
+import { useChosenTrial } from "../../Context/useChosenTrial";
 import { useDeviceSeletion } from "../../Context/useDeviceSeletion";
 import { useShape } from "../../EditToolBox/ShapeContext";
 import { SELECT_SHAPE } from "../../EditToolBox/utils/constants";
@@ -34,15 +34,15 @@ export const DeviceMarker = ({
 }) => {
   const { selection, setSelection } = useDeviceSeletion();
   const { currTrial } = useExperimentProvider();
-  const { trial } = useCurrTrial({});
+  const { changeTrialObj, shownMap } = useChosenTrial();
 
-  const ref = useRef(null);
+  const ref = useRef<L.Marker>(null);
   const { isPopupSwitchedTo } = usePopupSwitch();
   const { shape } = useShape();
 
   useEffect(() => {
     if (isPopupSwitchedTo(deviceOnTrial.deviceTypeName + ' : ' + deviceOnTrial.deviceItemName)) {
-      ref.current.openPopup();
+      ref?.current?.openPopup();
     }
   })
 
@@ -53,18 +53,22 @@ export const DeviceMarker = ({
   const setLocation = (latlng: LatLng) => {
     const dlat = latlng.lat - coordinates[0];
     const dlng = latlng.lng - coordinates[1];
-    trial.batch(draft => {
-      draft.getDevicesByNames(selection).forEach(devSelect => {
-        if (devSelect.hasLocationOnMap(currTrial.shownMapName)) {
-          const coordSelect = devSelect.getLocation()?.coordinates;
-          if (coordSelect) {
-            devSelect.setLocationOnMap([coordSelect[0] + dlat, coordSelect[1] + dlng], currTrial.shownMapName);
-          }
-        }
-      })
-      const devDrag = draft.getDevice(deviceTypeName, deviceItemName);
-      devDrag.setLocationOnMap([latlng.lat, latlng.lng], currTrial.shownMapName);
-    })
+    changeTrialObj(draft => {
+      const devDrag = draft.findDevice(deviceOnTrial);
+      devDrag?.setLocationOnMap([latlng.lat, latlng.lng], shownMap?.name);
+    });
+    // trial.batch(draft => {
+    //   draft.getDevicesByNames(selection).forEach(devSelect => {
+    //     if (devSelect.hasLocationOnMap(currTrial.shownMapName)) {
+    //       const coordSelect = devSelect.getLocation()?.coordinates;
+    //       if (coordSelect) {
+    //         devSelect.setLocationOnMap([coordSelect[0] + dlat, coordSelect[1] + dlng], currTrial.shownMapName);
+    //       }
+    //     }
+    //   })
+    //   const devDrag = draft.getDevice(deviceTypeName, deviceItemName);
+    //   devDrag.setLocationOnMap([latlng.lat, latlng.lng], currTrial.shownMapName);
+    // })
   }
 
   // const dragLocation = ()

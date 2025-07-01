@@ -30,6 +30,7 @@ interface ChosenTrialStore {
   changeChosen: (prevData: any, newData: any) => void,
   setTrialData: (newTrialData: ITrial) => void,
   changeTrialData: (changer: (prevTrialData: ITrial) => ITrial | undefined) => void,
+  changeTrialObj: (changer: (draftTrialObj: TrialObj) => void) => void,
 }
 
 export const useChosenTrial = create<ChosenTrialStore>()((set, get) => {
@@ -73,8 +74,8 @@ export const useChosenTrial = create<ChosenTrialStore>()((set, get) => {
         return { chosenNames: { ...prev.chosenNames, shownMap: found.found } };
       })
     },
-    isTrialChosen: () => get().chosenNames.trial && get().trial, // TODO: check if zustand has computed
-    isExperimentChosen: () => get().chosenNames.experiment && get().experiment,
+    isTrialChosen: () => !!(get().chosenNames.trial && get().trial), // TODO: check if zustand has computed
+    isExperimentChosen: () => !!(get().chosenNames.experiment && get().experiment),
     obtainTrial: (experiment: IExperiment | undefined) => {
       const trialType = (experiment?.trialTypes || [])[get().chosenNames.trialType?.index ?? 1e6];
       const trial = (trialType?.trials || [])[get().chosenNames.trial?.index ?? 1e6];
@@ -116,6 +117,16 @@ export const useChosenTrial = create<ChosenTrialStore>()((set, get) => {
           trialType.trials!.splice(index, 1);
         }
         useExperiments.getState().setExperiment(experiment.name, changedExperiment);
+      }
+    },
+    changeTrialObj: (changer: (draftTrialObj: TrialObj) => void) => {
+      const experiment = get().experiment;
+      if (get().isTrialChosen()) {
+        const changedExperiment = new ExperimentObj(experiment!);
+        // const trial = get().obtainTrial(experiment)!.trial as TrialObj;
+        const trial = changedExperiment.trialTypes[get().chosenNames.trialType?.index!].trials[get().chosenNames.trial?.index!];
+        changer(trial);
+        useExperiments.getState().setExperiment(experiment!.name, changedExperiment.toJson(true));
       }
     }
   })

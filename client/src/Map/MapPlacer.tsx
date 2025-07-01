@@ -1,8 +1,10 @@
 import { useExperimentProvider } from "../Context/ExperimentProvider";
+import { useChosenTrial } from "../Context/useChosenTrial";
 import { useCurrTrial } from "../Context/useCurrTrial";
 import { useDeviceSeletion } from "../Context/useDeviceSeletion";
 import { useShape } from "../EditToolBox/ShapeContext";
 import { CHOOSE_SHAPE, FREEPOSITIONING_SHAPE, POINT_SHAPE } from "../EditToolBox/utils/constants";
+import { ICoordinates } from "../types/types";
 import { MapContextMenu } from "./MapContextMenu";
 import { MapEventer } from "./MapEventer";
 import { MarkedShape } from "./MarkedShape";
@@ -15,9 +17,10 @@ export const MapPlacer = ({
   const { currTrial } = useExperimentProvider();
   const { shape, shapeData } = useShape();
   const { trial } = useCurrTrial({});
+  const { changeTrialObj, shownMap } = useChosenTrial();
 
   const onMapClick = (e, mapObj) => {
-    const latlng = [e.latlng.lat, e.latlng.lng];
+    const latlng: ICoordinates = [e.latlng.lat, e.latlng.lng];
     if (!shapeData.noControlPoints) {
       if (!shapeData.maxPoints) {
         setMarkedPoints([...markedPoints, latlng]);
@@ -27,8 +30,10 @@ export const MapPlacer = ({
     } else {
       if (shape === FREEPOSITIONING_SHAPE) {
         if (selection.length > 0) {
-          const dev = trial.getDevice(selection[0].deviceTypeName, selection[0].deviceItemName);
-          dev.setLocationOnMap(latlng, currTrial.shownMapName);
+          changeTrialObj(draft => {
+            const dev = draft.findDevice(selection[0], true);
+            dev?.setLocationOnMap(latlng, shownMap?.name);
+          })
           setSelection(selection.slice(1));
         }
       } else if (shape === POINT_SHAPE) {
