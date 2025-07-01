@@ -37,12 +37,11 @@ export const MapPlacer = ({
         }
       } else if (shape === POINT_SHAPE) {
         if (selection.length > 0) {
-          trial.batch(draft => {
+          changeTrialObj(draft => {
             for (const s of selection) {
-              const dev = draft.getDevice(s.deviceTypeName, s.deviceItemName);
-              dev.setLocationOnMap(latlng, currTrial.shownMapName);
+              draft.setDeviceLocation(s, latlng, shownMap?.name);
             }
-          });
+          })
           setSelection([]);
         }
       } else if (shape === CHOOSE_SHAPE) {
