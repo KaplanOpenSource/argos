@@ -63,6 +63,13 @@ export class DeviceOnTrialObj implements IDeviceOnTrial {
     }
   }
 
+  getLocationRecursive(): LocationObj | undefined {
+    if (!this.location && this.containedIn) {
+      return this.containedIn.getLocationRecursive();
+    }
+    return this.location;
+  }
+
   get deviceTypeName(): string {
     return this.deviceItem.deviceType.name;
   }
