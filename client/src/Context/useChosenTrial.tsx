@@ -73,8 +73,8 @@ export const useChosenTrial = create<ChosenTrialStore>()((set, get) => {
         return { chosenNames: { ...prev.chosenNames, shownMap: found.found } };
       })
     },
-    isTrialChosen: () => get().chosenNames.trial !== undefined, // TODO: check if zustand has computed
-    isExperimentChosen: () => get().chosenNames.experiment !== undefined,
+    isTrialChosen: () => get().chosenNames.trial && get().trial, // TODO: check if zustand has computed
+    isExperimentChosen: () => get().chosenNames.experiment && get().experiment,
     obtainTrial: (experiment: IExperiment | undefined) => {
       const trialType = (experiment?.trialTypes || [])[get().chosenNames.trialType?.index ?? 1e6];
       const trial = (trialType?.trials || [])[get().chosenNames.trial?.index ?? 1e6];

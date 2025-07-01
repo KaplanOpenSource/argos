@@ -1,17 +1,22 @@
 import React, { createContext, useContext } from 'react';
 
-export const PopupSwitchContext = createContext(null);
+type IPopupSwitchStore = {
+  switchToPopup: (key: string) => void;
+  isPopupSwitchedTo: (key: string) => boolean;
+};
 
-export const usePopupSwitch = () => useContext(PopupSwitchContext);
+export const PopupSwitchContext = createContext<IPopupSwitchStore | null>(null);
+
+export const usePopupSwitch = () => useContext(PopupSwitchContext)!;
 
 export const PopupSwitchProvider = ({ children }) => {
-  const [popupSwitch, setPopupSwitch] = React.useState();
+  const [popupSwitch, setPopupSwitch] = React.useState<string>();
 
-  const switchToPopup = (key) => {
+  const switchToPopup = (key: string | undefined) => {
     setPopupSwitch(key);
   }
 
-  const isPopupSwitchedTo = (key) => {
+  const isPopupSwitchedTo = (key: string | undefined) => {
     if (popupSwitch === key) {
       setPopupSwitch(undefined);
       return true;
