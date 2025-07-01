@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import { AttributeObj, DeviceItemObj, DeviceOnTrialObj, DeviceTypeObj, TrialTypeObj } from '.';
-import { IDeviceOnTrial, ITrial } from '../types/types';
+import { ICoordinates, IDeviceOnTrial, IDeviceTypeAndItem, ITrial } from '../types/types';
 import { isSameDevice } from '../Utils/isSameDevice';
 
 export class TrialObj implements ITrial {
@@ -93,6 +93,27 @@ export class TrialObj implements ITrial {
       this._devicesOnTrial.push(newDev);
       return newDev;
     }
+    return undefined;
+  }
+
+  setDeviceLocation(
+    name: IDeviceOnTrial,
+    coordinates: ICoordinates | undefined,
+    mapName?: string,
+    containedIn?: IDeviceTypeAndItem,
+  ): DeviceOnTrialObj | undefined {
+    if (coordinates || containedIn) {
+      const dev = this.findDevice(name, true);
+      if (dev) {
+        if (containedIn) {
+          dev.setContainedIn(containedIn);
+        } else {
+          dev.setLocationOnMap(coordinates, mapName);
+        }
+        return dev;
+      }
+    }
+    this._devicesOnTrial = this._devicesOnTrial.filter(d => !isSameDevice(d, name));
     return undefined;
   }
 

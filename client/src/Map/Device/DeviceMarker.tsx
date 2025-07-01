@@ -54,8 +54,7 @@ export const DeviceMarker = ({
     const dlat = latlng.lat - coordinates[0];
     const dlng = latlng.lng - coordinates[1];
     changeTrialObj(draft => {
-      const devDrag = draft.findDevice(deviceOnTrial);
-      devDrag?.setLocationOnMap([latlng.lat, latlng.lng], shownMap?.name);
+      draft.setDeviceLocation(deviceOnTrial, [latlng.lat, latlng.lng], shownMap?.name);
     });
     // trial.batch(draft => {
     //   draft.getDevicesByNames(selection).forEach(devSelect => {

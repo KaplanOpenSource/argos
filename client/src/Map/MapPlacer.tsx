@@ -31,8 +31,7 @@ export const MapPlacer = ({
       if (shape === FREEPOSITIONING_SHAPE) {
         if (selection.length > 0) {
           changeTrialObj(draft => {
-            const dev = draft.findDevice(selection[0], true);
-            dev?.setLocationOnMap(latlng, shownMap?.name);
+            draft.setDeviceLocation(selection[0], latlng, shownMap?.name);
           })
           setSelection(selection.slice(1));
         }
