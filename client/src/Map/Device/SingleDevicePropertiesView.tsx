@@ -4,6 +4,7 @@ import {
   Stack, Typography
 } from '@mui/material';
 import { useExperimentProvider } from '../../Context/ExperimentProvider';
+import { useChosenTrial } from '../../Context/useChosenTrial';
 import { useCurrTrial } from '../../Context/useCurrTrial';
 import { AttributeItemList } from '../../Experiment/AttributeItemList';
 import { AddContainedButton } from '../../Experiment/Contained/AddContainedButton';
@@ -29,6 +30,7 @@ export const SingleDevicePropertiesView = ({
   const { deviceTypeName, deviceItemName } = deviceOnTrial;
   const { trial } = useCurrTrial({});
   const device = trial.getDevice(deviceTypeName, deviceItemName);
+  const { shownMap } = useChosenTrial();
 
   const deviceType = (experiment.deviceTypes || []).find(t => t.name === deviceTypeName);
   const deviceItem = ((deviceType || []).devices || []).find(t => t.name === deviceItemName);
@@ -54,8 +56,8 @@ export const SingleDevicePropertiesView = ({
       </Typography>
       <br />
       <DeviceLocationEdit
-        location={deviceOnTrial.location.coordinates}
-        setLocation={(loc) => device.setLocationOnMap(loc, currTrial.mapName)}
+        location={deviceOnTrial?.location?.coordinates}
+        setLocation={(loc) => device.setLocationOnMap(loc, shownMap?.name)}
       />
       {deviceItem
         ? <Box sx={{ overflowY: 'auto', maxHeight: 300 }}>
