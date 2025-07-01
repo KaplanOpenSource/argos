@@ -54,23 +54,16 @@ export const DeviceMarker = ({
     const dlat = latlng.lat - coordinates[0];
     const dlng = latlng.lng - coordinates[1];
     changeTrialObj(draft => {
+      for (const s of selection) {
+        const dev = draft.findDevice(s, false);
+        const coords = dev?.location?.coordinates;
+        if (coords) {
+          dev.setLocationOnMap([coords[0] + dlat, coords[1] + dlng], shownMap?.name);
+        }
+      }
       draft.setDeviceLocation(deviceOnTrial, [latlng.lat, latlng.lng], shownMap?.name);
     });
-    // trial.batch(draft => {
-    //   draft.getDevicesByNames(selection).forEach(devSelect => {
-    //     if (devSelect.hasLocationOnMap(currTrial.shownMapName)) {
-    //       const coordSelect = devSelect.getLocation()?.coordinates;
-    //       if (coordSelect) {
-    //         devSelect.setLocationOnMap([coordSelect[0] + dlat, coordSelect[1] + dlng], currTrial.shownMapName);
-    //       }
-    //     }
-    //   })
-    //   const devDrag = draft.getDevice(deviceTypeName, deviceItemName);
-    //   devDrag.setLocationOnMap([latlng.lat, latlng.lng], currTrial.shownMapName);
-    // })
   }
-
-  // const dragLocation = ()
 
   const isSelected = !!selection.find(s => s.deviceItemName === deviceItemName && s.deviceTypeName === deviceTypeName);
 
