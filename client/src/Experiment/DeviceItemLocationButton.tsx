@@ -1,8 +1,8 @@
 import { NotListedLocation, NotListedLocationTwoTone, PersonPinCircle, PersonPinCircleTwoTone, Place, PlaceOutlined, PlaceTwoTone } from "@mui/icons-material";
-import React, { ReactNode } from "react";
+import { ReactNode } from "react";
 import { RealMapName } from "../constants/constants";
 import { DeviceObject } from "../Context/DeviceObject";
-import { useExperimentProvider } from "../Context/ExperimentProvider";
+import { useChosenTrial } from "../Context/useChosenTrial";
 import { useCurrTrial } from "../Context/useCurrTrial";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { ContextMenu } from "../Utils/ContextMenu";
@@ -40,15 +40,15 @@ export const DeviceItemLocationButton = ({
   deviceItem,
   surroundingDevices,
 }) => {
-  const { currTrial } = useExperimentProvider();
+  const { changeTrialObj, shownMap, isTrialChosen } = useChosenTrial();
 
   const { trial } = useCurrTrial({});
   const device = trial.getDevice(deviceType?.name, deviceItem?.name);
 
-  const { tooltip, icon } = locationIconTooltip(device, currTrial?.shownMapName || RealMapName);
+  const { tooltip, icon } = locationIconTooltip(device, shownMap?.name || RealMapName);
 
   const removeLocation = () => {
-    device.setLocation(undefined);
+    changeTrialObj(draft => draft.setDeviceLocation({ deviceTypeName: deviceType?.name, deviceItemName: deviceItem?.name }, undefined));
   }
 
   const menuItems = [
@@ -62,10 +62,9 @@ export const DeviceItemLocationButton = ({
     menuItems.push({
       label: 'Remove locations to all devices in list',
       callback: () => {
-        trial.batch(draft => {
+        changeTrialObj(draft => {
           for (const { deviceTypeName, deviceItemName } of surroundingDevices) {
-            const dev = draft.getDevice(deviceTypeName, deviceItemName);
-            dev.setLocation(undefined);
+            draft.setDeviceLocation({ deviceTypeName, deviceItemName }, undefined);
           }
         });
       }
@@ -74,7 +73,7 @@ export const DeviceItemLocationButton = ({
 
   return (
     <>
-      {currTrial.trial && (
+      {isTrialChosen() && (
         <ContextMenu menuItems={menuItems}>
           <ButtonTooltip
             tooltip={tooltip}
