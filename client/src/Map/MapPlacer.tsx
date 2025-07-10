@@ -70,10 +70,9 @@ export const MapPlacer = ({
         menuItems={[
           {
             label: 'Place top point here',
-            callback: (e, latlng) => {
+            callback: (_e: any, latlng) => {
               if (selection.length > 0) {
-                const dev = trial.getDevice(selection[0].deviceTypeName, selection[0].deviceItemName);
-                dev.setLocationOnMap(latlng, currTrial.shownMapName);
+                changeTrialObj(draft => draft.findDevice(selection[0])?.setLocationOnMap(latlng, currTrial.shownMapName));
                 setSelection(selection.slice(1));
               }
             }
