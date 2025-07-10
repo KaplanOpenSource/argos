@@ -13,7 +13,7 @@ export const DeviceMarkersShown = ({
   showDeviceNames: boolean,
 }) => {
   const { selection, setSelection } = useDeviceSeletion();
-  const { trial, shownMap, changeTrialData } = useChosenTrial();
+  const { trial, shownMap } = useChosenTrial();
   const { isDeviceTypeHidden } = useHiddenDeviceTypes();
 
   const mapName = shownMap?.name || RealMapName;
@@ -30,7 +30,7 @@ export const DeviceMarkersShown = ({
         {shownDevices.map((deviceOnTrial, index) => (
           <DeviceMarker
             key={index}
-            deviceOnTrial={deviceOnTrial.toJson(true)}
+            deviceOnTrial={deviceOnTrial}
             showDeviceNames={showDeviceNames}
           />
         ))}
