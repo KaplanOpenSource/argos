@@ -4,7 +4,6 @@ import {
   Stack, Typography
 } from '@mui/material';
 import { useChosenTrial } from '../../Context/useChosenTrial';
-import { useCurrTrial } from '../../Context/useCurrTrial';
 import { AttributeItemList } from '../../Experiment/AttributeItemList';
 import { AddContainedButton } from '../../Experiment/Contained/AddContainedButton';
 import { DeviceItemLocationButton } from '../../Experiment/DeviceItemLocationButton';
@@ -23,8 +22,6 @@ export const SingleDevicePropertiesView = ({
   children?: any,
 }) => {
   const { deviceTypeName, deviceItemName } = deviceOnTrial;
-  const { trial } = useCurrTrial({});
-  const device = trial.getDevice(deviceTypeName, deviceItemName);
   const { shownMap, changeTrialObj } = useChosenTrial();
 
   const deviceItem = deviceOnTrial.deviceItem;
@@ -57,7 +54,9 @@ export const SingleDevicePropertiesView = ({
       <br />
       <DeviceLocationEdit
         location={deviceOnTrial?.location?.coordinates}
-        setLocation={(loc) => device.setLocationOnMap(loc, shownMap?.name)}
+        setLocation={(loc) => {
+          changeTrialObj(draft => draft.findDevice(deviceOnTrial)?.setLocationOnMap(loc, shownMap?.name));
+        }}
       />
       {deviceItem
         ? <Box sx={{ overflowY: 'auto', maxHeight: 300 }}>
