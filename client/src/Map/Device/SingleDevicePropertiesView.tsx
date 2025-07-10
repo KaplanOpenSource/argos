@@ -3,12 +3,10 @@ import {
   Box,
   Stack, Typography
 } from '@mui/material';
-import { useExperimentProvider } from '../../Context/ExperimentProvider';
 import { useChosenTrial } from '../../Context/useChosenTrial';
 import { useCurrTrial } from '../../Context/useCurrTrial';
 import { AttributeItemList } from '../../Experiment/AttributeItemList';
 import { AddContainedButton } from '../../Experiment/Contained/AddContainedButton';
-import { ContainedDevice } from '../../Experiment/Contained/ContainedDevice';
 import { DeviceItemLocationButton } from '../../Experiment/DeviceItemLocationButton';
 import { SelectDeviceButton } from '../../Experiment/SelectDeviceButton';
 import { DeviceOnTrialObj } from '../../objects';
@@ -24,7 +22,6 @@ export const SingleDevicePropertiesView = ({
   deviceOnTrial: DeviceOnTrialObj,
   children?: any,
 }) => {
-  const { currTrial } = useExperimentProvider();
   const { deviceTypeName, deviceItemName } = deviceOnTrial;
   const { trial } = useCurrTrial({});
   const device = trial.getDevice(deviceTypeName, deviceItemName);
@@ -33,7 +30,6 @@ export const SingleDevicePropertiesView = ({
   const deviceItem = deviceOnTrial.deviceItem;
   const deviceType = deviceItem.deviceType;
 
-  const devicesOnTrial = (currTrial.trial || {}).devicesOnTrial || [];
   const containedDevices = deviceOnTrial.getContainedDevices();
 
   const setDeviceOnTrial = (newDeviceData: IDeviceOnTrial | undefined) => {
@@ -102,32 +98,9 @@ export const SingleDevicePropertiesView = ({
         }
       </Stack>
       {children}
-      {/* {deviceOnTrial.containedIn && (
-        <>
-          <br />
-          parent:
-          <ContainedDevice
-            key={'parent ' + deviceItemName + '_' + deviceTypeName}
-            deviceItemName={deviceOnTrial.containedIn.deviceItemName}
-            deviceTypeName={deviceOnTrial.containedIn.deviceTypeName}
-            disconnectDevice={() => {
-              changeTrialObj(draft => draft.findDevice(deviceOnTrial)?.setContainedIn(undefined));
-            }}
-          />
-        </>
-      )} */}
-      {containedDevices?.length > 0
-        ? (
-          <>
-            <br />
-            contains:
-            <ContainedDevicesList
-              containedDevices={containedDevices}
-              devicesOnTrial={devicesOnTrial}
-            />
-          </>
-        )
-        : null}
+      <ContainedDevicesList
+        containedDevices={containedDevices}
+      />
     </>
   )
 }
