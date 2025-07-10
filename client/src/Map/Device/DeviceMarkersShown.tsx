@@ -1,7 +1,6 @@
 import { useChosenTrial } from "../../Context/useChosenTrial";
 import { useDeviceSeletion } from "../../Context/useDeviceSeletion";
 import { useHiddenDeviceTypes } from "../../Context/useHiddenDeviceTypes";
-import { isSameDevice } from "../../Utils/isSameDevice";
 import { RealMapName } from "../../constants/constants";
 import { ICoordinates } from "../../types/types";
 import { AreaMarkListener } from "../AreaMarkListener";
@@ -32,14 +31,6 @@ export const DeviceMarkersShown = ({
           <DeviceMarker
             key={index}
             deviceOnTrial={deviceOnTrial.toJson(true)}
-            setDeviceOnTrial={newDeviceData => {
-              changeTrialData(prev => {
-                prev.devicesOnTrial = prev.devicesOnTrial
-                  ?.map(x => isSameDevice(x, deviceOnTrial) ? newDeviceData : x)
-                  ?.filter(x => x !== undefined);
-                return prev;
-              });
-            }}
             showDeviceNames={showDeviceNames}
           />
         ))}

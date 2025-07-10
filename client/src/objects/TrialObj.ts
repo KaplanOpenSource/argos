@@ -82,7 +82,7 @@ export class TrialObj implements ITrial {
       });
   }
 
-  findDevice(name: IDeviceOnTrial, addWhenNotOnTrial: boolean = false): DeviceOnTrialObj | undefined {
+  findDevice(name: IDeviceTypeAndItem, addWhenNotOnTrial: boolean = false): DeviceOnTrialObj | undefined {
     const dev = this.devicesOnTrial?.find(d => isSameDevice(d, name));
     if (dev || !addWhenNotOnTrial) {
       return dev;

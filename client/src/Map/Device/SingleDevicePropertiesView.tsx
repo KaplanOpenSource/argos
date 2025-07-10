@@ -11,6 +11,7 @@ import { AddContainedButton } from '../../Experiment/Contained/AddContainedButto
 import { ContainedDevice } from '../../Experiment/Contained/ContainedDevice';
 import { DeviceItemLocationButton } from '../../Experiment/DeviceItemLocationButton';
 import { SelectDeviceButton } from '../../Experiment/SelectDeviceButton';
+import { DeviceOnTrialObj } from '../../objects';
 import { IDeviceOnTrial, ScopeEnum } from '../../types/types';
 import { ButtonTooltip } from '../../Utils/ButtonTooltip';
 import { ContainedDevicesList } from './ContainedDevicesList';
@@ -18,11 +19,9 @@ import { DeviceLocationEdit } from './DeviceLocationEdit';
 
 export const SingleDevicePropertiesView = ({
   deviceOnTrial,
-  setDeviceOnTrial,
   children,
 }: {
   deviceOnTrial: IDeviceOnTrial,
-  setDeviceOnTrial: (newData: IDeviceOnTrial) => void,
   children?: any,
 }) => {
   const { currTrial } = useExperimentProvider();
@@ -30,7 +29,7 @@ export const SingleDevicePropertiesView = ({
   const { deviceTypeName, deviceItemName } = deviceOnTrial;
   const { trial } = useCurrTrial({});
   const device = trial.getDevice(deviceTypeName, deviceItemName);
-  const { shownMap } = useChosenTrial();
+  const { shownMap, changeTrialObj } = useChosenTrial();
 
   const deviceType = (experiment.deviceTypes || []).find(t => t.name === deviceTypeName);
   const deviceItem = ((deviceType || []).devices || []).find(t => t.name === deviceItemName);
@@ -45,6 +44,20 @@ export const SingleDevicePropertiesView = ({
         && dev.containedIn.deviceItemName === deviceItemName
         && dev.containedIn.deviceTypeName === deviceTypeName;
     });
+
+  const setDeviceOnTrial = (newDeviceData: IDeviceOnTrial | undefined) => {
+    changeTrialObj(draft => {
+      const idx = (draft.devicesOnTrial || []).findIndex(x => x.isSame(deviceOnTrial));
+      if (idx !== -1) {
+        if (!newDeviceData) {
+          draft.devicesOnTrial.splice(idx, 1);
+        } else {
+          const oldDev = draft.devicesOnTrial[idx];
+          draft.devicesOnTrial[idx] = new DeviceOnTrialObj(newDeviceData, oldDev.deviceItem, oldDev.trial);
+        }
+      }
+    });
+  }
 
   return (
     <>

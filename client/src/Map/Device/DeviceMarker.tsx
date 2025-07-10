@@ -25,11 +25,9 @@ export const locationToStr = (location) => {
 
 export const DeviceMarker = ({
   deviceOnTrial,
-  setDeviceOnTrial,
   showDeviceNames,
 }: {
   deviceOnTrial: IDeviceOnTrial,
-  setDeviceOnTrial: (newData: IDeviceOnTrial) => void,
   showDeviceNames: boolean,
 }) => {
   const { selection, setSelection } = useDeviceSeletion();
@@ -121,7 +119,6 @@ export const DeviceMarker = ({
       >
         <SingleDevicePropertiesView
           deviceOnTrial={deviceOnTrial}
-          setDeviceOnTrial={setDeviceOnTrial}
         >
         </SingleDevicePropertiesView>
       </Popup>
