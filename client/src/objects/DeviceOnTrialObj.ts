@@ -31,8 +31,12 @@ export class DeviceOnTrialObj implements IDeviceOnTrial {
     this.trackUuid = data.trackUuid || uuidv4();
   }
 
-  isSame(other: IDeviceOnTrial) {
-    return isSameDevice(this, other);
+  get combinedName(): string {
+    return `${this.deviceTypeName} : ${this.deviceItemName}`;
+  }
+
+  isSame(other: IDeviceTypeAndItem | undefined) {
+    return other && isSameDevice(this, other);
   }
 
   setContainedIn(containedIn?: IDeviceTypeAndItem) {
@@ -73,7 +77,7 @@ export class DeviceOnTrialObj implements IDeviceOnTrial {
   getContainedDevices(): { dev: DeviceOnTrialObj; index: number; }[] {
     const ret: { dev: DeviceOnTrialObj; index: number; }[] = []
     this.trial.devicesOnTrial.forEach((dev, index) => {
-      if (dev.containedIn && this.isSame(dev)) {
+      if (dev.containedIn && this.isSame(dev.containedIn)) {
         ret.push({ dev, index });
       }
     });
