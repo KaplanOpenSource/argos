@@ -5,8 +5,10 @@ import { Typography } from "@mui/material";
 import { TreeRowOnChosen } from "../App/TreeRowOnChosen";
 import { useExperimentProvider } from "../Context/ExperimentProvider";
 import { assignUuids } from "../Context/TrackUuidUtils";
+import { useExperiments } from "../Context/useExperiments";
 import { useHiddenDeviceTypes } from "../Context/useHiddenDeviceTypes";
 import { IconPicker } from "../Icons/IconPicker";
+import { ExperimentObj } from "../objects/ExperimentObj";
 import { ScopeEnum } from "../types/types";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { changeByName, createNewName } from "../Utils/utils";
@@ -16,7 +18,8 @@ import { DeviceItem } from "./DeviceItem";
 import { SelectDeviceTypeButton } from "./SelectDeviceTypeButton";
 
 export const DeviceType = ({ data, setData, experiment }) => {
-  const { deleteDeviceType, currTrial } = useExperimentProvider();
+  const { currTrial } = useExperimentProvider();
+  const { setExperiment } = useExperiments();
   const { setDeviceTypeHidden, isDeviceTypeHidden } = useHiddenDeviceTypes();
 
   const devicesEnclosingList = (data.devices || []).map(item => {
@@ -55,7 +58,11 @@ export const DeviceType = ({ data, setData, experiment }) => {
           />
           <ButtonTooltip
             tooltip="Delete device type"
-            onClick={() => deleteDeviceType({ experimentName: experiment.name, deviceTypeName: data.name })}
+            onClick={() => {
+              const exp = new ExperimentObj(experiment);
+              exp.deviceTypes = exp.deviceTypes.filter(d => d.name !== data.name);
+              setExperiment(experiment.name, exp.toJson(true));
+            }}
           >
             <DeleteIcon />
           </ButtonTooltip>
