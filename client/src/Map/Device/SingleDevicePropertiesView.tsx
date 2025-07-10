@@ -96,8 +96,7 @@ export const SingleDevicePropertiesView = ({
         />
         {deviceItem &&
           <AddContainedButton
-            deviceItem={deviceItem}
-            deviceType={deviceType}
+            deviceOnTrial={deviceOnTrial}
             hasContainedDevices={containedDevices?.length > 0}
           />
         }
