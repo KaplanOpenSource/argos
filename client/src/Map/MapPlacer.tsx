@@ -1,6 +1,4 @@
-import { useExperimentProvider } from "../Context/ExperimentProvider";
 import { useChosenTrial } from "../Context/useChosenTrial";
-import { useCurrTrial } from "../Context/useCurrTrial";
 import { useDeviceSeletion } from "../Context/useDeviceSeletion";
 import { useShape } from "../EditToolBox/ShapeContext";
 import { CHOOSE_SHAPE, FREEPOSITIONING_SHAPE, POINT_SHAPE } from "../EditToolBox/utils/constants";
@@ -14,9 +12,7 @@ export const MapPlacer = ({
   setMarkedPoints,
 }) => {
   const { selection, setSelection } = useDeviceSeletion();
-  const { currTrial } = useExperimentProvider();
   const { shape, shapeData } = useShape();
-  const { trial } = useCurrTrial({});
   const { changeTrialObj, shownMap } = useChosenTrial();
 
   const onMapClick = (e, mapObj) => {
@@ -72,7 +68,7 @@ export const MapPlacer = ({
             label: 'Place top point here',
             callback: (_e: any, latlng) => {
               if (selection.length > 0) {
-                changeTrialObj(draft => draft.findDevice(selection[0])?.setLocationOnMap(latlng, currTrial.shownMapName));
+                changeTrialObj(draft => draft.findDevice(selection[0])?.setLocationOnMap(latlng, shownMap?.name));
                 setSelection(selection.slice(1));
               }
             }
