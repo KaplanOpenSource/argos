@@ -3,11 +3,16 @@ import { useDeviceSeletion } from "../../Context/useDeviceSeletion";
 import { useHiddenDeviceTypes } from "../../Context/useHiddenDeviceTypes";
 import { isSameDevice } from "../../Utils/isSameDevice";
 import { RealMapName } from "../../constants/constants";
+import { ICoordinates } from "../../types/types";
 import { AreaMarkListener } from "../AreaMarkListener";
 import { PopupSwitchProvider } from "../PopupSwitchContext";
 import { DeviceMarker } from "./DeviceMarker";
 
-export const DeviceMarkersShown = ({ showDeviceNames }) => {
+export const DeviceMarkersShown = ({
+  showDeviceNames,
+}: {
+  showDeviceNames: boolean,
+}) => {
   const { selection, setSelection } = useDeviceSeletion();
   const { trial, shownMap, changeTrialData } = useChosenTrial();
   const { isDeviceTypeHidden } = useHiddenDeviceTypes();
@@ -43,7 +48,7 @@ export const DeviceMarkersShown = ({ showDeviceNames }) => {
         onAreaMarked={({ boxZoomBounds }) => {
           const newSelection = [...selection];
           for (const { deviceItemName, deviceTypeName, location } of shownDevices) {
-            const coordinates = location!.coordinates!.map(x => parseFloat(x + ''));
+            const coordinates = location!.coordinates!.map(x => parseFloat(x + '')) as ICoordinates;
             if (boxZoomBounds.contains(coordinates)) {
               const isSelected = newSelection.find(s => {
                 return s.deviceItemName === deviceItemName && s.deviceTypeName === deviceTypeName
