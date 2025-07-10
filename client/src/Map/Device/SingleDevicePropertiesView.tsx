@@ -102,7 +102,7 @@ export const SingleDevicePropertiesView = ({
         }
       </Stack>
       {children}
-      {deviceOnTrial.containedIn && (
+      {/* {deviceOnTrial.containedIn && (
         <>
           <br />
           parent:
@@ -115,7 +115,7 @@ export const SingleDevicePropertiesView = ({
             }}
           />
         </>
-      )}
+      )} */}
       {containedDevices?.length > 0
         ? (
           <>

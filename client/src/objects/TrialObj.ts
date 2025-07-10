@@ -123,9 +123,14 @@ export class TrialObj implements ITrial {
       createdDate: this.createdDate,
       description: this.description
     };
-    if (this.devicesOnTrial.length > 0) {
-      result.devicesOnTrial = this.devicesOnTrial.map(device => device.toJson(includeTrackUuid));
+
+    const devicesOnTrial = this.devicesOnTrial
+      .filter(device => device.location || device.containedIn)
+      .map(device => device.toJson(includeTrackUuid));
+    if (devicesOnTrial.length > 0) {
+      result.devicesOnTrial = devicesOnTrial;
     }
+
     if (this.attributes.length > 0) {
       result.attributes = this.attributes.map(attr => attr.toJson(includeTrackUuid));
     }
