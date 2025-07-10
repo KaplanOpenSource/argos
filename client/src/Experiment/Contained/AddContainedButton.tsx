@@ -1,9 +1,11 @@
 import { MergeType } from "@mui/icons-material";
 import { useChosenTrial } from "../../Context/useChosenTrial";
 import { useDeviceSeletion } from "../../Context/useDeviceSeletion";
+import { DeviceOnTrialObj } from "../../objects";
+import { IDeviceTypeAndItem } from "../../types/types";
 import { ButtonTooltip } from "../../Utils/ButtonTooltip";
 import { ContextMenu } from "../../Utils/ContextMenu";
-import { DeviceOnTrialObj } from "../../objects";
+import { isSameDevice } from "../../Utils/isSameDevice";
 
 export const AddContainedButton = ({
   deviceOnTrial,
@@ -16,30 +18,20 @@ export const AddContainedButton = ({
   const { changeTrialObj } = useChosenTrial();
 
   const removeAll = () => {
-    // const newSelection = [...selection];
+    // preparing new selection
+    const newSelection: IDeviceTypeAndItem[] = deviceOnTrial.getContainedDevices().map(x => x.dev.asNames());
 
     changeTrialObj(draft => {
       const contained = draft.findDevice(deviceOnTrial)?.getContainedDevices()
       contained?.forEach(c => c.dev.setContainedIn(undefined));
     });
 
-    // trial.batch(draft => {
-    //   for (const d of draft.getDevicesOnTrial()) {
-    //     if (d.checkParentIs(device)) {
-    //       d.setParent(undefined);
-    //       newSelection.push(d.name());
-    //     }
-    //   }
-    // });
-
-    // const oldSelection = [];
-    // for (const olds of selection) {
-    //   if (!newSelection.find(news => isSameName(news, olds))) {
-    //     oldSelection.push(olds);
-    //   }
-    // }
-
-    // setSelection([...newSelection, ...oldSelection])
+    for (const os of selection) {
+      if (!newSelection.find(ns => isSameDevice(ns, os))) {
+        newSelection.push(os);
+      }
+    }
+    setSelection(newSelection)
   };
 
   const addAllSelected = () => {

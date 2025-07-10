@@ -31,8 +31,12 @@ export class DeviceOnTrialObj implements IDeviceOnTrial {
     this.trackUuid = data.trackUuid || uuidv4();
   }
 
-  get combinedName(): string {
+  get stringName(): string {
     return `${this.deviceTypeName} : ${this.deviceItemName}`;
+  }
+
+  asNames(): IDeviceTypeAndItem {
+    return { deviceItemName: this.deviceItemName, deviceTypeName: this.deviceTypeName };
   }
 
   isSame(other: IDeviceTypeAndItem | undefined) {
