@@ -21,29 +21,20 @@ export const SingleDevicePropertiesView = ({
   deviceOnTrial,
   children,
 }: {
-  deviceOnTrial: IDeviceOnTrial,
+  deviceOnTrial: DeviceOnTrialObj,
   children?: any,
 }) => {
   const { currTrial } = useExperimentProvider();
-  const experiment = currTrial.experiment || {};
   const { deviceTypeName, deviceItemName } = deviceOnTrial;
   const { trial } = useCurrTrial({});
   const device = trial.getDevice(deviceTypeName, deviceItemName);
   const { shownMap, changeTrialObj } = useChosenTrial();
 
-  const deviceType = (experiment.deviceTypes || []).find(t => t.name === deviceTypeName);
-  const deviceItem = ((deviceType || []).devices || []).find(t => t.name === deviceItemName);
+  const deviceItem = deviceOnTrial.deviceItem;
+  const deviceType = deviceItem.deviceType;
 
   const devicesOnTrial = (currTrial.trial || {}).devicesOnTrial || [];
-  const containedDevicesIndices = devicesOnTrial
-    .map((dev, index) => {
-      return { dev, index };
-    })
-    .filter(({ dev }) => {
-      return dev.containedIn
-        && dev.containedIn.deviceItemName === deviceItemName
-        && dev.containedIn.deviceTypeName === deviceTypeName;
-    });
+  const containedDevices = deviceOnTrial.getContainedDevices();
 
   const setDeviceOnTrial = (newDeviceData: IDeviceOnTrial | undefined) => {
     changeTrialObj(draft => {
@@ -85,6 +76,7 @@ export const SingleDevicePropertiesView = ({
         : <Typography variant='body2'>
           This device exists on trial but not on experiment, please remove.
           <ButtonTooltip
+            tooltip={'Remove expired device from experiment'}
             onClick={() => setDeviceOnTrial(undefined)}
           >
             <Delete />
@@ -106,7 +98,7 @@ export const SingleDevicePropertiesView = ({
           <AddContainedButton
             deviceItem={deviceItem}
             deviceType={deviceType}
-            hasContainedDevices={containedDevicesIndices?.length > 0}
+            hasContainedDevices={containedDevices?.length > 0}
           />
         }
       </Stack>
@@ -120,20 +112,18 @@ export const SingleDevicePropertiesView = ({
             deviceItemName={deviceOnTrial.containedIn.deviceItemName}
             deviceTypeName={deviceOnTrial.containedIn.deviceTypeName}
             disconnectDevice={() => {
-              const newdev = { ...deviceOnTrial };
-              delete newdev.containedIn;
-              setDeviceOnTrial(newdev);
+              changeTrialObj(draft => draft.findDevice(deviceOnTrial)?.setContainedIn(undefined));
             }}
           />
         </>
       )}
-      {containedDevicesIndices?.length > 0
+      {containedDevices?.length > 0
         ? (
           <>
             <br />
             contains:
             <ContainedDevicesList
-              containedDevices={containedDevicesIndices}
+              containedDevices={containedDevices}
               devicesOnTrial={devicesOnTrial}
             />
           </>

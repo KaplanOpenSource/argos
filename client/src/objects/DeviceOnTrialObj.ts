@@ -70,6 +70,16 @@ export class DeviceOnTrialObj implements IDeviceOnTrial {
     return this.location;
   }
 
+  getContainedDevices(): { dev: DeviceOnTrialObj; index: number; }[] {
+    const ret: { dev: DeviceOnTrialObj; index: number; }[] = []
+    this.trial.devicesOnTrial.forEach((dev, index) => {
+      if (dev.containedIn && this.isSame(dev)) {
+        ret.push({ dev, index });
+      }
+    });
+    return ret;
+  }
+
   get deviceTypeName(): string {
     return this.deviceItem.deviceType.name;
   }
