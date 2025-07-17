@@ -1,7 +1,7 @@
 import { Stack, TableCell, TableRow, Typography } from "@mui/material";
-import { useExperimentProvider } from "../../Context/ExperimentProvider";
+import { useChosenTrial } from "../../Context/useChosenTrial";
 import { useCurrTrial } from "../../Context/useCurrTrial";
-import { IDeviceType } from "../../types/types";
+import { ICoordinates, IDevice, IDeviceType } from "../../types/types";
 import { SelectDeviceButton } from "../SelectDeviceButton";
 import { DevicesTabularOneAttr } from "./DevicesTabularOneAttr";
 import { NumberCoordField } from "./NumberCoordField";
@@ -15,11 +15,10 @@ export const DevicesTabularOneDevice = ({
   deviceType: IDeviceType,
   setDeviceType: (v: IDeviceType) => void,
 }) => {
-  const { currTrial } = useExperimentProvider();
-  const { trial } = useCurrTrial({});
+  const { trial: trialOld } = useCurrTrial({});
+  const { shownMap, trial, changeTrialObj } = useChosenTrial();
 
   const devices = deviceType?.devices || [];
-  const devicesOnTrial = currTrial?.trial?.devicesOnTrial;
 
   const devicesEnclosingList = devices.map(deviceItem => {
     return { deviceTypeName: deviceType.name, deviceItemName: deviceItem.name, deviceType, deviceItem };
@@ -28,17 +27,22 @@ export const DevicesTabularOneDevice = ({
   return (
     <>
       {devices.map((deviceItem, itr) => {
-        const device = trial.getDevice(deviceType.name, deviceItem.name);
+        const device = trialOld.getDevice(deviceType.name, deviceItem.name);
 
-        const setDeviceItem = (val) => {
+        const setDeviceItem = (val: IDevice) => {
           const t = structuredClone(deviceType);
-          t.devices[itr] = val;
+          t.devices![itr] = val;
           setDeviceType(t);
         }
 
-        const deviceOnTrial = devicesOnTrial?.find(t => {
-          return t.deviceItemName === deviceItem.name && t.deviceTypeName === deviceType.name;
-        });
+        const deviceOnTrial = trial?.findDevice({ deviceTypeName: deviceType.name!, deviceItemName: deviceItem.name! });
+
+        const setLocation = (coords: ICoordinates) => {
+          changeTrialObj(draft => {
+            const dev = draft.findDevice(deviceOnTrial);
+            dev?.setLocationOnMap(coords, shownMap?.name);
+          })
+        }
 
         return (
           <TableRow
@@ -61,9 +65,7 @@ export const DevicesTabularOneDevice = ({
                 ? <NumberCoordField
                   label={'Latitude'}
                   value={deviceOnTrial?.location?.coordinates[0]}
-                  setValue={v => {
-                    device.setLocationOnMap([v, device.getLocation().coordinates[1]], currTrial.shownMapName);
-                  }}
+                  setValue={v => setLocation([v, deviceOnTrial!.location!.coordinates![1]])}
                 />
                 : null}
             </TableCell>
@@ -72,9 +74,7 @@ export const DevicesTabularOneDevice = ({
                 ? <NumberCoordField
                   label={'Longitude'}
                   value={deviceOnTrial?.location?.coordinates[1]}
-                  setValue={v => {
-                    device.setLocationOnMap([device.getLocation().coordinates[0], v], currTrial.shownMapName);
-                  }}
+                  setValue={v => setLocation([deviceOnTrial!.location!.coordinates![0], v])}
                 />
                 : null}
             </TableCell>

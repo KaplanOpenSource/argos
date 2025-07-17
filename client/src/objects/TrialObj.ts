@@ -82,16 +82,18 @@ export class TrialObj implements ITrial {
       });
   }
 
-  findDevice(name: IDeviceTypeAndItem, addWhenNotOnTrial: boolean = false): DeviceOnTrialObj | undefined {
-    const dev = this.devicesOnTrial?.find(d => isSameDevice(d, name));
-    if (dev || !addWhenNotOnTrial) {
-      return dev;
-    }
-    const valids = this.filterValidDevices([name]);
-    if (valids.length > 0) {
-      const newDev = new DeviceOnTrialObj(valids[0].device, valids[0].deviceItem, this);
-      this._devicesOnTrial.push(newDev);
-      return newDev;
+  findDevice(name: IDeviceTypeAndItem | undefined, addWhenNotOnTrial: boolean = false): DeviceOnTrialObj | undefined {
+    if (name) {
+      const dev = this.devicesOnTrial?.find(d => isSameDevice(d, name));
+      if (dev || !addWhenNotOnTrial) {
+        return dev;
+      }
+      const valids = this.filterValidDevices([name]);
+      if (valids.length > 0) {
+        const newDev = new DeviceOnTrialObj(valids[0].device, valids[0].deviceItem, this);
+        this._devicesOnTrial.push(newDev);
+        return newDev;
+      }
     }
     return undefined;
   }
