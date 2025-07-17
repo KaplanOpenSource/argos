@@ -5,13 +5,13 @@ export function camelCaseToWords(s: string): string {
   return result.charAt(0).toUpperCase() + result.slice(1);
 }
 
-export function createNewName(currentNamedItems: INamed[], nameTemplate: string, separator = ' '): string {
+export function createNewName(currentNamedItems: INamed[] | undefined, nameTemplate: string, separator = ' '): string {
   if (!(currentNamedItems || []).find(t => t.name === nameTemplate)) {
     return nameTemplate;
   }
   for (let i = 1; ; ++i) {
     const cand = nameTemplate + separator + i;
-    if (!currentNamedItems.find(t => t.name === cand)) {
+    if (!currentNamedItems!.find(t => t.name === cand)) {
       return cand;
     }
   }
@@ -67,4 +67,12 @@ export function toTitleCase(str: string): string {
   return str.toLowerCase().replace(/(?:^|[\s-/])\w/g, function (match) {
     return match.toUpperCase();
   });
+}
+
+export function shortenName(name: string) {
+  let shortName = name;
+  if (shortName.length > 20) {
+    shortName = shortName.substring(0, 5) + '..' + shortName.substring(shortName.length - 8);
+  }
+  return shortName;
 }

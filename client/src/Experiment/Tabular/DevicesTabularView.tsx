@@ -1,7 +1,14 @@
 import { Paper, Table, TableContainer } from "@mui/material";
+import { IDeviceType, IExperiment } from "../../types/types";
 import { DevicesTabularOneType } from "./DevicesTabularOneType";
 
-export const DevicesTabularView = ({ experiment, setExperimentData }) => {
+export const DevicesTabularView = ({
+  experiment,
+  setExperimentData,
+}: {
+  experiment: IExperiment,
+  setExperimentData: (exp: IExperiment) => void,
+}) => {
   return (
     <TableContainer
       component={Paper}
@@ -13,9 +20,9 @@ export const DevicesTabularView = ({ experiment, setExperimentData }) => {
         stickyHeader
       >
         {experiment?.deviceTypes?.map((deviceType, itt) => {
-          const setDeviceType = (val) => {
+          const setDeviceType = (val: IDeviceType) => {
             const exp = structuredClone(experiment);
-            exp.deviceTypes[itt] = val;
+            exp!.deviceTypes![itt] = val;
             setExperimentData(exp);
           }
           return (

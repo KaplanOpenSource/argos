@@ -2,13 +2,20 @@ import { Add, ChevronRight, ExpandMore } from "@mui/icons-material";
 import { TableBody, TableCell, TableHead, TableRow, Tooltip } from "@mui/material";
 import { useState } from "react";
 import { assignUuids } from "../../Context/TrackUuidUtils";
+import { IDevice, IDeviceType } from "../../types/types";
 import { ButtonTooltip } from "../../Utils/ButtonTooltip";
-import { createNewName } from "../../Utils/utils";
+import { createNewName, shortenName } from "../../Utils/utils";
 import { AddMultipleDevices } from "../AddMultipleDevices";
 import { AttributeTypesDialogButton } from "../AttributeTypesDialogButton";
 import { DevicesTabularOneDevice } from "./DevicesTabularOneDevice";
 
-export const DevicesTabularOneType = ({ deviceType, setDeviceType }) => {
+export const DevicesTabularOneType = ({
+  deviceType,
+  setDeviceType,
+}: {
+  deviceType: IDeviceType,
+  setDeviceType: (v: IDeviceType) => void,
+}) => {
   const [open, setOpen] = useState(true);
   return (
     <>
@@ -33,7 +40,7 @@ export const DevicesTabularOneType = ({ deviceType, setDeviceType }) => {
             </ButtonTooltip>
             <AttributeTypesDialogButton
               data={deviceType}
-              setData={val => setDeviceType(val)}
+              setData={(val: IDeviceType) => setDeviceType(val)}
               isOfDevice={true}
             />
             <ButtonTooltip
@@ -48,7 +55,7 @@ export const DevicesTabularOneType = ({ deviceType, setDeviceType }) => {
             </ButtonTooltip>
             <AddMultipleDevices
               deviceType={deviceType}
-              addDevices={newDevices => {
+              addDevices={(newDevices: IDevice[]) => {
                 setDeviceType({ ...deviceType, devices: [...(deviceType.devices || []), ...newDevices] })
               }}
             />
@@ -59,24 +66,18 @@ export const DevicesTabularOneType = ({ deviceType, setDeviceType }) => {
           <TableCell key={':tlng'}>
             Longitude
           </TableCell>
-          {deviceType?.attributeTypes?.map(attrType => {
-            let shortName = attrType.name;
-            if (shortName.length > 20) {
-              shortName = shortName.substring(0, 5) + '..' + shortName.substring(shortName.length - 8);
-            }
-            return (
-              <Tooltip
+          {deviceType?.attributeTypes?.map(attrType => (
+            <Tooltip
+              key={attrType.name}
+              title={attrType.name}
+            >
+              <TableCell
                 key={attrType.name}
-                title={attrType.name}
               >
-                <TableCell
-                  key={attrType.name}
-                >
-                  {shortName}
-                </TableCell>
-              </Tooltip>
-            )
-          })}
+                {shortenName(attrType.name + '')}
+              </TableCell>
+            </Tooltip>
+          ))}
         </TableRow>
       </TableHead>
       <TableBody key={':tb_' + deviceType.name}>

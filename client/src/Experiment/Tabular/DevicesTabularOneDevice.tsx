@@ -1,6 +1,7 @@
 import { Stack, TableCell, TableRow, Typography } from "@mui/material";
 import { useExperimentProvider } from "../../Context/ExperimentProvider";
 import { useCurrTrial } from "../../Context/useCurrTrial";
+import { IDeviceType } from "../../types/types";
 import { TextFieldDebounceOutlined } from "../../Utils/TextFieldDebounce";
 import { SelectDeviceButton } from "../SelectDeviceButton";
 import { DevicesTabularOneAttr } from "./DevicesTabularOneAttr";
@@ -21,7 +22,15 @@ const NumberCoordField = ({ value, setValue, label }) => {
   )
 }
 
-export const DevicesTabularOneDevice = ({ deviceType, setDeviceType }) => {
+// TODO: Use TrialObj instead
+
+export const DevicesTabularOneDevice = ({
+  deviceType,
+  setDeviceType,
+}: {
+  deviceType: IDeviceType,
+  setDeviceType: (v: IDeviceType) => void,
+}) => {
   const { currTrial } = useExperimentProvider();
   const { trial } = useCurrTrial({});
 
