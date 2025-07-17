@@ -2,25 +2,9 @@ import { Stack, TableCell, TableRow, Typography } from "@mui/material";
 import { useExperimentProvider } from "../../Context/ExperimentProvider";
 import { useCurrTrial } from "../../Context/useCurrTrial";
 import { IDeviceType } from "../../types/types";
-import { TextFieldDebounceOutlined } from "../../Utils/TextFieldDebounce";
 import { SelectDeviceButton } from "../SelectDeviceButton";
 import { DevicesTabularOneAttr } from "./DevicesTabularOneAttr";
-
-const NumberCoordField = ({ value, setValue, label }) => {
-  return (
-    <TextFieldDebounceOutlined
-      label={label}
-      type="number"
-      value={Math.round(value * 1e8) / 1e8}
-      onChange={v => {
-        const n = parseFloat(v);
-        if (isFinite(n)) {
-          setValue(n);
-        }
-      }}
-    />
-  )
-}
+import { NumberCoordField } from "./NumberCoordField";
 
 // TODO: Use TrialObj instead
 
