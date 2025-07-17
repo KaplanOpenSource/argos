@@ -1,6 +1,5 @@
 import { Stack, TableCell, TableRow, Typography } from "@mui/material";
 import { useChosenTrial } from "../../Context/useChosenTrial";
-import { useCurrTrial } from "../../Context/useCurrTrial";
 import { ICoordinates, IDevice, IDeviceType } from "../../types/types";
 import { SelectDeviceButton } from "../SelectDeviceButton";
 import { DevicesTabularOneAttr } from "./DevicesTabularOneAttr";
@@ -15,7 +14,6 @@ export const DevicesTabularOneDevice = ({
   deviceType: IDeviceType,
   setDeviceType: (v: IDeviceType) => void,
 }) => {
-  const { trial: trialOld } = useCurrTrial({});
   const { shownMap, trial, changeTrialObj } = useChosenTrial();
 
   const devices = deviceType?.devices || [];
@@ -27,8 +25,6 @@ export const DevicesTabularOneDevice = ({
   return (
     <>
       {devices.map((deviceItem, itr) => {
-        const device = trialOld.getDevice(deviceType.name, deviceItem.name);
-
         const setDeviceItem = (val: IDevice) => {
           const t = structuredClone(deviceType);
           t.devices![itr] = val;
