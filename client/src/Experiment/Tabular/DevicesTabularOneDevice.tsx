@@ -32,6 +32,7 @@ export const DevicesTabularOneDevice = ({
         }
 
         const deviceOnTrial = trial?.findDevice({ deviceTypeName: deviceType.name!, deviceItemName: deviceItem.name! });
+        const hasLocation = deviceOnTrial?.location?.coordinates?.length === 2 && deviceOnTrial?.location?.coordinates.every(x => Number.isFinite(x));
 
         const setLocation = (coords: ICoordinates) => {
           changeTrialObj(draft => {
@@ -57,20 +58,20 @@ export const DevicesTabularOneDevice = ({
               </Stack>
             </TableCell>
             <TableCell key={':tlat'}>
-              {deviceOnTrial?.location?.coordinates?.length === 2
+              {hasLocation
                 ? <NumberCoordField
                   label={'Latitude'}
-                  value={deviceOnTrial?.location?.coordinates[0]}
-                  setValue={v => setLocation([v, deviceOnTrial!.location!.coordinates![1]])}
+                  value={deviceOnTrial.location!.coordinates![0] || 0}
+                  setValue={v => setLocation([v, deviceOnTrial.location!.coordinates![1] || 0])}
                 />
                 : null}
             </TableCell>
             <TableCell key={':tlng'}>
-              {deviceOnTrial?.location?.coordinates?.length === 2
+              {hasLocation
                 ? <NumberCoordField
                   label={'Longitude'}
-                  value={deviceOnTrial?.location?.coordinates[1]}
-                  setValue={v => setLocation([deviceOnTrial!.location!.coordinates![0], v])}
+                  value={deviceOnTrial.location!.coordinates![1] || 0}
+                  setValue={v => setLocation([deviceOnTrial.location!.coordinates![0] || 0, v])}
                 />
                 : null}
             </TableCell>
