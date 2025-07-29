@@ -152,8 +152,6 @@ export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
           </Case>
           <Case value={SHOW_DEVICES_TABULAR}>
             <DevicesTabularView
-              experiment={experiment!}
-              setExperimentData={val => setExperiment(experiment!.name!, val)}
             />
           </Case>
         </SwitchCase>

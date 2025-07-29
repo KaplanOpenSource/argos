@@ -71,12 +71,13 @@ export const useExperiments = create<ExperimentsStore>()((set, get) => ({
       return;
     }
 
+    const changedExperiment = new ExperimentObj(exp);
     set(prev => {
       const experiments = [...prev.experiments];
-      experiments[i] = new ExperimentObj(exp).toJson(true);
+      experiments[i] = changedExperiment.toJson(true);
       return { ...prev, experiments };
     });
 
-    useServerUpdates.getState().sendUpdate(name, new ExperimentObj(exp).toJson(false));
+    useServerUpdates.getState().sendUpdate(name, changedExperiment.toJson(false));
   },
 }))

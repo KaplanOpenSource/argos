@@ -1,20 +1,15 @@
-import { Add, ChevronRight, ExpandMore } from "@mui/icons-material";
+import { ChevronRight, ExpandMore } from "@mui/icons-material";
 import { TableBody, TableCell, TableHead, TableRow, Tooltip } from "@mui/material";
 import { useState } from "react";
-import { assignUuids } from "../../Context/TrackUuidUtils";
-import { IDevice, IDeviceType } from "../../types/types";
+import { DeviceTypeObj } from "../../objects";
 import { ButtonTooltip } from "../../Utils/ButtonTooltip";
-import { createNewName, shortenName } from "../../Utils/utils";
-import { AddMultipleDevices } from "../AddMultipleDevices";
-import { AttributeTypesDialogButton } from "../AttributeTypesDialogButton";
+import { shortenName } from "../../Utils/utils";
 import { DevicesTabularOneDevice } from "./DevicesTabularOneDevice";
 
 export const DevicesTabularOneType = ({
   deviceType,
-  setDeviceType,
 }: {
-  deviceType: IDeviceType,
-  setDeviceType: (v: IDeviceType) => void,
+  deviceType: DeviceTypeObj,
 }) => {
   const [open, setOpen] = useState(true);
   return (
@@ -38,7 +33,7 @@ export const DevicesTabularOneType = ({
             >
               {open ? <ExpandMore /> : <ChevronRight />}
             </ButtonTooltip>
-            <AttributeTypesDialogButton
+            {/* <AttributeTypesDialogButton
               data={deviceType}
               setData={(val: IDeviceType) => setDeviceType(val)}
               isOfDevice={true}
@@ -58,7 +53,7 @@ export const DevicesTabularOneType = ({
               addDevices={(newDevices: IDevice[]) => {
                 setDeviceType({ ...deviceType, devices: [...(deviceType.devices || []), ...newDevices] })
               }}
-            />
+            /> */}
           </TableCell>
           <TableCell key={':tlat'}>
             Latitude
@@ -85,7 +80,6 @@ export const DevicesTabularOneType = ({
           ? (
             <DevicesTabularOneDevice
               deviceType={deviceType}
-              setDeviceType={setDeviceType}
             />
           )
           : (

@@ -1,22 +1,19 @@
-import { useExperimentProvider } from "../../Context/ExperimentProvider";
 import { useChosenTrial } from "../../Context/useChosenTrial";
+import { useExperiments } from "../../Context/useExperiments";
 import { DeviceItemObj, DeviceOnTrialObj, DeviceTypeObj } from "../../objects";
-import { IDeviceOnTrial, ScopeEnum } from "../../types/types";
+import { IDevice, IDeviceOnTrial, ScopeEnum } from "../../types/types";
 import { AttributeItemOne } from "../AttributeItemList";
 
 export const DevicesTabularOneAttr = ({
   attrType,
   deviceItem,
   deviceType,
-  setDeviceItem,
 }: {
   attrType: any,
   deviceItem: DeviceItemObj,
   deviceType: DeviceTypeObj,
-  setDeviceItem: any,
 }) => {
-  const { currTrial } = useExperimentProvider();
-  const { changeTrialObj, trial } = useChosenTrial();
+  const { experiment, changeTrialObj, trial, changeChosen } = useChosenTrial();
 
   if (trial && ((!attrType?.scope) || attrType.scope === ScopeEnum.SCOPE_TRIAL)) {
     const devindex = trial.findDeviceIndex(deviceItem.asNames());
@@ -45,10 +42,15 @@ export const DevicesTabularOneAttr = ({
     }
   }
 
+  const setDeviceItem = (val: IDevice) => {
+    const changedExperiment = experiment!.createChange().change(deviceItem, new DeviceItemObj(val, deviceType)).apply().toJson(true);
+    useExperiments.getState().setExperiment(experiment!.name, changedExperiment);
+  }
+
   return (
     <AttributeItemOne
       attrType={attrType}
-      data={deviceItem}
+      data={deviceItem.toJson(true)}
       setData={val => setDeviceItem(val)}
       scope={ScopeEnum.SCOPE_EXPERIMENT}
       reduceNames={true}

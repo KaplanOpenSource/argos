@@ -1,6 +1,7 @@
 import { Stack, TableCell, TableRow, Typography } from "@mui/material";
 import { useChosenTrial } from "../../Context/useChosenTrial";
-import { ICoordinates, IDevice, IDeviceType } from "../../types/types";
+import { DeviceTypeObj } from "../../objects";
+import { ICoordinates } from "../../types/types";
 import { SelectDeviceButton } from "../SelectDeviceButton";
 import { DevicesTabularOneAttr } from "./DevicesTabularOneAttr";
 import { NumberCoordField } from "./NumberCoordField";
@@ -9,10 +10,8 @@ import { NumberCoordField } from "./NumberCoordField";
 
 export const DevicesTabularOneDevice = ({
   deviceType,
-  setDeviceType,
 }: {
-  deviceType: IDeviceType,
-  setDeviceType: (v: IDeviceType) => void,
+  deviceType: DeviceTypeObj,
 }) => {
   const { shownMap, trial, changeTrialObj } = useChosenTrial();
 
@@ -25,12 +24,6 @@ export const DevicesTabularOneDevice = ({
   return (
     <>
       {devices.map((deviceItem, itr) => {
-        const setDeviceItem = (val: IDevice) => {
-          const t = structuredClone(deviceType);
-          t.devices![itr] = val;
-          setDeviceType(t);
-        }
-
         const deviceOnTrial = trial?.findDevice({ deviceTypeName: deviceType.name!, deviceItemName: deviceItem.name! });
         const hasLocation = deviceOnTrial?.location?.coordinates?.length === 2 && deviceOnTrial?.location?.coordinates.every(x => Number.isFinite(x));
 
@@ -84,7 +77,6 @@ export const DevicesTabularOneDevice = ({
                     attrType={attrType}
                     deviceType={deviceType}
                     deviceItem={deviceItem}
-                    setDeviceItem={setDeviceItem}
                   />
                 </TableCell>
               )

@@ -14,8 +14,8 @@ export class DeviceTypeObj implements IDeviceType {
       throw new Error('DeviceType name is required');
     }
     this.name = data.name;
-    this.devices = data.devices?.map(device => new DeviceItemObj(device, this)) || [];
     this.attributeTypes = data.attributeTypes?.map(attr => new AttributeTypeObj(attr)) || [];
+    this.devices = data.devices?.map(device => new DeviceItemObj(device, this)) || [];
     this.icon = data.icon;
     this.trackUuid = data.trackUuid || uuidv4();
   }
