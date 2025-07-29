@@ -1,4 +1,5 @@
 import { Paper, Table, TableContainer } from "@mui/material";
+import { ExperimentObj } from "../../objects";
 import { IDeviceType, IExperiment } from "../../types/types";
 import { DevicesTabularOneType } from "./DevicesTabularOneType";
 
@@ -6,7 +7,7 @@ export const DevicesTabularView = ({
   experiment,
   setExperimentData,
 }: {
-  experiment: IExperiment,
+  experiment: ExperimentObj,
   setExperimentData: (exp: IExperiment) => void,
 }) => {
   return (
@@ -21,7 +22,7 @@ export const DevicesTabularView = ({
       >
         {experiment?.deviceTypes?.map((deviceType, itt) => {
           const setDeviceType = (val: IDeviceType) => {
-            const exp = structuredClone(experiment);
+            const exp = experiment.toJson(true);
             exp!.deviceTypes![itt] = val;
             setExperimentData(exp);
           }
