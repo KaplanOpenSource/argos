@@ -6,11 +6,12 @@ import { TreeView } from '@mui/x-tree-view/TreeView';
 import { sum } from "lodash";
 import { useContext, useEffect } from "react";
 import { SHOW_ALL_EXPERIMENTS, SHOW_DEVICES_TABULAR, SHOW_ONLY_DEVICES, SHOW_ONLY_TRIALS, SHOW_TRIALS_TABULAR } from "../App/ShowConfigToggles";
-import { useExperimentProvider } from "../Context/ExperimentProvider";
+import { useChosenTrial } from '../Context/useChosenTrial';
 import { useExperiments } from "../Context/useExperiments";
 import { useHiddenDeviceTypes } from "../Context/useHiddenDeviceTypes";
 import { useCloneExperiment } from "../IO/CloneExperiment";
 import { ActionsOnMapContext } from "../Map/ActionsOnMapContext";
+import { IExperiment, ITrackUuid } from '../types/types';
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { Case, SwitchCase } from "../Utils/SwitchCase";
 import { CoordsSpan } from "./CoordsSpan";
@@ -21,18 +22,15 @@ import { ExperimentTreeNodesExpandedContext } from "./ExperimentTreeNodesExpande
 import { DevicesTabularView } from "./Tabular/DevicesTabularView";
 import { TrialsTabularView } from "./Tabular/TrialsTabularView";
 import { TrialTypesList } from "./TrialTypesList";
-import { IExperiment, ITrackUuid } from '../types/types';
 
 export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
   const { experiments, setExperiment } = useExperiments();
-  const { currTrial, setCurrTrial } = useExperimentProvider();
+  const { chooseTrial, experiment } = useChosenTrial();
   const { cloneExperiment } = useCloneExperiment();
   const { addActionOnMap } = useContext(ActionsOnMapContext)!;
   const { resetHiddenDeviceTypes } = useHiddenDeviceTypes();
   const { expandedNodes, setExpandedNodes } = useContext(ExperimentTreeNodesExpandedContext)!;
   const { selectionOnEnclosingUuids, setSelectionOnEnclosingUuids } = useContext(EnclosingListSelectionContext)!;
-
-  const { experiment } = currTrial;
 
   const findExperimentByUuid = (uuid: string | undefined) => {
     if (uuid) {
@@ -47,13 +45,13 @@ export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
     const foundExperiment = findExperimentByUuid(newlyExpanded[0]);
     if (foundExperiment) {
       if (experiment?.name !== foundExperiment.name) {
-        setCurrTrial({ experimentName: foundExperiment.name });
+        chooseTrial({ experimentName: foundExperiment.name });
       }
       const newNodes = [
         foundExperiment.trackUuid,
         ...nodeIds.filter(u => !findExperimentByUuid(u)),
       ].filter(x => x !== undefined);
-      
+
       if ((foundExperiment?.trialTypes?.length || 0) < 10) {
         newNodes.push(foundExperiment.trackUuid + '_trialTypes');
       }
@@ -117,14 +115,13 @@ export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
         selected={selectionOnEnclosingUuids}
         onNodeSelect={(_e, nodeIds: string[]) => setSelectionOnEnclosingUuids(nodeIds)}
       >
-        <SwitchCase test={currTrial.experiment ? showConfig : SHOW_ALL_EXPERIMENTS}>
+        <SwitchCase test={(experiment && experiment.name) ? showConfig : SHOW_ALL_EXPERIMENTS}>
           <Case value={SHOW_ALL_EXPERIMENTS}>
             {experiments?.map(exp => (
               <ExperimentRow
                 key={exp.trackUuid || Math.random() + ""}
                 data={exp}
-                setData={val => setExperiment(exp.name, val)}
-                showConfig={showConfig && currTrial.trial}
+                setData={val => setExperiment(exp!.name!, val)}
               >
                 <ButtonTooltip
                   tooltip="Clone experiment"
@@ -137,26 +134,26 @@ export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
           </Case>
           <Case value={SHOW_ONLY_DEVICES}>
             <DeviceTypesList
-              data={currTrial.experiment}
-              setData={val => setExperiment(currTrial.experiment.name, val)}
+              data={experiment!}
+              setData={val => setExperiment(experiment!.name!, val)}
             />
           </Case>
           <Case value={SHOW_ONLY_TRIALS}>
             <TrialTypesList
-              data={currTrial.experiment}
-              setData={val => setExperiment(currTrial.experiment.name, val)}
+              data={experiment!}
+              setData={val => setExperiment(experiment!.name!, val)}
             />
           </Case>
           <Case value={SHOW_TRIALS_TABULAR}>
             <TrialsTabularView
-              data={currTrial.experiment}
-              setData={val => setExperiment(currTrial.experiment.name, val)}
+              data={experiment!}
+              setData={val => setExperiment(experiment!.name!, val)}
             />
           </Case>
           <Case value={SHOW_DEVICES_TABULAR}>
             <DevicesTabularView
-              experiment={currTrial.experiment}
-              setExperimentData={val => setExperiment(currTrial.experiment.name, val)}
+              experiment={experiment!}
+              setExperimentData={val => setExperiment(experiment!.name!, val)}
             />
           </Case>
         </SwitchCase>
