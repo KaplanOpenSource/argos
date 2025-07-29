@@ -13,7 +13,7 @@ export const DevicesTabularOneAttr = ({
   deviceItem: DeviceItemObj,
   deviceType: DeviceTypeObj,
 }) => {
-  const { experiment, changeTrialObj, trial } = useChosenTrial();
+  const { experiment, changeTrialObj, trial, changeChosen } = useChosenTrial();
   const { setExperiment } = useExperiments();
 
   if (trial && ((!attrType?.scope) || attrType.scope === ScopeEnum.SCOPE_TRIAL)) {
@@ -44,8 +44,7 @@ export const DevicesTabularOneAttr = ({
   }
 
   const setDeviceItem = (val: IDevice) => {
-    const changedExperiment = experiment!.createChange().change(deviceItem, new DeviceItemObj(val, deviceType)).apply().toJson(true);
-    setExperiment(experiment!.name, changedExperiment);
+    changeChosen(deviceItem, new DeviceItemObj(val, deviceType));
   }
 
   return (

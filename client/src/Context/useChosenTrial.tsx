@@ -97,7 +97,7 @@ export const useChosenTrial = create<ChosenTrialStore>()((set, get) => {
       const experiment = get().experiment;
       if (experiment && experiment.name) {
         // The following will clone the experiment and change (recursively and deeply) the prevData to newData
-        const changedExperiment = new ExperimentObj(experiment).createChange().change(prevData, newData).apply().toJson(true);
+        const changedExperiment = experiment.createChange().change(prevData, newData).apply().toJson(true);
         useExperiments.getState().setExperiment(experiment.name, changedExperiment);
       }
     },
