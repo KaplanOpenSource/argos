@@ -1,14 +1,17 @@
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography } from "@mui/material";
 import { sum } from "lodash";
 import { Fragment } from "react";
+import { useChosenTrial } from "../../Context/useChosenTrial";
 import { DateProperty } from "../../Property/DateProperty";
-import { ScopeEnum } from "../../types/types";
-import { AddNewTrialButton } from "../AddNewTrialButton";
+import { shortenName } from "../../Utils/utils";
+import { TrialObj } from "../../objects";
+import { ITrial, ScopeEnum } from "../../types/types";
 import { AttributeItemOne } from "../AttributeItemList";
-import { AttributeTypesDialogButton } from "../AttributeTypesDialogButton";
 
-export const TrialsTabularView = ({ data, setData }) => {
-  const totalDevices = sum((data?.deviceTypes || []).map(x => (x?.devices || []).length));
+export const TrialsTabularView = ({ }) => {
+  const { experiment, changeChosen } = useChosenTrial();
+
+  const totalDevices = sum((experiment?.deviceTypes || []).map(x => (x?.devices || []).length));
   return (
     <TableContainer
       component={Paper}
@@ -19,12 +22,7 @@ export const TrialsTabularView = ({ data, setData }) => {
         size="small"
         stickyHeader
       >
-        {data?.trialTypes?.map((trialType, itt) => {
-          const setTrialType = (val) => {
-            const exp = structuredClone(data);
-            exp.trialTypes[itt] = val;
-            setData(exp);
-          }
+        {experiment?.trialTypes?.map((trialType, itt) => {
           return (
             <Fragment key={trialType.trackUuid}>
               <TableHead key={':th_' + trialType.name}>
@@ -35,26 +33,22 @@ export const TrialsTabularView = ({ data, setData }) => {
                 >
                   <TableCell key={':tt'}>
                     Trial Type
-                    <AttributeTypesDialogButton
-                      data={trialType}
+                    {/* <AttributeTypesDialogButton
+                      experiment={trialType}
                       setData={val => setTrialType(val)}
                       isOfDevice={false}
-                    />
+                    /> */}
                   </TableCell>
                   <TableCell key={':tr'}>
                     Trial
-                    <AddNewTrialButton
+                    {/* <AddNewTrialButton
                       trialType={trialType}
                       setTrialType={val => setTrialType(val)}
-                    />
+                    /> */}
                   </TableCell>
                   <TableCell key={':tcd'}>Created Date</TableCell>
                   <TableCell key={':tpos'}>Positioned Devices</TableCell>
                   {trialType?.attributeTypes?.map(attrType => {
-                    let shortName = attrType.name;
-                    if (shortName.length > 20) {
-                      shortName = shortName.substring(0, 5) + '..' + shortName.substring(shortName.length - 8);
-                    }
                     return (
                       <Tooltip
                         key={attrType.name}
@@ -63,7 +57,7 @@ export const TrialsTabularView = ({ data, setData }) => {
                         <TableCell
                           key={attrType.name}
                         >
-                          {shortName}
+                          {shortenName(attrType.name)}
                         </TableCell>
                       </Tooltip>
                     )
@@ -73,10 +67,8 @@ export const TrialsTabularView = ({ data, setData }) => {
               <TableBody key={':tb_' + trialType.name}>
                 {trialType?.trials?.map((trial, itr) => {
                   const placedDevices = (trial.devicesOnTrial || []).length;
-                  const setTrial = (val) => {
-                    const exp = structuredClone(data);
-                    exp.trialTypes[itt].trials[itr] = val;
-                    setData(exp);
+                  const setTrial = (val: ITrial) => {
+                    changeChosen(trial, new TrialObj(val, experiment.deviceTypes, trialType))
                   }
                   return (
                     <TableRow
@@ -88,8 +80,8 @@ export const TrialsTabularView = ({ data, setData }) => {
                       <TableCell key={':tr'}>{trial.name}</TableCell>
                       <TableCell key={':tcd'}>
                         <DateProperty
-                          data={trial.createdDate}
-                          // setData={val => setData({ ...data, createdDate: val })}
+                          experiment={trial.createdDate}
+                          // setData={val => setData({ ...experiment, createdDate: val })}
                           label="Created Date"
                           disabled={true}
                         />
@@ -106,7 +98,7 @@ export const TrialsTabularView = ({ data, setData }) => {
                           >
                             <AttributeItemOne
                               attrType={attrType}
-                              data={trial}
+                              data={trial.toJson(true)}
                               setData={val => setTrial(val)}
                               scope={ScopeEnum.SCOPE_TRIAL}
                               reduceNames={true}

@@ -1,5 +1,4 @@
 import { useChosenTrial } from "../../Context/useChosenTrial";
-import { useExperiments } from "../../Context/useExperiments";
 import { DeviceItemObj, DeviceOnTrialObj, DeviceTypeObj } from "../../objects";
 import { IDevice, IDeviceOnTrial, ScopeEnum } from "../../types/types";
 import { AttributeItemOne } from "../AttributeItemList";
@@ -13,8 +12,7 @@ export const DevicesTabularOneAttr = ({
   deviceItem: DeviceItemObj,
   deviceType: DeviceTypeObj,
 }) => {
-  const { experiment, changeTrialObj, trial, changeChosen } = useChosenTrial();
-  const { setExperiment } = useExperiments();
+  const { changeTrialObj, trial, changeChosen } = useChosenTrial();
 
   if (trial && ((!attrType?.scope) || attrType.scope === ScopeEnum.SCOPE_TRIAL)) {
     const devindex = trial.findDeviceIndex(deviceItem.asNames());
