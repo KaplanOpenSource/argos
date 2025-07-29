@@ -1,7 +1,7 @@
 import { useExperimentProvider } from "../../Context/ExperimentProvider";
 import { useChosenTrial } from "../../Context/useChosenTrial";
 import { DeviceItemObj, DeviceOnTrialObj, DeviceTypeObj } from "../../objects";
-import { ScopeEnum } from "../../types/types";
+import { IDeviceOnTrial, ScopeEnum } from "../../types/types";
 import { AttributeItemOne } from "../AttributeItemList";
 
 export const DevicesTabularOneAttr = ({
@@ -15,22 +15,19 @@ export const DevicesTabularOneAttr = ({
   deviceType: DeviceTypeObj,
   setDeviceItem: any,
 }) => {
-  const { currTrial, setTrialData } = useExperimentProvider();
-  const { changeTrialObj } = useChosenTrial();
+  const { currTrial } = useExperimentProvider();
+  const { changeTrialObj, trial } = useChosenTrial();
 
-  if ((!attrType?.scope) || attrType.scope === ScopeEnum.SCOPE_TRIAL) {
-    const devicesOnTrial = currTrial?.trial?.devicesOnTrial;
-    const devindex = (devicesOnTrial || []).findIndex(t => {
-      return t.deviceItemName === deviceItem.name && t.deviceTypeName === deviceType.name;
-    });
+  if (trial && ((!attrType?.scope) || attrType.scope === ScopeEnum.SCOPE_TRIAL)) {
+    const devindex = trial.findDeviceIndex(deviceItem.asNames());
 
     if (devindex !== -1) {
-      const deviceOnTrial = devicesOnTrial![devindex];
-      const setDeviceOnTrial = newDeviceData => {
+      const deviceOnTrial = trial.devicesOnTrial[devindex];
+      const setDeviceOnTrial = (newDeviceData: IDeviceOnTrial) => {
         changeTrialObj(draft => {
           draft.devicesOnTrial[devindex] = new DeviceOnTrialObj(
             newDeviceData,
-            draft.devicesOnTrial[devindex]?.deviceItem!,
+            draft.devicesOnTrial[devindex].deviceItem,
             draft);
         });
       };
