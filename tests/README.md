@@ -10,6 +10,7 @@ sudo apt-get install -y libgstreamer1.0-0 libgstreamer-plugins-base1.0-0 libgstr
 
 ```sh
 npm install
+sudo npx playwright install-deps
 ```
 
 ### Run Tests
