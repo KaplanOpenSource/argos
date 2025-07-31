@@ -7,3 +7,5 @@ argos.zip
 data/uploads/
 /config.json
 coverage/
+node_modules/
+tests/test-results/.last-run.json
