@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { create } from "zustand";
-import { ExperimentObj } from "../objects";
+import { ExperimentObj, TrialObj, TrialTypeObj } from "../objects";
 import { IExperiment, IImageStandalone, ITrial, ITrialType } from "../types/types";
 import { useExperiments } from "./useExperiments";
 
@@ -12,9 +12,9 @@ type IChosenNames = {
 };
 
 interface ChosenTrialStore {
-  experiment: IExperiment | undefined,
-  trialType: ITrialType | undefined,
-  trial: ITrial | undefined,
+  experiment: ExperimentObj | undefined,
+  trialType: TrialTypeObj | undefined,
+  trial: TrialObj | undefined,
   shownMap: IImageStandalone | undefined,
   chosenNames: IChosenNames,
   chooseTrial: (params: {
@@ -28,21 +28,24 @@ interface ChosenTrialStore {
   obtainTrial: (experiment: IExperiment | undefined) => { trialType: ITrialType | undefined, trial: ITrial | undefined },
   setTrialIntoExp: (newTrialData: ITrial, experiment: IExperiment | undefined) => boolean,
   changeChosen: (prevData: any, newData: any) => void,
-}
-
-function findNamed<T extends { name?: string }>(
-  arr: T[] | undefined,
-  name?: string,
-): {
-  found?: { index: number, name: string } | undefined,
-  obj?: T | undefined,
-} {
-  const index = (arr && name) ? arr.findIndex(a => a.name === name) : -1;
-  if (index === -1) return {};
-  return { found: { index, name: name! }, obj: arr![index] };
+  setTrialData: (newTrialData: ITrial) => void,
+  changeTrialData: (changer: (prevTrialData: ITrial) => ITrial | undefined) => void,
+  changeTrialObj: (changer: (draftTrialObj: TrialObj) => void) => void,
 }
 
 export const useChosenTrial = create<ChosenTrialStore>()((set, get) => {
+
+  function findNamed<T extends { name?: string }>(
+    arr: T[] | undefined,
+    name?: string,
+  ): {
+    found?: { index: number, name: string } | undefined,
+    obj?: T | undefined,
+  } {
+    const index = (arr && name) ? arr.findIndex(a => a.name === name) : -1;
+    if (index === -1) return {};
+    return { found: { index, name: name! }, obj: arr![index] };
+  }
 
   return ({
     experiment: undefined,
@@ -71,8 +74,8 @@ export const useChosenTrial = create<ChosenTrialStore>()((set, get) => {
         return { chosenNames: { ...prev.chosenNames, shownMap: found.found } };
       })
     },
-    isTrialChosen: () => get().chosenNames.trial !== undefined, // TODO: check if zustand has computed
-    isExperimentChosen: () => get().chosenNames.experiment !== undefined,
+    isTrialChosen: () => !!(get().chosenNames.trial && get().trial), // TODO: check if zustand has computed
+    isExperimentChosen: () => !!(get().chosenNames.experiment && get().experiment),
     obtainTrial: (experiment: IExperiment | undefined) => {
       const trialType = (experiment?.trialTypes || [])[get().chosenNames.trialType?.index ?? 1e6];
       const trial = (trialType?.trials || [])[get().chosenNames.trial?.index ?? 1e6];
@@ -94,20 +97,50 @@ export const useChosenTrial = create<ChosenTrialStore>()((set, get) => {
       const experiment = get().experiment;
       if (experiment && experiment.name) {
         // The following will clone the experiment and change (recursively and deeply) the prevData to newData
-        const changedExperiment = new ExperimentObj(experiment).createChange().change(prevData, newData).apply().toJson(true);
+        const changedExperiment = experiment.createChange().change(prevData, newData).apply().toJson(true);
         useExperiments.getState().setExperiment(experiment.name, changedExperiment);
+      }
+    },
+    setTrialData: (newTrialData: ITrial) => {
+      get().changeTrialData(() => newTrialData);
+    },
+    changeTrialData: (changer: (prevTrialData: ITrial) => ITrial | undefined) => {
+      const experiment = get().experiment;
+      if (experiment?.name && get().trial) {
+        const changedExperiment = new ExperimentObj(experiment).toJson(true);
+        const trialType = changedExperiment.trialTypes![get().chosenNames.trialType?.index!];
+        const index = get().chosenNames.trial?.index!;
+        const newTrialData = changer(trialType.trials![index]);
+        if (newTrialData) {
+          trialType.trials![index] = newTrialData;
+        } else {
+          trialType.trials!.splice(index, 1);
+        }
+        useExperiments.getState().setExperiment(experiment.name, changedExperiment);
+      }
+    },
+    changeTrialObj: (changer: (draftTrialObj: TrialObj) => void) => {
+      const experiment = get().experiment;
+      if (get().isTrialChosen()) {
+        const changedExperiment = new ExperimentObj(experiment!);
+        // const trial = get().obtainTrial(experiment)!.trial as TrialObj;
+        const trial = changedExperiment.trialTypes[get().chosenNames.trialType?.index!].trials[get().chosenNames.trial?.index!];
+        changer(trial);
+        useExperiments.getState().setExperiment(experiment!.name, changedExperiment.toJson(true));
       }
     }
   })
 })
 
 export const ChosenExperimentUpdater = ({ }) => {
-  const { chosenNames, obtainTrial } = useChosenTrial();
+  const { chosenNames } = useChosenTrial();
   const { experiments } = useExperiments();
 
   useEffect(() => {
-    const experiment = experiments[chosenNames.experiment?.index ?? 1e6];
-    const { trialType, trial } = obtainTrial(experiment);
+    const exp = experiments[chosenNames.experiment?.index ?? 1e6];
+    const experiment = exp ? new ExperimentObj(exp) : undefined;
+    const trialType = (experiment?.trialTypes || [])[chosenNames.trialType?.index ?? 1e6];
+    const trial = (trialType?.trials || [])[chosenNames.trial?.index ?? 1e6];
     const shownMap = (experiment?.imageStandalone || [])[chosenNames.shownMap?.index ?? 1e6];
     useChosenTrial.setState({ experiment, trialType, trial, shownMap });
   }, [experiments, chosenNames]);

@@ -1,22 +1,31 @@
-import { useExperimentProvider } from "../../Context/ExperimentProvider";
-import { ScopeEnum } from "../../types/types";
+import { useChosenTrial } from "../../Context/useChosenTrial";
+import { DeviceItemObj, DeviceOnTrialObj, DeviceTypeObj } from "../../objects";
+import { IDevice, IDeviceOnTrial, ScopeEnum } from "../../types/types";
 import { AttributeItemOne } from "../AttributeItemList";
 
-export const DevicesTabularOneAttr = ({ attrType, deviceItem, deviceType, setDeviceItem }) => {
-  const { currTrial, setTrialData } = useExperimentProvider();
+export const DevicesTabularOneAttr = ({
+  attrType,
+  deviceItem,
+  deviceType,
+}: {
+  attrType: any,
+  deviceItem: DeviceItemObj,
+  deviceType: DeviceTypeObj,
+}) => {
+  const { changeTrialObj, trial, changeChosen } = useChosenTrial();
 
-  if ((!attrType?.scope) || attrType.scope === ScopeEnum.SCOPE_TRIAL) {
-    const devicesOnTrial = currTrial?.trial?.devicesOnTrial;
-    const devindex = (devicesOnTrial || []).findIndex(t => {
-      return t.deviceItemName === deviceItem.name && t.deviceTypeName === deviceType.name;
-    });
+  if (trial && ((!attrType?.scope) || attrType.scope === ScopeEnum.SCOPE_TRIAL)) {
+    const devindex = trial.findDeviceIndex(deviceItem.asNames());
 
     if (devindex !== -1) {
-      const deviceOnTrial = devicesOnTrial[devindex];
-      const setDeviceOnTrial = newDeviceData => {
-        const data = { ...currTrial.trial, devicesOnTrial: [...devicesOnTrial] };
-        data.devicesOnTrial[devindex] = newDeviceData;
-        setTrialData(data);
+      const deviceOnTrial = trial.devicesOnTrial[devindex];
+      const setDeviceOnTrial = (newDeviceData: IDeviceOnTrial) => {
+        changeTrialObj(draft => {
+          draft.devicesOnTrial[devindex] = new DeviceOnTrialObj(
+            newDeviceData,
+            draft.devicesOnTrial[devindex].deviceItem,
+            draft);
+        });
       };
 
       return (
@@ -32,10 +41,14 @@ export const DevicesTabularOneAttr = ({ attrType, deviceItem, deviceType, setDev
     }
   }
 
+  const setDeviceItem = (val: IDevice) => {
+    changeChosen(deviceItem, new DeviceItemObj(val, deviceType));
+  }
+
   return (
     <AttributeItemOne
       attrType={attrType}
-      data={deviceItem}
+      data={deviceItem.toJson(true)}
       setData={val => setDeviceItem(val)}
       scope={ScopeEnum.SCOPE_EXPERIMENT}
       reduceNames={true}

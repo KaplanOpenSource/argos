@@ -1,8 +1,9 @@
 import { Edit, PlayArrow } from "@mui/icons-material";
 import { Stack, TextField, Typography } from "@mui/material";
-import React, { useState } from "react";
+import { useState } from "react";
 import { ButtonTooltip } from "../../Utils/ButtonTooltip";
 import { locationToString } from "../../Utils/utils";
+import { ICoordinates } from "../../types/types";
 
 const NumberTextField = ({ label, value, setValue }: {
   label: string,
@@ -44,9 +45,16 @@ const NumberTextField = ({ label, value, setValue }: {
   )
 }
 
-export const DeviceLocationEdit = ({ location, setLocation }) => {
+export const DeviceLocationEdit = ({
+  location,
+  setLocation,
+}: {
+  location: ICoordinates | undefined,
+  setLocation: (loc: ICoordinates | undefined) => void,
+}) => {
   const [isEditLocation, setIsEditLocation] = useState<boolean>(false);
-  const [innerLocation, setInnerLocation] = useState(location);
+  const fixedLocation: ICoordinates = [location?.[0] || 0, location?.[1] || 0];
+  const [innerLocation, setInnerLocation] = useState<ICoordinates>(fixedLocation);
 
   const changeLocation = () => {
     setIsEditLocation(false);
@@ -56,7 +64,7 @@ export const DeviceLocationEdit = ({ location, setLocation }) => {
     ? <Stack direction='row' sx={{ marginTop: '10px' }}>
       <NumberTextField
         label={'Lat'}
-        value={innerLocation[0] || 0}
+        value={innerLocation[0]}
         setValue={v => setInnerLocation([v, innerLocation[1]])}
       />
       <Typography
@@ -66,7 +74,7 @@ export const DeviceLocationEdit = ({ location, setLocation }) => {
       </Typography>
       <NumberTextField
         label={'Lng'}
-        value={innerLocation[1] || 0}
+        value={innerLocation[1]}
         setValue={v => setInnerLocation([innerLocation[0], v])}
       />
       <ButtonTooltip
@@ -80,7 +88,7 @@ export const DeviceLocationEdit = ({ location, setLocation }) => {
     </Stack>
     : <Stack direction='row'>
       <Typography variant='overline'>
-        {locationToString(location)}
+        {locationToString(fixedLocation)}
       </Typography>
       <ButtonTooltip
         tooltip={'Edit location'}

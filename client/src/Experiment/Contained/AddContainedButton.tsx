@@ -1,52 +1,46 @@
 import { MergeType } from "@mui/icons-material";
-import { isSameName } from "../../Context/DeviceObject";
-import { useCurrTrial } from "../../Context/useCurrTrial";
+import { useChosenTrial } from "../../Context/useChosenTrial";
 import { useDeviceSeletion } from "../../Context/useDeviceSeletion";
+import { DeviceOnTrialObj } from "../../objects";
+import { IDeviceTypeAndItem } from "../../types/types";
 import { ButtonTooltip } from "../../Utils/ButtonTooltip";
 import { ContextMenu } from "../../Utils/ContextMenu";
+import { isSameDevice } from "../../Utils/isSameDevice";
 
-export const AddContainedButton = ({ deviceItem, deviceType, hasContainedDevices }) => {
+export const AddContainedButton = ({
+  deviceOnTrial,
+  hasContainedDevices,
+}: {
+  deviceOnTrial: DeviceOnTrialObj,
+  hasContainedDevices: boolean,
+}) => {
   const { selection, setSelection } = useDeviceSeletion();
-  const { trial } = useCurrTrial({});
-  const device = trial.getDevice(deviceType.name, deviceItem.name);
-
-  const { deviceItemName, deviceTypeName } = selection[0] || {};
-  const topSelectedDevice = trial.getDevice(deviceTypeName, deviceItemName);
+  const { changeTrialObj } = useChosenTrial();
 
   const removeAll = () => {
-    const newSelection = [];
+    // preparing new selection
+    const newSelection: IDeviceTypeAndItem[] = deviceOnTrial.getContainedDevices().map(x => x.dev.asNames());
 
-    trial.batch(draft => {
-      for (const d of draft.getDevicesOnTrial()) {
-        if (d.checkParentIs(device)) {
-          d.setParent(undefined);
-          newSelection.push(d.name());
-        }
-      }
+    changeTrialObj(draft => {
+      const contained = draft.findDevice(deviceOnTrial)?.getContainedDevices()
+      contained?.forEach(c => c.dev.setContainedIn(undefined));
     });
 
-    const oldSelection = [];
-    for (const olds of selection) {
-      if (!newSelection.find(news => isSameName(news, olds))) {
-        oldSelection.push(olds);
+    for (const os of selection) {
+      if (!newSelection.find(ns => isSameDevice(ns, os))) {
+        newSelection.push(os);
       }
     }
+    setSelection(newSelection)
+  };
 
-    setSelection([...newSelection, ...oldSelection])
-  };
-  const removeAllSelected = () => {
-    trial.batch(draft => {
-      for (const s of draft.getDevicesByNames(selection)) {
-        if (s.checkParentIs(device)) {
-          s.setParent(undefined);
-        }
-      }
-    });
-  };
   const addAllSelected = () => {
-    trial.batch(draft => {
-      for (const s of draft.getDevicesByNames(selection)) {
-        s.setParent(device);
+    changeTrialObj(draft => {
+      const dev = draft.findDevice(deviceOnTrial);
+      for (const s of selection) {
+        if (!dev?.isSame(s)) {
+          draft.findDevice(s, true)?.setContainedIn(dev)
+        }
       }
     });
     setSelection([]);
@@ -54,19 +48,15 @@ export const AddContainedButton = ({ deviceItem, deviceType, hasContainedDevices
 
   const menuItems = [{
     label: 'Add just top selected device to be contained in this',
-    callback: () => topSelectedDevice.setParent(undefined)
-  }, {
-    label: 'Remove just top selected device from being contained in this',
-    callback: () => topSelectedDevice.setParent(device)
+    callback: () => {
+      changeTrialObj(draft => draft.findDevice(selection[0], true)?.setContainedIn(draft.findDevice(deviceOnTrial)))
+    }
   }, {
     label: 'Add all selected devices to be contained in this',
     callback: addAllSelected
   }, {
     label: 'Remove all contained devices',
     callback: removeAll
-  }, {
-    label: 'Remove just selected devices that are also contained in this',
-    callback: removeAllSelected
   }];
 
   const handleClick = () => {
@@ -88,7 +78,7 @@ export const AddContainedButton = ({ deviceItem, deviceType, hasContainedDevices
       <ButtonTooltip
         tooltip={tooltip}
         onClick={handleClick}
-        color={hasContainedDevices ? "primary" : ""}
+        color={hasContainedDevices ? "primary" : "default"}
       >
         <MergeType />
       </ButtonTooltip>

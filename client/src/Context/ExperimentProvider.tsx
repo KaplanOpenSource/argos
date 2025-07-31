@@ -4,6 +4,7 @@ import { useChosenTrial } from "./useChosenTrial";
 import { useExperiments } from "./useExperiments";
 
 // TODO:
+// - When changing name or deleting trial before current trial, different trial is chosen
 // - change setLocation to Obj
 // - Select options on attribute should not be name but be reference to attribute option
 // - Trial object batch should be replaced with changing the trial or experiment using changeChosen
@@ -27,8 +28,6 @@ interface IExperimentProviderStore {
     trialName: string | undefined; // the name of the current trial (for legacy)
   }; // the current trial information
   setTrialData: (newTrialData: ITrial) => void; // a function to set the trial data
-  deleteDevice: (params: { experimentName: string; deviceItemName: string; deviceTypeName: string; }) => void; // a function to delete a device
-  deleteDeviceType: (params: { experimentName: string; deviceTypeName: string; }) => void; // a function to delete a device type
 };
 
 const experimentContext = createContext<IExperimentProviderStore | null>(null);
@@ -74,49 +73,10 @@ export const ExperimentProvider = ({ children }) => {
     }
   }
 
-  const deleteDevice = ({ experimentName, deviceItemName, deviceTypeName }) => {
-    const e = structuredClone(experiments.find(e => e.name === experimentName));
-    if (!e || !e.name) {
-      console.log(`unknown experiment ${experimentName}`);
-      return;
-    }
-    const dt = (e.deviceTypes || []).find(t => t.name === deviceTypeName);
-    if (dt && dt.devices) {
-      dt.devices = dt.devices.filter(d => d.name !== deviceItemName);
-    }
-    for (const tt of (e.trialTypes || [])) {
-      for (const tr of (tt.trials || [])) {
-        if (tr && tr.devicesOnTrial) {
-          tr.devicesOnTrial = tr.devicesOnTrial.filter(d => !(d.deviceTypeName === deviceTypeName && d.deviceItemName === deviceItemName));
-        }
-      }
-    }
-    setExperiment(e.name, e)
-  }
-
-  const deleteDeviceType = ({ experimentName, deviceTypeName }) => {
-    const e = structuredClone(experiments.find(e => e.name === experimentName));
-    if (!e || !e.name) {
-      console.log(`unknown experiment ${experimentName}`);
-      return;
-    }
-    e.deviceTypes = (e.deviceTypes || []).filter(t => t.name !== deviceTypeName);
-    for (const tt of (e.trialTypes || [])) {
-      for (const tr of (tt.trials || [])) {
-        if (tr && tr.devicesOnTrial) {
-          tr.devicesOnTrial = tr.devicesOnTrial.filter(d => d.deviceTypeName !== deviceTypeName);
-        }
-      }
-    }
-    setExperiment(e.name, e)
-  }
-
   const store = {
     setCurrTrial,
     currTrial,
     setTrialData,
-    deleteDevice,
-    deleteDeviceType,
   };
 
   return (

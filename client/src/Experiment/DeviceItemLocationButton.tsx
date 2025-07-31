@@ -1,35 +1,38 @@
 import { NotListedLocation, NotListedLocationTwoTone, PersonPinCircle, PersonPinCircleTwoTone, Place, PlaceOutlined, PlaceTwoTone } from "@mui/icons-material";
-import React, { ReactNode } from "react";
+import { ReactNode } from "react";
 import { RealMapName } from "../constants/constants";
-import { DeviceObject } from "../Context/DeviceObject";
-import { useExperimentProvider } from "../Context/ExperimentProvider";
-import { useCurrTrial } from "../Context/useCurrTrial";
+import { useChosenTrial } from "../Context/useChosenTrial";
+import { TrialObj } from "../objects";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { ContextMenu } from "../Utils/ContextMenu";
 
-const locationIconTooltip = (device: DeviceObject, mapName: string): { tooltip: string, icon: ReactNode } => {
-  const hasLocation = device.hasLocation();
-  const hasLocationOnMap = hasLocation && device.hasLocationOnMap(mapName);
-  const hasLocationSelf = hasLocation && device.hasLocation(false);
-  const hasParent = device.hasParent();
-
-  if (hasParent) {
-    if (hasLocationSelf) {
-      return { tooltip: 'Has parent but also has own location, click to remove from both', icon: <NotListedLocation /> };
-    }
-    if (hasLocationOnMap) {
-      return { tooltip: 'Has parent with a location on this map, click to remove from parent', icon: <PersonPinCircle /> };
-    }
-    if (hasLocation) {
-      return { tooltip: 'Has parent with a location on another map, click to remove from parent', icon: <PersonPinCircleTwoTone /> };
-    }
-    return { tooltip: 'Has parent that has no location, click to remove from parent', icon: <NotListedLocationTwoTone /> };
-  }
-  if (hasLocation) {
-    if (hasLocationOnMap) {
-      return { tooltip: 'Has location on this map, click to remove location', icon: <Place /> };
-    } else if (hasLocation) {
-      return { tooltip: 'Has location on another map, click to remove location', icon: <PlaceTwoTone /> };
+const locationIconTooltip = (
+  trial: TrialObj | undefined,
+  deviceTypeName: string,
+  deviceItemName: string,
+  mapName: string,
+): { tooltip: string, icon: ReactNode } => {
+  const dev = trial?.findDevice({ deviceItemName, deviceTypeName }, false);
+  if (dev) {
+    if (dev.containedIn) {
+      if (dev.location) {
+        return { tooltip: 'Has parent but also has own location, click to remove from both', icon: <NotListedLocation /> };
+      }
+      const recursiveLocation = dev.getLocationRecursive();
+      if (recursiveLocation) {
+        if (recursiveLocation.name || RealMapName === mapName) {
+          return { tooltip: 'Has parent with a location on this map, click to remove from parent', icon: <PersonPinCircle /> };
+        } else {
+          return { tooltip: 'Has parent with a location on another map, click to remove from parent', icon: <PersonPinCircleTwoTone /> };
+        }
+      }
+      return { tooltip: 'Has parent that has no location, click to remove from parent', icon: <NotListedLocationTwoTone /> };
+    } else if (dev.location) {
+      if (dev.location.name || RealMapName === mapName) {
+        return { tooltip: 'Has location on this map, click to remove location', icon: <Place /> };
+      } else {
+        return { tooltip: 'Has location on another map, click to remove location', icon: <PlaceTwoTone /> };
+      }
     }
   }
   return { tooltip: 'Has no location', icon: <PlaceOutlined /> };
@@ -40,15 +43,12 @@ export const DeviceItemLocationButton = ({
   deviceItem,
   surroundingDevices,
 }) => {
-  const { currTrial } = useExperimentProvider();
+  const { changeTrialObj, shownMap, isTrialChosen, trial } = useChosenTrial();
 
-  const { trial } = useCurrTrial({});
-  const device = trial.getDevice(deviceType?.name, deviceItem?.name);
-
-  const { tooltip, icon } = locationIconTooltip(device, currTrial?.shownMapName || RealMapName);
+  const { tooltip, icon } = locationIconTooltip(trial, deviceType?.name, deviceItem?.name, shownMap?.name || RealMapName);
 
   const removeLocation = () => {
-    device.setLocation(undefined);
+    changeTrialObj(draft => draft.setDeviceLocation({ deviceTypeName: deviceType?.name, deviceItemName: deviceItem?.name }, undefined));
   }
 
   const menuItems = [
@@ -62,10 +62,9 @@ export const DeviceItemLocationButton = ({
     menuItems.push({
       label: 'Remove locations to all devices in list',
       callback: () => {
-        trial.batch(draft => {
+        changeTrialObj(draft => {
           for (const { deviceTypeName, deviceItemName } of surroundingDevices) {
-            const dev = draft.getDevice(deviceTypeName, deviceItemName);
-            dev.setLocation(undefined);
+            draft.setDeviceLocation({ deviceTypeName, deviceItemName }, undefined);
           }
         });
       }
@@ -74,7 +73,7 @@ export const DeviceItemLocationButton = ({
 
   return (
     <>
-      {currTrial.trial && (
+      {isTrialChosen() && (
         <ContextMenu menuItems={menuItems}>
           <ButtonTooltip
             tooltip={tooltip}

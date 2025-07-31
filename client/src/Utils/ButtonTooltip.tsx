@@ -1,11 +1,25 @@
 import {
   IconButton,
+  IconButtonProps,
 } from '@mui/material';
 import { DomEvent } from 'leaflet';
-import React from 'react';
+import React, { MouseEvent } from 'react';
 import { TooltipItem } from './TooltipItem';
 
-export const ButtonTooltip = ({ onClick, tooltip, disabled = false, closeTooltipOnClick = undefined, children, ...restProps }) => {
+export const ButtonTooltip = ({
+  onClick,
+  tooltip,
+  disabled = false,
+  closeTooltipOnClick = false,
+  children,
+  ...restProps
+}: {
+  onClick: (e: MouseEvent<HTMLButtonElement>) => void,
+  tooltip: any,
+  disabled?: boolean,
+  closeTooltipOnClick?: boolean,
+  children: any
+} & IconButtonProps) => {
   const [open, setOpen] = React.useState(false);
 
   const button = (

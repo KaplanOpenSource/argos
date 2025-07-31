@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { AttributeObj, DeviceItemObj, DeviceOnTrialObj, DeviceTypeObj, TrialTypeObj } from '.';
-import { IDeviceOnTrial, ITrial } from '../types/types';
+import { ICoordinates, IDeviceOnTrial, IDeviceTypeAndItem, ITrial } from '../types/types';
+import { isSameDevice } from '../Utils/isSameDevice';
 
 export class TrialObj implements ITrial {
   name: string;
@@ -30,7 +31,10 @@ export class TrialObj implements ITrial {
 
     // Then set up containedIn relationships
     for (let i = 0; i < this._devicesOnTrial.length; i++) {
-      this._devicesOnTrial[i].setContainedIn(data.devicesOnTrial?.[i].containedIn);
+      const containedIn = data.devicesOnTrial?.[i].containedIn;
+      if (containedIn) {
+        this._devicesOnTrial[i].setContainedIn(containedIn);
+      }
     }
 
     this.description = data.description;
@@ -45,6 +49,11 @@ export class TrialObj implements ITrial {
     }
   }
 
+  /**
+   * Filters devices (given by item and type names) that exist on the experiment's device types
+   * @param devices device item and type names
+   * @returns the names and the objects of the devices that exist
+   */
   private filterValidDevices<T extends IDeviceOnTrial>(
     devices: T[] | undefined
   ): Array<{ device: T; deviceType: DeviceTypeObj; deviceItem: DeviceItemObj }> {
@@ -73,15 +82,62 @@ export class TrialObj implements ITrial {
       });
   }
 
+  findDeviceIndex(name: IDeviceTypeAndItem | undefined, addWhenNotOnTrial: boolean = false): number {
+    if (name) {
+      const devIndex = this.devicesOnTrial?.findIndex(d => isSameDevice(d, name));
+      if (devIndex !== -1 || !addWhenNotOnTrial) {
+        return devIndex;
+      }
+      const valids = this.filterValidDevices([name]);
+      if (valids.length > 0) {
+        const newDev = new DeviceOnTrialObj(valids[0].device, valids[0].deviceItem, this);
+        this._devicesOnTrial.push(newDev);
+        return this._devicesOnTrial.length - 1;
+      }
+    }
+    return -1;
+  }
+
+  findDevice(name: IDeviceTypeAndItem | undefined, addWhenNotOnTrial: boolean = false): DeviceOnTrialObj | undefined {
+    const i = this.findDeviceIndex(name, addWhenNotOnTrial);
+    return i === -1 ? undefined : this._devicesOnTrial[i];
+  }
+
+  setDeviceLocation(
+    name: IDeviceOnTrial,
+    coordinates: ICoordinates | undefined,
+    mapName?: string,
+    containedIn?: IDeviceTypeAndItem,
+  ): DeviceOnTrialObj | undefined {
+    if (coordinates || containedIn) {
+      const dev = this.findDevice(name, true);
+      if (dev) {
+        if (containedIn) {
+          dev.setContainedIn(containedIn);
+        } else {
+          dev.setLocationOnMap(coordinates, mapName);
+        }
+        return dev;
+      }
+    }
+    this._devicesOnTrial = this._devicesOnTrial.filter(d => !isSameDevice(d, name));
+    return undefined;
+  }
+
   toJson(includeTrackUuid: boolean = false): ITrial {
     const result: ITrial = {
       name: this.name,
       createdDate: this.createdDate,
       description: this.description
     };
-    if (this.devicesOnTrial.length > 0) {
-      result.devicesOnTrial = this.devicesOnTrial.map(device => device.toJson(includeTrackUuid));
+
+    const devicesOnTrial = this.devicesOnTrial
+      .filter(device => device.location || device.containedIn)
+      .map(device => device.toJson(includeTrackUuid));
+    if (devicesOnTrial.length > 0) {
+      result.devicesOnTrial = devicesOnTrial;
     }
+
     if (this.attributes.length > 0) {
       result.attributes = this.attributes.map(attr => attr.toJson(includeTrackUuid));
     }

@@ -25,8 +25,7 @@ import {
 } from './utils/constants.js';
 
 import { PlaylistAdd, RotateLeftRounded, Timeline } from '@mui/icons-material';
-import { useExperimentProvider } from '../Context/ExperimentProvider.jsx';
-import { useCurrTrial } from '../Context/useCurrTrial';
+import { useChosenTrial } from '../Context/useChosenTrial.js';
 import { useDeviceSeletion } from '../Context/useDeviceSeletion';
 import { EditTool } from './EditTool.jsx';
 import DistributeAlongArc from './ToolsBar/DistributeAlongArc.jsx';
@@ -46,8 +45,7 @@ export const EditToolBox = ({
   const { shape, setShape, shapeData, } = useShape();
 
   const { selection, setSelection } = useDeviceSeletion();
-  const { currTrial } = useExperimentProvider();
-  const { trial } = useCurrTrial({});
+  const { changeTrialObj, shownMap } = useChosenTrial();
 
   const onClickIcon = (id) => {
     if (id === shape) {
@@ -62,12 +60,10 @@ export const EditToolBox = ({
   const setMultipleDeviceLocations = () => {
     if (selection.length > 0) {
       const positions = shapeData.toPositions(markedPoints, selection.length);
-
-      trial.batch((draft) => {
+      changeTrialObj(draft => {
         let i = 0;
         for (const s of selection) {
-          const dev = draft.getDevice(s.deviceTypeName, s.deviceItemName);
-          dev.setLocationOnMap(positions[i++], currTrial.shownMapName);
+          draft.setDeviceLocation(s, positions[i++], shownMap?.name);
         }
       });
       setSelection([]);

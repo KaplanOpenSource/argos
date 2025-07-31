@@ -58,10 +58,11 @@ export const Trial = ({ data, setData, experiment, trialType, children }) => {
   const totalDevices = sum((experiment?.deviceTypes || []).map(x => (x?.devices || []).length));
   const placedDevices = (data.devicesOnTrial || []).length;
 
+  const isTrialChosen = data.name === currTrial?.trial?.name;
   return (
     <TreeRowOnChosen
       data={data}
-      boldName={data === currTrial?.trial}
+      boldName={isTrialChosen}
       validateName={(name) => !trialType?.trials?.find(tt => tt.name === name) ? '' : 'Duplicate name'}
       components={
         <>
@@ -76,7 +77,7 @@ export const Trial = ({ data, setData, experiment, trialType, children }) => {
               setCurrTrial({ experimentName: experiment.name, trialTypeName: trialType.name, trialName: data.name });
             }}
           >
-            <Edit color={data === currTrial?.trial ? "primary" : "inherit"} />
+            <Edit color={isTrialChosen ? "primary" : "inherit"} />
           </ButtonTooltip>
           <ButtonTooltip
             tooltip="Delete trial"

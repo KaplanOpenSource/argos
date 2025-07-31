@@ -1,32 +1,21 @@
 import { Stack, TableCell, TableRow, Typography } from "@mui/material";
-import { useExperimentProvider } from "../../Context/ExperimentProvider";
-import { useCurrTrial } from "../../Context/useCurrTrial";
-import { TextFieldDebounceOutlined } from "../../Utils/TextFieldDebounce";
+import { useChosenTrial } from "../../Context/useChosenTrial";
+import { DeviceTypeObj } from "../../objects";
+import { ICoordinates } from "../../types/types";
 import { SelectDeviceButton } from "../SelectDeviceButton";
 import { DevicesTabularOneAttr } from "./DevicesTabularOneAttr";
+import { NumberCoordField } from "./NumberCoordField";
 
-const NumberCoordField = ({ value, setValue, label }) => {
-  return (
-    <TextFieldDebounceOutlined
-      label={label}
-      type="number"
-      value={Math.round(value * 1e8) / 1e8}
-      onChange={v => {
-        const n = parseFloat(v);
-        if (isFinite(n)) {
-          setValue(n);
-        }
-      }}
-    />
-  )
-}
+// TODO: Use TrialObj instead
 
-export const DevicesTabularOneDevice = ({ deviceType, setDeviceType }) => {
-  const { currTrial } = useExperimentProvider();
-  const { trial } = useCurrTrial({});
+export const DevicesTabularOneDevice = ({
+  deviceType,
+}: {
+  deviceType: DeviceTypeObj,
+}) => {
+  const { shownMap, trial, changeTrialObj } = useChosenTrial();
 
   const devices = deviceType?.devices || [];
-  const devicesOnTrial = currTrial?.trial?.devicesOnTrial;
 
   const devicesEnclosingList = devices.map(deviceItem => {
     return { deviceTypeName: deviceType.name, deviceItemName: deviceItem.name, deviceType, deviceItem };
@@ -35,17 +24,15 @@ export const DevicesTabularOneDevice = ({ deviceType, setDeviceType }) => {
   return (
     <>
       {devices.map((deviceItem, itr) => {
-        const device = trial.getDevice(deviceType.name, deviceItem.name);
+        const deviceOnTrial = trial?.findDevice({ deviceTypeName: deviceType.name!, deviceItemName: deviceItem.name! });
+        const hasLocation = deviceOnTrial?.location?.coordinates?.length === 2 && deviceOnTrial?.location?.coordinates.every(x => Number.isFinite(x));
 
-        const setDeviceItem = (val) => {
-          const t = structuredClone(deviceType);
-          t.devices[itr] = val;
-          setDeviceType(t);
+        const setLocation = (coords: ICoordinates) => {
+          changeTrialObj(draft => {
+            const dev = draft.findDevice(deviceOnTrial);
+            dev?.setLocationOnMap(coords, shownMap?.name);
+          })
         }
-
-        const deviceOnTrial = devicesOnTrial?.find(t => {
-          return t.deviceItemName === deviceItem.name && t.deviceTypeName === deviceType.name;
-        });
 
         return (
           <TableRow
@@ -64,24 +51,20 @@ export const DevicesTabularOneDevice = ({ deviceType, setDeviceType }) => {
               </Stack>
             </TableCell>
             <TableCell key={':tlat'}>
-              {deviceOnTrial?.location?.coordinates?.length === 2
+              {hasLocation
                 ? <NumberCoordField
                   label={'Latitude'}
-                  value={deviceOnTrial?.location?.coordinates[0]}
-                  setValue={v => {
-                    device.setLocationOnMap([v, device.getLocation().coordinates[1]], currTrial.shownMapName);
-                  }}
+                  value={deviceOnTrial.location!.coordinates![0] || 0}
+                  setValue={v => setLocation([v, deviceOnTrial.location!.coordinates![1] || 0])}
                 />
                 : null}
             </TableCell>
             <TableCell key={':tlng'}>
-              {deviceOnTrial?.location?.coordinates?.length === 2
+              {hasLocation
                 ? <NumberCoordField
                   label={'Longitude'}
-                  value={deviceOnTrial?.location?.coordinates[1]}
-                  setValue={v => {
-                    device.setLocationOnMap([device.getLocation().coordinates[0], v], currTrial.shownMapName);
-                  }}
+                  value={deviceOnTrial.location!.coordinates![1] || 0}
+                  setValue={v => setLocation([deviceOnTrial.location!.coordinates![0] || 0, v])}
                 />
                 : null}
             </TableCell>
@@ -94,7 +77,6 @@ export const DevicesTabularOneDevice = ({ deviceType, setDeviceType }) => {
                     attrType={attrType}
                     deviceType={deviceType}
                     deviceItem={deviceItem}
-                    setDeviceItem={setDeviceItem}
                   />
                 </TableCell>
               )

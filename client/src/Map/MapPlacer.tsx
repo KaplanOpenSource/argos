@@ -1,8 +1,8 @@
-import { useExperimentProvider } from "../Context/ExperimentProvider";
-import { useCurrTrial } from "../Context/useCurrTrial";
+import { useChosenTrial } from "../Context/useChosenTrial";
 import { useDeviceSeletion } from "../Context/useDeviceSeletion";
 import { useShape } from "../EditToolBox/ShapeContext";
 import { CHOOSE_SHAPE, FREEPOSITIONING_SHAPE, POINT_SHAPE } from "../EditToolBox/utils/constants";
+import { ICoordinates } from "../types/types";
 import { MapContextMenu } from "./MapContextMenu";
 import { MapEventer } from "./MapEventer";
 import { MarkedShape } from "./MarkedShape";
@@ -12,12 +12,11 @@ export const MapPlacer = ({
   setMarkedPoints,
 }) => {
   const { selection, setSelection } = useDeviceSeletion();
-  const { currTrial } = useExperimentProvider();
   const { shape, shapeData } = useShape();
-  const { trial } = useCurrTrial({});
+  const { changeTrialObj, shownMap } = useChosenTrial();
 
   const onMapClick = (e, mapObj) => {
-    const latlng = [e.latlng.lat, e.latlng.lng];
+    const latlng: ICoordinates = [e.latlng.lat, e.latlng.lng];
     if (!shapeData.noControlPoints) {
       if (!shapeData.maxPoints) {
         setMarkedPoints([...markedPoints, latlng]);
@@ -27,18 +26,18 @@ export const MapPlacer = ({
     } else {
       if (shape === FREEPOSITIONING_SHAPE) {
         if (selection.length > 0) {
-          const dev = trial.getDevice(selection[0].deviceTypeName, selection[0].deviceItemName);
-          dev.setLocationOnMap(latlng, currTrial.shownMapName);
+          changeTrialObj(draft => {
+            draft.setDeviceLocation(selection[0], latlng, shownMap?.name);
+          })
           setSelection(selection.slice(1));
         }
       } else if (shape === POINT_SHAPE) {
         if (selection.length > 0) {
-          trial.batch(draft => {
+          changeTrialObj(draft => {
             for (const s of selection) {
-              const dev = draft.getDevice(s.deviceTypeName, s.deviceItemName);
-              dev.setLocationOnMap(latlng, currTrial.shownMapName);
+              draft.setDeviceLocation(s, latlng, shownMap?.name);
             }
-          });
+          })
           setSelection([]);
         }
       } else if (shape === CHOOSE_SHAPE) {
@@ -67,10 +66,9 @@ export const MapPlacer = ({
         menuItems={[
           {
             label: 'Place top point here',
-            callback: (e, latlng) => {
+            callback: (_e: any, latlng) => {
               if (selection.length > 0) {
-                const dev = trial.getDevice(selection[0].deviceTypeName, selection[0].deviceItemName);
-                dev.setLocationOnMap(latlng, currTrial.shownMapName);
+                changeTrialObj(draft => draft.findDevice(selection[0])?.setLocationOnMap(latlng, shownMap?.name));
                 setSelection(selection.slice(1));
               }
             }

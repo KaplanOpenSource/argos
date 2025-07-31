@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import { AttributeObj, DeviceTypeObj } from '.';
-import { IDevice } from '../types/types';
+import { IDevice, IDeviceTypeAndItem } from '../types/types';
 
 export class DeviceItemObj implements IDevice {
   readonly deviceType: DeviceTypeObj;
@@ -26,6 +26,10 @@ export class DeviceItemObj implements IDevice {
     }
 
     this.trackUuid = data.trackUuid || uuidv4();
+  }
+
+  asNames(): IDeviceTypeAndItem {
+    return { deviceItemName: this.name, deviceTypeName: this.deviceType.name };
   }
 
   toJson(includeTrackUuid: boolean = false): IDevice {
