@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import { AttributeObj, DeviceItemObj, DeviceOnTrialObj, DeviceTypeObj, TrialTypeObj } from '.';
-import { ICoordinates, IDeviceOnTrial, IDeviceTypeAndItem, ITrial } from '../types/types';
+import { ICoordinates, IDeviceOnTrial, IDeviceTypeAndItem, ITrial, ScopeEnum } from '../types/types';
 import { isSameDevice } from '../Utils/isSameDevice';
 
 export class TrialObj implements ITrial {
@@ -41,7 +41,7 @@ export class TrialObj implements ITrial {
     this.attributes = [];
     if (data.attributes) {
       for (const attr of data.attributes) {
-        const attrType = this.trialType.attributeTypes?.find(at => at.name === attr.name);
+        const attrType = this.trialType.attributeTypes?.find(at => at.name === attr.name && at.scope !== ScopeEnum.SCOPE_CONSTANT);
         if (attrType) {
           this.attributes.push(new AttributeObj(attr, attrType));
         }
