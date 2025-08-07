@@ -9,3 +9,4 @@ data/uploads/
 coverage/
 node_modules/
 tests/test-results/.last-run.json
+tests/playwright-report/index.html

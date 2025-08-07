@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import { AttributeObj, DeviceTypeObj } from '.';
-import { IDevice, IDeviceTypeAndItem } from '../types/types';
+import { IDevice, IDeviceTypeAndItem, ScopeEnum } from '../types/types';
 
 export class DeviceItemObj implements IDevice {
   readonly deviceType: DeviceTypeObj;
@@ -18,7 +18,7 @@ export class DeviceItemObj implements IDevice {
     // Process attributes
     if (data.attributes) {
       for (const attr of data.attributes) {
-        const attrType = this.deviceType.attributeTypes?.find(at => at.name === attr.name);
+        const attrType = this.deviceType.attributeTypes?.find(at => at.name === attr.name && at.scope === ScopeEnum.SCOPE_EXPERIMENT);
         if (attrType) {
           this.attributes.push(new AttributeObj(attr, attrType));
         }
