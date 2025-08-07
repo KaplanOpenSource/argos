@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { AttributeObj, DeviceItemObj, LocationObj, TrialObj } from '.';
 import { RealMapName } from '../constants/constants';
-import { ICoordinates, IDeviceOnTrial, IDeviceTypeAndItem, ILocation } from '../types/types';
+import { ICoordinates, IDeviceOnTrial, IDeviceTypeAndItem, ILocation, ScopeEnum } from '../types/types';
 import { isSameDevice } from '../Utils/isSameDevice';
 
 export class DeviceOnTrialObj implements IDeviceOnTrial {
@@ -21,7 +21,7 @@ export class DeviceOnTrialObj implements IDeviceOnTrial {
     // Process attributes
     if (data.attributes) {
       for (const attr of data.attributes) {
-        const attrType = this.deviceItem.deviceType.attributeTypes?.find(at => at.name === attr.name);
+        const attrType = this.deviceItem.deviceType.attributeTypes?.find(at => at.name === attr.name && at.scope === ScopeEnum.SCOPE_TRIAL);
         if (attrType) {
           this.attributes.push(new AttributeObj(attr, attrType));
         }
