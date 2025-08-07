@@ -9,7 +9,7 @@ import { useExperiments } from "../Context/useExperiments";
 import { useHiddenDeviceTypes } from "../Context/useHiddenDeviceTypes";
 import { IconPicker } from "../Icons/IconPicker";
 import { ExperimentObj } from "../objects/ExperimentObj";
-import { ScopeEnum } from "../types/types";
+import { IDeviceType, IExperiment, ScopeEnum } from "../types/types";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { changeByName, createNewName } from "../Utils/utils";
 import { AddMultipleDevices } from "./AddMultipleDevices";
@@ -17,7 +17,15 @@ import { AttributeTypesDialogButton } from "./AttributeTypesDialogButton";
 import { DeviceItem } from "./DeviceItem";
 import { SelectDeviceTypeButton } from "./SelectDeviceTypeButton";
 
-export const DeviceType = ({ data, setData, experiment }) => {
+export const DeviceType = ({
+  data,
+  setData,
+  experiment,
+}: {
+  data: IDeviceType,
+  setData: (v: IDeviceType) => void,
+  experiment: IExperiment,
+}) => {
   const { currTrial } = useExperimentProvider();
   const { setExperiment } = useExperiments();
   const { setDeviceTypeHidden, isDeviceTypeHidden } = useHiddenDeviceTypes();

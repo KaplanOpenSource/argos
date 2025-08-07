@@ -5,12 +5,28 @@ import { useChosenTrial } from '../Context/useChosenTrial';
 import { useCurrTrial } from "../Context/useCurrTrial";
 import { useExperiments } from '../Context/useExperiments';
 import { ExperimentObj } from '../objects';
-import { ScopeEnum } from "../types/types";
+import { IDevice, IDeviceType, IExperiment, ScopeEnum } from "../types/types";
 import { AttributeItemList } from "./AttributeItemList";
 import { DeviceItemLocationButton } from "./DeviceItemLocationButton";
 import { SelectDeviceButton } from "./SelectDeviceButton";
 
-export const DeviceItem = ({ data, setData, deviceType, showAttributes, devicesEnclosingList, scope, experiment }) => {
+export const DeviceItem = ({
+  data,
+  setData,
+  deviceType,
+  showAttributes,
+  devicesEnclosingList,
+  scope,
+  experiment,
+}: {
+  data: IDevice,
+  setData: (v: IDevice) => void,
+  deviceType: IDeviceType,
+  showAttributes: boolean,
+  devicesEnclosingList: any,
+  scope: ScopeEnum,
+  experiment: IExperiment,
+}) => {
   const { trial } = useCurrTrial({});
   const { setExperiment } = useExperiments();
   const { isExperimentChosen } = useChosenTrial();
