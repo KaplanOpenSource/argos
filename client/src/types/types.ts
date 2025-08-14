@@ -42,6 +42,13 @@ export interface IAttribute extends INamed {
   value?: any;
 }
 
+// $$$$ TODO:
+// 1. on each Obj class derived from IHasAttributes implement get / set attr
+// 2. substitute AttributeValueGet with methods to(1)
+// 3. use in AttributeItemList(2)
+// 4. use the above in DeviceItem
+// 5. when some of the attrs are trial specific put on DeviceItem subtrees for each trial
+
 export interface IHasAttributes {
   attributes?: Array<IAttribute>;
 }

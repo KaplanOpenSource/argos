@@ -20,7 +20,7 @@ export const DeviceItem = ({
   experiment,
 }: {
   data: IDevice,
-  setData: (v: IDevice) => void,
+  setData?: (v: IDevice) => void,
   deviceType: IDeviceType,
   showAttributes: boolean,
   devicesEnclosingList: any,
@@ -30,7 +30,7 @@ export const DeviceItem = ({
   const { trial } = useCurrTrial({});
   const { setExperiment } = useExperiments();
   const { isExperimentChosen } = useChosenTrial();
-  const device = trial.getDevice(deviceType.name, data.name);
+  const device = trial.getDevice(deviceType.name!, data.name!);
 
   return (
     <TreeRowOnChosen
@@ -50,7 +50,7 @@ export const DeviceItem = ({
                 const devtype = exp.deviceTypes.find(dt => dt.name === deviceType.name);
                 if (devtype) {
                   devtype.devices = devtype.devices.filter(d => d.name !== data.name);
-                  setExperiment(experiment.name, exp.toJson(true));
+                  setExperiment(experiment.name!, exp.toJson(true));
                 }
               }}
             >
