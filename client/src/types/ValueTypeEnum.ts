@@ -7,13 +7,5 @@ export enum ValueTypeEnum {
   VALUE_TYPE_SELECT = "Select"
 }
 
-export const valueTypes = [
-  ValueTypeEnum.VALUE_TYPE_STRING,
-  ValueTypeEnum.VALUE_TYPE_NUMBER,
-  ValueTypeEnum.VALUE_TYPE_BOOLEAN,
-  ValueTypeEnum.VALUE_TYPE_DATE,
-  ValueTypeEnum.VALUE_TYPE_DATE_TIME,
-  ValueTypeEnum.VALUE_TYPE_SELECT,
-];
-
-export const DEFAULT_VALUE_TYPE = ValueTypeEnum.VALUE_TYPE_STRING; 
+export const valueTypes = Object.values(ValueTypeEnum);
+export const VALUE_TYPE_DEFAULT = ValueTypeEnum.VALUE_TYPE_STRING; 

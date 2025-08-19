@@ -2,9 +2,9 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { TreeView } from "@mui/x-tree-view/TreeView";
 import { TreeSublist } from "../App/TreeSublist";
+import { VALUE_TYPE_DEFAULT } from '../types/ValueTypeEnum';
 import { changeByName } from "../Utils/utils";
 import { AttributeType } from "./AttributeType";
-import { VALUE_TYPE_DEFAULT } from "./AttributeValue";
 
 export const AttributeTypesDialog = ({ data, setData, isOfDevice, containers }) => {
   return (

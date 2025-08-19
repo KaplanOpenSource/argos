@@ -5,9 +5,10 @@ import { TreeRowOnChosen } from '../App/TreeRowOnChosen';
 import { useExperiments } from "../Context/useExperiments";
 import { SelectProperty } from "../Property/SelectProperty";
 import { IAttribute, IAttributeType, IExperiment, INamed, ScopeEnum } from "../types/types";
+import { VALUE_TYPE_DEFAULT, ValueTypeEnum, valueTypes } from '../types/ValueTypeEnum';
 import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
 import { AttributeTypeOptions } from "./AttributeTypeOptions";
-import { AttributeValue, VALUE_TYPE_DEFAULT, VALUE_TYPE_SELECT, valueTypes } from "./AttributeValue";
+import { AttributeValue } from "./AttributeValue";
 
 export const AttributeType = ({
   data,
@@ -81,13 +82,13 @@ export const AttributeType = ({
           <SelectProperty
             label="Type"
             data={data.type || VALUE_TYPE_DEFAULT}
-            setData={type => setData({ ...data, type })}
+            setData={(type: ValueTypeEnum) => setData({ ...data, type })}
             options={valueTypes.map(name => { return { name } })}
           />
           <SelectProperty
             label="Scope"
             data={data.scope === ScopeEnum.SCOPE_EXPERIMENT_ALT ? ScopeEnum.SCOPE_EXPERIMENT : (data.scope || ScopeEnum.SCOPE_TRIAL)}
-            setData={scope => setData({ ...data, scope })}
+            setData={(scope: ScopeEnum) => setData({ ...data, scope })}
             options={isOfDevice
               ? [
                 { name: ScopeEnum.SCOPE_TRIAL, tooltip: "Attribute can be changed only when device is placed on a trial" },
@@ -108,7 +109,7 @@ export const AttributeType = ({
         </>
       }
     >
-      {data.type === VALUE_TYPE_SELECT &&
+      {data.type === ValueTypeEnum.VALUE_TYPE_SELECT &&
         <AttributeTypeOptions
           data={data}
           setData={setData}
