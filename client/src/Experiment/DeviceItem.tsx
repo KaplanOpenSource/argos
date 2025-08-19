@@ -63,7 +63,7 @@ export const DeviceItem = ({
       {isExperimentChosen() && showAttributes && (
         <>
           {(deviceType.attributeTypes || [])
-            .filter(attrType => attrType.scope !== ScopeEnum.SCOPE_TRIAL)
+            .filter(attrType => attrType.scope === ScopeEnum.SCOPE_EXPERIMENT)
             .map(attrType => {
               return (
                 <AttributeItem

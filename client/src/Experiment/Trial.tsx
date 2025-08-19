@@ -17,7 +17,7 @@ import { ScopeEnum } from "../types/types";
 import { ButtonMenu } from "../Utils/ButtonMenu";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { arraySwapItems } from "../Utils/utils";
-import { AttributeItemList } from "./AttributeItemList";
+import { AttributeItem } from "./AttributeItem";
 import { CoordsSpan } from "./CoordsSpan";
 
 export const Trial = ({ data, setData, experiment, trialType, children }) => {
@@ -146,12 +146,18 @@ export const Trial = ({ data, setData, experiment, trialType, children }) => {
         </>
       }
     >
-      <AttributeItemList
-        attributeTypes={trialType.attributeTypes}
-        data={data}
-        setData={setData}
-        scope={ScopeEnum.SCOPE_TRIAL}
-      />
+      {(trialType.attributeTypes || [])
+        .filter(attrType => attrType.scope === ScopeEnum.SCOPE_TRIAL)
+        .map(attrType => {
+          return (
+            <AttributeItem
+              key={attrType.name}
+              attrType={attrType}
+              data={data}
+              setData={setData}
+            />
+          )
+        })}
     </TreeRowOnChosen>
   )
 }
