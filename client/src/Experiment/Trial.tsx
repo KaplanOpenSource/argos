@@ -13,19 +13,31 @@ import { useTrialGeoJson } from "../IO/TrialGeoJson";
 import { UploadDevicesButton } from "../IO/UploadDevices/UploadDevicesButton";
 import { ActionsOnMapContext } from "../Map/ActionsOnMapContext";
 import { DateProperty } from "../Property/DateProperty";
-import { ScopeEnum } from "../types/types";
+import { IExperiment, ITrial, ITrialType, ScopeEnum } from "../types/types";
 import { ButtonMenu } from "../Utils/ButtonMenu";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { arraySwapItems } from "../Utils/utils";
 import { AttributeItem } from "./AttributeItem";
 import { CoordsSpan } from "./CoordsSpan";
 
-export const Trial = ({ data, setData, experiment, trialType, children }) => {
+export const Trial = ({
+  data,
+  setData,
+  experiment,
+  trialType,
+  children,
+}: {
+  data: ITrial,
+  setData: (val: ITrial | undefined) => void,
+  experiment: IExperiment,
+  trialType: ITrialType,
+  children: any,
+}) => {
   const { selection } = useDeviceSeletion();
   const { currTrial, setCurrTrial } = useExperimentProvider();
   const { chooseShownMap } = useChosenTrial();
   const { downloadGeojson, downloadZipCsv } = useTrialGeoJson();
-  const { addActionOnMap } = useContext(ActionsOnMapContext);
+  const { addActionOnMap } = useContext(ActionsOnMapContext)!;
   const { setExperiment } = useExperiments();
 
   const cloneDevices = () => {
@@ -117,7 +129,7 @@ export const Trial = ({ data, setData, experiment, trialType, children }) => {
                 const i = tt.trials.findIndex(x => x.name === data.name);
                 if (i > 0) {
                   arraySwapItems(tt.trials, i - 1, i);
-                  setExperiment(exp.name, exp);
+                  setExperiment(exp.name!, exp);
                 }
               }}
             >
@@ -132,7 +144,7 @@ export const Trial = ({ data, setData, experiment, trialType, children }) => {
                 const i = tt.trials.findIndex(x => x.name === data.name);
                 if (i < tt.trials.length - 1) {
                   arraySwapItems(tt.trials, i, i + 1);
-                  setExperiment(exp.name, exp);
+                  setExperiment(exp.name!, exp);
                 }
               }}
             >
