@@ -57,7 +57,6 @@ export const DeviceType = ({
   return (
     <TreeRowOnChosen
       data={data}
-      setData={setData}
       components={
         <>
           <IconPicker
