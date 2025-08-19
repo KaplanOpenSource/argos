@@ -9,7 +9,7 @@ import { useExperiments } from "../Context/useExperiments";
 import { useHiddenDeviceTypes } from "../Context/useHiddenDeviceTypes";
 import { IconPicker } from "../Icons/IconPicker";
 import { ExperimentObj } from "../objects/ExperimentObj";
-import { IDeviceType, IExperiment, ScopeEnum } from "../types/types";
+import { IDeviceType, IExperiment } from "../types/types";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { changeByName, createNewName } from "../Utils/utils";
 import { AddMultipleDevices } from "./AddMultipleDevices";
@@ -116,11 +116,10 @@ export const DeviceType = ({
             key={itemData.trackUuid || Math.random() + ""}
             data={itemData}
             setData={newData => {
-              setData({ ...data, devices: changeByName(data.devices, itemData.name, newData) });
+              setData({ ...data, devices: changeByName(data.devices, itemData.name!, newData) });
             }}
             deviceType={data}
             showAttributes={true}
-            scope={ScopeEnum.SCOPE_EXPERIMENT}
             devicesEnclosingList={devicesEnclosingList}
             experiment={experiment}
           />

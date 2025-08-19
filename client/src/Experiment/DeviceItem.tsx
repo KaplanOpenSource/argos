@@ -2,11 +2,12 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { IconButton } from "@mui/material";
 import { TreeRowOnChosen } from "../App/TreeRowOnChosen";
 import { useChosenTrial } from '../Context/useChosenTrial';
-import { useCurrTrial } from "../Context/useCurrTrial";
 import { useExperiments } from '../Context/useExperiments';
 import { ExperimentObj } from '../objects';
 import { IDevice, IDeviceType, IExperiment, ScopeEnum } from "../types/types";
-import { AttributeItemList } from "./AttributeItemList";
+import { VALUE_TYPE_DEFAULT } from '../types/ValueTypeEnum';
+import { changeByName } from '../Utils/utils';
+import { AttributeValue } from './AttributeValue';
 import { DeviceItemLocationButton } from "./DeviceItemLocationButton";
 import { SelectDeviceButton } from "./SelectDeviceButton";
 
@@ -16,7 +17,6 @@ export const DeviceItem = ({
   deviceType,
   showAttributes,
   devicesEnclosingList,
-  scope,
   experiment,
 }: {
   data: IDevice,
@@ -24,13 +24,10 @@ export const DeviceItem = ({
   deviceType: IDeviceType,
   showAttributes: boolean,
   devicesEnclosingList: any,
-  scope: ScopeEnum,
   experiment: IExperiment,
 }) => {
-  const { trial } = useCurrTrial({});
   const { setExperiment } = useExperiments();
   const { isExperimentChosen } = useChosenTrial();
-  const device = trial.getDevice(deviceType.name!, data.name!);
 
   return (
     <TreeRowOnChosen
@@ -60,21 +57,38 @@ export const DeviceItem = ({
           <DeviceItemLocationButton
             deviceType={deviceType}
             deviceItem={data}
-            // hasLocation={device.hasLocationOnMap(currTrial?.shownMapName || RealMapName)}
             surroundingDevices={devicesEnclosingList}
           />
         </>
       }
     >
-      {isExperimentChosen() && showAttributes &&
-        <AttributeItemList
-          attributeTypes={deviceType.attributeTypes}
-          data={scope === ScopeEnum.SCOPE_TRIAL ? device.onTrial() : data}
-          setData={scope === ScopeEnum.SCOPE_TRIAL ? device.setOnTrial : setData}
-          scope={scope}
-          deviceItem={scope === ScopeEnum.SCOPE_TRIAL ? data : null}
-        />
-      }
+      {isExperimentChosen() && showAttributes && (
+        <>
+          {(deviceType.attributeTypes || [])
+            .filter(attrType => attrType.scope !== ScopeEnum.SCOPE_TRIAL)
+            .map(attrType => {
+              const attr = data.attributes?.find(attr => attr.name === attrType.name);
+              const value = (attr ? attr.value : attrType.defaultValue) ?? '';
+              const setValue = (val: any) => {
+                if (setData) {
+                  const attrValue = (val === undefined) ? undefined : { name: attrType.name, value: val };
+                  const attributes = changeByName(data.attributes, attrType.name!, attrValue);
+                  setData({ ...data, attributes });
+                }
+              }
+              return (
+                <AttributeValue
+                  key={attrType.name}
+                  label={attrType.name!}
+                  type={attrType.type || VALUE_TYPE_DEFAULT}
+                  data={value}
+                  setData={setValue}
+                  attrType={attrType}
+                />
+              )
+            })}
+        </>
+      )}
     </TreeRowOnChosen>
   )
 }
