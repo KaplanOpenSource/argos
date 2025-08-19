@@ -16,6 +16,7 @@ import { DateProperty } from "../Property/DateProperty";
 import { IExperiment, ITrial, ITrialType, ScopeEnum } from "../types/types";
 import { ButtonMenu } from "../Utils/ButtonMenu";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
+import { Stack3 } from "../Utils/Stack3";
 import { arraySwapItems } from "../Utils/utils";
 import { AttributeItem } from "./AttributeItem";
 import { CoordsSpan } from "./CoordsSpan";
@@ -158,18 +159,20 @@ export const Trial = ({
         </>
       }
     >
-      {(trialType.attributeTypes || [])
-        .filter(attrType => attrType.scope === ScopeEnum.SCOPE_TRIAL)
-        .map(attrType => {
-          return (
-            <AttributeItem
-              key={attrType.name}
-              attrType={attrType}
-              data={data}
-              setData={setData}
-            />
-          )
-        })}
+      <Stack3>
+        {(trialType.attributeTypes || [])
+          .filter(attrType => attrType.scope === ScopeEnum.SCOPE_TRIAL)
+          .map(attrType => {
+            return (
+              <AttributeItem
+                key={attrType.name}
+                attrType={attrType}
+                data={data}
+                setData={setData}
+              />
+            )
+          })}
+      </Stack3>
     </TreeRowOnChosen>
   )
 }
