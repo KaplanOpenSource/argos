@@ -5,6 +5,7 @@ import { useChosenTrial } from '../Context/useChosenTrial';
 import { useExperiments } from '../Context/useExperiments';
 import { ExperimentObj } from '../objects';
 import { IDevice, IDeviceType, IExperiment, ScopeEnum } from "../types/types";
+import { Stack3 } from '../Utils/Stack3';
 import { AttributeItem } from './AttributeItem';
 import { DeviceItemLocationButton } from "./DeviceItemLocationButton";
 import { SelectDeviceButton } from "./SelectDeviceButton";
@@ -61,7 +62,7 @@ export const DeviceItem = ({
       }
     >
       {isExperimentChosen() && showAttributes && (
-        <>
+        <Stack3>
           {(deviceType.attributeTypes || [])
             .filter(attrType => attrType.scope === ScopeEnum.SCOPE_EXPERIMENT)
             .map(attrType => {
@@ -74,7 +75,7 @@ export const DeviceItem = ({
                 />
               )
             })}
-        </>
+        </Stack3>
       )}
     </TreeRowOnChosen>
   )
