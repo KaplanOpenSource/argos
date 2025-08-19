@@ -1,19 +1,20 @@
 import { v4 as uuidv4 } from 'uuid';
-import { AttributeObj, DeviceItemObj, DeviceOnTrialObj, DeviceTypeObj, TrialTypeObj } from '.';
+import { DeviceItemObj, DeviceOnTrialObj, DeviceTypeObj, TrialTypeObj } from '.';
 import { ICoordinates, IDeviceOnTrial, IDeviceTypeAndItem, ITrial, ScopeEnum } from '../types/types';
 import { isSameDevice } from '../Utils/isSameDevice';
+import { HasAttributesObj } from './HasAttributesObj';
 
-export class TrialObj implements ITrial {
+export class TrialObj extends HasAttributesObj implements ITrial {
   name: string;
   createdDate?: string;
   protected _devicesOnTrial: DeviceOnTrialObj[] = [];
   description?: string;
-  attributes: AttributeObj[] = [];
   protected readonly deviceTypes: DeviceTypeObj[];
   readonly trialType: TrialTypeObj;
   trackUuid: string;
 
   constructor(data: ITrial, deviceTypes: DeviceTypeObj[], trialType: TrialTypeObj) {
+    super(data, trialType.attributeTypes, ScopeEnum.SCOPE_TRIAL);
     if (!data.name) {
       throw new Error('Trial name is required');
     }
@@ -38,15 +39,6 @@ export class TrialObj implements ITrial {
     }
 
     this.description = data.description;
-    this.attributes = [];
-    if (data.attributes) {
-      for (const attr of data.attributes) {
-        const attrType = this.trialType.attributeTypes?.find(at => at.name === attr.name && at.scope !== ScopeEnum.SCOPE_CONSTANT);
-        if (attrType) {
-          this.attributes.push(new AttributeObj(attr, attrType));
-        }
-      }
-    }
   }
 
   /**
@@ -128,7 +120,8 @@ export class TrialObj implements ITrial {
     const result: ITrial = {
       name: this.name,
       createdDate: this.createdDate,
-      description: this.description
+      description: this.description,
+      ...super.toJson(includeTrackUuid),
     };
 
     const devicesOnTrial = this.devicesOnTrial
@@ -138,9 +131,6 @@ export class TrialObj implements ITrial {
       result.devicesOnTrial = devicesOnTrial;
     }
 
-    if (this.attributes.length > 0) {
-      result.attributes = this.attributes.map(attr => attr.toJson(includeTrackUuid));
-    }
     if (includeTrackUuid) {
       result.trackUuid = this.trackUuid;
     }

@@ -1,33 +1,22 @@
 import { v4 as uuidv4 } from 'uuid';
-import { AttributeObj, DeviceItemObj, LocationObj, TrialObj } from '.';
+import { DeviceItemObj, LocationObj, TrialObj } from '.';
 import { RealMapName } from '../constants/constants';
 import { ICoordinates, IDeviceOnTrial, IDeviceTypeAndItem, ILocation, ScopeEnum } from '../types/types';
 import { isSameDevice } from '../Utils/isSameDevice';
+import { HasAttributesObj } from './HasAttributesObj';
 
-export class DeviceOnTrialObj implements IDeviceOnTrial {
+export class DeviceOnTrialObj extends HasAttributesObj implements IDeviceOnTrial {
   readonly deviceItem: DeviceItemObj;
   readonly trial: TrialObj;
   location?: LocationObj;
-  attributes: AttributeObj[] = [];
   containedIn?: DeviceOnTrialObj;
   trackUuid: string;
 
   constructor(data: IDeviceOnTrial, deviceItem: DeviceItemObj, trial: TrialObj) {
+    super(data, deviceItem.deviceType.attributeTypes, ScopeEnum.SCOPE_TRIAL);
     this.deviceItem = deviceItem;
     this.trial = trial;
-
     this.setLocation(data.location);
-
-    // Process attributes
-    if (data.attributes) {
-      for (const attr of data.attributes) {
-        const attrType = this.deviceItem.deviceType.attributeTypes?.find(at => at.name === attr.name && at.scope === ScopeEnum.SCOPE_TRIAL);
-        if (attrType) {
-          this.attributes.push(new AttributeObj(attr, attrType));
-        }
-      }
-    }
-
     this.trackUuid = data.trackUuid || uuidv4();
   }
 
@@ -100,16 +89,14 @@ export class DeviceOnTrialObj implements IDeviceOnTrial {
     const result: IDeviceOnTrial = {
       deviceTypeName: this.deviceTypeName,
       deviceItemName: this.deviceItemName,
-      location: this.location?.toJson(includeTrackUuid)
+      location: this.location?.toJson(includeTrackUuid),
+      ...super.toJson(includeTrackUuid),
     };
     if (this.containedIn) {
       result.containedIn = {
         deviceTypeName: this.containedIn.deviceTypeName,
         deviceItemName: this.containedIn.deviceItemName
       };
-    }
-    if (this.attributes.length > 0) {
-      result.attributes = this.attributes.map(attr => attr.toJson(includeTrackUuid));
     }
     if (includeTrackUuid) {
       result.trackUuid = this.trackUuid;
