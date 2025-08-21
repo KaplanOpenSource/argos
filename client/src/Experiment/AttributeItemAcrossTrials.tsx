@@ -1,6 +1,5 @@
 import { Table, TableBody, TableCell, TableContainer, TableRow, Typography } from "@mui/material";
 import { TreeItem } from "@mui/x-tree-view";
-import { useState } from "react";
 import { useExperiments } from "../Context/useExperiments";
 import { IAttributeType, IDevice, IDeviceOnTrial, IDeviceType, IExperiment, IHasAttributes } from "../types/types";
 import { isSameDeviceItem } from "../Utils/isSameDevice";
@@ -17,7 +16,6 @@ export const AttributeItemAcrossTrials = ({
   deviceType: IDeviceType,
   experiment: IExperiment,
 }) => {
-  const [expanded, setExpanded] = useState(false);
   const { setExperiment } = useExperiments();
   return (
     <TreeItem
@@ -58,21 +56,5 @@ export const AttributeItemAcrossTrials = ({
         </Table>
       </TableContainer>
     </TreeItem>
-    //       {/* <TableRow>
-    //         <TableCell sx={{ borderBottom: 'none' }}>
-    //           <ButtonTooltip
-    //             tooltip={expanded ? "Collapse values across trials" : "Show values across trials"}
-    //             onClick={() => setExpanded(!expanded)}
-    //             style={{ margin: 0, padding: 0 }}
-    //           >
-    //             {expanded ? <ExpandMore /> : <ChevronRight />}
-    //           </ButtonTooltip>
-    //         </TableCell>
-    //       </TableRow>
-    //     </TableHead> */}
-    // {/* {expanded &&
-    //     }
-    //   </>
-    // */}
   )
 }
