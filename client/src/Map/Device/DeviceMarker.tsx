@@ -2,7 +2,6 @@ import L, { LatLng } from "leaflet";
 import { useEffect, useRef } from "react";
 import { Marker, Popup, Tooltip } from "react-leaflet";
 import { RealMapName } from "../../constants/constants";
-import { useExperimentProvider } from "../../Context/ExperimentProvider";
 import { useChosenTrial } from "../../Context/useChosenTrial";
 import { useDeviceSeletion } from "../../Context/useDeviceSeletion";
 import { useShape } from "../../EditToolBox/ShapeContext";
@@ -34,7 +33,6 @@ export const DeviceMarker = ({
   showDeviceNames: boolean,
 }) => {
   const { selection, setSelection } = useDeviceSeletion();
-  const { currTrial } = useExperimentProvider();
   const { changeTrialObj, shownMap } = useChosenTrial();
 
   const ref = useRef<L.Marker>(null);

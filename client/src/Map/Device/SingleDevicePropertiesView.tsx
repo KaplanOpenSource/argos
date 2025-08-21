@@ -1,4 +1,3 @@
-import { Delete } from '@mui/icons-material';
 import {
   Box,
   Stack, Typography
@@ -10,7 +9,6 @@ import { DeviceItemLocationButton } from '../../Experiment/DeviceItemLocationBut
 import { SelectDeviceButton } from '../../Experiment/SelectDeviceButton';
 import { DeviceOnTrialObj } from '../../objects';
 import { IDeviceOnTrial, ScopeEnum } from '../../types/types';
-import { ButtonTooltip } from '../../Utils/ButtonTooltip';
 import { ContainedDevicesList } from './ContainedDevicesList';
 import { DeviceLocationEdit } from './DeviceLocationEdit';
 
@@ -58,26 +56,15 @@ export const SingleDevicePropertiesView = ({
           changeTrialObj(draft => draft.findDevice(deviceOnTrial)?.setLocationOnMap(loc, shownMap?.name));
         }}
       />
-      {deviceItem
-        ? <Box sx={{ overflowY: 'auto', maxHeight: 300 }}>
-          <AttributeItemList
-            attributeTypes={deviceType.attributeTypes}
-            data={deviceOnTrial}
-            setData={setDeviceOnTrial}
-            scope={ScopeEnum.SCOPE_TRIAL}
-            deviceItem={deviceItem}
-          />
-        </Box>
-        : <Typography variant='body2'>
-          This device exists on trial but not on experiment, please remove.
-          <ButtonTooltip
-            tooltip={'Remove expired device from experiment'}
-            onClick={() => setDeviceOnTrial(undefined)}
-          >
-            <Delete />
-          </ButtonTooltip>
-        </Typography>
-      }
+      <Box sx={{ overflowY: 'auto', maxHeight: 300 }}>
+        <AttributeItemList
+          attributeTypes={deviceType.attributeTypes}
+          data={deviceOnTrial}
+          setData={setDeviceOnTrial}
+          scope={ScopeEnum.SCOPE_TRIAL}
+          deviceItem={deviceItem}
+        />
+      </Box>
       <Stack direction='row'>
         {deviceItem &&
           <SelectDeviceButton
