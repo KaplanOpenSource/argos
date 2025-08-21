@@ -13,7 +13,7 @@ export const Stack3 = ({
   return (
     <Stack direction='column' spacing={spacingY}>
       {children.map((_, i) => i % 3 !== 0 ? null : (<>
-        <Stack direction='row' spacing={spacingX}>
+        <Stack direction='row' spacing={spacingX} key={`stack3_row_${i}`}>
           {children.slice(i, i + 3)}
         </Stack>
       </>))}

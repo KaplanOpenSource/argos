@@ -1,7 +1,8 @@
 import { ChevronRight, ExpandMore } from "@mui/icons-material";
 import { TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
 import { useState } from "react";
-import { IAttributeType, IDevice, IDeviceType, IExperiment } from "../types/types";
+import { useChosenTrial } from "../Context/useChosenTrial";
+import { IAttributeType, IDevice, IDeviceType, IExperiment, IHasAttributes } from "../types/types";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { isSameDeviceItem } from "../Utils/isSameDevice";
 import { AttributeItem } from "./AttributeItem";
@@ -18,6 +19,7 @@ export const AttributeItemAcrossTrials = ({
   experiment: IExperiment,
 }) => {
   const [expanded, setExpanded] = useState(false);
+  const { changeChosen } = useChosenTrial();
   return (
     <>
       <TableHead>
@@ -36,10 +38,14 @@ export const AttributeItemAcrossTrials = ({
       </TableHead>
       {expanded &&
         <TableBody>
-          {experiment.trialTypes?.flatMap(tt => tt.trials?.flatMap(trial => {
-            const dev = trial.devicesOnTrial?.find(dt => isSameDeviceItem(device.name!, deviceType.name!, dt))
-            if (!dev) {
+          {experiment.trialTypes?.flatMap((tt, itt) => tt.trials?.flatMap((trial, itrial) => {
+            const idev = (trial.devicesOnTrial || []).findIndex(dt => isSameDeviceItem(device.name!, deviceType.name!, dt))
+            if (idev === -1) {
               return null;
+            }
+            const dev = trial.devicesOnTrial![idev];
+            const setDev = (v: IHasAttributes) => {
+              changeChosen(dev, v);
             }
             return (
               <TableRow hover>
@@ -50,7 +56,7 @@ export const AttributeItemAcrossTrials = ({
                   <AttributeItem
                     attrType={attrType}
                     container={dev}
-                  // setData={setData}
+                    setContainer={setDev}
                   />
                 </TableCell>
               </TableRow>

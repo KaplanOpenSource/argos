@@ -31,6 +31,7 @@ export const DeviceItem = ({
 
   return (
     <TreeRowOnChosen
+      key={data.trackUuid}
       data={data}
       components={
         <>
@@ -85,14 +86,13 @@ export const DeviceItem = ({
             .filter(attrType => attrType.scope === ScopeEnum.SCOPE_TRIAL)
             .map(attrType => {
               return (
-                <>
-                  <AttributeItemAcrossTrials
-                    attrType={attrType}
-                    device={data}
-                    deviceType={deviceType}
-                    experiment={experiment}
-                  />
-                </>
+                <AttributeItemAcrossTrials
+                  key={attrType.trackUuid}
+                  attrType={attrType}
+                  device={data}
+                  deviceType={deviceType}
+                  experiment={experiment}
+                />
               )
             })}
         </Table>
