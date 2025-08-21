@@ -1,0 +1,80 @@
+name: Deploy - create zip & upload artifact
+
+# Trigger on every push to the main branch
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-archive:
+    runs-on: ubuntu-latest
+    defaults:
+      # All commands start from the repository root
+      run:
+        working-directory: ${{ github.workspace }}
+
+    steps:
+      # 1. Checkout the repository (full history)
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # needed for `git archive`
+
+      # 2. Set up Node v20.16.0
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.16.0"
+          cache: "npm"
+
+      # 3. Upgrade npm to v10.8.1
+      - name: Install npm 10.8.1
+        run: npm i -g npm@10.8.1
+
+      # 4. Install client dependencies & build
+      - name: Install client dependencies
+        working-directory: client
+        run: npm ci
+
+      - name: Build client
+        working-directory: client
+        # If this step exits with a non‑zero status the job stops automatically
+        run: npm run build
+
+      # 5. Create the deployment zip
+      # Optional: ensure no stale archive exists (uncomment if desired)
+      # - name: Clean old archive
+      #   run: rm -f argos.zip
+
+      - name: Archive repository source
+        run: |
+          echo "Creating base archive from git HEAD"
+          git archive --format=zip -o argos.zip HEAD
+
+      - name: Record commit SHA inside the client bundle
+        run: |
+          mkdir -p client/dist
+          git rev-parse HEAD > client/dist/commit.txt
+
+      - name: Add built client files to the zip
+        run: |
+          echo "Adding client/dist/* to the archive"
+          zip -ur argos.zip client/dist/*
+
+      # 6. Upload the zip as a workflow artifact
+      - name: Upload deployment artifact
+        id: upload_artifact # give the step an ID so we can reference its outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: argos-deployment
+          path: argos.zip
+          retention-days: 30 # keep for a month (adjust as needed)
+
+      # 7. Print the download link for the artifact
+      - name: Show artifact download URL
+        if: steps.upload_artifact.outputs.artifact-url != ''
+        run: |
+          echo "Artifact uploaded successfully."
+          echo "Download link:"
+          echo "${{ steps.upload_artifact.outputs.artifact-url }}"
