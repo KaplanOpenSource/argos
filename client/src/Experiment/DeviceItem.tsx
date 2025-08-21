@@ -71,8 +71,8 @@ export const DeviceItem = ({
                 <AttributeItem
                   key={attrType.name}
                   attrType={attrType}
-                  data={data}
-                  setData={setData}
+                  container={data}
+                  setContainer={setData}
                 />
               )
             })}

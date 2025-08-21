@@ -49,7 +49,7 @@ export const AttributeItemAcrossTrials = ({
                 <TableCell sx={{ paddingY: 0, marginY: 0, borderBottom: 'none' }}>
                   <AttributeItem
                     attrType={attrType}
-                    data={dev}
+                    container={dev}
                   // setData={setData}
                   />
                 </TableCell>

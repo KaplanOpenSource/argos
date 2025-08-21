@@ -167,8 +167,8 @@ export const Trial = ({
               <AttributeItem
                 key={attrType.name}
                 attrType={attrType}
-                data={data}
-                setData={setData}
+                container={data}
+                setContainer={setData}
               />
             )
           })}

@@ -5,20 +5,20 @@ import { AttributeValue } from "./AttributeValue";
 
 export const AttributeItem = ({
   attrType,
-  data,
-  setData,
+  container,
+  setContainer,
 }: {
   attrType: IAttributeType,
-  data: IHasAttributes,
-  setData?: (v: IHasAttributes) => void,
+  container: IHasAttributes,
+  setContainer?: (v: IHasAttributes) => void,
 }) => {
-  const attr = data.attributes?.find(attr => attr.name === attrType.name);
+  const attr = container.attributes?.find(attr => attr.name === attrType.name);
   const value = (attr ? attr.value : attrType.defaultValue) ?? '';
   const setValue = (val: any) => {
-    if (setData) {
+    if (setContainer) {
       const attrValue = (val === undefined) ? undefined : { name: attrType.name, value: val };
-      const attributes = changeByName(data.attributes, attrType.name!, attrValue);
-      setData({ ...data, attributes });
+      const attributes = changeByName(container.attributes, attrType.name!, attrValue);
+      setContainer({ ...container, attributes });
     }
   }
   return (
