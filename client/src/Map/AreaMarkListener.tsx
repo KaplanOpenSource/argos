@@ -1,7 +1,11 @@
 import { DomEvent, LatLngBounds } from "leaflet";
 import { useMapEvents } from "react-leaflet";
 
-export const AreaMarkListener = ({ onAreaMarked }) => {
+export const AreaMarkListener = ({
+  onAreaMarked,
+}: {
+  onAreaMarked: ({ boxZoomBounds }: { boxZoomBounds: LatLngBounds }) => void,
+}) => {
   const mapObj = useMapEvents({
     boxzoomend: (e) => {
       DomEvent.stop(e);

@@ -1,32 +1,36 @@
 import { Box } from "@mui/material";
-import React from "react";
-import { useExperimentProvider } from "../../Context/ExperimentProvider";
+import { useChosenTrial } from "../../Context/useChosenTrial";
 import { ContainedDevice } from "../../Experiment/Contained/ContainedDevice";
+import { DeviceOnTrialObj } from "../../objects";
 
 export const ContainedDevicesList = ({
   containedDevices,
-  devicesOnTrial,
 }: {
-  containedDevices: any[],
-  devicesOnTrial: any[],
+  containedDevices: {
+    dev: DeviceOnTrialObj;
+    index: number;
+  }[],
 }) => {
-  const { currTrial, setTrialData } = useExperimentProvider();
+  const { changeTrialObj } = useChosenTrial();
 
-  return (
-    <Box sx={{ maxHeight: '300px', overflowY: 'auto' }}>
-      {containedDevices?.map(({ dev, index }) => (
-        <ContainedDevice
-          key={'contained ' + dev.deviceItemName + '_' + dev.deviceTypeName}
-          deviceItemName={dev.deviceItemName}
-          deviceTypeName={dev.deviceTypeName}
-          disconnectDevice={() => {
-            const devs = [...devicesOnTrial];
-            devs[index] = { ...dev };
-            delete devs[index].containedIn;
-            setTrialData({ ...currTrial.trial, devicesOnTrial: devs });
-          }}
-        />
-      ))}
-    </Box>
-  )
+  return containedDevices?.length > 0
+    ? (
+      <>
+        <br />
+        contains:
+        <Box sx={{ maxHeight: '300px', overflowY: 'auto' }}>
+          {containedDevices?.map(({ dev }) => (
+            <ContainedDevice
+              key={'contained ' + dev.deviceItemName + '_' + dev.deviceTypeName}
+              deviceItemName={dev.deviceItemName}
+              deviceTypeName={dev.deviceTypeName}
+              disconnectDevice={() => {
+                changeTrialObj(draft => draft.findDevice(dev)?.setContainedIn(undefined));
+              }}
+            />
+          ))}
+        </Box>
+      </>
+    )
+    : null
 }

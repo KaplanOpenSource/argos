@@ -2,37 +2,38 @@ import { BooleanProperty } from "../Property/BooleanProperty";
 import { DateProperty } from "../Property/DateProperty";
 import { DateTimeProperty } from "../Property/DateTimeProperty";
 import { SelectProperty } from "../Property/SelectProperty";
+import { IAttributeType } from "../types/types";
+import { ValueTypeEnum } from "../types/ValueTypeEnum";
 import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
 
-export const VALUE_TYPE_STRING = "String";
-export const VALUE_TYPE_NUMBER = "Number";
-export const VALUE_TYPE_DATE = "Date";
-export const VALUE_TYPE_DATE_TIME = "DateTime";
-export const VALUE_TYPE_BOOLEAN = "Boolean";
-export const VALUE_TYPE_SELECT = "Select";
-export const valueTypes = [
-  VALUE_TYPE_STRING,
-  VALUE_TYPE_NUMBER,
-  VALUE_TYPE_BOOLEAN,
-  VALUE_TYPE_DATE,
-  VALUE_TYPE_DATE_TIME,
-  VALUE_TYPE_SELECT,
-];
-export const VALUE_TYPE_DEFAULT = VALUE_TYPE_STRING;
-
-export const AttributeValue = ({ type, label, data, setData, attrType, reduceNames = false, ...restProps }) => {
+export const AttributeValue = ({
+  type,
+  label,
+  data,
+  setData,
+  attrType,
+  reduceNames = false,
+  ...restProps
+}: {
+  type: ValueTypeEnum,
+  label: string,
+  data: any,
+  setData: (val: any) => void,
+  attrType: IAttributeType,
+  reduceNames?: boolean,
+}) => {
   switch (type) {
-    case VALUE_TYPE_NUMBER:
+    case ValueTypeEnum.VALUE_TYPE_NUMBER:
       return (
         <TextFieldDebounceOutlined
           label={label}
           type="number"
-          onChange={val => setData(val === '' ? undefined : val)}
+          onChange={(val: any) => setData(val === '' ? undefined : val)}
           value={data}
           {...restProps}
         />
       )
-    case VALUE_TYPE_BOOLEAN: {
+    case ValueTypeEnum.VALUE_TYPE_BOOLEAN: {
       return (
         <BooleanProperty
           data={data}
@@ -42,7 +43,7 @@ export const AttributeValue = ({ type, label, data, setData, attrType, reduceNam
         />
       )
     }
-    case VALUE_TYPE_DATE:
+    case ValueTypeEnum.VALUE_TYPE_DATE:
       return (
         <DateProperty
           data={data}
@@ -51,7 +52,7 @@ export const AttributeValue = ({ type, label, data, setData, attrType, reduceNam
           {...restProps}
         />
       )
-    case VALUE_TYPE_DATE_TIME:
+    case ValueTypeEnum.VALUE_TYPE_DATE_TIME:
       return (
         <DateTimeProperty
           data={data}
@@ -60,7 +61,7 @@ export const AttributeValue = ({ type, label, data, setData, attrType, reduceNam
           {...restProps}
         />
       )
-    case VALUE_TYPE_SELECT: {
+    case ValueTypeEnum.VALUE_TYPE_SELECT: {
       return (
         <SelectProperty
           data={data}
@@ -73,13 +74,13 @@ export const AttributeValue = ({ type, label, data, setData, attrType, reduceNam
       )
     }
     default:
-      if (type !== VALUE_TYPE_STRING) {
+      if (type !== ValueTypeEnum.VALUE_TYPE_STRING) {
         console.log(`unknown attribute value type ${type} for ${label}`);
       }
       return (
         <TextFieldDebounceOutlined
           label={label}
-          onChange={val => setData(val)}
+          onChange={(val: string) => setData(val)}
           value={data || ''}
           {...restProps}
         />

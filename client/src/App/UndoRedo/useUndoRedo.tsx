@@ -1,7 +1,7 @@
 import { usePrevious } from '@radix-ui/react-use-previous';
 import { useEffect } from "react";
 import { create } from "zustand";
-import { useExperimentProvider } from "../../Context/ExperimentProvider";
+import { useExperiments } from '../../Context/useExperiments';
 import { IExperiment } from "../../types/types";
 import { jsonCompare, JsonOperationPack } from "../../Utils/JsonPatch";
 
@@ -85,7 +85,7 @@ const compareExperiments = (
 }
 
 export const UndoRedoHandler = () => {
-  const { experiments } = useExperimentProvider() as { experiments: IExperiment[] };
+  const { experiments } = useExperiments();
   const prevExperiments: IExperiment[] = usePrevious(experiments);
   const { trackChanges, setStacks, undoStack } = useUndoRedo();
 

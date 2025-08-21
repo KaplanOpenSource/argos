@@ -1,23 +1,38 @@
 import DeleteIcon from '@mui/icons-material/Delete';
 import { IconButton } from "@mui/material";
-import { TreeRow } from "../App/TreeRow";
-import { useExperimentProvider } from "../Context/ExperimentProvider";
-import { useCurrTrial } from "../Context/useCurrTrial";
-import { ScopeEnum } from "../types/types";
-import { AttributeItemList } from "./AttributeItemList";
+import { TreeRowOnChosen } from "../App/TreeRowOnChosen";
+import { useChosenTrial } from '../Context/useChosenTrial';
+import { useExperiments } from '../Context/useExperiments';
+import { ExperimentObj } from '../objects';
+import { IDevice, IDeviceType, IExperiment, ScopeEnum } from "../types/types";
+import { Stack3 } from '../Utils/Stack3';
+import { AttributeItem } from './AttributeItem';
+import { AttributeItemAcrossTrials } from './AttributeItemAcrossTrials';
 import { DeviceItemLocationButton } from "./DeviceItemLocationButton";
 import { SelectDeviceButton } from "./SelectDeviceButton";
 
-export const DeviceItem = ({ data, setData, deviceType, showAttributes, devicesEnclosingList, scope, experiment }) => {
-  const { currTrial, deleteDevice } = useExperimentProvider();
-
-  const { trial } = useCurrTrial({});
-  const device = trial.getDevice(deviceType.name, data.name);
+export const DeviceItem = ({
+  data,
+  setData,
+  deviceType,
+  showAttributes,
+  devicesEnclosingList,
+  experiment,
+}: {
+  data: IDevice,
+  setData?: (v: IDevice) => void,
+  deviceType: IDeviceType,
+  showAttributes: boolean,
+  devicesEnclosingList: any,
+  experiment: IExperiment,
+}) => {
+  const { setExperiment } = useExperiments();
+  const { isExperimentChosen } = useChosenTrial();
 
   return (
-    <TreeRow
+    <TreeRowOnChosen
+      key={data.trackUuid}
       data={data}
-      setData={setData}
       components={
         <>
           <SelectDeviceButton
@@ -28,7 +43,14 @@ export const DeviceItem = ({ data, setData, deviceType, showAttributes, devicesE
           {setData && experiment &&
             <IconButton
               size="small"
-              onClick={() => deleteDevice({ experimentName: experiment.name, deviceTypeName: deviceType.name, deviceItemName: data.name })}
+              onClick={() => {
+                const exp = new ExperimentObj(experiment);
+                const devtype = exp.deviceTypes.find(dt => dt.name === deviceType.name);
+                if (devtype) {
+                  devtype.devices = devtype.devices.filter(d => d.name !== data.name);
+                  setExperiment(experiment.name!, exp.toJson(true));
+                }
+              }}
             >
               <DeleteIcon />
             </IconButton>
@@ -36,21 +58,41 @@ export const DeviceItem = ({ data, setData, deviceType, showAttributes, devicesE
           <DeviceItemLocationButton
             deviceType={deviceType}
             deviceItem={data}
-            // hasLocation={device.hasLocationOnMap(currTrial?.shownMapName || RealMapName)}
             surroundingDevices={devicesEnclosingList}
           />
         </>
       }
     >
-      {currTrial.experiment && showAttributes &&
-        <AttributeItemList
-          attributeTypes={deviceType.attributeTypes}
-          data={scope === ScopeEnum.SCOPE_TRIAL ? device.onTrial() : data}
-          setData={scope === ScopeEnum.SCOPE_TRIAL ? device.setOnTrial : setData}
-          scope={scope}
-          deviceItem={scope === ScopeEnum.SCOPE_TRIAL ? data : null}
-        />
-      }
-    </TreeRow>
+      {isExperimentChosen() && showAttributes && (
+        <Stack3>
+          {(deviceType.attributeTypes || [])
+            .filter(attrType => attrType.scope === ScopeEnum.SCOPE_EXPERIMENT)
+            .map(attrType => {
+              return (
+                <AttributeItem
+                  key={attrType.name}
+                  attrType={attrType}
+                  container={data}
+                  setContainer={setData}
+                />
+              )
+            })}
+        </Stack3>
+      )}
+
+      {(deviceType.attributeTypes || [])
+        .filter(attrType => attrType.scope === ScopeEnum.SCOPE_TRIAL)
+        .map(attrType => {
+          return (
+            <AttributeItemAcrossTrials
+              key={attrType.trackUuid}
+              attrType={attrType}
+              device={data}
+              deviceType={deviceType}
+              experiment={experiment}
+            />
+          )
+        })}
+    </TreeRowOnChosen>
   )
 }

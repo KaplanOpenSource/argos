@@ -1,14 +1,16 @@
-import { Add, ChevronRight, ExpandMore } from "@mui/icons-material";
+import { ChevronRight, ExpandMore } from "@mui/icons-material";
 import { TableBody, TableCell, TableHead, TableRow, Tooltip } from "@mui/material";
 import { useState } from "react";
-import { assignUuids } from "../../Context/TrackUuidUtils";
+import { DeviceTypeObj } from "../../objects";
 import { ButtonTooltip } from "../../Utils/ButtonTooltip";
-import { createNewName } from "../../Utils/utils";
-import { AddMultipleDevices } from "../AddMultipleDevices";
-import { AttributeTypesDialogButton } from "../AttributeTypesDialogButton";
+import { shortenName } from "../../Utils/utils";
 import { DevicesTabularOneDevice } from "./DevicesTabularOneDevice";
 
-export const DevicesTabularOneType = ({ deviceType, setDeviceType }) => {
+export const DevicesTabularOneType = ({
+  deviceType,
+}: {
+  deviceType: DeviceTypeObj,
+}) => {
   const [open, setOpen] = useState(true);
   return (
     <>
@@ -31,9 +33,9 @@ export const DevicesTabularOneType = ({ deviceType, setDeviceType }) => {
             >
               {open ? <ExpandMore /> : <ChevronRight />}
             </ButtonTooltip>
-            <AttributeTypesDialogButton
+            {/* <AttributeTypesDialogButton
               data={deviceType}
-              setData={val => setDeviceType(val)}
+              setData={(val: IDeviceType) => setDeviceType(val)}
               isOfDevice={true}
             />
             <ButtonTooltip
@@ -48,10 +50,10 @@ export const DevicesTabularOneType = ({ deviceType, setDeviceType }) => {
             </ButtonTooltip>
             <AddMultipleDevices
               deviceType={deviceType}
-              addDevices={newDevices => {
+              addDevices={(newDevices: IDevice[]) => {
                 setDeviceType({ ...deviceType, devices: [...(deviceType.devices || []), ...newDevices] })
               }}
-            />
+            /> */}
           </TableCell>
           <TableCell key={':tlat'}>
             Latitude
@@ -59,24 +61,18 @@ export const DevicesTabularOneType = ({ deviceType, setDeviceType }) => {
           <TableCell key={':tlng'}>
             Longitude
           </TableCell>
-          {deviceType?.attributeTypes?.map(attrType => {
-            let shortName = attrType.name;
-            if (shortName.length > 20) {
-              shortName = shortName.substring(0, 5) + '..' + shortName.substring(shortName.length - 8);
-            }
-            return (
-              <Tooltip
+          {deviceType?.attributeTypes?.map(attrType => (
+            <Tooltip
+              key={attrType.name}
+              title={attrType.name}
+            >
+              <TableCell
                 key={attrType.name}
-                title={attrType.name}
               >
-                <TableCell
-                  key={attrType.name}
-                >
-                  {shortName}
-                </TableCell>
-              </Tooltip>
-            )
-          })}
+                {shortenName(attrType.name + '')}
+              </TableCell>
+            </Tooltip>
+          ))}
         </TableRow>
       </TableHead>
       <TableBody key={':tb_' + deviceType.name}>
@@ -84,7 +80,6 @@ export const DevicesTabularOneType = ({ deviceType, setDeviceType }) => {
           ? (
             <DevicesTabularOneDevice
               deviceType={deviceType}
-              setDeviceType={setDeviceType}
             />
           )
           : (

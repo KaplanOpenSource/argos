@@ -1,13 +1,12 @@
 import { Delete } from "@mui/icons-material"
-import { TreeRow } from "../../App/TreeRow"
+import { TreeRowOnChosen } from "../../App/TreeRowOnChosen"
 import { ButtonTooltip } from "../../Utils/ButtonTooltip"
 import { ShapeEditContent } from "./ShapeEditContent"
 
 export const ShapeItem = ({ data, setData }) => {
   return (
-    <TreeRow
+    <TreeRowOnChosen
       data={data}
-      setData={setData}
       components={
         <>
           <ButtonTooltip
@@ -23,6 +22,6 @@ export const ShapeItem = ({ data, setData }) => {
         data={data}
         setData={setData}
       />
-    </TreeRow>
+    </TreeRowOnChosen>
   )
 }

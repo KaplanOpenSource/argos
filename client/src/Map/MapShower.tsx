@@ -3,11 +3,11 @@ import 'leaflet/dist/leaflet.css';
 
 import 'leaflet-contextmenu';
 import 'leaflet-contextmenu/dist/leaflet.contextmenu.css';
-import React from 'react';
 import { AttributionControl, MapContainer, ZoomControl } from 'react-leaflet';
 import { useExperimentProvider } from '../Context/ExperimentProvider';
 import { useChosenTrial } from '../Context/useChosenTrial';
 import { useExperiments } from '../Context/useExperiments';
+import { useShowImagePlacement } from '../Context/useShowImagePlacement';
 import { DeviceIconLegend } from '../Icons/DeviceIconLegend';
 import { EmbeddedImageLayer } from './Image/EmbeddedImageLayer';
 import { StandaloneImageLayer } from './Image/StandaloneImageLayer';
@@ -19,8 +19,8 @@ L.Icon.Default.imagePath = 'leaflet-images/';
 export const MapShower = ({ children }) => {
   const {
     currTrial,
-    showImagePlacement,
   } = useExperimentProvider();
+  const { showImagePlacement } = useShowImagePlacement();
   const { setExperiment } = useExperiments();
   const { shownMap } = useChosenTrial();
 
@@ -37,7 +37,7 @@ export const MapShower = ({ children }) => {
         left: 0,
         zIndex: 0,
       }}
-      crs={shownMap() ? CRS.Simple : CRS.EPSG3857}
+      crs={shownMap ? CRS.Simple : CRS.EPSG3857}
       center={[32.081128, 34.779729]}
       zoomControl={false}
       minZoom={-6}
@@ -49,15 +49,15 @@ export const MapShower = ({ children }) => {
       />
       <MapEventer directlyOnMap={false}
         mapEvents={{
-          layeradd: (_, mapObject) => mapObject.options.crs = shownMap() ? CRS.Simple : CRS.EPSG3857
+          layeradd: (_, mapObject) => mapObject.options.crs = shownMap ? CRS.Simple : CRS.EPSG3857
         }}
       />
-      {shownMap()
+      {shownMap
         ? (
           <StandaloneImageLayer
             experiment={currTrial.experiment}
             setExperiment={setExperiment}
-            shownMap={shownMap()!}
+            shownMap={shownMap!}
             showImagePlacement={showImagePlacement}
             key={'standalone'}
           />

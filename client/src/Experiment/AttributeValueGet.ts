@@ -1,6 +1,6 @@
 import { ScopeEnum } from "../types/types";
+import { VALUE_TYPE_DEFAULT } from "../types/ValueTypeEnum";
 import { changeByName } from "../Utils/utils";
-import { VALUE_TYPE_DEFAULT } from "./AttributeValue";
 
 export const AttributeValueGet = ({
   attrType, // Type of the attribute from the container's type

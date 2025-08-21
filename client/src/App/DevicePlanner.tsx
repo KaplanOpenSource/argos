@@ -1,8 +1,9 @@
 import { Stack } from '@mui/material';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { AllExperimentsLoader } from '../Context/AllExperimentsLoader';
 import { ChosenTrialOnUrl } from '../Context/ChosenTrialOnUrl';
 import { useExperimentProvider } from '../Context/ExperimentProvider';
+import { ChosenExperimentUpdater } from '../Context/useChosenTrial';
 import { CurrMouseLocation } from '../Context/useCurrMouseLocation';
 import { ServerUpdatesHandler } from '../Context/useServerUpdates';
 import { DeviceTable } from '../DeviceTable/DeviceTable';
@@ -36,6 +37,7 @@ export function DevicePlanner() {
       <ServerUpdatesHandler />
       <UndoRedoHandler />
       <ChosenTrialOnUrl />
+      <ChosenExperimentUpdater />
       <AppHeader>
         <AppHeaderButtons
           fullscreen={fullscreen} setFullscreen={setFullscreen}

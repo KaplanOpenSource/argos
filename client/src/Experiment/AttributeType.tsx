@@ -1,14 +1,14 @@
 import DeleteIcon from '@mui/icons-material/Delete';
 import { FormControlLabel, IconButton, Switch } from "@mui/material";
 import { remove } from "lodash";
-import React from "react";
-import { TreeRow } from "../App/TreeRow";
+import { TreeRowOnChosen } from '../App/TreeRowOnChosen';
 import { useExperiments } from "../Context/useExperiments";
 import { SelectProperty } from "../Property/SelectProperty";
 import { IAttribute, IAttributeType, IExperiment, INamed, ScopeEnum } from "../types/types";
+import { VALUE_TYPE_DEFAULT, ValueTypeEnum, valueTypes } from '../types/ValueTypeEnum';
 import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
 import { AttributeTypeOptions } from "./AttributeTypeOptions";
-import { AttributeValue, VALUE_TYPE_DEFAULT, VALUE_TYPE_SELECT, valueTypes } from "./AttributeValue";
+import { AttributeValue } from "./AttributeValue";
 
 export const AttributeType = ({
   data,
@@ -54,17 +54,6 @@ export const AttributeType = ({
     }
   }
 
-  const handleRename = (v: INamed) => {
-    const experiment = structuredClone(containers.experiment as IExperiment);
-    if (experiment) {
-      getAttributeContainers(experiment,
-        (types) => types.filter(at => at.name === data.name).forEach(at => at.name = v.name),
-        (attrs) => attrs.filter(at => at.name === data.name).forEach(at => at.name = v.name),
-      );
-      setExperiment(experiment?.name!, experiment);
-    }
-  };
-
   const handleDelete = () => {
     const experiment = structuredClone(containers.experiment as IExperiment);
     if (experiment) {
@@ -77,9 +66,8 @@ export const AttributeType = ({
   };
 
   return (
-    <TreeRow
+    <TreeRowOnChosen
       data={data}
-      setData={handleRename}
       components={
         <>
           <FormControlLabel
@@ -94,13 +82,13 @@ export const AttributeType = ({
           <SelectProperty
             label="Type"
             data={data.type || VALUE_TYPE_DEFAULT}
-            setData={type => setData({ ...data, type })}
+            setData={(type: ValueTypeEnum) => setData({ ...data, type })}
             options={valueTypes.map(name => { return { name } })}
           />
           <SelectProperty
             label="Scope"
             data={data.scope === ScopeEnum.SCOPE_EXPERIMENT_ALT ? ScopeEnum.SCOPE_EXPERIMENT : (data.scope || ScopeEnum.SCOPE_TRIAL)}
-            setData={scope => setData({ ...data, scope })}
+            setData={(scope: ScopeEnum) => setData({ ...data, scope })}
             options={isOfDevice
               ? [
                 { name: ScopeEnum.SCOPE_TRIAL, tooltip: "Attribute can be changed only when device is placed on a trial" },
@@ -121,7 +109,7 @@ export const AttributeType = ({
         </>
       }
     >
-      {data.type === VALUE_TYPE_SELECT &&
+      {data.type === ValueTypeEnum.VALUE_TYPE_SELECT &&
         <AttributeTypeOptions
           data={data}
           setData={setData}
@@ -142,6 +130,6 @@ export const AttributeType = ({
         rows={1}
         sx={{ width: '100%' }}
       />
-    </TreeRow>
+    </TreeRowOnChosen>
   )
 }

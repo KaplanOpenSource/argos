@@ -2,12 +2,14 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Typography } from "@mui/material";
-import { TreeRow } from "../App/TreeRow";
+import { TreeRowOnChosen } from "../App/TreeRowOnChosen";
 import { useExperimentProvider } from "../Context/ExperimentProvider";
 import { assignUuids } from "../Context/TrackUuidUtils";
+import { useExperiments } from "../Context/useExperiments";
 import { useHiddenDeviceTypes } from "../Context/useHiddenDeviceTypes";
 import { IconPicker } from "../Icons/IconPicker";
-import { ScopeEnum } from "../types/types";
+import { ExperimentObj } from "../objects/ExperimentObj";
+import { IDevice, IDeviceType, IExperiment } from "../types/types";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { changeByName, createNewName } from "../Utils/utils";
 import { AddMultipleDevices } from "./AddMultipleDevices";
@@ -15,18 +17,27 @@ import { AttributeTypesDialogButton } from "./AttributeTypesDialogButton";
 import { DeviceItem } from "./DeviceItem";
 import { SelectDeviceTypeButton } from "./SelectDeviceTypeButton";
 
-export const DeviceType = ({ data, setData, experiment }) => {
-  const { deleteDeviceType, currTrial } = useExperimentProvider();
+export const DeviceType = ({
+  data,
+  setData,
+  experiment,
+}: {
+  data: IDeviceType,
+  setData: (v: IDeviceType) => void,
+  experiment: IExperiment,
+}) => {
+  const { currTrial } = useExperimentProvider();
+  const { setExperiment } = useExperiments();
   const { setDeviceTypeHidden, isDeviceTypeHidden } = useHiddenDeviceTypes();
 
   const devicesEnclosingList = (data.devices || []).map(item => {
     return { deviceTypeName: data.name, deviceItemName: item.name, deviceType: data, deviceItem: item };
   });
 
-  const isHidden = isDeviceTypeHidden(data.name);
+  const isHidden = isDeviceTypeHidden(data.name!);
 
   const toggleHidden = () => {
-    setDeviceTypeHidden(data.name, !isHidden);
+    setDeviceTypeHidden(data.name!, !isHidden);
   }
 
   const devicesNum = data?.devices?.length || 0;
@@ -44,18 +55,21 @@ export const DeviceType = ({ data, setData, experiment }) => {
   }
 
   return (
-    <TreeRow
+    <TreeRowOnChosen
       data={data}
-      setData={setData}
       components={
         <>
           <IconPicker
             data={data.icon || ""}
-            setData={val => setData({ ...data, icon: val })}
+            setData={(icon: string) => setData({ ...data, icon })}
           />
           <ButtonTooltip
             tooltip="Delete device type"
-            onClick={() => deleteDeviceType({ experimentName: experiment.name, deviceTypeName: data.name })}
+            onClick={() => {
+              const exp = new ExperimentObj(experiment);
+              exp.deviceTypes = exp.deviceTypes.filter(d => d.name !== data.name);
+              setExperiment(experiment.name!, exp.toJson(true));
+            }}
           >
             <DeleteIcon />
           </ButtonTooltip>
@@ -70,7 +84,7 @@ export const DeviceType = ({ data, setData, experiment }) => {
           </ButtonTooltip>
           <AddMultipleDevices
             deviceType={data}
-            addDevices={newDevices => {
+            addDevices={(newDevices: IDevice[]) => {
               setData({ ...data, devices: [...(data.devices || []), ...newDevices] })
             }}
           />
@@ -101,16 +115,15 @@ export const DeviceType = ({ data, setData, experiment }) => {
             key={itemData.trackUuid || Math.random() + ""}
             data={itemData}
             setData={newData => {
-              setData({ ...data, devices: changeByName(data.devices, itemData.name, newData) });
+              setData({ ...data, devices: changeByName(data.devices, itemData.name!, newData) });
             }}
             deviceType={data}
             showAttributes={true}
-            scope={ScopeEnum.SCOPE_EXPERIMENT}
             devicesEnclosingList={devicesEnclosingList}
             experiment={experiment}
           />
         ))
       }
-    </TreeRow>
+    </TreeRowOnChosen>
   )
 }

@@ -1,36 +1,28 @@
-import { useExperimentProvider } from "../../Context/ExperimentProvider";
+import { useChosenTrial } from "../../Context/useChosenTrial";
 import { useDeviceSeletion } from "../../Context/useDeviceSeletion";
 import { useHiddenDeviceTypes } from "../../Context/useHiddenDeviceTypes";
 import { RealMapName } from "../../constants/constants";
+import { ICoordinates } from "../../types/types";
 import { AreaMarkListener } from "../AreaMarkListener";
 import { PopupSwitchProvider } from "../PopupSwitchContext";
 import { DeviceMarker } from "./DeviceMarker";
 
-export const DeviceMarkersShown = ({ showDeviceNames }) => {
+export const DeviceMarkersShown = ({
+  showDeviceNames,
+}: {
+  showDeviceNames: boolean,
+}) => {
   const { selection, setSelection } = useDeviceSeletion();
-  const { currTrial, setTrialData } = useExperimentProvider();
+  const { trial, shownMap } = useChosenTrial();
   const { isDeviceTypeHidden } = useHiddenDeviceTypes();
 
-  const devicesOnTrial = (currTrial.trial || {}).devicesOnTrial || [];
-  const mapName = currTrial.shownMapName || RealMapName;
+  const mapName = shownMap?.name || RealMapName;
 
-  const devicesWithoutLocation = [];
-  const shownDevices = [];
-
-  for (const dev of devicesOnTrial) {
-    const { location } = dev;
-    if (!location || !location.coordinates) {
-      devicesWithoutLocation.push(dev);
-    } else if (location.name === mapName) {
-      if (!isDeviceTypeHidden(dev.deviceTypeName)) {
-        shownDevices.push(dev);
-      }
-    }
-  }
-
-  // if (devicesWithoutLocation.length) {
-  //     console.log('no locations on devices:', JSON.stringify(devicesWithoutLocation));
-  // }
+  const shownDevices = (trial?.devicesOnTrial || []).filter(dev => {
+    return dev?.location?.coordinates
+      && dev?.location?.name === mapName
+      && !isDeviceTypeHidden(dev.deviceTypeName);
+  });
 
   return (
     <>
@@ -39,15 +31,6 @@ export const DeviceMarkersShown = ({ showDeviceNames }) => {
           <DeviceMarker
             key={index}
             deviceOnTrial={deviceOnTrial}
-            setDeviceOnTrial={newDeviceData => {
-              const data = structuredClone(currTrial.trial);
-              if (newDeviceData) {
-                data.devicesOnTrial[index] = newDeviceData;
-              } else {
-                data.devicesOnTrial.splice(index, 1);
-              }
-              setTrialData(data);
-            }}
             showDeviceNames={showDeviceNames}
           />
         ))}
@@ -56,7 +39,7 @@ export const DeviceMarkersShown = ({ showDeviceNames }) => {
         onAreaMarked={({ boxZoomBounds }) => {
           const newSelection = [...selection];
           for (const { deviceItemName, deviceTypeName, location } of shownDevices) {
-            const coordinates = location.coordinates.map(x => parseFloat(x));
+            const coordinates = location!.coordinates!.map(x => parseFloat(x + '')) as ICoordinates;
             if (boxZoomBounds.contains(coordinates)) {
               const isSelected = newSelection.find(s => {
                 return s.deviceItemName === deviceItemName && s.deviceTypeName === deviceTypeName

@@ -1,0 +1,53 @@
+name: Deploy - create zip & upload artifact
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-archive:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # needed for `git archive`
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.16.0"
+      - name: Install client dependencies
+        working-directory: client
+        run: npm install
+      - name: Build client
+        working-directory: client
+        run: npm run build
+      - name: Archive repository source
+        run: |
+          echo "Creating base archive from git HEAD"
+          git archive --format=zip -o argos.zip HEAD
+      - name: Record commit SHA inside the client bundle
+        run: |
+          mkdir -p client/dist
+          git rev-parse HEAD > client/dist/commit.txt
+      - name: Add built client files to the zip
+        run: |
+          echo "Adding client/dist/* to the archive"
+          zip -ur argos.zip client/dist/*
+      - name: Commit and push to deploy branch
+        run: |
+          git config --local user.name "GitHub Action"
+          git config --local user.email "action@github.com"
+          git checkout -b deploy || git checkout deploy
+          mkdir -p deploy
+          mv argos.zip deploy/
+          git add deploy/argos.zip
+          TIMESTAMP=$(date +"%Y-%m-%d %H:%M:%S")
+          COMMIT_HASH=$(git rev-parse HEAD)
+          git commit -m "Deploy: Add argos.zip at ${TIMESTAMP} (commit: ${COMMIT_HASH})"
+          git push origin deploy
+          echo "Download link for the new zip: https://github.com/${{ github.repository }}/raw/deploy/argos.zip"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,6 +1,6 @@
 import { argosJsonVersion } from "../constants/constants";
-import { VALUE_TYPE_BOOLEAN, VALUE_TYPE_DATE_TIME, VALUE_TYPE_NUMBER, VALUE_TYPE_SELECT, VALUE_TYPE_STRING } from "../Experiment/AttributeValue";
 import { IAttribute, IAttributeType, IDevice, IDeviceOnTrial, IDeviceType, IExperiment, IImageStandalone, ITrial, ITrialType } from "../types/types";
+import { ValueTypeEnum } from "../types/ValueTypeEnum";
 
 export class ConvertExperiment {
   public readonly errors: Array<string> = [];
@@ -160,21 +160,21 @@ export class ConvertExperiment {
     switch (oldType) {
       case 'text':
       case 'textArea':
-        return VALUE_TYPE_STRING;
+        return ValueTypeEnum.VALUE_TYPE_STRING;
       case 'number':
-        return VALUE_TYPE_NUMBER;
+        return ValueTypeEnum.VALUE_TYPE_NUMBER;
       case 'boolean':
       case 'bool':
-        return VALUE_TYPE_BOOLEAN;
+        return ValueTypeEnum.VALUE_TYPE_BOOLEAN;
       case 'date':
       case 'time':
       case 'datetime':
       case 'datetime-local':
-        return VALUE_TYPE_DATE_TIME;
+        return ValueTypeEnum.VALUE_TYPE_DATE_TIME;
       case 'selectList':
-        return VALUE_TYPE_SELECT;
+        return ValueTypeEnum.VALUE_TYPE_SELECT;
       default:
-        return VALUE_TYPE_STRING;
+        return ValueTypeEnum.VALUE_TYPE_STRING;
     }
   }
 
@@ -185,7 +185,7 @@ export class ConvertExperiment {
       defaultValue: oldAttrType.defaultValue,
       type: this.convertTypeOnAttrType(oldAttrType.type),
     };
-    if (ret.type === VALUE_TYPE_SELECT) {
+    if (ret.type === ValueTypeEnum.VALUE_TYPE_SELECT) {
       ret.options = (oldAttrType.value || '').split(',').map(name => {
         return { name };
       });
@@ -204,7 +204,7 @@ export class ConvertExperiment {
       return undefined;
     }
     const newType = this.convertTypeOnAttrType(oldAttrType.type);
-    if (newType === VALUE_TYPE_BOOLEAN) {
+    if (newType === ValueTypeEnum.VALUE_TYPE_BOOLEAN) {
       val = (!val || val === 'false' || val === '0') ? false : true;
     }
     return {

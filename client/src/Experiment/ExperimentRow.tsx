@@ -3,11 +3,12 @@ import PublicIcon from '@mui/icons-material/Public';
 import { Stack } from "@mui/material";
 import { TreeRow } from "../App/TreeRow";
 import { TreeSublist } from "../App/TreeSublist";
-import { useExperimentProvider } from "../Context/ExperimentProvider";
+import { useChosenTrial } from '../Context/useChosenTrial';
 import { useExperiments } from "../Context/useExperiments";
 import { useShownMap } from "../Context/useShownMap";
 import { DownloadExperimentButton } from "../IO/DownloadExperimentButton";
 import { DateProperty } from "../Property/DateProperty";
+import { IExperiment } from '../types/types';
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
 import { changeByName } from "../Utils/utils";
@@ -17,15 +18,23 @@ import { ImageStandalone } from "./ImageStandalone";
 import { ShapeList } from "./Shape/ShapeList";
 import { TrialTypesList } from "./TrialTypesList";
 
-export const ExperimentRow = ({ data, setData, children }) => {
-  const { currTrial } = useExperimentProvider();
+export const ExperimentRow = ({
+  data,
+  setData,
+  children,
+}: {
+  data: IExperiment,
+  setData: (e: IExperiment) => void,
+  children: any,
+}) => {
+  const { experiment } = useChosenTrial();
   const { deleteExperiment } = useExperiments();
   const { switchToMap } = useShownMap({});
   return (
     <TreeRow
       data={data}
       setData={setData}
-      boldName={data === currTrial?.experiment}
+      boldName={data.name === experiment?.name}
       components={
         <>
           <DateProperty
@@ -43,7 +52,7 @@ export const ExperimentRow = ({ data, setData, children }) => {
           />
           <ButtonTooltip
             tooltip={"Delete experiment"}
-            onClick={() => deleteExperiment(data.name)}
+            onClick={() => deleteExperiment(data.name!)}
           >
             <DeleteIcon />
           </ButtonTooltip>
@@ -65,7 +74,6 @@ export const ExperimentRow = ({ data, setData, children }) => {
         data={data}
         setData={setData}
       />
-
 
       <DeviceTypesList
         data={data}

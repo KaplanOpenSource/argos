@@ -11,17 +11,19 @@ import {
 import EditLocationAltIcon from '@mui/icons-material/EditLocationAlt';
 import EditLocationOutlinedIcon from '@mui/icons-material/EditLocationOutlined';
 import {
-  Stack} from '@mui/material';
+  Stack
+} from '@mui/material';
 import { useExperimentProvider } from '../Context/ExperimentProvider';
 import { useExperiments } from '../Context/useExperiments';
+import { useShowImagePlacement } from '../Context/useShowImagePlacement';
 import { DocumentationButton } from '../Doc/DocumentationButton';
 import { UploadButton } from '../IO/UploadButton';
 import { useUploadExperiment } from '../IO/UploadExperiment';
 import { ButtonTooltip } from '../Utils/ButtonTooltip';
+import { AppHeaderExpTrial } from './AppHeaderExpTrial';
 import { AppHeaderShownMap } from './AppHeaderShownMap';
 import { ShowConfigToggles } from './ShowConfigToggles';
 import { UndoRedoButtons } from './UndoRedo/UndoRedoButtons';
-import { AppHeaderExpTrial } from './AppHeaderExpTrial';
 
 export const AppHeaderButtons = ({
   fullscreen, setFullscreen,
@@ -29,11 +31,8 @@ export const AppHeaderButtons = ({
   showAttributes, setShowAttributes,
   showDeviceNames, setShowDeviceNames
 }) => {
-  const {
-    currTrial,
-    showImagePlacement,
-    setShowImagePlacement,
-  } = useExperimentProvider();
+  const { currTrial } = useExperimentProvider();
+  const { showImagePlacement, setShowImagePlacement } = useShowImagePlacement();
 
   const { addExperiment } = useExperiments();
 

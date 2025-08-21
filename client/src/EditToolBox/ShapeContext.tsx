@@ -1,17 +1,37 @@
-import React, { createContext, useContext } from 'react';
+import { createContext, useContext, useState } from 'react';
+import { ICoordinates } from '../types/types.js';
 import { arcCurveFromPoints, lerpPoint, rectByAngle, resamplePolyline, splineCurve } from '../Utils/GeometryUtils';
 import { CHOOSE_SHAPE, FREEPOSITIONING_SHAPE, POINT_SHAPE, SELECT_SHAPE } from './utils/constants.js';
 
-export const ShapeContext = createContext(null)
+type IShapeOption = {
+  name: string;
+  noControlPoints?: boolean;
+  toLine: (points: ICoordinates[]) => ICoordinates[][];
+  toPositions: (points: ICoordinates[], amount: number) => ICoordinates[];
+  maxPoints?: undefined | number;
+};
 
-export const useShape = () => useContext(ShapeContext);
+type IShapeContextStore = {
+  shape: string;
+  setShape: React.Dispatch<React.SetStateAction<string>>;
+  rectAngle: number;
+  setRectAngle: React.Dispatch<React.SetStateAction<number>>;
+  rectRows: number;
+  setRectRows: React.Dispatch<number>;
+  shapeOptions: IShapeOption[];
+  shapeData: IShapeOption;
+};
+
+export const ShapeContext = createContext<IShapeContextStore | null>(null)
+
+export const useShape = () => useContext(ShapeContext)!;
 
 export const ShapeProvider = ({ children }) => {
-  const [shape, setShape] = React.useState(SELECT_SHAPE);
-  const [rectAngle, setRectAngle] = React.useState(0);
-  const [rectRows, setRectRows] = React.useState(3);
+  const [shape, setShape] = useState(SELECT_SHAPE);
+  const [rectAngle, setRectAngle] = useState(0);
+  const [rectRows, setRectRows] = useState(3);
 
-  const shapeOptions = [
+  const shapeOptions: IShapeOption[] = [
     {
       name: CHOOSE_SHAPE,
       noControlPoints: true,
@@ -65,7 +85,7 @@ export const ShapeProvider = ({ children }) => {
       toPositions: (points, amount, rows = rectRows, angle = rectAngle) => {
         if (points.length === 0) return [];
         const [nw, ne, se, sw] = rectByAngle(points, angle);
-        let ret = [];
+        let ret: ICoordinates[] = [];
         const cols = Math.ceil(amount / rows);
         if (rows > 1 && cols > 1) {
           for (let y = 0; y < rows; ++y) {
@@ -82,16 +102,19 @@ export const ShapeProvider = ({ children }) => {
   ];
 
   // TODO: get default shapeData in a nicer way, maybe convert shapeOptions to struct
-  const shapeData = shapeOptions.find(s => s.name === shape) || shapeOptions.find(s => s.name === CHOOSE_SHAPE);
+  const defaultShape = shapeOptions.find(s => s.name === CHOOSE_SHAPE)!;
+  const shapeData: IShapeOption = shapeOptions.find(s => s.name === shape) || defaultShape;
 
-  const store = {
+  const store: IShapeContextStore = {
     shape, setShape,
     rectAngle, setRectAngle,
     rectRows, setRectRows,
     shapeOptions, shapeData
   }
 
-  return <ShapeContext.Provider value={store}>
-    {children}
-  </ShapeContext.Provider>
+  return (
+    <ShapeContext.Provider value={store}>
+      {children}
+    </ShapeContext.Provider>
+  )
 }

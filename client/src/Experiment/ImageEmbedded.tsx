@@ -1,9 +1,10 @@
 import { EditLocationAlt, EditLocationOutlined, OpenInFull } from "@mui/icons-material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Stack } from "@mui/material";
-import React, { useContext } from "react";
-import { TreeRow } from "../App/TreeRow";
+import { useContext } from "react";
+import { TreeRowOnChosen } from "../App/TreeRowOnChosen";
 import { useExperimentProvider } from "../Context/ExperimentProvider";
+import { useShowImagePlacement } from "../Context/useShowImagePlacement";
 import { ImageOnServer } from "../IO/ImageOnServer";
 import { UploadImageButton } from "../IO/UploadImageButton";
 import { ActionsOnMapContext } from "../Map/ActionsOnMapContext";
@@ -24,14 +25,14 @@ export const ImageEmbedded = ({
   const { addActionOnMap, mapBounds } = useContext(ActionsOnMapContext)!;
   const {
     currTrial,
-    showImagePlacement,
-    setShowImagePlacement,
   } = useExperimentProvider();
+  const { showImagePlacement, setShowImagePlacement } = useShowImagePlacement();
+
+  const hasBounds = data?.latnorth && data?.lngwest && data?.latsouth && data?.lngeast;
 
   return (
-    <TreeRow
+    <TreeRowOnChosen
       data={data}
-      setData={setData}
       components={
         <>
           <ButtonTooltip
@@ -68,11 +69,13 @@ export const ImageEmbedded = ({
             }}
           />
           <ButtonTooltip
-            tooltip="Fit image to screen"
+            tooltip={"Fit image to screen" + (hasBounds ? "" : ", disabled when no bounds")}
             onClick={() => addActionOnMap((mapObject) => {
-              mapObject.fitBounds([[data.latnorth, data.lngwest], [data.latsouth, data.lngeast]]);
+              if (hasBounds) {
+                mapObject.fitBounds([[data.latnorth!, data.lngwest!], [data.latsouth!, data.lngeast!]]);
+              }
             })}
-            disabled={(data || {}).latnorth === undefined}
+            disabled={!hasBounds}
           >
             <OpenInFull />
           </ButtonTooltip>
@@ -139,6 +142,6 @@ export const ImageEmbedded = ({
           experiment={experiment}
         />
       </Stack>
-    </TreeRow>
+    </TreeRowOnChosen>
   )
 }

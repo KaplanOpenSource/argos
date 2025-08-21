@@ -4,11 +4,11 @@ import {
   Tooltip,
   Typography
 } from '@mui/material';
-import { ButtonTooltip } from '../Utils/ButtonTooltip';
-import { useChosenTrial } from '../Context/useChosenTrial';
 import { useState } from 'react';
-import { IMenuActionItem, MenuActions } from '../Utils/MenuActions';
+import { useChosenTrial } from '../Context/useChosenTrial';
 import { useExperiments } from '../Context/useExperiments';
+import { ButtonTooltip } from '../Utils/ButtonTooltip';
+import { IMenuActionItem, MenuActions } from '../Utils/MenuActions';
 
 export const AppHeaderExpTrial = () => {
   const [anchorEl, setAnchorEl] = useState<Element | null>(null);
@@ -28,12 +28,12 @@ export const AppHeaderExpTrial = () => {
   } = useExperiments();
 
   const showTrialsMenu = (e: { currentTarget: Element | null; }) => {
-    setMenuItems((trialType()?.trials || []).map(tr => {
+    setMenuItems((trialType?.trials || []).map(tr => {
       return {
         name: tr.name!,
         action: () => chooseTrial({
-          experimentName: experiment()?.name,
-          trialTypeName: trialType()?.name,
+          experimentName: experiment?.name,
+          trialTypeName: trialType?.name,
           trialName: tr.name
         }),
       };
@@ -77,20 +77,20 @@ export const AppHeaderExpTrial = () => {
                 onClick={showExperimentsMenu}
                 style={{ cursor: 'pointer' }}
               >
-                {experiment()!.name}
+                {experiment!.name}
               </Typography>
               {isTrialChosen()
                 ? <>
                   &nbsp;:&nbsp;
                   <Typography variant="body1">
-                    {trialType()!.name}
+                    {trialType!.name}
                   </Typography>
                   &nbsp;:&nbsp;
                   <Typography variant="body1"
                     onClick={showTrialsMenu}
                     style={{ cursor: 'pointer' }}
                   >
-                    {trial()!.name}
+                    {trial!.name}
                   </Typography>
                 </>
                 : null}

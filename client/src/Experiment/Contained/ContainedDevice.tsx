@@ -6,7 +6,6 @@ import {
   Paper,
   Typography
 } from '@mui/material';
-import React from 'react';
 import { usePopupSwitch } from '../../Map/PopupSwitchContext';
 import { ButtonTooltip } from '../../Utils/ButtonTooltip';
 

@@ -3,7 +3,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { Stack, Typography } from "@mui/material";
 import { sum } from "lodash";
 import { useContext, useEffect } from "react";
-import { TreeRow } from "../App/TreeRow";
+import { TreeRowOnChosen } from "../App/TreeRowOnChosen";
 import { RealMapName } from "../constants/constants";
 import { useExperimentProvider } from "../Context/ExperimentProvider";
 import { useChosenTrial } from "../Context/useChosenTrial";
@@ -13,19 +13,32 @@ import { useTrialGeoJson } from "../IO/TrialGeoJson";
 import { UploadDevicesButton } from "../IO/UploadDevices/UploadDevicesButton";
 import { ActionsOnMapContext } from "../Map/ActionsOnMapContext";
 import { DateProperty } from "../Property/DateProperty";
-import { ScopeEnum } from "../types/types";
+import { IExperiment, ITrial, ITrialType, ScopeEnum } from "../types/types";
 import { ButtonMenu } from "../Utils/ButtonMenu";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
+import { Stack3 } from "../Utils/Stack3";
 import { arraySwapItems } from "../Utils/utils";
-import { AttributeItemList } from "./AttributeItemList";
+import { AttributeItem } from "./AttributeItem";
 import { CoordsSpan } from "./CoordsSpan";
 
-export const Trial = ({ data, setData, experiment, trialType, children }) => {
+export const Trial = ({
+  data,
+  setData,
+  experiment,
+  trialType,
+  children,
+}: {
+  data: ITrial,
+  setData: (val: ITrial | undefined) => void,
+  experiment: IExperiment,
+  trialType: ITrialType,
+  children: any,
+}) => {
   const { selection } = useDeviceSeletion();
   const { currTrial, setCurrTrial } = useExperimentProvider();
   const { chooseShownMap } = useChosenTrial();
   const { downloadGeojson, downloadZipCsv } = useTrialGeoJson();
-  const { addActionOnMap } = useContext(ActionsOnMapContext);
+  const { addActionOnMap } = useContext(ActionsOnMapContext)!;
   const { setExperiment } = useExperiments();
 
   const cloneDevices = () => {
@@ -58,11 +71,11 @@ export const Trial = ({ data, setData, experiment, trialType, children }) => {
   const totalDevices = sum((experiment?.deviceTypes || []).map(x => (x?.devices || []).length));
   const placedDevices = (data.devicesOnTrial || []).length;
 
+  const isTrialChosen = data.name === currTrial?.trial?.name;
   return (
-    <TreeRow
+    <TreeRowOnChosen
       data={data}
-      setData={setData}
-      boldName={data === currTrial?.trial}
+      boldName={isTrialChosen}
       validateName={(name) => !trialType?.trials?.find(tt => tt.name === name) ? '' : 'Duplicate name'}
       components={
         <>
@@ -77,7 +90,7 @@ export const Trial = ({ data, setData, experiment, trialType, children }) => {
               setCurrTrial({ experimentName: experiment.name, trialTypeName: trialType.name, trialName: data.name });
             }}
           >
-            <Edit color={data === currTrial?.trial ? "primary" : ""} />
+            <Edit color={isTrialChosen ? "primary" : "inherit"} />
           </ButtonTooltip>
           <ButtonTooltip
             tooltip="Delete trial"
@@ -117,7 +130,7 @@ export const Trial = ({ data, setData, experiment, trialType, children }) => {
                 const i = tt.trials.findIndex(x => x.name === data.name);
                 if (i > 0) {
                   arraySwapItems(tt.trials, i - 1, i);
-                  setExperiment(exp.name, exp);
+                  setExperiment(exp.name!, exp);
                 }
               }}
             >
@@ -132,7 +145,7 @@ export const Trial = ({ data, setData, experiment, trialType, children }) => {
                 const i = tt.trials.findIndex(x => x.name === data.name);
                 if (i < tt.trials.length - 1) {
                   arraySwapItems(tt.trials, i, i + 1);
-                  setExperiment(exp.name, exp);
+                  setExperiment(exp.name!, exp);
                 }
               }}
             >
@@ -146,12 +159,20 @@ export const Trial = ({ data, setData, experiment, trialType, children }) => {
         </>
       }
     >
-      <AttributeItemList
-        attributeTypes={trialType.attributeTypes}
-        data={data}
-        setData={setData}
-        scope={ScopeEnum.SCOPE_TRIAL}
-      />
-    </TreeRow>
+      <Stack3>
+        {(trialType.attributeTypes || [])
+          .filter(attrType => attrType.scope === ScopeEnum.SCOPE_TRIAL)
+          .map(attrType => {
+            return (
+              <AttributeItem
+                key={attrType.name}
+                attrType={attrType}
+                container={data}
+                setContainer={setData}
+              />
+            )
+          })}
+      </Stack3>
+    </TreeRowOnChosen>
   )
 }

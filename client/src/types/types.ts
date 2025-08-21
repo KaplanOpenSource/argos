@@ -1,7 +1,9 @@
+import { ValueTypeEnum } from './ValueTypeEnum';
+
 export type ICoordinates = [number, number];
 export type ITrackUuid = { trackUuid?: string };
 
-export interface INamed {
+export interface INamed extends ITrackUuid {
   name?: string;
 };
 
@@ -31,7 +33,7 @@ export interface ILocation {
   coordinates?: ICoordinates;
 };
 
-export interface IDeviceTypeAndItem {
+export interface IDeviceTypeAndItem extends ITrackUuid {
   deviceTypeName: string;
   deviceItemName: string;
 }
@@ -39,6 +41,13 @@ export interface IDeviceTypeAndItem {
 export interface IAttribute extends INamed {
   value?: any;
 }
+
+// $$$$ TODO:
+// 1. on each Obj class derived from IHasAttributes implement get / set attr
+// 2. substitute AttributeValueGet with methods to(1)
+// 3. use in AttributeItemList(2)
+// 4. use the above in DeviceItem
+// 5. when some of the attrs are trial specific put on DeviceItem subtrees for each trial
 
 export interface IHasAttributes {
   attributes?: Array<IAttribute>;
@@ -80,7 +89,7 @@ export enum ScopeEnum {
 };
 
 export interface IAttributeType extends INamed {
-  type?: string;
+  type?: ValueTypeEnum;
   scope?: ScopeEnum;
   multiple?: boolean;
   required?: boolean;
@@ -92,6 +101,7 @@ export interface IAttributeType extends INamed {
 export interface IDeviceType extends INamed {
   devices?: Array<IDevice>;
   attributeTypes?: Array<IAttributeType>;
+  icon?: string;
 };
 
 export interface IExperiment extends INamed {
