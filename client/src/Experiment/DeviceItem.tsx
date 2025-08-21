@@ -1,13 +1,13 @@
 import DeleteIcon from '@mui/icons-material/Delete';
-import { IconButton, Stack, Typography } from "@mui/material";
+import { IconButton, Stack } from "@mui/material";
 import { TreeRowOnChosen } from "../App/TreeRowOnChosen";
 import { useChosenTrial } from '../Context/useChosenTrial';
 import { useExperiments } from '../Context/useExperiments';
 import { ExperimentObj } from '../objects';
 import { IDevice, IDeviceType, IExperiment, ScopeEnum } from "../types/types";
-import { isSameDeviceItem } from '../Utils/isSameDevice';
 import { Stack3 } from '../Utils/Stack3';
 import { AttributeItem } from './AttributeItem';
+import { AttributeItemAcrossTrials } from './AttributeItemAcrossTrials';
 import { DeviceItemLocationButton } from "./DeviceItemLocationButton";
 import { SelectDeviceButton } from "./SelectDeviceButton";
 
@@ -87,21 +87,12 @@ export const DeviceItem = ({
           .map(attrType => {
             return (
               <>
-                <Typography>
-                  {attrType.name}
-                </Typography>
-                {experiment.trialTypes?.flatMap(tt => tt.trials?.flatMap(trial => {
-                  const dev = trial.devicesOnTrial?.find(dt => isSameDeviceItem(data.name!, deviceType.name!, dt))
-                  if (!dev) {
-                    return null;
-                  }
-                  return (<AttributeItem
-                    attrType={attrType}
-                    data={dev}
-                  // setData={setData}
-                  />
-                  )
-                }))}
+                <AttributeItemAcrossTrials
+                  attrType={attrType}
+                  device={data}
+                  deviceType={deviceType}
+                  experiment={experiment}
+                />
               </>
             )
           })}
