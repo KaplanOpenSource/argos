@@ -18,7 +18,7 @@ import { CoordsSpan } from "./CoordsSpan";
 import { DeviceTypesList } from "./DeviceTypesList";
 import { EnclosingListSelectionContext } from "./EnclosedSelectionProvider";
 import { ExperimentRow } from "./ExperimentRow";
-import { ExperimentTreeNodesExpandedContext } from "./ExperimentTreeNodesExpandedProvider";
+import { useExperimentTreeNodesExpandedStore } from './ExperimentTreeNodesExpandedProvider';
 import { DevicesTabularView } from "./Tabular/DevicesTabularView";
 import { TrialsTabularView } from "./Tabular/TrialsTabularView";
 import { TrialTypesList } from "./TrialTypesList";
@@ -29,7 +29,7 @@ export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
   const { cloneExperiment } = useCloneExperiment();
   const { addActionOnMap } = useContext(ActionsOnMapContext)!;
   const { resetHiddenDeviceTypes } = useHiddenDeviceTypes();
-  const { expandedNodes, setExpandedNodes } = useContext(ExperimentTreeNodesExpandedContext)!;
+  const { expandedNodes, setExpandedNodes } = useExperimentTreeNodesExpandedStore();
   const { selectionOnEnclosingUuids, setSelectionOnEnclosingUuids } = useContext(EnclosingListSelectionContext)!;
 
   const findExperimentByUuid = (uuid: string | undefined) => {

@@ -1,9 +1,9 @@
 import AddIcon from '@mui/icons-material/Add';
 import { Box, IconButton, Tooltip, Typography } from "@mui/material";
 import { TreeItem } from "@mui/x-tree-view/TreeItem";
-import React, { ReactNode, useContext } from "react";
+import { ReactNode } from "react";
 import { assignUuids } from "../Context/TrackUuidUtils";
-import { ExperimentTreeNodesExpandedContext } from "../Experiment/ExperimentTreeNodesExpandedProvider";
+import { useExperimentTreeNodesExpandedStore } from "../Experiment/ExperimentTreeNodesExpandedProvider";
 import { INamed } from "../types/types";
 import { camelCaseToWords, createNewName } from "../Utils/utils";
 
@@ -28,7 +28,7 @@ export const TreeSublist = ({
   components?: ReactNode,
   children?: ReactNode,
 }) => {
-  const { addExpandedNode } = useContext(ExperimentTreeNodesExpandedContext)!;
+  const { addExpandedNode } = useExperimentTreeNodesExpandedStore();
 
   const items = data[fieldName] || [];
   const key = parentKey + '_' + fieldName;

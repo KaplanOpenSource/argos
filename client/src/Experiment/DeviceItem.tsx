@@ -2,11 +2,12 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { IconButton } from "@mui/material";
 import { TreeRowOnChosen } from "../App/TreeRowOnChosen";
 import { useChosenTrial } from '../Context/useChosenTrial';
-import { useCurrTrial } from "../Context/useCurrTrial";
 import { useExperiments } from '../Context/useExperiments';
 import { ExperimentObj } from '../objects';
 import { IDevice, IDeviceType, IExperiment, ScopeEnum } from "../types/types";
-import { AttributeItemList } from "./AttributeItemList";
+import { Stack3 } from '../Utils/Stack3';
+import { AttributeItem } from './AttributeItem';
+import { AttributeItemAcrossTrials } from './AttributeItemAcrossTrials';
 import { DeviceItemLocationButton } from "./DeviceItemLocationButton";
 import { SelectDeviceButton } from "./SelectDeviceButton";
 
@@ -16,7 +17,6 @@ export const DeviceItem = ({
   deviceType,
   showAttributes,
   devicesEnclosingList,
-  scope,
   experiment,
 }: {
   data: IDevice,
@@ -24,16 +24,14 @@ export const DeviceItem = ({
   deviceType: IDeviceType,
   showAttributes: boolean,
   devicesEnclosingList: any,
-  scope: ScopeEnum,
   experiment: IExperiment,
 }) => {
-  const { trial } = useCurrTrial({});
   const { setExperiment } = useExperiments();
   const { isExperimentChosen } = useChosenTrial();
-  const device = trial.getDevice(deviceType.name!, data.name!);
 
   return (
     <TreeRowOnChosen
+      key={data.trackUuid}
       data={data}
       components={
         <>
@@ -60,21 +58,41 @@ export const DeviceItem = ({
           <DeviceItemLocationButton
             deviceType={deviceType}
             deviceItem={data}
-            // hasLocation={device.hasLocationOnMap(currTrial?.shownMapName || RealMapName)}
             surroundingDevices={devicesEnclosingList}
           />
         </>
       }
     >
-      {isExperimentChosen() && showAttributes &&
-        <AttributeItemList
-          attributeTypes={deviceType.attributeTypes}
-          data={scope === ScopeEnum.SCOPE_TRIAL ? device.onTrial() : data}
-          setData={scope === ScopeEnum.SCOPE_TRIAL ? device.setOnTrial : setData}
-          scope={scope}
-          deviceItem={scope === ScopeEnum.SCOPE_TRIAL ? data : null}
-        />
-      }
+      {isExperimentChosen() && showAttributes && (
+        <Stack3>
+          {(deviceType.attributeTypes || [])
+            .filter(attrType => attrType.scope === ScopeEnum.SCOPE_EXPERIMENT)
+            .map(attrType => {
+              return (
+                <AttributeItem
+                  key={attrType.name}
+                  attrType={attrType}
+                  container={data}
+                  setContainer={setData}
+                />
+              )
+            })}
+        </Stack3>
+      )}
+
+      {(deviceType.attributeTypes || [])
+        .filter(attrType => attrType.scope === ScopeEnum.SCOPE_TRIAL)
+        .map(attrType => {
+          return (
+            <AttributeItemAcrossTrials
+              key={attrType.trackUuid}
+              attrType={attrType}
+              device={data}
+              deviceType={deviceType}
+              experiment={experiment}
+            />
+          )
+        })}
     </TreeRowOnChosen>
   )
 }

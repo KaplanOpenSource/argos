@@ -9,7 +9,6 @@ import ReactDOM from 'react-dom/client';
 import { App } from './App/App';
 import { ExperimentProvider } from './Context/ExperimentProvider';
 import { ShapeProvider } from './EditToolBox/ShapeContext';
-import { ExperimentTreeNodesExpandedProvider } from './Experiment/ExperimentTreeNodesExpandedProvider';
 import { ActionsOnMapProvider } from './Map/ActionsOnMapContext';
 
 // consoleErrorUniqueKeyFix();
@@ -17,15 +16,13 @@ import { ActionsOnMapProvider } from './Map/ActionsOnMapContext';
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <LocalizationProvider dateAdapter={AdapterDayjs}>
     <React.StrictMode>
-      <ExperimentTreeNodesExpandedProvider>
-        <ExperimentProvider>
-          <ActionsOnMapProvider>
-            <ShapeProvider>
-              <App />
-            </ShapeProvider>
-          </ActionsOnMapProvider>
-        </ExperimentProvider>
-      </ExperimentTreeNodesExpandedProvider>
+      <ExperimentProvider>
+        <ActionsOnMapProvider>
+          <ShapeProvider>
+            <App />
+          </ShapeProvider>
+        </ActionsOnMapProvider>
+      </ExperimentProvider>
     </React.StrictMode>
   </LocalizationProvider>
 )

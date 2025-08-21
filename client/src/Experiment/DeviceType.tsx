@@ -9,7 +9,7 @@ import { useExperiments } from "../Context/useExperiments";
 import { useHiddenDeviceTypes } from "../Context/useHiddenDeviceTypes";
 import { IconPicker } from "../Icons/IconPicker";
 import { ExperimentObj } from "../objects/ExperimentObj";
-import { IDeviceType, IExperiment, ScopeEnum } from "../types/types";
+import { IDevice, IDeviceType, IExperiment } from "../types/types";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { changeByName, createNewName } from "../Utils/utils";
 import { AddMultipleDevices } from "./AddMultipleDevices";
@@ -34,10 +34,10 @@ export const DeviceType = ({
     return { deviceTypeName: data.name, deviceItemName: item.name, deviceType: data, deviceItem: item };
   });
 
-  const isHidden = isDeviceTypeHidden(data.name);
+  const isHidden = isDeviceTypeHidden(data.name!);
 
   const toggleHidden = () => {
-    setDeviceTypeHidden(data.name, !isHidden);
+    setDeviceTypeHidden(data.name!, !isHidden);
   }
 
   const devicesNum = data?.devices?.length || 0;
@@ -57,19 +57,18 @@ export const DeviceType = ({
   return (
     <TreeRowOnChosen
       data={data}
-      setData={setData}
       components={
         <>
           <IconPicker
             data={data.icon || ""}
-            setData={val => setData({ ...data, icon: val })}
+            setData={(icon: string) => setData({ ...data, icon })}
           />
           <ButtonTooltip
             tooltip="Delete device type"
             onClick={() => {
               const exp = new ExperimentObj(experiment);
               exp.deviceTypes = exp.deviceTypes.filter(d => d.name !== data.name);
-              setExperiment(experiment.name, exp.toJson(true));
+              setExperiment(experiment.name!, exp.toJson(true));
             }}
           >
             <DeleteIcon />
@@ -85,7 +84,7 @@ export const DeviceType = ({
           </ButtonTooltip>
           <AddMultipleDevices
             deviceType={data}
-            addDevices={newDevices => {
+            addDevices={(newDevices: IDevice[]) => {
               setData({ ...data, devices: [...(data.devices || []), ...newDevices] })
             }}
           />
@@ -116,11 +115,10 @@ export const DeviceType = ({
             key={itemData.trackUuid || Math.random() + ""}
             data={itemData}
             setData={newData => {
-              setData({ ...data, devices: changeByName(data.devices, itemData.name, newData) });
+              setData({ ...data, devices: changeByName(data.devices, itemData.name!, newData) });
             }}
             deviceType={data}
             showAttributes={true}
-            scope={ScopeEnum.SCOPE_EXPERIMENT}
             devicesEnclosingList={devicesEnclosingList}
             experiment={experiment}
           />

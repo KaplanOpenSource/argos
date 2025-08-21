@@ -19,7 +19,7 @@ export class AttributeTypeObj implements IAttributeType {
     }
     this.name = data.name;
     this.type = data.type;
-    this.scope = data.scope;
+    this.scope = data.scope || ScopeEnum.SCOPE_TRIAL;
     this.multiple = data.multiple;
     this.required = data.required;
     this.defaultValue = data.defaultValue;
