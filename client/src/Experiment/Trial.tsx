@@ -161,7 +161,7 @@ export const Trial = ({
     >
       <Stack3>
         {(trialType.attributeTypes || [])
-          .filter(attrType => attrType.scope === ScopeEnum.SCOPE_TRIAL)
+          .filter(attrType => !attrType.scope || attrType.scope === ScopeEnum.SCOPE_TRIAL)
           .map(attrType => {
             return (
               <AttributeItem

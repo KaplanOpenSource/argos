@@ -88,6 +88,9 @@ export enum ScopeEnum {
   SCOPE_CONSTANT = "Constant",
 };
 
+export const ScopesForDeviceDef = [ScopeEnum.SCOPE_EXPERIMENT, ScopeEnum.SCOPE_EXPERIMENT_ALT];
+export const ScopesForTrialDef = [ScopeEnum.SCOPE_TRIAL, undefined];
+
 export interface IAttributeType extends INamed {
   type?: ValueTypeEnum;
   scope?: ScopeEnum;

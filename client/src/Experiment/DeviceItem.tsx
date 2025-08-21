@@ -4,7 +4,7 @@ import { TreeRowOnChosen } from "../App/TreeRowOnChosen";
 import { useChosenTrial } from '../Context/useChosenTrial';
 import { useExperiments } from '../Context/useExperiments';
 import { ExperimentObj } from '../objects';
-import { IDevice, IDeviceType, IExperiment, ScopeEnum } from "../types/types";
+import { IDevice, IDeviceType, IExperiment, ScopeEnum, ScopesForDeviceDef } from "../types/types";
 import { Stack3 } from '../Utils/Stack3';
 import { AttributeItem } from './AttributeItem';
 import { AttributeItemAcrossTrials } from './AttributeItemAcrossTrials';
@@ -29,6 +29,7 @@ export const DeviceItem = ({
   const { setExperiment } = useExperiments();
   const { isExperimentChosen } = useChosenTrial();
 
+  console.log(data.name, isExperimentChosen(), showAttributes, deviceType.attributeTypes)
   return (
     <TreeRowOnChosen
       key={data.trackUuid}
@@ -66,7 +67,7 @@ export const DeviceItem = ({
       {isExperimentChosen() && showAttributes && (
         <Stack3>
           {(deviceType.attributeTypes || [])
-            .filter(attrType => attrType.scope === ScopeEnum.SCOPE_EXPERIMENT)
+            .filter(attrType => ScopesForDeviceDef.find(x => x === attrType.scope))
             .map(attrType => {
               return (
                 <AttributeItem
@@ -81,7 +82,7 @@ export const DeviceItem = ({
       )}
 
       {(deviceType.attributeTypes || [])
-        .filter(attrType => attrType.scope === ScopeEnum.SCOPE_TRIAL)
+        .filter(attrType => !attrType.scope || attrType.scope === ScopeEnum.SCOPE_TRIAL)
         .map(attrType => {
           return (
             <AttributeItemAcrossTrials
