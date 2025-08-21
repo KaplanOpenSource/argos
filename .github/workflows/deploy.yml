@@ -1,6 +1,5 @@
 name: Deploy - create zip & upload artifact
 
-# Run on every push to the main branch
 on:
   push:
     branches:
@@ -9,66 +8,41 @@ on:
 jobs:
   build-and-archive:
     runs-on: ubuntu-latest
-    defaults:
-      # By default commands run from the repository root
-      run:
-        working-directory: ${{ github.workspace }}
 
     steps:
-      # 1. Checkout the repository (full history)
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0 # needed for `git archive`
-
-      # 2. Set up Node v20.16.0
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20.16.0"
-          cache: "npm"
-
-      # 3. Upgrade npm to v10.8.1
-      - name: Install npm 10.8.1
-        run: npm i -g npm@10.8.1
-
-      # 4. Install client dependencies (inside client/)
       - name: Install client dependencies
         working-directory: client
-        run: npm install # runs in ./client
-
-      # 5. Build client (inside client/)
+        run: npm install
       - name: Build client
         working-directory: client
-        # If this step exits non‑zero the job stops automatically
         run: npm run build
-
-      # 6. Create the deployment zip (root level)
       - name: Archive repository source
         run: |
           echo "Creating base archive from git HEAD"
           git archive --format=zip -o argos.zip HEAD
-
       - name: Record commit SHA inside the client bundle
         run: |
           mkdir -p client/dist
           git rev-parse HEAD > client/dist/commit.txt
-
       - name: Add built client files to the zip
         run: |
           echo "Adding client/dist/* to the archive"
           zip -ur argos.zip client/dist/*
-
-      # 7. Upload the zip as a workflow artifact
       - name: Upload deployment artifact
         id: upload_artifact
         uses: actions/upload-artifact@v4
         with:
           name: argos-deployment
           path: argos.zip
-          retention-days: 30 # keep for a month (adjust as needed)
-
-      # 8. Print the download link for the artifact
+          retention-days: 30
       - name: Show artifact download URL
         if: steps.upload_artifact.outputs.artifact-url != ''
         run: |
