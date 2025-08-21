@@ -1,5 +1,5 @@
 import DeleteIcon from '@mui/icons-material/Delete';
-import { IconButton, Table, TableContainer } from "@mui/material";
+import { IconButton } from "@mui/material";
 import { TreeRowOnChosen } from "../App/TreeRowOnChosen";
 import { useChosenTrial } from '../Context/useChosenTrial';
 import { useExperiments } from '../Context/useExperiments';
@@ -80,23 +80,19 @@ export const DeviceItem = ({
         </Stack3>
       )}
 
-      <TableContainer>
-        <Table size="small">
-          {(deviceType.attributeTypes || [])
-            .filter(attrType => attrType.scope === ScopeEnum.SCOPE_TRIAL)
-            .map(attrType => {
-              return (
-                <AttributeItemAcrossTrials
-                  key={attrType.trackUuid}
-                  attrType={attrType}
-                  device={data}
-                  deviceType={deviceType}
-                  experiment={experiment}
-                />
-              )
-            })}
-        </Table>
-      </TableContainer>
+      {(deviceType.attributeTypes || [])
+        .filter(attrType => attrType.scope === ScopeEnum.SCOPE_TRIAL)
+        .map(attrType => {
+          return (
+            <AttributeItemAcrossTrials
+              key={attrType.trackUuid}
+              attrType={attrType}
+              device={data}
+              deviceType={deviceType}
+              experiment={experiment}
+            />
+          )
+        })}
     </TreeRowOnChosen>
   )
 }
