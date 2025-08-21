@@ -36,16 +36,18 @@ jobs:
         run: |
           echo "Adding client/dist/* to the archive"
           zip -ur argos.zip client/dist/*
-      - name: Upload deployment artifact
-        id: upload_artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: argos-deployment
-          path: argos.zip
-          retention-days: 30
-      - name: Show artifact download URL
-        if: steps.upload_artifact.outputs.artifact-url != ''
+      - name: Commit and push to deploy branch
         run: |
-          echo "Artifact uploaded successfully."
-          echo "Download link:"
-          echo "${{ steps.upload_artifact.outputs.artifact-url }}"
+          git config --local user.name "GitHub Action"
+          git config --local user.email "action@github.com"
+          git checkout -b deploy || git checkout deploy
+          mkdir -p deploy
+          mv argos.zip deploy/
+          git add deploy/argos.zip
+          TIMESTAMP=$(date +"%Y-%m-%d %H:%M:%S")
+          COMMIT_HASH=$(git rev-parse HEAD)
+          git commit -m "Deploy: Add argos.zip at ${TIMESTAMP} (commit: ${COMMIT_HASH})"
+          git push origin deploy
+          echo "Download link for the new zip: https://github.com/${{ github.repository }}/raw/deploy/argos.zip"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
