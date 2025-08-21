@@ -1,8 +1,8 @@
 import { ChevronRight, ExpandMore } from "@mui/icons-material";
 import { TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
 import { useState } from "react";
-import { useChosenTrial } from "../Context/useChosenTrial";
-import { IAttributeType, IDevice, IDeviceType, IExperiment, IHasAttributes } from "../types/types";
+import { useExperiments } from "../Context/useExperiments";
+import { IAttributeType, IDevice, IDeviceOnTrial, IDeviceType, IExperiment, IHasAttributes } from "../types/types";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { isSameDeviceItem } from "../Utils/isSameDevice";
 import { AttributeItem } from "./AttributeItem";
@@ -19,7 +19,7 @@ export const AttributeItemAcrossTrials = ({
   experiment: IExperiment,
 }) => {
   const [expanded, setExpanded] = useState(false);
-  const { changeChosen } = useChosenTrial();
+  const { setExperiment } = useExperiments();
   return (
     <>
       <TableHead>
@@ -45,10 +45,12 @@ export const AttributeItemAcrossTrials = ({
             }
             const dev = trial.devicesOnTrial![idev];
             const setDev = (v: IHasAttributes) => {
-              changeChosen(dev, v);
+              const e = structuredClone(experiment);
+              e.trialTypes![itt].trials![itrial].devicesOnTrial![idev] = v as IDeviceOnTrial;
+              setExperiment(experiment.name!, e);
             }
             return (
-              <TableRow hover>
+              <TableRow hover key={trial.name}>
                 <TableCell sx={{ paddingY: 0, marginY: 0, borderBottom: 'none' }}>
                   <Typography>{trial.name}</Typography>
                 </TableCell>
