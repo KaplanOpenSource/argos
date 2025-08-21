@@ -1,5 +1,6 @@
 import { Stack } from "@mui/material"
-import { ReactNode } from "react"
+import { chunk } from "lodash"
+import { Fragment, ReactNode } from "react"
 
 export const Stack3 = ({
   spacingX = 1,
@@ -10,13 +11,18 @@ export const Stack3 = ({
   spacingY?: number,
   children: ReactNode[]
 }) => {
+  const groups = chunk(children.map((x, i) => ({ node: x, index: i })), 3);
   return (
     <Stack direction='column' spacing={spacingY}>
-      {children.map((_, i) => i % 3 !== 0 ? null : (<>
+      {groups.map((group, i) => (
         <Stack direction='row' spacing={spacingX} key={`stack3_row_${i}`}>
-          {children.slice(i, i + 3)}
+          {group.map(({ node, index }) => (
+            <Fragment key={`stack3_${index}`}>
+              {node}
+            </Fragment>
+          ))}
         </Stack>
-      </>))}
+      ))}
     </Stack>
   )
 }
