@@ -26,7 +26,11 @@ export const AttributeItemAcrossTrials = ({
     <TreeItem
       key={key}
       nodeId={key}
-      label={attrType.name}
+      label={
+        <Typography sx={{ margin: 1 }}>
+          {attrType.name}
+        </Typography>
+      }
     >
       <TableContainer sx={{ paddingTop: 1 }}>
         <Table size="small">
