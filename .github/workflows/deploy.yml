@@ -1,6 +1,6 @@
 name: Deploy - create zip & upload artifact
 
-# Trigger on every push to the main branch
+# Run on every push to the main branch
 on:
   push:
     branches:
@@ -10,7 +10,7 @@ jobs:
   build-and-archive:
     runs-on: ubuntu-latest
     defaults:
-      # All commands start from the repository root
+      # By default commands run from the repository root
       run:
         working-directory: ${{ github.workspace }}
 
@@ -32,21 +32,18 @@ jobs:
       - name: Install npm 10.8.1
         run: npm i -g npm@10.8.1
 
-      # 4. Install client dependencies & build
+      # 4. Install client dependencies (inside client/)
       - name: Install client dependencies
         working-directory: client
-        run: npm ci
+        run: npm install # runs in ./client
 
+      # 5. Build client (inside client/)
       - name: Build client
         working-directory: client
-        # If this step exits with a non‑zero status the job stops automatically
+        # If this step exits non‑zero the job stops automatically
         run: npm run build
 
-      # 5. Create the deployment zip
-      # Optional: ensure no stale archive exists (uncomment if desired)
-      # - name: Clean old archive
-      #   run: rm -f argos.zip
-
+      # 6. Create the deployment zip (root level)
       - name: Archive repository source
         run: |
           echo "Creating base archive from git HEAD"
@@ -62,16 +59,16 @@ jobs:
           echo "Adding client/dist/* to the archive"
           zip -ur argos.zip client/dist/*
 
-      # 6. Upload the zip as a workflow artifact
+      # 7. Upload the zip as a workflow artifact
       - name: Upload deployment artifact
-        id: upload_artifact # give the step an ID so we can reference its outputs
+        id: upload_artifact
         uses: actions/upload-artifact@v4
         with:
           name: argos-deployment
           path: argos.zip
           retention-days: 30 # keep for a month (adjust as needed)
 
-      # 7. Print the download link for the artifact
+      # 8. Print the download link for the artifact
       - name: Show artifact download URL
         if: steps.upload_artifact.outputs.artifact-url != ''
         run: |
