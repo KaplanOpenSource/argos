@@ -15,7 +15,7 @@ export class HasAttributesObj implements IHasAttributes {
   ) {
     this.scope = scopeToScopeGood(scopeRaw);
     for (const attr of data.attributes || []) {
-      const attrType = this.attributeTypes?.find(at => at.name === attr.name && at.scope === this.scope);
+      const attrType = this.attributeTypes.find(at => at.name === attr.name && at.scope === this.scope);
       if (attrType) {
         this.attributes.push(new AttributeObj(attr, attrType, this));
       }

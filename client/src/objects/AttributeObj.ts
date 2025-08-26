@@ -10,7 +10,7 @@ export class AttributeObj implements IAttribute {
   constructor(
     data: IAttribute,
     private attrType: AttributeTypeObj,
-    private container: HasAttributesObj,
+    public container: HasAttributesObj,
   ) {
     this.value = data.value;
     this.trackUuid = data.trackUuid || uuidv4();
