@@ -1,5 +1,5 @@
-import { useChosenTrial } from "../Context/useChosenTrial";
-import { AttributeTypeObj, DeviceOnTrialObj } from "../objects";
+import { useExperiments } from "../Context/useExperiments";
+import { AttributeTypeObj, DeviceOnTrialObj, ExperimentObj } from "../objects";
 import { AttributeValue } from "./AttributeValue";
 
 export const AttributeItemOnTrial = ({
@@ -9,18 +9,19 @@ export const AttributeItemOnTrial = ({
   attrType: AttributeTypeObj,
   deviceOnTrial: DeviceOnTrialObj,
 }) => {
-  const { changeTrialObj } = useChosenTrial();
+  const { setExperiment } = useExperiments();
 
   const deviceItem = deviceOnTrial.deviceItem;
   const editable = attrType.isEditable(deviceOnTrial);
   const setValue = (val: any) => {
     if (editable) {
-      changeTrialObj(draft => {
-        const dev = draft.findDevice(deviceOnTrial);
-        if (dev) {
-          dev.setAttribute(attrType, val);
-        }
-      });
+      const exp = new ExperimentObj(deviceOnTrial.trial.trialType.experiment!);
+      const trial = exp?.findTrial(deviceOnTrial.trial);
+      const dev = trial?.findDevice(deviceOnTrial);
+      if (dev) {
+        dev.setAttribute(attrType, val);
+      }
+      setExperiment(exp.name, exp.toJson(true));
     }
   }
 

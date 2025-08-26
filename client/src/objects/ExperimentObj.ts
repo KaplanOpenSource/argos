@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { DeviceTypeObj, ImageEmbeddedObj, ImageStandaloneObj, ShapeObj, TrialTypeObj } from '.';
+import { DeviceTypeObj, ImageEmbeddedObj, ImageStandaloneObj, ShapeObj, TrialObj, TrialTypeObj } from '.';
 import { IExperiment } from '../types/types';
 import { ExperimentChange } from './ExperimentChange';
 
@@ -44,6 +44,13 @@ export class ExperimentObj implements IExperiment {
 
   getDeviceCount(): number {
     return this.deviceTypes.reduce((sum, type) => sum + type.devices.length, 0);
+  }
+
+  /** Find the trial with the same name even though it might be from another context */
+  findTrial(trial: TrialObj): TrialObj | undefined {
+    const trialType = this.trialTypes.find(tt => tt.name === trial.trialType.name);
+    const foundTrial = trialType?.trials.find(tr => tr.name === trial.name);
+    return foundTrial;
   }
 
   toJson(includeTrackUuid: boolean = false): IExperiment {
