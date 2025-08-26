@@ -1,4 +1,5 @@
-import { IHasAttributes, ScopeEnum } from '../types/types';
+import { ScopeEnum } from '../types/ScopeEnum';
+import { IHasAttributes } from '../types/types';
 import { AttributeObj } from './AttributeObj';
 import { AttributeTypeObj } from './AttributeTypeObj';
 

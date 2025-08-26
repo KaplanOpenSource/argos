@@ -7,7 +7,7 @@ import { useExperimentProvider } from "../Context/ExperimentProvider";
 import { useDeviceSeletion } from "../Context/useDeviceSeletion";
 import { DeviceItem } from "../Experiment/DeviceItem";
 import { EnclosingListSelectionContext } from "../Experiment/EnclosedSelectionProvider";
-import { ScopeEnum } from "../types/types";
+import { ScopeEnum } from '../types/ScopeEnum';
 
 export const DeviceTableRich = ({ }) => {
   const {

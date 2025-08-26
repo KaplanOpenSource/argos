@@ -1,5 +1,5 @@
 import { RealMapName } from "../../constants/constants";
-import { ScopeEnum } from "../../types/types";
+import { ScopeEnum } from '../../types/ScopeEnum';
 import { FIELD_LATITUDE, FIELD_LONGITUDE, FIELD_MAPNAME, FIELD_NAME, FIELD_TYPE, FIELD_UNASSIGNED } from "./uploadDefs";
 
 export const changeDeviceOnTrial = (

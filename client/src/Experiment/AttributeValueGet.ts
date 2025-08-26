@@ -1,4 +1,4 @@
-import { ScopeEnum } from "../types/types";
+import { ScopeEnum } from '../types/ScopeEnum';
 import { VALUE_TYPE_DEFAULT } from "../types/ValueTypeEnum";
 import { changeByName } from "../Utils/utils";
 

@@ -1,6 +1,7 @@
 import { useChosenTrial } from "../../Context/useChosenTrial";
 import { DeviceItemObj, DeviceOnTrialObj, DeviceTypeObj } from "../../objects";
-import { IDevice, IDeviceOnTrial, ScopeEnum } from "../../types/types";
+import { ScopeEnum } from '../../types/ScopeEnum';
+import { IDevice, IDeviceOnTrial } from "../../types/types";
 import { AttributeItemOne } from "../AttributeItemList";
 
 export const DevicesTabularOneAttr = ({

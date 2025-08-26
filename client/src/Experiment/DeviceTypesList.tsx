@@ -2,7 +2,8 @@ import { Typography } from "@mui/material";
 import { sum } from "lodash";
 import { TreeSublist } from "../App/TreeSublist";
 import { changeByName } from "../Utils/utils";
-import { IExperiment, ScopeEnum } from "../types/types";
+import { ScopeEnum } from '../types/ScopeEnum';
+import { IExperiment } from "../types/types";
 import { DeviceType } from "./DeviceType";
 
 export const DeviceTypesList = ({

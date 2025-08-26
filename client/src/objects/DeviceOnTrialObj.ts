@@ -1,7 +1,8 @@
 import { v4 as uuidv4 } from 'uuid';
 import { DeviceItemObj, LocationObj, TrialObj } from '.';
 import { RealMapName } from '../constants/constants';
-import { ICoordinates, IDeviceOnTrial, IDeviceTypeAndItem, ILocation, ScopeEnum } from '../types/types';
+import { ScopeEnum } from '../types/ScopeEnum';
+import { ICoordinates, IDeviceOnTrial, IDeviceTypeAndItem, ILocation } from '../types/types';
 import { isSameDevice } from '../Utils/isSameDevice';
 import { HasAttributesObj } from './HasAttributesObj';
 

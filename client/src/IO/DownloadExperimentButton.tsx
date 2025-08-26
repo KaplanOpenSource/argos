@@ -9,7 +9,7 @@ import { isEqual } from "lodash";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { cleanUuids } from "../Context/TrackUuidUtils";
 import { MARKER_DEFAULT_ICON } from "../Icons/IconPicker";
-import { ScopeEnum } from "../types/types";
+import { ScopeEnum } from '../types/ScopeEnum';
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { shapesToGeoJSON } from "./ShapesToGeoJson";
 import { useDownloadImage } from "./useDownloadImage";

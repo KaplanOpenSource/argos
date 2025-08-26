@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
-import { IAttributeType, ISelectOption, ScopeEnum } from '../types/types';
+import { ScopeEnum } from '../types/ScopeEnum';
+import { IAttributeType, ISelectOption } from '../types/types';
 import { ValueTypeEnum } from '../types/ValueTypeEnum';
 
 export class AttributeTypeObj implements IAttributeType {

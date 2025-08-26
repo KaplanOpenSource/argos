@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { DeviceTypeObj } from '.';
-import { IDevice, IDeviceTypeAndItem, ScopeEnum } from '../types/types';
+import { ScopeEnum } from '../types/ScopeEnum';
+import { IDevice, IDeviceTypeAndItem } from '../types/types';
 import { HasAttributesObj } from './HasAttributesObj';
 
 export class DeviceItemObj extends HasAttributesObj implements IDevice {

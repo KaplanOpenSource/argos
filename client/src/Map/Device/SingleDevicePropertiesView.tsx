@@ -8,7 +8,8 @@ import { AddContainedButton } from '../../Experiment/Contained/AddContainedButto
 import { DeviceItemLocationButton } from '../../Experiment/DeviceItemLocationButton';
 import { SelectDeviceButton } from '../../Experiment/SelectDeviceButton';
 import { DeviceOnTrialObj } from '../../objects';
-import { IDeviceOnTrial, ScopeEnum } from '../../types/types';
+import { ScopeEnum } from '../../types/ScopeEnum';
+import { IDeviceOnTrial } from '../../types/types';
 import { ContainedDevicesList } from './ContainedDevicesList';
 import { DeviceLocationEdit } from './DeviceLocationEdit';
 

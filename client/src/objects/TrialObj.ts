@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { DeviceItemObj, DeviceOnTrialObj, DeviceTypeObj, TrialTypeObj } from '.';
-import { ICoordinates, IDeviceOnTrial, IDeviceTypeAndItem, ITrial, ScopeEnum } from '../types/types';
+import { ScopeEnum } from '../types/ScopeEnum';
+import { ICoordinates, IDeviceOnTrial, IDeviceTypeAndItem, ITrial } from '../types/types';
 import { isSameDevice } from '../Utils/isSameDevice';
 import { HasAttributesObj } from './HasAttributesObj';
 

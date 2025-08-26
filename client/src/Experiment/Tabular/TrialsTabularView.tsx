@@ -5,7 +5,8 @@ import { useChosenTrial } from "../../Context/useChosenTrial";
 import { DateProperty } from "../../Property/DateProperty";
 import { shortenName } from "../../Utils/utils";
 import { TrialObj } from "../../objects";
-import { ITrial, ScopeEnum } from "../../types/types";
+import { ScopeEnum } from '../../types/ScopeEnum';
+import { ITrial } from "../../types/types";
 import { AttributeItemOne } from "../AttributeItemList";
 
 export const TrialsTabularView = ({ }) => {

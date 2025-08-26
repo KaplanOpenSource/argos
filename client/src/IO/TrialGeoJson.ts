@@ -3,7 +3,7 @@ import { saveAs } from 'file-saver';
 import JSZip from "jszip";
 import { useCallback } from "react";
 import { AttributeValueGet } from "../Experiment/AttributeValueGet";
-import { ScopeEnum } from "../types/types";
+import { ScopeEnum } from '../types/ScopeEnum';
 import { SaveJson } from "./FileIo";
 
 export const useTrialGeoJson = () => {
