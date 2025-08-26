@@ -22,6 +22,14 @@ export class HasAttributesObj implements IHasAttributes {
     }
   }
 
+  findAttr(attrTypeName: string): AttributeObj | undefined {
+    return this.attributes.find(at => at.name === attrTypeName);
+  }
+
+  findAttrType(attrTypeName: string): AttributeTypeObj | undefined {
+    return this.attributeTypes.find(at => at.name === attrTypeName);
+  }
+
   toJson(includeTrackUuid: boolean = false): IHasAttributes {
     const result: IHasAttributes = {};
 

@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { ScopeEnumGood, scopeToScopeGood } from '../types/ScopeEnum';
 import { IAttributeType, ISelectOption } from '../types/types';
 import { ValueTypeEnum } from '../types/ValueTypeEnum';
+import { HasAttributesObj } from './HasAttributesObj';
 
 export class AttributeTypeObj implements IAttributeType {
   name: string;
@@ -27,6 +28,16 @@ export class AttributeTypeObj implements IAttributeType {
     this.description = data.description;
     this.options = data.options || [];
     this.trackUuid = data.trackUuid || uuidv4();
+  }
+
+  isEditable(container: HasAttributesObj): boolean {
+    return container.scope === this.scope;
+  }
+
+  tooltip(container: HasAttributesObj): string {
+    return this.isEditable(container)
+      ? `Attribute "${this.name}" can be updated here on ${this.scope} level`
+      : `Attribute "${this.name}" can be updated only on ${this.scope} level (this is the ${container.scope} level)`;
   }
 
   toJson(includeTrackUuid: boolean = false): IAttributeType {

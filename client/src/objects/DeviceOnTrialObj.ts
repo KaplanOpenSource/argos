@@ -34,12 +34,8 @@ export class DeviceOnTrialObj extends HasAttributesObj implements IDeviceOnTrial
   }
 
   setContainedIn(containedIn?: IDeviceTypeAndItem) {
-    this.containedIn = this.trial?.devicesOnTrial?.find(d =>
-      d.deviceTypeName === containedIn?.deviceTypeName &&
-      d.deviceItemName === containedIn?.deviceItemName
-    );
+    this.containedIn = this.trial?.findDevice(containedIn);
     this.location = undefined;
-    // TODO: not sure if to add to trial, check
   }
 
   setLocation(location: ILocation | undefined) {
