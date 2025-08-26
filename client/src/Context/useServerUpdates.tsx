@@ -13,6 +13,7 @@ interface ServerUpdatesStore {
 export const useServerUpdates = create<ServerUpdatesStore>()((set, get) => ({
   serverUpdates: [],
   sendUpdate: (name: string, exp: IExperiment | undefined) => {
+    console.log('update:', name, exp);
     set(prev => ({ ...prev, serverUpdates: [...prev.serverUpdates, { name, exp }] }))
   },
   clearUpdates: () => {

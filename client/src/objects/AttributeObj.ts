@@ -1,5 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
-import { IAttribute, IAttributeType } from '../types/types';
+import { IAttribute } from '../types/types';
+import { AttributeTypeObj } from './AttributeTypeObj';
+import { HasAttributesObj } from './HasAttributesObj';
 
 export class AttributeObj implements IAttribute {
   value?: any;
@@ -7,9 +9,9 @@ export class AttributeObj implements IAttribute {
 
   constructor(
     data: IAttribute,
-    private attrType: IAttributeType,
+    private attrType: AttributeTypeObj,
+    private container: HasAttributesObj,
   ) {
-    this.attrType = attrType;
     this.value = data.value;
     this.trackUuid = data.trackUuid || uuidv4();
   }
