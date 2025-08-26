@@ -1,12 +1,12 @@
 import { v4 as uuidv4 } from 'uuid';
 import { ScopeEnumGood, scopeToScopeGood } from '../types/ScopeEnum';
 import { IAttributeType, ISelectOption } from '../types/types';
-import { ValueTypeEnum } from '../types/ValueTypeEnum';
+import { VALUE_TYPE_DEFAULT, ValueTypeEnum } from '../types/ValueTypeEnum';
 import { HasAttributesObj } from './HasAttributesObj';
 
 export class AttributeTypeObj implements IAttributeType {
   name: string;
-  type?: ValueTypeEnum;
+  type: ValueTypeEnum;
   scope: ScopeEnumGood;
   multiple?: boolean;
   required?: boolean;
@@ -20,7 +20,7 @@ export class AttributeTypeObj implements IAttributeType {
       throw new Error('AttributeType name is required');
     }
     this.name = data.name;
-    this.type = data.type;
+    this.type = data.type || VALUE_TYPE_DEFAULT;
     this.scope = scopeToScopeGood(data.scope);
     this.multiple = data.multiple;
     this.required = data.required;

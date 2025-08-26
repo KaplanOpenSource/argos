@@ -3,12 +3,12 @@ import {
   Stack, Typography
 } from '@mui/material';
 import { useChosenTrial } from '../../Context/useChosenTrial';
-import { AttributeItemList } from '../../Experiment/AttributeItemList';
+import { useExperiments } from '../../Context/useExperiments';
+import { AttributeValue } from '../../Experiment/AttributeValue';
 import { AddContainedButton } from '../../Experiment/Contained/AddContainedButton';
 import { DeviceItemLocationButton } from '../../Experiment/DeviceItemLocationButton';
 import { SelectDeviceButton } from '../../Experiment/SelectDeviceButton';
 import { DeviceOnTrialObj } from '../../objects';
-import { ScopeEnum } from '../../types/ScopeEnum';
 import { IDeviceOnTrial } from '../../types/types';
 import { ContainedDevicesList } from './ContainedDevicesList';
 import { DeviceLocationEdit } from './DeviceLocationEdit';
@@ -21,7 +21,8 @@ export const SingleDevicePropertiesView = ({
   children?: any,
 }) => {
   const { deviceTypeName, deviceItemName } = deviceOnTrial;
-  const { shownMap, changeTrialObj } = useChosenTrial();
+  const { shownMap, changeTrialObj, experiment } = useChosenTrial();
+  const { setExperiment } = useExperiments();
 
   const deviceItem = deviceOnTrial.deviceItem;
   const deviceType = deviceItem.deviceType;
@@ -58,13 +59,29 @@ export const SingleDevicePropertiesView = ({
         }}
       />
       <Box sx={{ overflowY: 'auto', maxHeight: 300 }}>
-        <AttributeItemList
-          attributeTypes={deviceType.attributeTypes}
-          data={deviceOnTrial}
-          setData={setDeviceOnTrial}
-          scope={ScopeEnum.SCOPE_TRIAL}
-          deviceItem={deviceItem}
-        />
+        {deviceItem.deviceType.attributeTypes.map(attrType => {
+          const editable = attrType.isEditable(deviceOnTrial);
+          const setValue = (val: any) => {
+            changeTrialObj(draft => {
+              const dev = draft.findDevice(deviceOnTrial);
+              if (dev) {
+                dev.setAttribute(attrType, val);
+              }
+            });
+          }
+          return (
+            <AttributeValue
+              key={attrType.name}
+              label={attrType.name}
+              type={attrType.type}
+              attrType={attrType}
+              data={deviceItem.getAttributeValue(attrType, deviceOnTrial.trial, deviceOnTrial)}
+              setData={!editable ? undefined : setValue}
+              disabled={!editable}
+              tooltipTitle={attrType.tooltip(deviceOnTrial)}
+            />
+          )
+        })}
       </Box>
       <Stack direction='row'>
         {deviceItem &&
