@@ -97,7 +97,7 @@ export class TrialObj extends HasAttributesObj implements ITrial {
   }
 
   setDeviceLocation(
-    name: IDeviceOnTrial,
+    name: IDeviceTypeAndItem,
     coordinates: ICoordinates | undefined,
     mapName?: string,
     containedIn?: IDeviceTypeAndItem,
