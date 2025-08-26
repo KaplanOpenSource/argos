@@ -16,6 +16,7 @@ import { DateProperty } from "../Property/DateProperty";
 import { IExperiment, ITrial, ITrialType, ScopeEnum } from "../types/types";
 import { ButtonMenu } from "../Utils/ButtonMenu";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
+import { intersectDeviceLists, unionDeviceLists } from "../Utils/isSameDevice";
 import { Stack3 } from "../Utils/Stack3";
 import { arraySwapItems } from "../Utils/utils";
 import { AttributeItem } from "./AttributeItem";
@@ -36,22 +37,14 @@ export const Trial = ({
 }) => {
   const { selection } = useDeviceSeletion();
   const { currTrial, setCurrTrial } = useExperimentProvider();
-  const { chooseShownMap } = useChosenTrial();
+  const { chooseShownMap, trial } = useChosenTrial();
   const { downloadGeojson, downloadZipCsv } = useTrialGeoJson();
   const { addActionOnMap } = useContext(ActionsOnMapContext)!;
   const { setExperiment } = useExperiments();
 
   const cloneDevices = () => {
-    const devicesOnTrial = [...(data.devicesOnTrial || [])];
-    const devicesOnTrialCurr = [...(currTrial.trial.devicesOnTrial || [])];
-    for (const { deviceTypeName, deviceItemName } of selection) {
-      if (!devicesOnTrial.find(t => t.deviceItemName === deviceItemName && t.deviceTypeName === deviceTypeName)) {
-        const dev = devicesOnTrialCurr.find(t => t.deviceItemName === deviceItemName && t.deviceTypeName === deviceTypeName);
-        if (dev) {
-          devicesOnTrial.push(dev);
-        }
-      }
-    }
+    const selectedDevices = intersectDeviceLists(trial?.devicesOnTrial || [], selection);
+    const devicesOnTrial = unionDeviceLists(data.devicesOnTrial || [], selectedDevices.map(d => d.toJson()));
     setData({ ...data, devicesOnTrial });
   }
 
