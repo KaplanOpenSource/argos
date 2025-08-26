@@ -3,7 +3,7 @@ import {
   Stack, Typography
 } from '@mui/material';
 import { useChosenTrial } from '../../Context/useChosenTrial';
-import { AttributeValue } from '../../Experiment/AttributeValue';
+import { AttributeItemOnTrial } from '../../Experiment/AttributeItemOnTrial';
 import { AddContainedButton } from '../../Experiment/Contained/AddContainedButton';
 import { DeviceItemLocationButton } from '../../Experiment/DeviceItemLocationButton';
 import { SelectDeviceButton } from '../../Experiment/SelectDeviceButton';
@@ -42,29 +42,13 @@ export const SingleDevicePropertiesView = ({
         }}
       />
       <Box sx={{ overflowY: 'auto', maxHeight: 300 }}>
-        {deviceItem.deviceType.attributeTypes.map(attrType => {
-          const editable = attrType.isEditable(deviceOnTrial);
-          const setValue = (val: any) => {
-            changeTrialObj(draft => {
-              const dev = draft.findDevice(deviceOnTrial);
-              if (dev) {
-                dev.setAttribute(attrType, val);
-              }
-            });
-          }
-          return (
-            <AttributeValue
-              key={attrType.name}
-              label={attrType.name}
-              type={attrType.type}
-              attrType={attrType}
-              data={deviceItem.getAttributeValue(attrType, deviceOnTrial.trial, deviceOnTrial)}
-              setData={!editable ? undefined : setValue}
-              disabled={!editable}
-              tooltipTitle={attrType.tooltip(deviceOnTrial)}
-            />
-          )
-        })}
+        {deviceItem.deviceType.attributeTypes.map(attrType => (
+          <AttributeItemOnTrial
+            key={attrType.trackUuid}
+            attrType={attrType}
+            deviceOnTrial={deviceOnTrial}
+          />)
+        )}
       </Box>
       <Stack direction='row'>
         {deviceItem &&
