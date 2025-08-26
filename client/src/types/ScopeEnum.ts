@@ -5,10 +5,9 @@ export enum ScopeEnum {
   SCOPE_CONSTANT = "Constant"
 }
 
-export const ScopesForDeviceDef = [ScopeEnum.SCOPE_EXPERIMENT, ScopeEnum.SCOPE_EXPERIMENT_ALT];
-export const ScopesForTrialDef = [ScopeEnum.SCOPE_TRIAL, undefined];
+export type ScopeEnumGood = ScopeEnum.SCOPE_TRIAL | ScopeEnum.SCOPE_EXPERIMENT | ScopeEnum.SCOPE_CONSTANT;
 
-export const scopeToNewScope = (scope: ScopeEnum | undefined) => {
+export const scopeToScopeGood = (scope: ScopeEnum | undefined): ScopeEnumGood => {
   if (scope === ScopeEnum.SCOPE_TRIAL || scope === undefined) {
     return ScopeEnum.SCOPE_TRIAL;
   } else if (scope === ScopeEnum.SCOPE_EXPERIMENT || scope === ScopeEnum.SCOPE_EXPERIMENT_ALT) {
@@ -18,5 +17,5 @@ export const scopeToNewScope = (scope: ScopeEnum | undefined) => {
 }
 
 export const isScopeEqual = (one: ScopeEnum | undefined, two: ScopeEnum | undefined): boolean => {
-  return scopeToNewScope(one) === scopeToNewScope(two);
+  return scopeToScopeGood(one) === scopeToScopeGood(two);
 }
