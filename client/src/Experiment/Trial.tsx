@@ -13,7 +13,7 @@ import { useTrialGeoJson } from "../IO/TrialGeoJson";
 import { UploadDevicesButton } from "../IO/UploadDevices/UploadDevicesButton";
 import { ActionsOnMapContext } from "../Map/ActionsOnMapContext";
 import { DateProperty } from "../Property/DateProperty";
-import { ScopeEnum } from '../types/ScopeEnum';
+import { isScopeEqual, ScopeEnum } from '../types/ScopeEnum';
 import { IExperiment, ITrial, ITrialType } from "../types/types";
 import { ButtonMenu } from "../Utils/ButtonMenu";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
@@ -155,7 +155,7 @@ export const Trial = ({
     >
       <Stack3>
         {(trialType.attributeTypes || [])
-          .filter(attrType => !attrType.scope || attrType.scope === ScopeEnum.SCOPE_TRIAL)
+          .filter(attrType => isScopeEqual(attrType.scope, ScopeEnum.SCOPE_TRIAL))
           .map(attrType => {
             return (
               <AttributeItem
