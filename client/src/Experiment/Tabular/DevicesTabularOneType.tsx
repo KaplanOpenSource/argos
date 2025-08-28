@@ -12,6 +12,7 @@ export const DevicesTabularOneType = ({
   deviceType: DeviceTypeObj,
 }) => {
   const [open, setOpen] = useState(true);
+  const attributeTypes = deviceType?.attributeTypes;
   return (
     <>
       <TableHead key={':th_' + deviceType.name}>
@@ -61,7 +62,7 @@ export const DevicesTabularOneType = ({
           <TableCell key={':tlng'}>
             Longitude
           </TableCell>
-          {deviceType?.attributeTypes?.map(attrType => (
+          {attributeTypes?.map(attrType => (
             <Tooltip
               key={attrType.name}
               title={attrType.name}
@@ -97,7 +98,7 @@ export const DevicesTabularOneType = ({
                 {deviceType?.devices?.length || 0} devices (collapsed)
               </TableCell>
               <TableCell key={'stripes'}
-                colSpan={'100%'}
+                colSpan={attributeTypes.length + 1}
               >
               </TableCell>
             </TableRow>
