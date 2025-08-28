@@ -7,7 +7,7 @@ import { shortenName } from "../../Utils/utils";
 import { TrialObj } from "../../objects";
 import { ScopeEnum } from '../../types/ScopeEnum';
 import { ITrial } from "../../types/types";
-import { AttributeItemOne } from "../AttributeItemList";
+import { AttributeItem } from "../AttributeItem";
 
 export const TrialsTabularView = ({ }) => {
   const { experiment, changeChosen } = useChosenTrial();
@@ -92,21 +92,20 @@ export const TrialsTabularView = ({ }) => {
                           {placedDevices}/{totalDevices}
                         </Typography>
                       </TableCell>
-                      {trialType?.attributeTypes?.map(attrType => {
-                        return (
+                      {trialType?.attributeTypes
+                        ?.filter(a => a.scope === ScopeEnum.SCOPE_TRIAL)
+                        .map(attrType => (
                           <TableCell
                             key={attrType.name}
                           >
-                            <AttributeItemOne
+                            <AttributeItem
                               attrType={attrType}
-                              data={trial.toJson(true)}
-                              setData={val => setTrial(val)}
-                              scope={ScopeEnum.SCOPE_TRIAL}
+                              container={trial}
+                              setContainer={setTrial}
                               reduceNames={true}
                             />
                           </TableCell>
-                        )
-                      })}
+                        ))}
                     </TableRow>
 
                   )
