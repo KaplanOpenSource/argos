@@ -1,25 +1,6 @@
 import { AttributeValue } from "./AttributeValue";
 import { AttributeValueGet } from "./AttributeValueGet";
 
-export const AttributeItemList = ({
-  attributeTypes, // Type of the attributes from the container's type
-  data, // data of the container (device / trial)
-  setData, // set the container
-  deviceItem, // device item when applicable
-  scope, // scope of the using component     
-}) => {
-  return (attributeTypes || []).map(attrType => (
-    <AttributeItemOne
-      key={attrType.name}
-      attrType={attrType}
-      data={data}
-      setData={setData}
-      scope={scope}
-      deviceItem={deviceItem}
-    />
-  ))
-}
-
 export const AttributeItemOne = ({
   attrType, // Type of the attribute from the container's type
   data, // data of the container (device / trial)
