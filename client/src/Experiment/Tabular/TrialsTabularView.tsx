@@ -81,7 +81,7 @@ export const TrialsTabularView = ({ }) => {
                       <TableCell key={':tr'}>{trial.name}</TableCell>
                       <TableCell key={':tcd'}>
                         <DateProperty
-                          experiment={trial.createdDate}
+                          data={trial.createdDate}
                           // setData={val => setData({ ...experiment, createdDate: val })}
                           label="Created Date"
                           disabled={true}

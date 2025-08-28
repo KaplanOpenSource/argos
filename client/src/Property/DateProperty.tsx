@@ -1,13 +1,24 @@
-import { DatePicker } from "@mui/x-date-pickers";
+import { DatePicker, DatePickerProps } from "@mui/x-date-pickers";
 import dayjs from 'dayjs';
 import { TooltipItem } from "../Utils/TooltipItem";
 
-export const DateProperty = ({ label, data, setData, tooltipTitle = "", ...restProps }) => {
+export const DateProperty = ({
+  label,
+  data,
+  setData,
+  tooltipTitle = "",
+  ...restProps
+}: {
+  label: string,
+  data: string | undefined,
+  setData?: (val: string | undefined) => void,
+  tooltipTitle?: string | undefined,
+} & DatePickerProps<dayjs.Dayjs>) => {
   let value = null;
   try {
     if (data) {
-      if (data.$d) {
-        value = dayjs(data.$d);
+      if ((data as any).$d) {
+        value = dayjs((data as any).$d);
       } else {
         value = dayjs(data);
       }
@@ -16,8 +27,10 @@ export const DateProperty = ({ label, data, setData, tooltipTitle = "", ...restP
     console.trace('problem on date', label, data, e);
   }
 
-  const setValue = (val) => {
-    setData(val.startOf('day').add(12, 'hours').toISOString());
+  const setValue = (val: dayjs.Dayjs | null) => {
+    if (setData && val) {
+      setData(val.startOf('day').add(12, 'hours').toISOString());
+    }
   }
 
   return (
