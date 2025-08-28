@@ -13,7 +13,7 @@ import EditLocationOutlinedIcon from '@mui/icons-material/EditLocationOutlined';
 import {
   Stack
 } from '@mui/material';
-import { useExperimentProvider } from '../Context/ExperimentProvider';
+import { useChosenTrial } from '../Context/useChosenTrial';
 import { useExperiments } from '../Context/useExperiments';
 import { useShowImagePlacement } from '../Context/useShowImagePlacement';
 import { DocumentationButton } from '../Doc/DocumentationButton';
@@ -31,13 +31,12 @@ export const AppHeaderButtons = ({
   showAttributes, setShowAttributes,
   showDeviceNames, setShowDeviceNames
 }) => {
-  const { currTrial } = useExperimentProvider();
   const { showImagePlacement, setShowImagePlacement } = useShowImagePlacement();
+  const { isExperimentChosen } = useChosenTrial();
 
   const { addExperiment } = useExperiments();
 
   const { uploadExperiment } = useUploadExperiment();
-  const { experimentName } = currTrial;
   return (
     <Stack
       direction='row'
@@ -97,7 +96,7 @@ export const AppHeaderButtons = ({
       >
         <UndoRedoButtons
         />
-        {experimentName
+        {isExperimentChosen()
           ? <>
             <AppHeaderExpTrial
             />

@@ -19,7 +19,6 @@ interface IExperimentProviderStore {
     trial: ITrial | undefined; // the current trial
     shownMap: IImageStandalone | undefined; // the current shown map
     shownMapName: string | undefined; // the name of the current shown map
-    experimentName: string | undefined; // the name of the current experiment (for legacy)
   }; // the current trial information
 };
 
@@ -43,7 +42,6 @@ export const ExperimentProvider = ({
     trial: trial,
     shownMap: shownMap,
     shownMapName: shownMap?.name,
-    experimentName: experiment?.name, // this field is for legacy
   };
 
   const store = {
