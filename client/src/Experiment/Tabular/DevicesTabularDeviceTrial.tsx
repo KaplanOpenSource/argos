@@ -47,7 +47,9 @@ export const DevicesTabularDeviceTrial = ({
           {rowHeader}
         </Stack>
       </TableCell>
-      <TableCell key={':tlat'}>
+      <TableCell key={':tlat'}
+        sx={{ marginBottom: 0, paddingBottom: 0 }}
+      >
         {hasLocation
           ? <NumberCoordField
             label={'Latitude'}
@@ -56,7 +58,9 @@ export const DevicesTabularDeviceTrial = ({
           />
           : null}
       </TableCell>
-      <TableCell key={':tlng'}>
+      <TableCell key={':tlng'}
+        sx={{ marginBottom: 0, paddingBottom: 0 }}
+      >
         {hasLocation
           ? <NumberCoordField
             label={'Longitude'}
@@ -69,6 +73,7 @@ export const DevicesTabularDeviceTrial = ({
         return (
           <TableCell
             key={attrType.name}
+            sx={{ marginBottom: 0, paddingBottom: 0 }}
           >
             {deviceOnTrial
               ? <AttributeItemOnTrial
