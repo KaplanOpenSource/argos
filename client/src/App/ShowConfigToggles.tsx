@@ -1,7 +1,6 @@
 import { CellTower, GridOn, Podcasts, TableView, Terrain } from "@mui/icons-material";
 import { ThemeProvider, ToggleButton, ToggleButtonGroup, Tooltip, createTheme } from "@mui/material";
-import React from "react";
-import { useExperimentProvider } from "../Context/ExperimentProvider";
+import { useExperimentProvider } from "../Context/useChosenTrial";
 
 export const SHOW_ALL_EXPERIMENTS = 'SHOW_ALL_EXPERIMENTS';
 export const SHOW_ONLY_DEVICES = 'SHOW_ONLY_DEVICES';

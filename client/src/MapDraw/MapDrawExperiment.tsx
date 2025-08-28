@@ -1,5 +1,5 @@
 import { Fragment } from "react";
-import { useExperimentProvider } from "../Context/ExperimentProvider";
+import { useExperimentProvider } from "../Context/useChosenTrial";
 import { useExperiments } from "../Context/useExperiments";
 import { MapDrawShape } from "./MapDrawShape";
 

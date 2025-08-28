@@ -2,8 +2,7 @@ import { PlaylistAdd } from "@mui/icons-material";
 import {
   differenceWith,
 } from 'lodash';
-import React from "react";
-import { useExperimentProvider } from "../Context/ExperimentProvider";
+import { useExperimentProvider } from "../Context/useChosenTrial";
 import { useDeviceSeletion } from "../Context/useDeviceSeletion";
 import { IDeviceType, IDeviceTypeAndItem, ITrial } from "../types/types";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";

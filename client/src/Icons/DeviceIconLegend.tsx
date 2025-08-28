@@ -1,5 +1,5 @@
 import { Paper, Stack, Typography } from "@mui/material";
-import { useExperimentProvider } from "../Context/ExperimentProvider";
+import { useExperimentProvider } from "../Context/useChosenTrial";
 import { IconDeviceByName } from "./IconPicker";
 
 export const DeviceIconLegend = ({ }) => {

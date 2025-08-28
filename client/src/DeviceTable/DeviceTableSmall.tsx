@@ -1,6 +1,5 @@
 import { Stack } from "@mui/material";
-import React from "react";
-import { useExperimentProvider } from "../Context/ExperimentProvider";
+import { useExperimentProvider } from "../Context/useChosenTrial";
 import { useDeviceSeletion } from "../Context/useDeviceSeletion";
 import { IDevice, IExperiment, ITrackUuid } from "../types/types";
 

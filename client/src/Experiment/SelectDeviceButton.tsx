@@ -3,8 +3,8 @@ import {
   differenceWith,
   uniq,
 } from 'lodash';
-import React, { useContext } from "react";
-import { useExperimentProvider } from "../Context/ExperimentProvider";
+import { useContext } from "react";
+import { useExperimentProvider } from "../Context/useChosenTrial";
 import { useDeviceSeletion } from "../Context/useDeviceSeletion";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { ContextMenu } from "../Utils/ContextMenu";

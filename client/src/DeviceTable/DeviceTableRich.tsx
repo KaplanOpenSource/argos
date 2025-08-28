@@ -3,7 +3,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Paper } from "@mui/material";
 import { TreeView } from "@mui/x-tree-view/TreeView";
 import { useContext } from "react";
-import { useExperimentProvider } from "../Context/ExperimentProvider";
+import { useExperimentProvider } from "../Context/useChosenTrial";
 import { useDeviceSeletion } from "../Context/useDeviceSeletion";
 import { DeviceItem } from "../Experiment/DeviceItem";
 import { EnclosingListSelectionContext } from "../Experiment/EnclosedSelectionProvider";
