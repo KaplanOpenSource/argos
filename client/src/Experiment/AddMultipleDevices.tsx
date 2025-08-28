@@ -2,12 +2,19 @@ import { DynamicFeed, PlayArrow } from "@mui/icons-material";
 import { Box, Popover, Stack } from "@mui/material";
 import { useEffect, useState } from "react";
 import { assignUuids } from "../Context/TrackUuidUtils";
+import { IDevice, IDeviceType } from "../types/types";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { TextFieldDebounce } from "../Utils/TextFieldDebounce";
 import { AttributeItemList } from "./AttributeItemList";
 
-export const AddMultipleDevices = ({ deviceType, addDevices }) => {
-  const [anchorEl, setAnchorEl] = useState(null);
+export const AddMultipleDevices = ({
+  deviceType,
+  addDevices,
+}: {
+  deviceType: IDeviceType,
+  addDevices: (newDevices: IDevice[]) => void,
+}) => {
+  const [anchorEl, setAnchorEl] = useState<Element | null>(null);
   const [instances, setInstances] = useState(10);
   const [prefix, setPrefix] = useState(deviceType.name + "_");
   const [digits, setDigits] = useState(3);
@@ -17,7 +24,7 @@ export const AddMultipleDevices = ({ deviceType, addDevices }) => {
   const open = Boolean(anchorEl);
 
   const createNewDevices = () => {
-    const newDevices = [];
+    const newDevices: IDevice[] = [];
     for (let i = 1; i <= instances; ++i) {
       const name = prefix + ('' + i).padStart(digits, '0') + suffix;
       newDevices.push({ name, ...attrValues });
@@ -34,7 +41,7 @@ export const AddMultipleDevices = ({ deviceType, addDevices }) => {
     <>
       <ButtonTooltip
         tooltip={"Add multiple devices"}
-        color={open ? "primary" : ""}
+        color={open ? "primary" : "default"}
         onClick={(e) => {
           e.stopPropagation();
           setAnchorEl(e.currentTarget);
