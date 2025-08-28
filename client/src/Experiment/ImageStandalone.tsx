@@ -4,6 +4,7 @@ import MapIcon from '@mui/icons-material/Map';
 import { Stack } from "@mui/material";
 import { TreeRowOnChosen } from "../App/TreeRowOnChosen";
 import { useExperimentProvider } from "../Context/ExperimentProvider";
+import { useChosenTrial } from "../Context/useChosenTrial";
 import { useShowImagePlacement } from "../Context/useShowImagePlacement";
 import { useShownMap } from "../Context/useShownMap";
 import { ImageOnServer } from "../IO/ImageOnServer";
@@ -25,10 +26,11 @@ export const ImageStandalone = ({
   const {
     currTrial,
   } = useExperimentProvider();
+  const { chosenNames } = useChosenTrial();
   const { showImagePlacement, setShowImagePlacement } = useShowImagePlacement();
   const { switchToMap } = useShownMap({});
 
-  const isShown = currTrial.shownMapName === data.name && currTrial.experimentName === experiment.name;
+  const isShown = chosenNames.experiment?.name === experiment.name && chosenNames.shownMap?.name === data.name;
   const isBeingEdit = showImagePlacement && isShown;
 
   return (

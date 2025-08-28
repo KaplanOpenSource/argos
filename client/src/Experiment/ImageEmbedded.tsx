@@ -3,7 +3,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { Stack } from "@mui/material";
 import { useContext } from "react";
 import { TreeRowOnChosen } from "../App/TreeRowOnChosen";
-import { useExperimentProvider } from "../Context/ExperimentProvider";
 import { useChosenTrial } from "../Context/useChosenTrial";
 import { useShowImagePlacement } from "../Context/useShowImagePlacement";
 import { ImageOnServer } from "../IO/ImageOnServer";
@@ -24,9 +23,6 @@ export const ImageEmbedded = ({
   experiment: IExperiment,
 }) => {
   const { addActionOnMap, mapBounds } = useContext(ActionsOnMapContext)!;
-  const {
-    currTrial,
-  } = useExperimentProvider();
   const { showImagePlacement, setShowImagePlacement } = useShowImagePlacement();
   const { chosenNames } = useChosenTrial();
 
@@ -86,7 +82,7 @@ export const ImageEmbedded = ({
             onClick={() => setShowImagePlacement(!showImagePlacement)}
             disabled={!!chosenNames.shownMap}
           >
-            {(showImagePlacement && currTrial.experimentName === experiment.name)
+            {(showImagePlacement && chosenNames.experiment?.name === experiment.name && !chosenNames.shownMap)
               ? <EditLocationAlt />
               : <EditLocationOutlined />
             }
