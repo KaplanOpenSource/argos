@@ -20,8 +20,8 @@ export const AttributeItemOnTrial = ({
       const dev = trial?.findDevice(deviceOnTrial);
       if (dev) {
         dev.setAttribute(attrType, val);
+        setExperiment(exp.name, exp.toJson(true));
       }
-      setExperiment(exp.name, exp.toJson(true));
     }
   }
 
