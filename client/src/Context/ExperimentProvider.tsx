@@ -8,8 +8,6 @@ import { useExperiments } from "./useExperiments";
 // - change setLocation to Obj
 // - Select options on attribute should not be name but be reference to attribute option
 // - Trial object batch should be replaced with changing the trial or experiment using changeChosen
-// - remove DeviceObject
-// - remove TrialObject
 // - state on useExperiment should be of ExperimentObj not IExperiment
 // - deletes from lists should be done on ExperimentObj
 // - remove currTrial, use different stores as needed
