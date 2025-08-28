@@ -64,8 +64,9 @@ export const ImageStandalone = ({
             <MapIcon />
           </ButtonTooltip>
           <ButtonTooltip
-            tooltip="Edit image placement"
+            tooltip={"Edit image placement" + (isShown ? "" : " only when shown")}
             onClick={() => setShowImagePlacement(!showImagePlacement)}
+            disabled={!isShown}
           >
             {isBeingEdit
               ? <EditLocationAlt />

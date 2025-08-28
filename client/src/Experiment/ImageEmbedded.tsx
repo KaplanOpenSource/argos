@@ -4,6 +4,7 @@ import { Stack } from "@mui/material";
 import { useContext } from "react";
 import { TreeRowOnChosen } from "../App/TreeRowOnChosen";
 import { useExperimentProvider } from "../Context/ExperimentProvider";
+import { useChosenTrial } from "../Context/useChosenTrial";
 import { useShowImagePlacement } from "../Context/useShowImagePlacement";
 import { ImageOnServer } from "../IO/ImageOnServer";
 import { UploadImageButton } from "../IO/UploadImageButton";
@@ -27,6 +28,7 @@ export const ImageEmbedded = ({
     currTrial,
   } = useExperimentProvider();
   const { showImagePlacement, setShowImagePlacement } = useShowImagePlacement();
+  const { chosenNames } = useChosenTrial();
 
   const hasBounds = data?.latnorth && data?.lngwest && data?.latsouth && data?.lngeast;
 
@@ -80,8 +82,9 @@ export const ImageEmbedded = ({
             <OpenInFull />
           </ButtonTooltip>
           <ButtonTooltip
-            tooltip="Edit image placement"
+            tooltip={"Edit image placement" + (chosenNames.shownMap ? " only when shown" : "")}
             onClick={() => setShowImagePlacement(!showImagePlacement)}
+            disabled={!!chosenNames.shownMap}
           >
             {(showImagePlacement && currTrial.experimentName === experiment.name)
               ? <EditLocationAlt />
