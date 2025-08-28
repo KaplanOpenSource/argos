@@ -25,7 +25,6 @@ interface IExperimentProviderStore {
     trialTypeName: string | undefined; // the name of the current trial type (for legacy)
     trialName: string | undefined; // the name of the current trial (for legacy)
   }; // the current trial information
-  setTrialData: (newTrialData: ITrial) => void; // a function to set the trial data
 };
 
 const experimentContext = createContext<IExperimentProviderStore | null>(null);
@@ -64,17 +63,9 @@ export const ExperimentProvider = ({ children }) => {
     chooseTrial({ experimentName, trialTypeName, trialName });
   }
 
-  const setTrialData = (newTrialData: ITrial) => {
-    const e = structuredClone(experiment);
-    if (setTrialIntoExp(newTrialData, e)) {
-      setExperiment(e!.name!, e!)
-    }
-  }
-
   const store = {
     setCurrTrial,
     currTrial,
-    setTrialData,
   };
 
   return (
