@@ -18,6 +18,7 @@ export const DevicesTabularOneDevice = ({
   showAllDevices: boolean,
 }) => {
   const [showAllTrials, setShowAllTrials] = useState(false);
+  const [trialTypesOpen, setTrialTypesOpen] = useState<string[]>([]);
 
   const { trial, experiment } = useChosenTrial();
 
@@ -49,44 +50,59 @@ export const DevicesTabularOneDevice = ({
         </>)}
       />
       {showAllTrials
-        ? experiment?.trialTypes.map(trialType => (
-          <Fragment
-            key={'frag' + trialType.trackUuid + ' ' + deviceItem.trackUuid}
-          >
-            <TableRow
-              key={trialType.trackUuid + ' ' + deviceItem.trackUuid}
-            >
-              <TableCell key={':tr'} sx={{ paddingY: 0, marginY: 0 }} colSpan={attributeTypes.length + 3}>
-                <Stack direction={'row'} sx={{ padding: 0, margin: 0, alignItems: 'center' }}>
-                  <Typography sx={{ marginLeft: 2 }}>
-                    {trialType?.name}
-                  </Typography>
-                  <ButtonTooltip
-                    tooltip={showAllTrials ? "Showing values on all trials" : "Hiding values on other trials"}
-                    onClick={() => setShowAllTrials(!showAllTrials)}
-                    style={{ margin: 0, padding: 0 }}
-                  >
-                    {showAllTrials ? <ExpandMore /> : <ChevronRight />}
-                  </ButtonTooltip>
-                </Stack>
-              </TableCell>
-            </TableRow>
-            {trialType?.trials?.map(otherTrial => (
-              <DevicesTabularDeviceTrial
-                key={otherTrial.trackUuid + '_' + deviceItem.trackUuid}
-                deviceItem={deviceItem}
-                deviceType={deviceType}
-                attributeTypes={attributeTypes}
-                trial={otherTrial}
-                rowHeader={<>
-                  <Typography sx={{ marginLeft: 4 }}>
-                    {otherTrial?.name}
-                  </Typography>
-                </>}
-              />
-            ))}
-          </Fragment>
-        ))
+        ? experiment?.trialTypes
+          .map(trialType => {
+
+            const typeOpen = trialTypesOpen.includes(trialType.name);
+            const setTypeOpen = (yes: boolean) => {
+              const newval = trialTypesOpen.filter(t => t !== trialType.name);
+              if (yes) {
+                newval.push(trialType.name);
+              }
+              setTrialTypesOpen(newval);
+            }
+
+            return (
+              <Fragment
+                key={'frag' + trialType.trackUuid + ' ' + deviceItem.trackUuid}
+              >
+                <TableRow
+                  key={trialType.trackUuid + ' ' + deviceItem.trackUuid}
+                >
+                  <TableCell key={':tr'} sx={{ paddingY: 0, marginY: 0 }} colSpan={attributeTypes.length + 3}>
+                    <Stack direction={'row'} sx={{ padding: 0, margin: 0, alignItems: 'center' }}>
+                      <Typography sx={{ marginLeft: 2 }}>
+                        {trialType?.name}
+                      </Typography>
+                      <ButtonTooltip
+                        tooltip={typeOpen ? "Showing this trial type" : "Hiding this trial type"}
+                        onClick={() => setTypeOpen(!typeOpen)}
+                        style={{ margin: 0, padding: 0 }}
+                      >
+                        {typeOpen ? <ExpandMore /> : <ChevronRight />}
+                      </ButtonTooltip>
+                    </Stack>
+                  </TableCell>
+                </TableRow>
+                {typeOpen
+                  ? trialType?.trials?.map(otherTrial => (
+                    <DevicesTabularDeviceTrial
+                      key={otherTrial.trackUuid + '_' + deviceItem.trackUuid}
+                      deviceItem={deviceItem}
+                      deviceType={deviceType}
+                      attributeTypes={attributeTypes}
+                      trial={otherTrial}
+                      rowHeader={<>
+                        <Typography sx={{ marginLeft: 4 }}>
+                          {otherTrial?.name}
+                        </Typography>
+                      </>}
+                    />
+                  ))
+                  : null}
+              </Fragment>
+            );
+          })
         : null}
     </>
   )
