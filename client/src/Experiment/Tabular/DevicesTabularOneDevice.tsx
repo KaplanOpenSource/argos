@@ -1,17 +1,19 @@
 import { Stack, TableCell, TableRow, Typography } from "@mui/material";
 import { useChosenTrial } from "../../Context/useChosenTrial";
-import { DeviceTypeObj } from "../../objects";
+import { AttributeTypeObj, DeviceTypeObj } from "../../objects";
 import { ICoordinates } from "../../types/types";
+import { AttributeItemOnTrial } from "../AttributeItemOnTrial";
 import { SelectDeviceButton } from "../SelectDeviceButton";
-import { DevicesTabularOneAttr } from "./DevicesTabularOneAttr";
 import { NumberCoordField } from "./NumberCoordField";
 
 // TODO: Use TrialObj instead
 
 export const DevicesTabularOneDevice = ({
   deviceType,
+  attributeTypes,
 }: {
   deviceType: DeviceTypeObj,
+  attributeTypes: AttributeTypeObj[],
 }) => {
   const { shownMap, trial, changeTrialObj } = useChosenTrial();
 
@@ -68,16 +70,18 @@ export const DevicesTabularOneDevice = ({
                 />
                 : null}
             </TableCell>
-            {deviceType?.attributeTypes?.map(attrType => {
+            {attributeTypes.map(attrType => {
               return (
                 <TableCell
                   key={attrType.name}
                 >
-                  <DevicesTabularOneAttr
-                    attrType={attrType}
-                    deviceType={deviceType}
-                    deviceItem={deviceItem}
-                  />
+                  {deviceOnTrial
+                    ?
+                    <AttributeItemOnTrial
+                      attrType={attrType}
+                      deviceOnTrial={deviceOnTrial}
+                    />
+                    : null}
                 </TableCell>
               )
             })}
