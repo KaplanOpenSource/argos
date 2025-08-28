@@ -1,6 +1,6 @@
 import { ChevronRight, ExpandMore } from "@mui/icons-material";
-import { Typography } from "@mui/material";
-import { useState } from "react";
+import { Stack, TableCell, TableRow, Typography } from "@mui/material";
+import { Fragment, useState } from "react";
 import { useChosenTrial } from "../../Context/useChosenTrial";
 import { AttributeTypeObj, DeviceItemObj, DeviceTypeObj } from "../../objects";
 import { ButtonTooltip } from "../../Utils/ButtonTooltip";
@@ -49,20 +49,44 @@ export const DevicesTabularOneDevice = ({
         </>)}
       />
       {showAllTrials
-        ? experiment?.trialTypes.flatMap(trialType => trialType?.trials?.flatMap(otherTrial => (
-          <DevicesTabularDeviceTrial
-            key={otherTrial.trackUuid + '_' + deviceItem.trackUuid}
-            deviceItem={deviceItem}
-            deviceType={deviceType}
-            attributeTypes={attributeTypes}
-            trial={otherTrial}
-            rowHeader={<>
-              <Typography sx={{ marginLeft: 2 }}>
-                {otherTrial?.name}
-              </Typography>
-            </>}
-          />
-        )))
+        ? experiment?.trialTypes.map(trialType => (
+          <Fragment
+            key={'frag' + trialType.trackUuid + ' ' + deviceItem.trackUuid}
+          >
+            <TableRow
+              key={trialType.trackUuid + ' ' + deviceItem.trackUuid}
+            >
+              <TableCell key={':tr'} sx={{ paddingY: 0, marginY: 0 }} colSpan={attributeTypes.length + 3}>
+                <Stack direction={'row'} sx={{ padding: 0, margin: 0, alignItems: 'center' }}>
+                  <Typography sx={{ marginLeft: 2 }}>
+                    {trialType?.name}
+                  </Typography>
+                  <ButtonTooltip
+                    tooltip={showAllTrials ? "Showing values on all trials" : "Hiding values on other trials"}
+                    onClick={() => setShowAllTrials(!showAllTrials)}
+                    style={{ margin: 0, padding: 0 }}
+                  >
+                    {showAllTrials ? <ExpandMore /> : <ChevronRight />}
+                  </ButtonTooltip>
+                </Stack>
+              </TableCell>
+            </TableRow>
+            {trialType?.trials?.map(otherTrial => (
+              <DevicesTabularDeviceTrial
+                key={otherTrial.trackUuid + '_' + deviceItem.trackUuid}
+                deviceItem={deviceItem}
+                deviceType={deviceType}
+                attributeTypes={attributeTypes}
+                trial={otherTrial}
+                rowHeader={<>
+                  <Typography sx={{ marginLeft: 4 }}>
+                    {otherTrial?.name}
+                  </Typography>
+                </>}
+              />
+            ))}
+          </Fragment>
+        ))
         : null}
     </>
   )
