@@ -87,13 +87,15 @@ export const DevicesTabularOneType = ({
       </TableHead>
       <TableBody key={':tb_' + deviceType.name}>
         {open
-          ? (
+          ? (deviceType?.devices || []).map((deviceItem) => (
             <DevicesTabularOneDevice
+              key={deviceItem.trackUuid}
+              deviceItem={deviceItem}
               deviceType={deviceType}
               attributeTypes={attributeTypes}
               showAllDevices={showAllDevices}
             />
-          )
+          ))
           : (
             <TableRow
               style={{
