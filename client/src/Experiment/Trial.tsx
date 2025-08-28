@@ -5,7 +5,6 @@ import { sum } from "lodash";
 import { useContext, useEffect } from "react";
 import { TreeRowOnChosen } from "../App/TreeRowOnChosen";
 import { RealMapName } from "../constants/constants";
-import { useExperimentProvider } from "../Context/ExperimentProvider";
 import { useChosenTrial } from "../Context/useChosenTrial";
 import { useDeviceSeletion } from "../Context/useDeviceSeletion";
 import { useExperiments } from "../Context/useExperiments";
@@ -37,8 +36,7 @@ export const Trial = ({
   children: any,
 }) => {
   const { selection } = useDeviceSeletion();
-  const { currTrial } = useExperimentProvider();
-  const { chooseShownMap, trial, chooseTrial } = useChosenTrial();
+  const { shownMap, chooseShownMap, chooseTrial, trial, chosenNames } = useChosenTrial();
 
   const { downloadGeojson, downloadZipCsv } = useTrialGeoJson();
   const { addActionOnMap } = useContext(ActionsOnMapContext)!;
@@ -51,26 +49,26 @@ export const Trial = ({
   }
 
   useEffect(() => {
-    if (currTrial.trial) {
-      const span = new CoordsSpan().fromTrial(currTrial.trial);
+    if (trial) {
+      const span = new CoordsSpan().fromTrial(trial);
       const standalone = span.getFirstStandalone()
-      if (currTrial.shownMapName !== standalone) {
+      if (shownMap?.name !== standalone) {
         chooseShownMap(standalone);
       }
       addActionOnMap((mapObject) => {
         span.fitBounds(mapObject, standalone ? standalone : RealMapName);
       });
     }
-  }, [currTrial?.trialName + "::" + currTrial?.trialTypeName + "::" + currTrial?.experiment]);
+  }, [chosenNames.experiment?.name, chosenNames.trialType?.name, chosenNames.trial?.name]);
 
   const totalDevices = sum((experiment?.deviceTypes || []).map(x => (x?.devices || []).length));
   const placedDevices = (data.devicesOnTrial || []).length;
 
-  const isTrialChosen = data.name === currTrial?.trial?.name;
+  const isThisTrialChosen = data.name === trial?.name;
   return (
     <TreeRowOnChosen
       data={data}
-      boldName={isTrialChosen}
+      boldName={isThisTrialChosen}
       validateName={(name) => !trialType?.trials?.find(tt => tt.name === name) ? '' : 'Duplicate name'}
       components={
         <>
@@ -85,7 +83,7 @@ export const Trial = ({
               chooseTrial({ experimentName: experiment.name, trialTypeName: trialType.name, trialName: data.name });
             }}
           >
-            <Edit color={isTrialChosen ? "primary" : "inherit"} />
+            <Edit color={isThisTrialChosen ? "primary" : "inherit"} />
           </ButtonTooltip>
           <ButtonTooltip
             tooltip="Delete trial"
@@ -95,7 +93,7 @@ export const Trial = ({
           </ButtonTooltip>
           <ButtonTooltip
             tooltip={'Place selected devices into this trial as are on current trial'}
-            disabled={data === currTrial.trial || selection.length === 0}
+            disabled={isThisTrialChosen || selection.length === 0}
             onClick={cloneDevices}
           >
             <ReadMore sx={{ rotate: '180deg' }} />
