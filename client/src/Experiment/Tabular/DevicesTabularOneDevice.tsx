@@ -1,4 +1,4 @@
-import { ChevronRight, ExpandMore } from "@mui/icons-material";
+import { ChevronRight, ExpandMore, KeyboardDoubleArrowDown, KeyboardDoubleArrowRight } from "@mui/icons-material";
 import { Stack, TableCell, TableRow, Typography } from "@mui/material";
 import { Fragment, useState } from "react";
 import { useChosenTrial } from "../../Context/useChosenTrial";
@@ -28,6 +28,14 @@ export const DevicesTabularOneDevice = ({
     return null;
   }
 
+  const showAllTypes = showAllTrials && trialTypesOpen.length === (experiment?.trialTypes.length || 1);
+  const setShowAllTypes = (yes: boolean) => {
+    setTrialTypesOpen(yes ? (experiment?.trialTypes || []).map(tt => tt.name) : []);
+    if (yes) {
+      setShowAllTrials(true);
+    }
+  }
+
   return (
     <>
       <DevicesTabularDeviceTrial
@@ -46,6 +54,13 @@ export const DevicesTabularOneDevice = ({
             style={{ margin: 0, padding: 0 }}
           >
             {showAllTrials ? <ExpandMore /> : <ChevronRight />}
+          </ButtonTooltip>
+          <ButtonTooltip
+            tooltip={showAllTypes ? "Expanding all trial types, click to hide all" : "Not all trial types are shown, click to expand all"}
+            onClick={() => setShowAllTypes(!showAllTypes)}
+            style={{ margin: 0, padding: 0 }}
+          >
+            {showAllTypes ? <KeyboardDoubleArrowDown /> : <KeyboardDoubleArrowRight />}
           </ButtonTooltip>
         </>)}
       />
