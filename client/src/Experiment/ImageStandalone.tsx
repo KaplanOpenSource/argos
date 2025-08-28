@@ -11,8 +11,17 @@ import { UploadImageButton } from "../IO/UploadImageButton";
 import { BooleanProperty } from "../Property/BooleanProperty";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { TextFieldDebounceOutlined } from "../Utils/TextFieldDebounce";
+import { IExperiment, IImageStandalone } from "../types/types";
 
-export const ImageStandalone = ({ data, setData, experiment }) => {
+export const ImageStandalone = ({
+  data,
+  setData,
+  experiment,
+}: {
+  data: IImageStandalone,
+  setData: (newData: IImageStandalone | undefined) => any,
+  experiment: IExperiment,
+}) => {
   const {
     currTrial,
   } = useExperimentProvider();
