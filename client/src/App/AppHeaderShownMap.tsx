@@ -3,6 +3,7 @@ import PublicIcon from '@mui/icons-material/Public';
 import { Stack, Tooltip, Typography } from "@mui/material";
 import { useState } from "react";
 import { useExperimentProvider } from "../Context/ExperimentProvider";
+import { useChosenTrial } from '../Context/useChosenTrial';
 import { useShownMap } from "../Context/useShownMap";
 import { IImageStandalone } from "../types/types";
 import { ButtonTooltip } from '../Utils/ButtonTooltip';
@@ -10,9 +11,10 @@ import { MenuActions } from '../Utils/MenuActions';
 
 export const AppHeaderShownMap = ({ }) => {
   const { currTrial } = useExperimentProvider();
-  const { shownMapName, experiment } = currTrial;
+  const { experiment } = currTrial;
   const { switchToMap } = useShownMap({});
   const [anchorEl, setAnchorEl] = useState<Element | null>(null);
+  const { shownMap } = useChosenTrial();
 
   const standaloneNames: string[] = (experiment?.imageStandalone || []).map((x: IImageStandalone) => x.name!);
   const menuItems = standaloneNames.map(name => ({
@@ -33,19 +35,19 @@ export const AppHeaderShownMap = ({ }) => {
       alignItems="center"
     >
       <ButtonTooltip
-        tooltip={(shownMapName ? "Shown map" : realMapText) + ", click to change"}
+        tooltip={(shownMap?.name ? "Shown map" : realMapText) + ", click to change"}
         color={'inherit'}
         onClick={(e: MouseEvent) => setAnchorEl(e.currentTarget as (Element | null))}
       >
-        {shownMapName ? <MapIcon /> : <PublicIcon />}
+        {shownMap?.name ? <MapIcon /> : <PublicIcon />}
       </ButtonTooltip>
-      {shownMapName && (
+      {shownMap?.name && (
         <Tooltip title={"Name of the map shown, click to change map"}>
           <Typography variant="body1" paddingRight={1}
             onClick={(e) => setAnchorEl(e.currentTarget as (Element | null))}
             style={{ cursor: 'pointer' }}
           >
-            {shownMapName}
+            {shownMap?.name}
           </Typography>
         </Tooltip>
       )}

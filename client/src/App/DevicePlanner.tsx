@@ -2,8 +2,7 @@ import { Stack } from '@mui/material';
 import { useState } from 'react';
 import { AllExperimentsLoader } from '../Context/AllExperimentsLoader';
 import { ChosenTrialOnUrl } from '../Context/ChosenTrialOnUrl';
-import { useExperimentProvider } from '../Context/ExperimentProvider';
-import { ChosenExperimentUpdater } from '../Context/useChosenTrial';
+import { ChosenExperimentUpdater, useChosenTrial } from '../Context/useChosenTrial';
 import { CurrMouseLocation } from '../Context/useCurrMouseLocation';
 import { ServerUpdatesHandler } from '../Context/useServerUpdates';
 import { DeviceTable } from '../DeviceTable/DeviceTable';
@@ -29,7 +28,7 @@ export function DevicePlanner() {
   const [showConfig, setShowConfig] = useState(SHOW_ALL_EXPERIMENTS);
   const [showAttributes, setShowAttributes] = useState(false);
   const [showDeviceNames, setShowDeviceNames] = useState(true);
-  const { currTrial } = useExperimentProvider();
+  const { shownMap } = useChosenTrial();
 
   return (
     <>
@@ -95,7 +94,7 @@ export function DevicePlanner() {
         showEditBox={showEditBox}
         setShowEditBox={setShowEditBox}
       >
-        <MapCoordinates showAsLatLong={!currTrial?.shownMapName} />
+        <MapCoordinates showAsLatLong={!shownMap} />
       </EditToolBox>
     </>
   )

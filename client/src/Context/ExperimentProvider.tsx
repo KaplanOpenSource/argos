@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import { IExperiment, IImageStandalone, ITrial, ITrialType } from "../types/types";
+import { IExperiment, ITrial, ITrialType } from "../types/types";
 import { useChosenTrial } from "./useChosenTrial";
 
 // TODO:
@@ -17,8 +17,6 @@ interface IExperimentProviderStore {
     experiment: IExperiment | undefined;
     trialType: ITrialType | undefined; // the current trial type
     trial: ITrial | undefined; // the current trial
-    shownMap: IImageStandalone | undefined; // the current shown map
-    shownMapName: string | undefined; // the name of the current shown map
   }; // the current trial information
 };
 
@@ -33,15 +31,12 @@ export const ExperimentProvider = ({
     experiment,
     trialType,
     trial,
-    shownMap,
   } = useChosenTrial();
 
   const currTrial = {
     experiment: experiment,
     trialType: trialType,
     trial: trial,
-    shownMap: shownMap,
-    shownMapName: shownMap?.name,
   };
 
   const store = {
