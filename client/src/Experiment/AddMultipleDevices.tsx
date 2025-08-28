@@ -2,10 +2,11 @@ import { DynamicFeed, PlayArrow } from "@mui/icons-material";
 import { Box, Popover, Stack } from "@mui/material";
 import { useEffect, useState } from "react";
 import { assignUuids } from "../Context/TrackUuidUtils";
+import { isScopeEqual, ScopeEnum } from "../types/ScopeEnum";
 import { IDevice, IDeviceType } from "../types/types";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { TextFieldDebounce } from "../Utils/TextFieldDebounce";
-import { AttributeItemList } from "./AttributeItemList";
+import { AttributeItem } from "./AttributeItem";
 
 export const AddMultipleDevices = ({
   deviceType,
@@ -19,7 +20,7 @@ export const AddMultipleDevices = ({
   const [prefix, setPrefix] = useState(deviceType.name + "_");
   const [digits, setDigits] = useState(3);
   const [suffix, setSuffix] = useState("");
-  const [attrValues, setAttrValues] = useState([]);
+  const [initDevice, setInitDevice] = useState<IDevice>({});
 
   const open = Boolean(anchorEl);
 
@@ -27,7 +28,7 @@ export const AddMultipleDevices = ({
     const newDevices: IDevice[] = [];
     for (let i = 1; i <= instances; ++i) {
       const name = prefix + ('' + i).padStart(digits, '0') + suffix;
-      newDevices.push({ name, ...attrValues });
+      newDevices.push({ ...initDevice, name });
     }
     addDevices(assignUuids(newDevices));
     setAnchorEl(null);
@@ -112,11 +113,18 @@ export const AddMultipleDevices = ({
             />
           </Box>
           <Box>
-            <AttributeItemList
-              attributeTypes={deviceType.attributeTypes}
-              data={attrValues}
-              setData={setAttrValues}
-            />
+            {(deviceType.attributeTypes || [])
+              .filter(attrType => isScopeEqual(attrType.scope, ScopeEnum.SCOPE_EXPERIMENT))
+              .map(attrType => {
+                return (
+                  <AttributeItem
+                    key={attrType.name}
+                    attrType={attrType}
+                    container={initDevice}
+                    setContainer={setInitDevice}
+                  />
+                )
+              })}
           </Box>
           <Box>
             <ButtonTooltip

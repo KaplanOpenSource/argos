@@ -30,7 +30,7 @@ export const DeviceItem = ({
   const { setExperiment } = useExperiments();
   const { isExperimentChosen } = useChosenTrial();
 
-  console.log(data.name, isExperimentChosen(), showAttributes, deviceType.attributeTypes)
+  // console.log(data.name, isExperimentChosen(), showAttributes, deviceType.attributeTypes)
   return (
     <TreeRowOnChosen
       key={data.trackUuid}
