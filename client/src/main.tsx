@@ -7,7 +7,6 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { App } from './App/App';
-import { ExperimentProvider } from './Context/ExperimentProvider';
 import { ShapeProvider } from './EditToolBox/ShapeContext';
 import { ActionsOnMapProvider } from './Map/ActionsOnMapContext';
 
@@ -16,13 +15,11 @@ import { ActionsOnMapProvider } from './Map/ActionsOnMapContext';
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <LocalizationProvider dateAdapter={AdapterDayjs}>
     <React.StrictMode>
-      <ExperimentProvider>
-        <ActionsOnMapProvider>
-          <ShapeProvider>
-            <App />
-          </ShapeProvider>
-        </ActionsOnMapProvider>
-      </ExperimentProvider>
+      <ActionsOnMapProvider>
+        <ShapeProvider>
+          <App />
+        </ShapeProvider>
+      </ActionsOnMapProvider>
     </React.StrictMode>
   </LocalizationProvider>
 )

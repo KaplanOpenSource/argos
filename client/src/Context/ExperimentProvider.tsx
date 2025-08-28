@@ -1,5 +1,3 @@
-import { createContext, useContext } from "react";
-import { IExperiment, ITrial, ITrialType } from "../types/types";
 import { useChosenTrial } from "./useChosenTrial";
 
 // TODO:
@@ -12,43 +10,13 @@ import { useChosenTrial } from "./useChosenTrial";
 // - remove currTrial, use different stores as needed
 // - avoid using actions from ExperimentProvider
 
-interface IExperimentProviderStore {
-  currTrial: {
-    experiment: IExperiment | undefined;
-    trialType: ITrialType | undefined; // the current trial type
-    trial: ITrial | undefined; // the current trial
-  }; // the current trial information
-};
-
-const experimentContext = createContext<IExperimentProviderStore | null>(null);
-
-export const ExperimentProvider = ({
-  children
-}: {
-  children: any
-}) => {
-  const {
-    experiment,
-    trialType,
-    trial,
-  } = useChosenTrial();
-
-  const currTrial = {
-    experiment: experiment,
-    trialType: trialType,
-    trial: trial,
+export const useExperimentProvider = () => {
+  const { experiment, trialType, trial } = useChosenTrial.getState();
+  return {
+    currTrial: {
+      experiment: experiment,
+      trialType: trialType,
+      trial: trial,
+    },
   };
-
-  const store = {
-    currTrial,
-  };
-
-  return (
-    <experimentContext.Provider value={store}>
-      {children}
-    </experimentContext.Provider>
-  )
 }
-
-// useExperimentProvider should be at the end to avoid reload problems
-export const useExperimentProvider = () => useContext(experimentContext)!;
