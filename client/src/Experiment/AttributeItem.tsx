@@ -7,11 +7,12 @@ export const AttributeItem = ({
   attrType,
   container,
   setContainer,
+  ...restParams
 }: {
   attrType: IAttributeType,
   container: IHasAttributes,
   setContainer?: (v: IHasAttributes) => void,
-}) => {
+} & Record<string, any>) => {
   const attr = container.attributes?.find(attr => attr.name === attrType.name);
   const value = (attr ? attr.value : attrType.defaultValue) ?? '';
   const setValue = (val: any) => {
@@ -29,6 +30,7 @@ export const AttributeItem = ({
       data={value}
       setData={setValue}
       attrType={attrType}
+      {...restParams}
     />
   )
 }

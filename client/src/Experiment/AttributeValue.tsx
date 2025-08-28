@@ -21,7 +21,7 @@ export const AttributeValue = ({
   setData: (val: any) => void,
   attrType: IAttributeType,
   reduceNames?: boolean,
-}) => {
+} & Record<string, any>) => {
   switch (type) {
     case ValueTypeEnum.VALUE_TYPE_NUMBER:
       return (
