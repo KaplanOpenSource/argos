@@ -6,14 +6,14 @@ import { AttributeItemOnTrial } from "../AttributeItemOnTrial";
 import { SelectDeviceButton } from "../SelectDeviceButton";
 import { NumberCoordField } from "./NumberCoordField";
 
-// TODO: Use TrialObj instead
-
 export const DevicesTabularOneDevice = ({
   deviceType,
   attributeTypes,
+  showAllDevices,
 }: {
   deviceType: DeviceTypeObj,
   attributeTypes: AttributeTypeObj[],
+  showAllDevices: boolean,
 }) => {
   const { shownMap, trial, changeTrialObj } = useChosenTrial();
 
@@ -25,7 +25,7 @@ export const DevicesTabularOneDevice = ({
 
   return (
     <>
-      {devices.map((deviceItem, itr) => {
+      {devices.map((deviceItem) => {
         const deviceOnTrial = trial?.findDevice({ deviceTypeName: deviceType.name!, deviceItemName: deviceItem.name! });
         const hasLocation = deviceOnTrial?.location?.coordinates?.length === 2 && deviceOnTrial?.location?.coordinates.every(x => Number.isFinite(x));
 
@@ -34,6 +34,10 @@ export const DevicesTabularOneDevice = ({
             const dev = draft.findDevice(deviceOnTrial);
             dev?.setLocationOnMap(coords, shownMap?.name);
           })
+        }
+
+        if (!showAllDevices && !deviceOnTrial) {
+          return null;
         }
 
         return (
@@ -76,8 +80,7 @@ export const DevicesTabularOneDevice = ({
                   key={attrType.name}
                 >
                   {deviceOnTrial
-                    ?
-                    <AttributeItemOnTrial
+                    ? <AttributeItemOnTrial
                       attrType={attrType}
                       deviceOnTrial={deviceOnTrial}
                     />

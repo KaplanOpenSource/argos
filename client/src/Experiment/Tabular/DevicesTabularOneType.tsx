@@ -1,4 +1,4 @@
-import { ChevronRight, ExpandMore } from "@mui/icons-material";
+import { ChevronRight, ExpandMore, Visibility, VisibilityOff } from "@mui/icons-material";
 import { TableBody, TableCell, TableHead, TableRow, Tooltip } from "@mui/material";
 import { useState } from "react";
 import { DeviceTypeObj } from "../../objects";
@@ -13,6 +13,7 @@ export const DevicesTabularOneType = ({
   deviceType: DeviceTypeObj,
 }) => {
   const [open, setOpen] = useState(true);
+  const [showAllDevices, setShowAllDevices] = useState(false);
   const attributeTypes = (deviceType?.attributeTypes || []).filter(x => x.scope === ScopeEnum.SCOPE_TRIAL);
   return (
     <>
@@ -34,6 +35,13 @@ export const DevicesTabularOneType = ({
               style={{ margin: 0, padding: 0 }}
             >
               {open ? <ExpandMore /> : <ChevronRight />}
+            </ButtonTooltip>
+            <ButtonTooltip
+              tooltip={showAllDevices ? "Showing all devices" : "Showing just placed devices"}
+              onClick={() => setShowAllDevices(!showAllDevices)}
+              style={{ margin: 0, padding: 0 }}
+            >
+              {showAllDevices ? <Visibility /> : <VisibilityOff />}
             </ButtonTooltip>
             {/* <AttributeTypesDialogButton
               data={deviceType}
@@ -83,6 +91,7 @@ export const DevicesTabularOneType = ({
             <DevicesTabularOneDevice
               deviceType={deviceType}
               attributeTypes={attributeTypes}
+              showAllDevices={showAllDevices}
             />
           )
           : (
