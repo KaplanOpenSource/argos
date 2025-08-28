@@ -37,8 +37,9 @@ export const Trial = ({
   children: any,
 }) => {
   const { selection } = useDeviceSeletion();
-  const { currTrial, setCurrTrial } = useExperimentProvider();
-  const { chooseShownMap, trial } = useChosenTrial();
+  const { currTrial } = useExperimentProvider();
+  const { chooseShownMap, trial, chooseTrial } = useChosenTrial();
+
   const { downloadGeojson, downloadZipCsv } = useTrialGeoJson();
   const { addActionOnMap } = useContext(ActionsOnMapContext)!;
   const { setExperiment } = useExperiments();
@@ -81,7 +82,7 @@ export const Trial = ({
           <ButtonTooltip
             tooltip="Select trial for editing"
             onClick={() => {
-              setCurrTrial({ experimentName: experiment.name, trialTypeName: trialType.name, trialName: data.name });
+              chooseTrial({ experimentName: experiment.name, trialTypeName: trialType.name, trialName: data.name });
             }}
           >
             <Edit color={isTrialChosen ? "primary" : "inherit"} />

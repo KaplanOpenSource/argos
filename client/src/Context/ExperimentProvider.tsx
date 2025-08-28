@@ -1,7 +1,6 @@
 import { createContext, useContext } from "react";
 import { IExperiment, IImageStandalone, ITrial, ITrialType } from "../types/types";
 import { useChosenTrial } from "./useChosenTrial";
-import { useExperiments } from "./useExperiments";
 
 // TODO:
 // - When changing name or deleting trial before current trial, different trial is chosen
@@ -14,7 +13,6 @@ import { useExperiments } from "./useExperiments";
 // - avoid using actions from ExperimentProvider
 
 interface IExperimentProviderStore {
-  setCurrTrial: (params: { experimentName?: string; trialTypeName?: string; trialName?: string; }) => void; // a function to set the current trial
   currTrial: {
     experiment: IExperiment | undefined;
     trialType: ITrialType | undefined; // the current trial type
@@ -29,15 +27,16 @@ interface IExperimentProviderStore {
 
 const experimentContext = createContext<IExperimentProviderStore | null>(null);
 
-export const ExperimentProvider = ({ children }) => {
-  const { setExperiment, experiments } = useExperiments();
+export const ExperimentProvider = ({
+  children
+}: {
+  children: any
+}) => {
   const {
     experiment,
     trialType,
     trial,
     shownMap,
-    chooseTrial,
-    setTrialIntoExp,
   } = useChosenTrial();
 
   const currTrial = {
@@ -51,20 +50,7 @@ export const ExperimentProvider = ({ children }) => {
     trialName: trial?.name, // this field is for legacy
   };
 
-  const setCurrTrial = ({
-    experimentName,
-    trialTypeName,
-    trialName,
-  }: {
-    experimentName?: string | undefined,
-    trialTypeName?: string | undefined,
-    trialName?: string | undefined,
-  }) => {
-    chooseTrial({ experimentName, trialTypeName, trialName });
-  }
-
   const store = {
-    setCurrTrial,
     currTrial,
   };
 

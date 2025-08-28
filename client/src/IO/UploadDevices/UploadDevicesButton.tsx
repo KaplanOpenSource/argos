@@ -1,6 +1,6 @@
 import { HourglassBottom, Upload } from "@mui/icons-material";
 import { useState } from "react";
-import { useExperimentProvider } from "../../Context/ExperimentProvider";
+import { useChosenTrial } from "../../Context/useChosenTrial";
 import { ButtonFile } from "../../Utils/ButtonFile";
 import { ErrorsDialog } from "../ErrorsDialog";
 import { obtainDevicesFromFile } from "./obtainDevicesFromFile";
@@ -15,7 +15,7 @@ export const UploadDevicesButton = ({
   const [working, setWorking] = useState(false);
   const [errors, setErrors] = useState(undefined);
   const [devicesToUpload, setDevicesToUpload] = useState([]);
-  const { setCurrTrial } = useExperimentProvider();
+  const { chooseTrial } = useChosenTrial();
 
   const handleChangeFile = async (files) => {
     setWorking(true);
@@ -44,7 +44,7 @@ export const UploadDevicesButton = ({
         tooltip={'Upload devices as geojson, csv, zip of csvs'}
         onChange={handleChangeFile}
         onClickCapture={() => {
-          setCurrTrial({ experimentName: experiment.name, trialTypeName: trialType.name, trialName: trial.name })
+          chooseTrial({ experimentName: experiment.name, trialTypeName: trialType.name, trialName: trial.name })
         }}
         disabled={working}
       >
