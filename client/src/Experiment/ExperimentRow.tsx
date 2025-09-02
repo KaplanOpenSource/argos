@@ -64,7 +64,7 @@ export const ExperimentRow = ({
         <TextFieldDebounceOutlined
           label="Description"
           value={data.description}
-          onChange={val => setData({ ...data, description: val })}
+          onChange={(description: string) => setData({ ...data, description })}
           multiline={true}
           rows={2}
         />
