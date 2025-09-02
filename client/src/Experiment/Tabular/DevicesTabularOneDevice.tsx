@@ -51,20 +51,21 @@ export const DevicesTabularOneDevice = ({
             tooltip={showTrials.show
               ? (showAllTypes ? "Showing values on all trials" : "Showing values on other trials")
               : "Hiding values on other trials"}
-            onClick={() => setShowTrials(prev => ({ ...prev, show: !prev.show }))}
+            onClick={() => setShowTrials(prev => {
+              if (!prev.show) {
+                return { show: true, types: new Set() };
+              } else if (!showAllTypes) {
+                return { show: true, types: new Set((experiment?.trialTypes || []).map(tt => tt.name)) };
+              } else {
+                return { show: false, types: new Set() };
+              }
+            })}
             style={{ margin: 0, padding: 0 }}
           >
             {showTrials.show
               ? (showAllTypes ? <KeyboardDoubleArrowDown /> : <ExpandMore />)
               : <ChevronRight />}
           </ButtonTooltip>
-          {/* <ButtonTooltip
-            tooltip={showAllTypes ? "Expanding all trial types, click to hide all" : "Not all trial types are shown, click to expand all"}
-            onClick={() => setShowAllTypes(!showAllTypes)}
-            style={{ margin: 0, padding: 0 }}
-          >
-            {showAllTypes ? <KeyboardDoubleArrowDown /> : <KeyboardDoubleArrowRight />}
-          </ButtonTooltip> */}
         </>)}
       />
       {showTrials.show
