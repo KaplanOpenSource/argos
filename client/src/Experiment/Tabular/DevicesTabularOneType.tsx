@@ -1,9 +1,10 @@
 import { ChevronRight, ExpandMore, KeyboardDoubleArrowDown } from "@mui/icons-material";
-import { TableBody, TableCell, TableHead, TableRow, Tooltip } from "@mui/material";
+import { Stack, TableBody, TableCell, TableHead, TableRow, Tooltip } from "@mui/material";
 import { useState } from "react";
 import { DeviceTypeObj } from "../../objects";
 import { ScopeEnum } from "../../types/ScopeEnum";
 import { ButtonTooltip } from "../../Utils/ButtonTooltip";
+import { ContextMenu } from "../../Utils/ContextMenu";
 import { shortenName } from "../../Utils/utils";
 import { DevicesTabularOneDevice } from "./DevicesTabularOneDevice";
 
@@ -28,33 +29,43 @@ export const DevicesTabularOneType = ({
           <TableCell key={':tr'}
             sx={{ paddingRight: 0 }}
           >
-            {deviceType.name}
-            <ButtonTooltip
-              tooltip={open
-                ? (showAllDevices
-                  ? "Showing all devices"
-                  : "Showing just placed devices")
-                : "Devices are collapsed, click to show"
-              }
-              style={{ margin: 0, padding: 0 }}
-              onClick={() => {
-                if (!open) {
-                  setOpen(true);
-                  setShowAllDevices(false);
-                } else if (!showAllDevices) {
-                  setOpen(true);
-                  setShowAllDevices(true);
-                } else {
-                  setOpen(false);
-                  setShowAllDevices(false);
-                }
-              }}
-            >
-              {open
-                ? (showAllDevices ? <KeyboardDoubleArrowDown /> : <ExpandMore />)
-                : <ChevronRight />
-              }
-            </ButtonTooltip>
+            <Stack direction='row'>
+              {deviceType.name}
+              <ContextMenu
+                menuItems={[
+                  { label: "Show all devices", callback: () => { setOpen(true); setShowAllDevices(true); } },
+                  { label: "Show just placed devices", callback: () => { setOpen(true); setShowAllDevices(false); } },
+                  { label: "Hide all devices", callback: () => { setOpen(false); setShowAllDevices(false); } },
+                ]}
+              >
+                <ButtonTooltip
+                  tooltip={open
+                    ? (showAllDevices
+                      ? "Showing all devices"
+                      : "Showing just placed devices")
+                    : "Devices are collapsed, click to show"
+                  }
+                  style={{ margin: 0, padding: 0 }}
+                  onClick={() => {
+                    if (!open) {
+                      setOpen(true);
+                      setShowAllDevices(false);
+                    } else if (!showAllDevices) {
+                      setOpen(true);
+                      setShowAllDevices(true);
+                    } else {
+                      setOpen(false);
+                      setShowAllDevices(false);
+                    }
+                  }}
+                >
+                  {open
+                    ? (showAllDevices ? <KeyboardDoubleArrowDown /> : <ExpandMore />)
+                    : <ChevronRight />
+                  }
+                </ButtonTooltip>
+              </ContextMenu>
+            </Stack>
           </TableCell>
           <TableCell key={':tlat'}>
             Latitude

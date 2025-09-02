@@ -11,7 +11,7 @@ export const ContextMenu = ({
   children,
 }: {
   menuItems: IMenuCallbackItem[],
-  children: ReactNode[],
+  children: ReactNode,
 }) => {
   const [menuAnchorElement, setMenuAnchorElement] = React.useState<Element | null>(null);
 
