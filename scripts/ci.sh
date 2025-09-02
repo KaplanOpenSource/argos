@@ -2,7 +2,7 @@
 
 cd ~/argos
 # Check new version exists
-git fetch && if [ "$1" = "--force" ] || [ `git rev-parse HEAD` != `git rev-parse origin/HEAD` ]; then
+git fetch && if [ "$1" = "--force" ] || [ `git rev-parse HEAD` != `git rev-parse origin/main` ]; then
   # kill previous server instance if running
   server_pid=$(ps ax | grep 'python -um server' | grep -v grep | awk '{print $1;}')
   echo $server_pid
@@ -12,7 +12,7 @@ git fetch && if [ "$1" = "--force" ] || [ `git rev-parse HEAD` != `git rev-parse
       ps ax | grep 'python -um server' | grep -v grep
   fi
 
-	git reset --hard origin/HEAD;
+	git reset --hard origin/main;
 
   # Build react client side
 	cd client
