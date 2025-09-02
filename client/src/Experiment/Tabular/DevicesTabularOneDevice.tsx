@@ -1,4 +1,4 @@
-import { ChevronRight, ExpandMore } from "@mui/icons-material";
+import { ChevronRight, ExpandMore, KeyboardDoubleArrowDown } from "@mui/icons-material";
 import { Stack, TableCell, TableRow, Typography } from "@mui/material";
 import { Fragment, useState } from "react";
 import { useChosenTrial } from "../../Context/useChosenTrial";
@@ -20,14 +20,14 @@ export const DevicesTabularOneDevice = ({
   const [showTrials, setShowTrials] = useState({ show: false, types: new Set() });
 
   const { trial, experiment } = useChosenTrial();
-
+  const showAllTypes = showTrials.show && showTrials.types.size === (experiment?.trialTypes.length || 1);
   const deviceOnTrial = trial?.findDevice({ deviceTypeName: deviceType.name!, deviceItemName: deviceItem.name! });
 
   if (!showAllDevices && !deviceOnTrial) {
     return null;
   }
 
-  // const showAllTypes = showTrials.show && trialTypesOpen.size === (experiment?.trialTypes.length || 1);
+
   // const setShowAllTypes = (yes: boolean) => {
   //   setTrialTypesOpen(new Set(yes ? (experiment?.trialTypes || []).map(tt => tt.name) : []));
   //   if (yes) {
@@ -48,11 +48,15 @@ export const DevicesTabularOneDevice = ({
             {deviceItem.name}
           </Typography>
           <ButtonTooltip
-            tooltip={showTrials ? "Showing values on all trials" : "Hiding values on other trials"}
+            tooltip={showTrials.show
+              ? (showAllTypes ? "Showing values on all trials" : "Showing values on other trials")
+              : "Hiding values on other trials"}
             onClick={() => setShowTrials(prev => ({ ...prev, show: !prev.show }))}
             style={{ margin: 0, padding: 0 }}
           >
-            {showTrials.show ? <ExpandMore /> : <ChevronRight />}
+            {showTrials.show
+              ? (showAllTypes ? <KeyboardDoubleArrowDown /> : <ExpandMore />)
+              : <ChevronRight />}
           </ButtonTooltip>
           {/* <ButtonTooltip
             tooltip={showAllTypes ? "Expanding all trial types, click to hide all" : "Not all trial types are shown, click to expand all"}
