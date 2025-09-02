@@ -1,4 +1,4 @@
-import { ChevronRight, ExpandMore, KeyboardDoubleArrowDown, KeyboardDoubleArrowRight } from "@mui/icons-material";
+import { ChevronRight, ExpandMore } from "@mui/icons-material";
 import { Stack, TableCell, TableRow, Typography } from "@mui/material";
 import { Fragment, useState } from "react";
 import { useChosenTrial } from "../../Context/useChosenTrial";
@@ -17,8 +17,7 @@ export const DevicesTabularOneDevice = ({
   attributeTypes: AttributeTypeObj[],
   showAllDevices: boolean,
 }) => {
-  const [showAllTrials, setShowAllTrials] = useState(false);
-  const [trialTypesOpen, setTrialTypesOpen] = useState<Set<string>>(new Set());
+  const [showTrials, setShowTrials] = useState({ show: false, types: new Set() });
 
   const { trial, experiment } = useChosenTrial();
 
@@ -28,13 +27,13 @@ export const DevicesTabularOneDevice = ({
     return null;
   }
 
-  const showAllTypes = showAllTrials && trialTypesOpen.size === (experiment?.trialTypes.length || 1);
-  const setShowAllTypes = (yes: boolean) => {
-    setTrialTypesOpen(new Set(yes ? (experiment?.trialTypes || []).map(tt => tt.name) : []));
-    if (yes) {
-      setShowAllTrials(true);
-    }
-  }
+  // const showAllTypes = showTrials.show && trialTypesOpen.size === (experiment?.trialTypes.length || 1);
+  // const setShowAllTypes = (yes: boolean) => {
+  //   setTrialTypesOpen(new Set(yes ? (experiment?.trialTypes || []).map(tt => tt.name) : []));
+  //   if (yes) {
+  //     setShowTrials(true);
+  //   }
+  // }
 
   return (
     <>
@@ -49,30 +48,30 @@ export const DevicesTabularOneDevice = ({
             {deviceItem.name}
           </Typography>
           <ButtonTooltip
-            tooltip={showAllTrials ? "Showing values on all trials" : "Hiding values on other trials"}
-            onClick={() => setShowAllTrials(!showAllTrials)}
+            tooltip={showTrials ? "Showing values on all trials" : "Hiding values on other trials"}
+            onClick={() => setShowTrials(prev => ({ ...prev, show: !prev.show }))}
             style={{ margin: 0, padding: 0 }}
           >
-            {showAllTrials ? <ExpandMore /> : <ChevronRight />}
+            {showTrials.show ? <ExpandMore /> : <ChevronRight />}
           </ButtonTooltip>
-          <ButtonTooltip
+          {/* <ButtonTooltip
             tooltip={showAllTypes ? "Expanding all trial types, click to hide all" : "Not all trial types are shown, click to expand all"}
             onClick={() => setShowAllTypes(!showAllTypes)}
             style={{ margin: 0, padding: 0 }}
           >
             {showAllTypes ? <KeyboardDoubleArrowDown /> : <KeyboardDoubleArrowRight />}
-          </ButtonTooltip>
+          </ButtonTooltip> */}
         </>)}
       />
-      {showAllTrials
+      {showTrials.show
         ? experiment?.trialTypes
           .map(trialType => {
 
-            const typeOpen = trialTypesOpen.has(trialType.name);
+            const typeOpen = showTrials.types.has(trialType.name);
             const setTypeOpen = (yes: boolean) => {
-              setTrialTypesOpen(prev => {
-                const newval = new Set(prev);
-                yes ? newval.add(trialType.name) : newval.delete(trialType.name)
+              setShowTrials(prev => {
+                const newval = structuredClone(prev);
+                yes ? newval.types.add(trialType.name) : newval.types.delete(trialType.name)
                 return newval;
               });
             }
