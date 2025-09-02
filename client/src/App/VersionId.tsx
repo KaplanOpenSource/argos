@@ -9,7 +9,7 @@ export const VersionId = ({ }) => {
         const resp = await fetch("/commit.txt");
         if (resp.ok) {
           const com = await resp.text();
-          setCommitId(com.slice(0, 7));
+          setCommitId(com.slice(0, 7) + '_try');
         } else {
           setCommitId('')
         }
