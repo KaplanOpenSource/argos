@@ -3,13 +3,22 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { IconButton, Tooltip, Typography } from "@mui/material";
 import dayjs from "dayjs";
 import { TreeRowOnChosen } from "../App/TreeRowOnChosen";
+import { IExperiment, ITrialType } from '../types/types';
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { changeByName, createNewName } from "../Utils/utils";
 import { AddNewTrialButton } from "./AddNewTrialButton";
 import { AttributeTypesDialogButton } from "./AttributeTypesDialogButton";
 import { Trial } from "./Trial";
 
-export const TrialType = ({ data, setData, experiment }) => {
+export const TrialType = ({
+  data,
+  setData,
+  experiment,
+}: {
+  data: ITrialType,
+  setData: (val: ITrialType | undefined) => void,
+  experiment: IExperiment,
+}) => {
   const trials = data?.trials || [];
   return (
     <TreeRowOnChosen
@@ -46,7 +55,7 @@ export const TrialType = ({ data, setData, experiment }) => {
             key={itemData.name}
             data={itemData}
             setData={newData => {
-              setData({ ...data, trials: changeByName(data.trials, itemData.name, newData) });
+              setData({ ...data, trials: changeByName(data.trials, itemData.name!, newData) });
             }}
             experiment={experiment}
             trialType={data}

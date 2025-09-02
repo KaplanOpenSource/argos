@@ -1,15 +1,22 @@
 import { Typography } from "@mui/material";
 import { sum } from "lodash";
 import { TreeSublist } from "../App/TreeSublist";
+import { IExperiment } from "../types/types";
 import { changeByName } from "../Utils/utils";
 import { TrialType } from "./TrialType";
 
-export const TrialTypesList = ({ data, setData }) => {
+export const TrialTypesList = ({
+  data,
+  setData,
+}: {
+  data: IExperiment,
+  setData: (val: IExperiment) => void,
+}) => {
   const trialTypes = data?.trialTypes || [];
   const trialsNum = sum(trialTypes.map(x => x?.trials?.length || 0));
   return (
     <TreeSublist
-      parentKey={data.trackUuid}
+      parentKey={data.trackUuid!}
       data={data}
       fieldName='trialTypes'
       nameTemplate='New Trial Type'
@@ -37,7 +44,7 @@ export const TrialTypesList = ({ data, setData }) => {
           key={itemData.trackUuid}
           data={itemData}
           setData={newData => {
-            setData({ ...data, trialTypes: changeByName(data.trialTypes, itemData.name, newData) });
+            setData({ ...data, trialTypes: changeByName(data.trialTypes, itemData.name!, newData) });
           }}
           experiment={data}
         />

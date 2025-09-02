@@ -81,7 +81,7 @@ export const ExperimentRow = ({
       />
 
       <TreeSublist
-        parentKey={data.trackUuid}
+        parentKey={data.trackUuid!}
         data={data}
         fieldName='imageEmbedded'
         nameTemplate='New Embedded Image'
@@ -101,7 +101,7 @@ export const ExperimentRow = ({
               key={itemData.name}
               data={itemData}
               setData={newData => {
-                setData({ ...data, imageEmbedded: changeByName(data.imageEmbedded, itemData.name, newData) });
+                setData({ ...data, imageEmbedded: changeByName(data.imageEmbedded, itemData.name!, newData) });
               }}
               experiment={data}
             />
@@ -110,7 +110,7 @@ export const ExperimentRow = ({
       </TreeSublist>
 
       <TreeSublist
-        parentKey={data.trackUuid}
+        parentKey={data.trackUuid!}
         data={data}
         fieldName='imageStandalone'
         nameTemplate='New Standalone Image'
@@ -122,7 +122,7 @@ export const ExperimentRow = ({
               key={itemData.name}
               data={itemData}
               setData={newData => {
-                setData({ ...data, imageStandalone: changeByName(data.imageStandalone, itemData.name, newData) });
+                setData({ ...data, imageStandalone: changeByName(data.imageStandalone, itemData.name!, newData) });
               }}
               experiment={data}
             />
