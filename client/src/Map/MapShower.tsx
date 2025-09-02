@@ -3,6 +3,7 @@ import 'leaflet/dist/leaflet.css';
 
 import 'leaflet-contextmenu';
 import 'leaflet-contextmenu/dist/leaflet.contextmenu.css';
+import { ReactNode } from 'react';
 import { AttributionControl, MapContainer, ZoomControl } from 'react-leaflet';
 import { useChosenTrial, useExperimentProvider } from '../Context/useChosenTrial';
 import { useExperiments } from '../Context/useExperiments';
@@ -15,7 +16,11 @@ import { RealMap } from './RealMap';
 
 L.Icon.Default.imagePath = 'leaflet-images/';
 
-export const MapShower = ({ children }) => {
+export const MapShower = ({
+  children,
+}: {
+  children: ReactNode[],
+}) => {
   const {
     currTrial,
   } = useExperimentProvider();

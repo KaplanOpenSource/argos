@@ -6,7 +6,7 @@ import { IExperiment, IImageStandalone } from "../types/types";
 import { useChosenTrial } from "./useChosenTrial";
 
 export const useShownMap = ({ }) => {
-  const { addActionOnMap } = useContext(ActionsOnMapContext);
+  const { addActionOnMap } = useContext(ActionsOnMapContext)!;
   const { experiment, chooseShownMap } = useChosenTrial();
 
   const imageHasDimensions = (stand: IImageStandalone) => {

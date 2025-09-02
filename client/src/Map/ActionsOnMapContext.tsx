@@ -1,5 +1,5 @@
 import { LatLngBounds, Map } from "leaflet";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { useMap } from "react-leaflet";
 import { MapEventer } from "./MapEventer";
 
@@ -14,7 +14,11 @@ type IActionsOnMapStore = {
 
 export const ActionsOnMapContext = createContext<IActionsOnMapStore | null>(null);
 
-export const ActionsOnMapProvider = ({ children }) => {
+export const ActionsOnMapProvider = ({
+  children,
+}: {
+  children: ReactNode[],
+}) => {
   const [actionsOnMap, setActionsOnMap] = useState<IActionOnMap[]>([]);
   const [mapBounds, setMapBounds] = useState<LatLngBounds>();
   const addActionOnMap = (newAction: IActionOnMap) => {
