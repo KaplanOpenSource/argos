@@ -1,4 +1,4 @@
-import { ChevronRight, ExpandMore, Visibility, VisibilityOff } from "@mui/icons-material";
+import { ChevronRight, ExpandMore, KeyboardDoubleArrowDown } from "@mui/icons-material";
 import { TableBody, TableCell, TableHead, TableRow, Tooltip } from "@mui/material";
 import { useState } from "react";
 import { DeviceTypeObj } from "../../objects";
@@ -30,40 +30,31 @@ export const DevicesTabularOneType = ({
           >
             {deviceType.name}
             <ButtonTooltip
-              tooltip={open ? "Collapse devices" : "Show devices"}
-              onClick={() => setOpen(!open)}
+              tooltip={open
+                ? (showAllDevices
+                  ? "Showing all devices"
+                  : "Showing just placed devices")
+                : "Devices are collapsed, click to show"
+              }
               style={{ margin: 0, padding: 0 }}
-            >
-              {open ? <ExpandMore /> : <ChevronRight />}
-            </ButtonTooltip>
-            <ButtonTooltip
-              tooltip={showAllDevices ? "Showing all devices" : "Showing just placed devices"}
-              onClick={() => setShowAllDevices(!showAllDevices)}
-              style={{ margin: 0, padding: 0 }}
-            >
-              {showAllDevices ? <Visibility /> : <VisibilityOff />}
-            </ButtonTooltip>
-            {/* <AttributeTypesDialogButton
-              data={deviceType}
-              setData={(val: IDeviceType) => setDeviceType(val)}
-              isOfDevice={true}
-            />
-            <ButtonTooltip
-              tooltip="Add new device"
-              onClick={e => {
-                e.stopPropagation();
-                const name = createNewName(deviceType.devices, 'New Device');
-                setDeviceType({ ...deviceType, devices: [...(deviceType.devices || []), assignUuids({ name })] });
+              onClick={() => {
+                if (!open) {
+                  setOpen(true);
+                  setShowAllDevices(false);
+                } else if (!showAllDevices) {
+                  setOpen(true);
+                  setShowAllDevices(true);
+                } else {
+                  setOpen(false);
+                  setShowAllDevices(false);
+                }
               }}
             >
-              <Add />
+              {open
+                ? (showAllDevices ? <KeyboardDoubleArrowDown /> : <ExpandMore />)
+                : <ChevronRight />
+              }
             </ButtonTooltip>
-            <AddMultipleDevices
-              deviceType={deviceType}
-              addDevices={(newDevices: IDevice[]) => {
-                setDeviceType({ ...deviceType, devices: [...(deviceType.devices || []), ...newDevices] })
-              }}
-            /> */}
           </TableCell>
           <TableCell key={':tlat'}>
             Latitude
@@ -96,26 +87,7 @@ export const DevicesTabularOneType = ({
               showAllDevices={showAllDevices}
             />
           ))
-          : (
-            <TableRow
-              style={{
-                backgroundSize: "10px 10px",
-                background: "repeating-linear-gradient(-45deg,#fff,#fff 10px,#eee 10px,#eee 20px)",
-              }}
-              onClick={() => setOpen(true)}
-            >
-              <TableCell component="th" scope="row" key={'name'}>
-                {deviceType.name}
-              </TableCell>
-              <TableCell component="th" scope="row" key={'num'}>
-                {deviceType?.devices?.length || 0} devices (collapsed)
-              </TableCell>
-              <TableCell key={'stripes'}
-                colSpan={attributeTypes.length + 1}
-              >
-              </TableCell>
-            </TableRow>
-          )
+          : null
         }
       </TableBody>
     </>
