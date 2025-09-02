@@ -1,14 +1,14 @@
-import type { Map } from 'leaflet';
+import type { LeafletEvent, Map } from 'leaflet';
 import { useMapEvents } from "react-leaflet";
 
 export const MapEventer = ({
   mapEvents,
   directlyOnMap = true,
 }: {
-  mapEvents: { [funcName: string]: (e: any, mapObj: Map) => any },
+  mapEvents: { [funcName: string]: (e: LeafletEvent, mapObj: Map) => any },
   directlyOnMap?: boolean,
 }) => {
-  const eventFuncs = {};
+  const eventFuncs: { [funcName: string]: (e: LeafletEvent) => any } = {};
   for (const [funcName, func] of Object.entries(mapEvents)) {
     // if (directlyOnMap) {
     //   eventFuncs[funcName] = (e) => {
@@ -18,7 +18,7 @@ export const MapEventer = ({
     //     }
     //   }
     // } else {
-    eventFuncs[funcName] = (e) => {
+    eventFuncs[funcName] = (e: LeafletEvent) => {
       func(e, mapObj);
     }
     // }
