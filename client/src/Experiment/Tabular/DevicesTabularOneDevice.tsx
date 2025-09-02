@@ -18,7 +18,7 @@ export const DevicesTabularOneDevice = ({
   showAllDevices: boolean,
 }) => {
   const [showAllTrials, setShowAllTrials] = useState(false);
-  const [trialTypesOpen, setTrialTypesOpen] = useState<string[]>([]);
+  const [trialTypesOpen, setTrialTypesOpen] = useState<Set<string>>(new Set());
 
   const { trial, experiment } = useChosenTrial();
 
@@ -28,9 +28,9 @@ export const DevicesTabularOneDevice = ({
     return null;
   }
 
-  const showAllTypes = showAllTrials && trialTypesOpen.length === (experiment?.trialTypes.length || 1);
+  const showAllTypes = showAllTrials && trialTypesOpen.size === (experiment?.trialTypes.length || 1);
   const setShowAllTypes = (yes: boolean) => {
-    setTrialTypesOpen(yes ? (experiment?.trialTypes || []).map(tt => tt.name) : []);
+    setTrialTypesOpen(new Set(yes ? (experiment?.trialTypes || []).map(tt => tt.name) : []));
     if (yes) {
       setShowAllTrials(true);
     }
@@ -68,13 +68,13 @@ export const DevicesTabularOneDevice = ({
         ? experiment?.trialTypes
           .map(trialType => {
 
-            const typeOpen = trialTypesOpen.includes(trialType.name);
+            const typeOpen = trialTypesOpen.has(trialType.name);
             const setTypeOpen = (yes: boolean) => {
-              const newval = trialTypesOpen.filter(t => t !== trialType.name);
-              if (yes) {
-                newval.push(trialType.name);
-              }
-              setTrialTypesOpen(newval);
+              setTrialTypesOpen(prev => {
+                const newval = new Set(prev);
+                yes ? newval.add(trialType.name) : newval.delete(trialType.name)
+                return newval;
+              });
             }
 
             return (
