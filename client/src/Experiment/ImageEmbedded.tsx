@@ -40,8 +40,8 @@ export const ImageEmbedded = ({
             <DeleteIcon />
           </ButtonTooltip>
           <UploadImageButton
-            imageName={data.name}
-            experimentName={experiment.name}
+            imageName={data.name!}
+            experimentName={experiment.name!}
             onChangeFile={(filename, height, width) => {
               console.log(mapBounds);
               if (!mapBounds) {
