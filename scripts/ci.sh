@@ -25,7 +25,7 @@ git fetch && if [ "$1" = "--force" ] || [ `git rev-parse HEAD` != `git rev-parse
   if [ ! -d ".venv" ]; then
     python -m venv .venv
   fi
-	source .venv/bin/activate # . is a synonym to source
+	. .venv/bin/activate # . is a synonym to source
 	pip install -r requirements.txt
   python --version
 
