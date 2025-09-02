@@ -3,14 +3,22 @@ import dayjs from "dayjs";
 import { assignUuids } from "../Context/TrackUuidUtils";
 import { ButtonTooltip } from "../Utils/ButtonTooltip";
 import { createNewName } from "../Utils/utils";
+import { IExperiment, ITrialType } from "../types/types";
 
-export const AddNewTrialButton = ({ trialType, setTrialType }) => {
+export const AddNewTrialButton = ({
+  experiment,
+  trialType,
+  setTrialType,
+}: {
+  experiment: IExperiment,
+  trialType: ITrialType,
+  setTrialType: (val: ITrialType) => void,
+}) => {
   return (
     <ButtonTooltip
       tooltip="Add new trial"
       onClick={e => {
-        e.stopPropagation();
-        const name = createNewName(trialType.trials, 'New Trial');
+        const name = createNewName(experiment.trialTypes?.flatMap(t => t.trials || []) || [], 'New Trial');
         const createdDate = dayjs().startOf('day').add(12, 'hours').toISOString();
         const newTrial = assignUuids({ name, createdDate });
         setTrialType({ ...trialType, trials: [...(trialType.trials || []), newTrial] });

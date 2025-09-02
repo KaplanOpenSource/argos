@@ -34,6 +34,7 @@ export const TrialType = ({
             </IconButton>
           </Tooltip>
           <AddNewTrialButton
+            experiment={experiment}
             trialType={data}
             setTrialType={setData}
           />
