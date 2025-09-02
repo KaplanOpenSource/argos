@@ -1,8 +1,19 @@
 import { Menu, MenuItem } from '@mui/material';
-import React from 'react';
+import React, { ReactNode } from 'react';
 
-export const ContextMenu = ({ menuItems, children }) => {
-  const [menuAnchorElement, setMenuAnchorElement] = React.useState(null);
+export type IMenuCallbackItem = {
+  label: string;
+  callback: () => void;
+};
+
+export const ContextMenu = ({
+  menuItems,
+  children,
+}: {
+  menuItems: IMenuCallbackItem[],
+  children: ReactNode[],
+}) => {
+  const [menuAnchorElement, setMenuAnchorElement] = React.useState<Element | null>(null);
 
   const handleClose = () => {
     setMenuAnchorElement(null);
@@ -23,7 +34,7 @@ export const ContextMenu = ({ menuItems, children }) => {
               onClick={(e) => {
                 e.stopPropagation();
                 e.preventDefault();
-                callback(e);
+                callback();
                 handleClose();
               }}
               key={label}
