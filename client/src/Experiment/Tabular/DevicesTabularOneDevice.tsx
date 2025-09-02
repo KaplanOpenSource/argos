@@ -27,14 +27,6 @@ export const DevicesTabularOneDevice = ({
     return null;
   }
 
-
-  // const setShowAllTypes = (yes: boolean) => {
-  //   setTrialTypesOpen(new Set(yes ? (experiment?.trialTypes || []).map(tt => tt.name) : []));
-  //   if (yes) {
-  //     setShowTrials(true);
-  //   }
-  // }
-
   return (
     <>
       <DevicesTabularDeviceTrial
