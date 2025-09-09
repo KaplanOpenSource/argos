@@ -1,4 +1,4 @@
-import { MouseEvent, ReactNode, useState } from 'react';
+import { MouseEvent, useState } from 'react';
 import { ButtonTooltip } from "./ButtonTooltip";
 import { IMenuActionItem, MenuActions } from "./MenuActions";
 
@@ -10,7 +10,7 @@ export const ButtonMenu = ({
 }: {
   tooltip: any,
   menuItems: IMenuActionItem[],
-  children: ReactNode[],
+  children: any,
 }) => {
   const [anchorEl, setAnchorEl] = useState<Element | null>(null);
   return (

@@ -23,7 +23,15 @@ import { DevicesTabularView } from "./Tabular/DevicesTabularView";
 import { TrialsTabularView } from "./Tabular/TrialsTabularView";
 import { TrialTypesList } from "./TrialTypesList";
 
-export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
+export const ExperimentList = ({
+  fullscreen,
+  showConfig,
+  setShowConfig,
+}: {
+  fullscreen: boolean,
+  showConfig: string,
+  setShowConfig: (newval: string) => void,
+}) => {
   const { experiments, setExperiment } = useExperiments();
   const { chooseTrial, experiment } = useChosenTrial();
   const { cloneExperiment } = useCloneExperiment();
@@ -39,7 +47,7 @@ export const ExperimentList = ({ fullscreen, showConfig, setShowConfig }) => {
     return undefined;
   }
 
-  const handleNodeToggle = (_e, nodeIds: string[]) => {
+  const handleNodeToggle = (_e: any, nodeIds: string[]) => {
     const newlyExpanded = nodeIds.filter(nodeId => !expandedNodes.includes(nodeId));
 
     const foundExperiment = findExperimentByUuid(newlyExpanded[0]);
