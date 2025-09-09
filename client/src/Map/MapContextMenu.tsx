@@ -12,10 +12,7 @@ export const MapContextMenu = ({
 
   useMapEvent('contextmenu', (e) => {
     e.originalEvent.preventDefault(); // prevent default browser context menu
-    setMenuPosition({
-      mouseX: e.originalEvent.clientX,
-      mouseY: e.originalEvent.clientY,
-    });
+    setMenuPosition({ mouseX: e.originalEvent.clientX, mouseY: e.originalEvent.clientY });
   });
 
   const handleClose = () => {
@@ -34,6 +31,11 @@ export const MapContextMenu = ({
           ? { top: menuPosition.mouseY, left: menuPosition.mouseX }
           : undefined
       }
+      onContextMenu={e => {
+        e.stopPropagation();
+        e.preventDefault();
+        setMenuPosition({ mouseX: e.clientX, mouseY: e.clientY })
+      }}
     >
       {menuItems.map(({ label, callback }) => (
         <MenuItem
