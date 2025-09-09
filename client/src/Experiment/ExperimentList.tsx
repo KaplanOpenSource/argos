@@ -64,7 +64,7 @@ export const ExperimentList = ({
         newNodes.push(foundExperiment.trackUuid + '_trialTypes');
       }
       if (sum(foundExperiment?.trialTypes?.map(x => x?.trials?.length || 0)) < 10) {
-        newNodes.push(...(foundExperiment?.trialTypes?.map(tt => tt.trackUuid) || []));
+        newNodes.push(...(foundExperiment?.trialTypes?.map(tt => tt.trackUuid!) || []));
       }
       setExpandedNodes(newNodes);
       resetHiddenDeviceTypes();
