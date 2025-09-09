@@ -1,18 +1,24 @@
 import { Menu, MenuItem } from '@mui/material';
+import { LatLng } from 'leaflet';
 import { useState } from 'react';
 import { useMapEvent } from "react-leaflet";
-import { IMenuCallbackItem } from '../Utils/ContextMenu';
+
+export type IMapMenuCallbackItem = {
+  label: string;
+  callback: (latlng: LatLng) => void;
+};
+
 
 export const MapContextMenu = ({
   menuItems,
 }: {
-  menuItems: IMenuCallbackItem[],
+  menuItems: IMapMenuCallbackItem[],
 }) => {
-  const [menuPosition, setMenuPosition] = useState<{ mouseX: number; mouseY: number } | null>(null);
+  const [menuPosition, setMenuPosition] = useState<{ x: number; y: number, latlng: LatLng } | null>(null);
 
   useMapEvent('contextmenu', (e) => {
     e.originalEvent.preventDefault(); // prevent default browser context menu
-    setMenuPosition({ mouseX: e.originalEvent.clientX, mouseY: e.originalEvent.clientY });
+    setMenuPosition({ x: e.originalEvent.clientX, y: e.originalEvent.clientY, latlng: e.latlng });
   });
 
   const handleClose = () => {
@@ -28,21 +34,21 @@ export const MapContextMenu = ({
       anchorReference="anchorPosition"
       anchorPosition={
         menuPosition !== null
-          ? { top: menuPosition.mouseY, left: menuPosition.mouseX }
+          ? { top: menuPosition.y, left: menuPosition.x }
           : undefined
       }
       onContextMenu={e => {
         e.stopPropagation();
         e.preventDefault();
-        setMenuPosition({ mouseX: e.clientX, mouseY: e.clientY })
+        handleClose();
       }}
     >
-      {menuItems.map(({ label, callback }) => (
+      {(menuPosition?.latlng ? menuItems : []).map(({ label, callback }) => (
         <MenuItem
           onClick={(e) => {
             e.stopPropagation();
             e.preventDefault();
-            callback();
+            callback(menuPosition?.latlng!);
             handleClose();
           }}
           key={label}

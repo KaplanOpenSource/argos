@@ -65,10 +65,11 @@ export const MapPlacer = ({
       <MapContextMenu
         menuItems={[
           {
-            label: 'Place top point here',
-            callback: (_e: any, latlng) => {
+            label: selection.length ? 'Place top point here' : 'No devices selected to place here',
+            callback: (latlng) => {
               if (selection.length > 0) {
-                changeTrialObj(draft => draft.findDevice(selection[0])?.setLocationOnMap(latlng, shownMap?.name));
+                const pos: ICoordinates = [latlng.lat, latlng.lng];
+                changeTrialObj(draft => draft.findDevice(selection[0], true)?.setLocationOnMap(pos, shownMap?.name));
                 setSelection(selection.slice(1));
               }
             }
