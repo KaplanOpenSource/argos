@@ -1,4 +1,4 @@
-import type { LeafletEvent, Map as LeafletMap, LeafletMouseEvent } from 'leaflet';
+import { tooltip, type LeafletEvent, type Map as LeafletMap, type LeafletMouseEvent } from 'leaflet';
 import { useChosenTrial } from "../Context/useChosenTrial";
 import { useDeviceSeletion } from "../Context/useDeviceSeletion";
 import { useShape } from "../EditToolBox/ShapeContext";
@@ -46,10 +46,10 @@ export const MapPlacer = ({
           setSelection([]);
         }
       } else if (shape === CHOOSE_SHAPE) {
-        var tooltip = L.tooltip({ direction: 'top', content: 'Nothing to choose here', }).setLatLng(latlng)
-        mapObj.openTooltip(tooltip);
+        var t = tooltip({ direction: 'top', content: 'Nothing to choose here', }).setLatLng(latlng)
+        mapObj.openTooltip(t);
         setTimeout(() => {
-          mapObj.closeTooltip(tooltip);
+          mapObj.closeTooltip(t);
         }, 500);
       }
     }
@@ -64,8 +64,8 @@ export const MapPlacer = ({
       <MarkedShape
         markedPoints={markedPoints}
         setMarkedPoints={setMarkedPoints}
-        entityNum={selection.length}
-      // distanceInMeters={showDistanceInMeters}
+        deviceNum={selection.length}
+        distanceInMeters={shownMap !== undefined}
       />
       <MapContextMenu
         menuItems={[
