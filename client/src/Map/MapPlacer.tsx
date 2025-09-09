@@ -1,3 +1,4 @@
+import type { LeafletEvent, Map as LeafletMap, LeafletMouseEvent } from 'leaflet';
 import { useChosenTrial } from "../Context/useChosenTrial";
 import { useDeviceSeletion } from "../Context/useDeviceSeletion";
 import { useShape } from "../EditToolBox/ShapeContext";
@@ -10,13 +11,17 @@ import { MarkedShape } from "./MarkedShape";
 export const MapPlacer = ({
   markedPoints,
   setMarkedPoints,
+}: {
+  markedPoints: ICoordinates[],
+  setMarkedPoints: (newval: ICoordinates[]) => void,
 }) => {
   const { selection, setSelection } = useDeviceSeletion();
   const { shape, shapeData } = useShape();
   const { changeTrialObj, shownMap } = useChosenTrial();
 
-  const onMapClick = (e, mapObj) => {
-    const latlng: ICoordinates = [e.latlng.lat, e.latlng.lng];
+  const onMapClick = (e: LeafletEvent, mapObj: LeafletMap) => {
+    const em = e as LeafletMouseEvent;
+    const latlng: ICoordinates = [em.latlng.lat, em.latlng.lng];
     if (!shapeData.noControlPoints) {
       if (!shapeData.maxPoints) {
         setMarkedPoints([...markedPoints, latlng]);
