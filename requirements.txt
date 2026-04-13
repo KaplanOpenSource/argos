@@ -6,7 +6,7 @@ Flask-JWT-Extended==4.6.0
 itsdangerous==2.1.2
 Jinja2==3.1.6
 MarkupSafe==2.1.4
-pillow==10.4.0
+pillow==12.2.0
 PyJWT==2.8.0
 waitress==3.0.2
 Werkzeug==3.1.5
